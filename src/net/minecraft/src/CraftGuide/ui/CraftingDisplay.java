@@ -1,5 +1,6 @@
 package net.minecraft.src.CraftGuide.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -163,12 +164,36 @@ public class CraftingDisplay extends GuiElement
 		
 		if(stack != null)
 		{
-			String name = StringTranslate.getInstance().translateNamedKey(stack.getItemName());
-			itemName.setText(name);
+			itemName.setText(itemText(stack));
 			render(itemName);
 		}
 	}
 	
+	private List<String> itemText(ItemStack stack)
+	{
+		List list = stack.func_40712_q();
+		List<String> text = new ArrayList<String>(list.size());
+		boolean first = true;
+		
+		for(Object o: list)
+		{
+			if(o instanceof String)
+			{
+				if(first)
+				{
+					text.add("\247" + Integer.toHexString(stack.func_40707_s().field_40535_e) + (String)o);
+					first = false;
+				}
+				else
+				{
+					text.add("\2477" + (String)o);
+				}
+			}
+		}
+		
+		return text;
+	}
+
 	private ItemStack itemStackUnderMouse()
 	{
 		if(isMouseOver(mouseX, mouseY))

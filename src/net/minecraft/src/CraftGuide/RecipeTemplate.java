@@ -11,12 +11,14 @@ public class RecipeTemplate implements IRecipeTemplate
 {
 	private ItemSlot[] slots;
 	private IRenderable background, backgroundSelected;
+	ItemStack craftingType;
 	
-	public RecipeTemplate(ItemSlot[] slots, TexturedRect background, TexturedRect backgroundSelected)
+	public RecipeTemplate(ItemSlot[] slots, ItemStack craftingType, TexturedRect background, TexturedRect backgroundSelected)
 	{
 		this.slots = slots;
 		this.background = background;
 		this.backgroundSelected = backgroundSelected;
+		this.craftingType = craftingType;
 	}
 
 	public ICraftGuideRecipe generate(ItemStack[] items)

@@ -23,14 +23,14 @@ public class ItemCraftGuide extends Item
 		setItemName("CraftGuideItem");
 	}
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
     	if(gui == null)
     	{
     		gui = new GuiCraftGuide();
     	}
     	
-    	ModLoader.OpenGUI(entityplayer, gui);
+    	ModLoader.OpenGUI(player, gui);
         return itemstack;
     }
     

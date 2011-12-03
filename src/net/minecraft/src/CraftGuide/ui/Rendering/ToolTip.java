@@ -1,19 +1,33 @@
 package net.minecraft.src.CraftGuide.ui.Rendering;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 
 public class ToolTip implements IRenderable
 {
-	private String text;
+	private List<String> text = new ArrayList<String>(1);;
 	
-	public ToolTip(String text)
+	public ToolTip(List<String> text)
 	{
 		this.text = text;
 	}
 	
+	public ToolTip(String text)
+	{
+		this.text.add(text);
+	}
+	
 	public void setText(String text)
+	{
+		this.text.clear();
+		this.text.add(text);
+	}
+
+	public void setText(List<String> text)
 	{
 		this.text = text;
 	}

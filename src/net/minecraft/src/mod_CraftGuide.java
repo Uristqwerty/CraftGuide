@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.CraftGuide.DefaultRecipeProvider;
 import net.minecraft.src.CraftGuide.ItemCraftGuide;
+import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 
@@ -22,6 +24,8 @@ public class mod_CraftGuide extends BaseMod
 	{
 		loadProperties();
 		addItems();
+		
+		new DefaultRecipeProvider();
 	}
 
 	private void addItems()
@@ -42,7 +46,7 @@ public class mod_CraftGuide extends BaseMod
 	private void setConfigDefaults()
 	{
 		config.setProperty("itemCraftGuideID", "29361");
-		config.setProperty("RecipeList_mouseWheelScrollRate", "1");
+		config.setProperty("RecipeList_mouseWheelScrollRate", "3");
 	}
 
 	private void loadProperties()
@@ -100,9 +104,15 @@ public class mod_CraftGuide extends BaseMod
 			}
 		}
 	}
-	
-	public String Version()
+
+	@Override
+	public String getVersion()
 	{
 		return "1.2.2";
+	}
+
+	@Override
+	public void load()
+	{
 	}
 }

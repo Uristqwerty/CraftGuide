@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.src.Block;
 import net.minecraft.src.CraftingManager;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
@@ -12,6 +13,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
+import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
@@ -19,7 +21,7 @@ import net.minecraft.src.CraftGuide.API.IRecipeProvider;
 import net.minecraft.src.CraftGuide.API.IRecipeFilter;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
 
-public class CraftGuideAPIHook implements IRecipeProvider
+public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
 {
 	private final boolean obfuscatedNames = true;
 	
@@ -54,23 +56,19 @@ public class CraftGuideAPIHook implements IRecipeProvider
 	{
 		IRecipeTemplate craftingTemplate = generator.createRecipeTemplate(
 			craftingSlots,
-			"/gui/CraftGuideRecipe.png",  1, 1,
-			"/gui/CraftGuideRecipe.png", 82, 1);
+			"/gui/CraftGuideRecipe.png",  1, 1, 82, 1);
 		
 		IRecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
 			craftingSlots,
-			"/gui/CraftGuideRecipe.png",  1, 121,
-			"/gui/CraftGuideRecipe.png", 82, 121);
+			"/gui/CraftGuideRecipe.png",  1, 121, 82, 121);
 		
 		IRecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(
 			smallCraftingSlots,
-			"/gui/CraftGuideRecipe.png",  1, 61,
-			"/gui/CraftGuideRecipe.png", 82, 61);
+			"/gui/CraftGuideRecipe.png",  1, 61, 82, 61);
 		
 		IRecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
-			furnaceSlots,
-			"/gui/CraftGuideRecipe.png",  1, 181,
-			"/gui/CraftGuideRecipe.png", 82, 181);
+			furnaceSlots, new ItemStack(Block.stoneOvenActive),
+			"/gui/CraftGuideRecipe.png",  1, 181, 82, 181);
 		
 		addCraftingRecipes(craftingTemplate, smallCraftingTemplate, shapelessTemplate, generator);
 		addFurnaceRecipes(furnaceTemplate, generator);
