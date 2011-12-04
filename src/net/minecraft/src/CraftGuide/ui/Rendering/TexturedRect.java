@@ -6,10 +6,15 @@ import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 
 public class TexturedRect implements IRenderable
 {
-	private GuiTexture texture;
+	private ITexture texture;
 	private int x, y, width, height, u, v;
+
+	public TexturedRect(int x, int y, int width, int height, ITexture texture)
+	{
+		this(x, y, width, height, texture, 0, 0);
+	}
 	
-	public TexturedRect(int x, int y, int width, int height, GuiTexture texture, int u, int v)
+	public TexturedRect(int x, int y, int width, int height, ITexture texture, int u, int v)
 	{
 		this.x = x;
 		this.y = y;

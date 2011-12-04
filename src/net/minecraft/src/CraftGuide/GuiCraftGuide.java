@@ -16,6 +16,7 @@ import org.lwjgl.input.Mouse;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.mod_CraftGuide;
 import net.minecraft.src.CraftGuide.ui.CraftingDisplay;
+import net.minecraft.src.CraftGuide.ui.GuiBorderedRect;
 import net.minecraft.src.CraftGuide.ui.GuiButton;
 import net.minecraft.src.CraftGuide.ui.GuiElement;
 import net.minecraft.src.CraftGuide.ui.GuiImage;
@@ -28,7 +29,9 @@ import net.minecraft.src.CraftGuide.ui.GuiText;
 import net.minecraft.src.CraftGuide.ui.GuiValueButton;
 import net.minecraft.src.CraftGuide.ui.GuiWindow;
 import net.minecraft.src.CraftGuide.ui.IButtonListener;
+import net.minecraft.src.CraftGuide.ui.Rendering.GuiSubTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
+import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 
 public class GuiCraftGuide extends GuiScreen
 {
@@ -64,7 +67,30 @@ public class GuiCraftGuide extends GuiScreen
 
 		renderer = new GuiRenderer();
 		guideWindow = new GuiWindow(0, 0, windowWidth, windowHeight, renderer);
-		guideWindow.addElement(new GuiImage(0, 0, windowWidth, windowHeight, guiTexture, 0, 0));
+		//guideWindow.addElement(new GuiImage(0, 0, windowWidth, windowHeight, guiTexture, 0, 0));
+		/*guideWindow.addElement(
+			new GuiImage(
+				0, 0, windowWidth, windowHeight,
+				new GuiSubTexture(guiTexture, 6, 6, 64, 64),
+				0, 0
+				)
+			);
+		*/
+		guideWindow.addElement(
+				new GuiBorderedRect(
+					0, 0, windowWidth, windowHeight, guiTexture, 1, 1, 4, 64)
+				);
+		
+		guideWindow.addElement(
+				new GuiBorderedRect(
+					71, 17, 164, 176, guiTexture, 78, 1, 2, 32)
+				);
+		
+		guideWindow.addElement(
+				new GuiBorderedRect(
+					237, 5, 14, 188, guiTexture, 78, 1, 2, 32)
+				);
+		
 		guideWindow.addElement(new GuiText(11, 163, "Filter", 0xff000000));
 		guideWindow.addElement(clearButton);
 		guideWindow.addElement(new GuiText(22, 183, "Clear", 0xff000000));
@@ -73,7 +99,7 @@ public class GuiCraftGuide extends GuiScreen
 		guideWindow.addElement(rowText);
 		
 		scrollBar = 
-			new GuiScrollBar(238, 6, 12, 184, 
+			new GuiScrollBar(238, 6, 12, 186, 
 				new GuiSlider(0, 21, 12, 144, 12, 15, guiTexture, 0, 199),
 				new GuiValueButton[]{
     				new GuiValueButton(0,   0, 12, 11, guiTexture, 0, 234, -30),

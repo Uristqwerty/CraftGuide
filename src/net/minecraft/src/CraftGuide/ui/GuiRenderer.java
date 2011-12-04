@@ -111,12 +111,73 @@ public class GuiRenderer
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_I(colour, alpha);
+        
+        if(subtexEnabled)
+        {
+        	drawSubTexRect(tessellator, x, y, width, height);
+        }
+        else
+        {
+        	drawTexturedRect(tessellator, x, y, width, height, 0, 0);
+        }
+        
+        tessellator.draw();
+		GL11.glDisable(GL11.GL_BLEND);
+	}
+
+	private void drawSubTexRect(Tessellator tessellator, int x, int y, int width, int height)
+	{
+		if(subtex_width < 1 || subtex_height < 1)
+		{
+			return;
+		}
+		
+		int texX = u % subtex_width;
+		int texY = v % subtex_height;
+		int rectX = x;
+		int rectY = y;
+		
+		while(rectX < x + width)
+		{
+			int subWidth = subtex_width - texX;
+			
+			if(rectX + subWidth > x + width)
+			{
+				subWidth = x + width - rectX;
+			}
+			
+			while(rectY < y + height)
+			{
+				int subHeight = subtex_height - texY;
+				
+				if(rectY + subHeight > y + height)
+				{
+					subHeight = y + height - rectY;
+				}
+				
+				drawTexturedRect(tessellator, rectX, rectY, subWidth, subHeight, texX + subtex_x, texY + subtex_y);
+				
+				rectY += subtex_height - texY;
+				texY = 0;
+			}
+			
+			texY = v % subtex_height;
+			rectY = y;
+			
+			rectX += subtex_width - texX;
+			texX = 0;
+		}
+	}
+
+	private void drawTexturedRect(Tessellator tessellator, int x, int y, int width, int height, int u, int v)
+	{
+		u += this.u;
+		v += this.v;
+		
         tessellator.addVertexWithUV(x		 , y + height, 0, (u) / textureWidth		, (v + height) / textureHeight);
         tessellator.addVertexWithUV(x + width, y + height, 0, (u + width) / textureWidth, (v + height) / textureHeight);
         tessellator.addVertexWithUV(x + width, y		 , 0, (u + width) / textureWidth, (v) / textureHeight);
         tessellator.addVertexWithUV(x		 , y		 , 0, (u) / textureWidth		, (v) / textureHeight);
-        tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	public void drawRect(int x, int y, int width, int height)

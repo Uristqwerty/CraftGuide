@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
+import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class GuiButton extends GuiElement
@@ -25,12 +26,12 @@ public class GuiButton extends GuiElement
 	private ButtonState currentState = ButtonState.UP;
 
 
-	public GuiButton(int x, int y, int width, int height, GuiTexture texture, int u, int v)
+	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v)
 	{
 		this(x, y, width, height, texture, u, v, width, 0);
 	}
 	
-	public GuiButton(int x, int y, int width, int height, GuiTexture texture, int u, int v, int dx, int dy)
+	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v, int dx, int dy)
 	{
 		super(x, y, width, height);
 		

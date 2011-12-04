@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
+import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 
 public class GuiSlider extends GuiButton
 {
@@ -71,7 +72,7 @@ public class GuiSlider extends GuiButton
 		return value;
 	}
 
-	public GuiSlider(int x, int y, int width, int height, int buttonWidth, int buttonHeight, GuiTexture texture,
+	public GuiSlider(int x, int y, int width, int height, int buttonWidth, int buttonHeight, ITexture texture,
 			int u, int v)
 	{
 		super(x, y, buttonWidth, buttonHeight, texture, u, v);
