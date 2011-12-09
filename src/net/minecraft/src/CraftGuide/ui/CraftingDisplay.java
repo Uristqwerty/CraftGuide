@@ -10,36 +10,31 @@ import net.minecraft.src.StringTranslate;
 import net.minecraft.src.CraftGuide.Recipe;
 import net.minecraft.src.CraftGuide.RecipeCache;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
-import net.minecraft.src.CraftGuide.ui.Rendering.CraftingDisplayRect;
+import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ToolTip;
 
-public class CraftingDisplay extends GuiElement
+public class CraftingDisplay extends GuiScrollableGrid
 {
-	private GuiScrollBar scrollBar;
-	private CraftingDisplayRect display;
-	private int mouseX, mouseY;
+	int mouseX;
+	int mouseY;
 	private ToolTip itemName = new ToolTip("-No Item-");
-	private RecipeCache recipeCache;
+	RecipeCache recipeCache;
 	
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
-		super(x, y, width, height);
+		super(x, y, width, height, scrollBar, 58);
 
 		this.recipeCache = recipeCache;
-		this.scrollBar = scrollBar;
 		
 		updateScrollbarSize();
 		
-		this.display = new CraftingDisplayRect(0, 0, width, height, this);
 	}
 
 	@Override
 	public void draw()
 	{
-		render(display);
 		super.draw();
-		
 		drawSelectionName();
 	}
 
@@ -63,43 +58,9 @@ public class CraftingDisplay extends GuiElement
 		
 		super.mousePressed(x, y);
 	}
-	
-	public void setFilter(ItemStack filter)
-	{
-		recipeCache.filter(filter);
-		updateScrollbarSize();
-	}
 
-	private void updateScrollbarSize()
-	{
-		float max = (recipeCache.getRecipes().size() - 5) / 2;
-		if(max < 0)
-		{
-			max = 0;
-		}
-		
-		scrollBar.setScale(0, max);
-	}
-
-	private Recipe recipeAt(int x, int y)
-	{
-		if(x <= 82 && x > 78)
-		{
-			return null;
-		}
-		
-		int row = (int)(scrollBar.getValue() + y / (float)58);
-		int index = row * 2 + (x > 82? 1 : 0);
-		
-		if(index < recipeCache.getRecipes().size() && index >= 0)
-		{
-			return (Recipe)recipeCache.getRecipes().get(index);
-		}
-		
-		return null;
-	}
-
-	public void renderRecipes(GuiRenderer renderer, int xOffset, int yOffset)
+	/*@Override
+	public void renderGridRows(GuiRenderer renderer, int xOffset, int yOffset)
 	{
 		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
 		
@@ -115,7 +76,7 @@ public class CraftingDisplay extends GuiElement
 		for(int i = first; i < last; i++)
 		{
 			Recipe recipe = (Recipe)recipes.get(i);
-			int x = xOffset + ((i & 1) == 0? 0 : 83);
+			int x = xOffset + ((i & 1) == 0? 0 : 87);
 			int y = yOffset + (((i - first - 2) >> 1) * 58);
 			boolean selected = false;
 			
@@ -132,8 +93,76 @@ public class CraftingDisplay extends GuiElement
 		}
 		
 		DrawSelectionBox();
-	}
+	}*/
 	
+	@Override
+	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
+	{
+		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		
+		if(row * 2 < recipes.size())
+		{
+			renderRecipe(renderer, xOffset, yOffset, (Recipe)recipes.get(row * 2));
+		}
+		
+		if(row * 2 < recipes.size() - 1)
+		{
+			renderRecipe(renderer, xOffset + 87, yOffset, (Recipe)recipes.get(row * 2 + 1));
+		}
+	}
+
+	private void renderRecipe(GuiRenderer renderer, int xOffset, int yOffset, Recipe recipe)
+	{
+		boolean selected = false;
+		
+		if(isMouseOver(mouseX, mouseY))
+		{
+			ICraftGuideRecipe selectedRecipe = recipeAt(mouseX - this.x, mouseY - this.y);
+			if(recipe == selectedRecipe)
+			{
+				selected = true;
+			}
+		}
+		
+		recipe.draw(renderer, xOffset, yOffset, selected);
+	}
+
+	public void setFilter(ItemStack filter)
+	{
+		recipeCache.filter(filter);
+		updateScrollbarSize();
+	}
+
+	private void updateScrollbarSize()
+	{
+		setRows(recipeCache.getRecipes().size() / 2);
+		/*float max = (recipeCache.getRecipes().size() - 5) / 2;
+		if(max < 0)
+		{
+			max = 0;
+		}
+		
+		scrollBar.setScale(0, max);*/
+	}
+
+	private Recipe recipeAt(int x, int y)
+	{
+		if(x <= 86 && x > 78)
+		{
+			return null;
+		}
+		
+		int row = (int)(scrollBar.getValue() + y / (float)58);
+		int index = row * 2 + (x > 86? 1 : 0);
+		
+		if(index < recipeCache.getRecipes().size() && index >= 0)
+		{
+			return (Recipe)recipeCache.getRecipes().get(index);
+		}
+		
+		return null;
+	}
+
 	private void DrawSelectionBox()
 	{
 		if(isMouseOver(mouseX, mouseY))
@@ -142,7 +171,7 @@ public class CraftingDisplay extends GuiElement
 
 			if(recipe != null)
 			{
-				int x = (mouseX - this.x > 82? mouseX - this.x - 83 : mouseX - this.x);
+				int x = (mouseX - this.x > 86? mouseX - this.x - 87 : mouseX - this.x);
 				int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
 				
 				if(recipe.getItemUnderMouse(x, y) != null)
@@ -202,7 +231,7 @@ public class CraftingDisplay extends GuiElement
 			
 			if(recipe != null)
 			{
-				int x = (mouseX - this.x > 82? mouseX - this.x - 82 : mouseX - this.x);
+				int x = (mouseX - this.x > 86? mouseX - this.x - 86 : mouseX - this.x);
 				int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
 				
 				return recipe.getItemUnderMouse(x, y);

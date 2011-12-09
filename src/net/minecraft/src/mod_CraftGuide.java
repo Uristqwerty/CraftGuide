@@ -18,9 +18,22 @@ public class mod_CraftGuide extends BaseMod
 {
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
+	
 	public static int mouseWheelScrollRate;
+	public static boolean pauseWhileOpen = true;
 	
 	public mod_CraftGuide()
+	{
+	}
+
+	@Override
+	public String getVersion()
+	{
+		return "1.3.0";
+	}
+
+	@Override
+	public void load()
 	{
 		loadProperties();
 		addItems();
@@ -47,6 +60,7 @@ public class mod_CraftGuide extends BaseMod
 	{
 		config.setProperty("itemCraftGuideID", "29361");
 		config.setProperty("RecipeList_mouseWheelScrollRate", "3");
+		config.setProperty("PauseWhileOpen", Boolean.toString(true));
 	}
 
 	private void loadProperties()
@@ -81,6 +95,8 @@ public class mod_CraftGuide extends BaseMod
 		}
 		catch(NumberFormatException e){}
 		
+		pauseWhileOpen = Boolean.valueOf(config.getProperty("PauseWhileOpen"));
+		
 		if(!configFile.exists())
 		{
 			try {
@@ -103,16 +119,5 @@ public class mod_CraftGuide extends BaseMod
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public String getVersion()
-	{
-		return "1.2.2";
-	}
-
-	@Override
-	public void load()
-	{
 	}
 }

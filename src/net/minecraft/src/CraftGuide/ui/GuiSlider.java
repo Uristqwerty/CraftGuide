@@ -72,8 +72,8 @@ public class GuiSlider extends GuiButton
 		return value;
 	}
 
-	public GuiSlider(int x, int y, int width, int height, int buttonWidth, int buttonHeight, ITexture texture,
-			int u, int v)
+	public GuiSlider(int x, int y, int width, int height, int buttonWidth, int buttonHeight,
+		ITexture texture, int u, int v)
 	{
 		super(x, y, buttonWidth, buttonHeight, texture, u, v);
 		

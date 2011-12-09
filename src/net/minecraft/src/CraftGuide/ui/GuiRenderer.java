@@ -303,6 +303,8 @@ public class GuiRenderer
 		drawGradient(x - 3,				y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		drawGradient(x + textWidth + 2, y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		
+    	setColour(0xFFFFFF, 0xFF);
+		
 		int textY = y;
 		boolean first = true;
 		for(String s: text)

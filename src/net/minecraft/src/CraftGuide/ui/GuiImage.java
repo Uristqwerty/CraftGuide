@@ -13,7 +13,7 @@ public class GuiImage extends GuiElement
 	{
 		super(x, y, width, height);
 		
-		image = new TexturedRect(x, y, width, height, texture, u, v);
+		image = new TexturedRect(0, 0, width, height, texture, u, v);
 	}
 	
 	@Override

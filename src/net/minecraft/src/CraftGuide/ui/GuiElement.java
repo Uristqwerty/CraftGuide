@@ -25,6 +25,12 @@ public class GuiElement
 		element.parent = this;
 		children.add(element);
 	}
+
+	public void removeElement(GuiElement element)
+	{
+		element.parent = null;
+		children.remove(element);
+	}
 	
 	public void draw()
 	{
