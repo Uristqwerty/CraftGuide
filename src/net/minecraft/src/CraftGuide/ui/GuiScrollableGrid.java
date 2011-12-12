@@ -29,8 +29,23 @@ public class GuiScrollableGrid extends GuiElement
 	}
 	
 	@Override
+	public void mouseMoved(int x, int y)
+	{
+		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y;
+		int row = scrollY / rowHeight;
+		
+		mouseMovedRow(row, x, scrollY % rowHeight);
+		
+		super.mousePressed(x, y);
+	}
+	
+	@Override
 	public void mousePressed(int x, int y)
 	{
+		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - this.y;
+		int row = scrollY / rowHeight;
+		
+		rowClicked(row, x - this.x, scrollY % rowHeight);
 		super.mousePressed(x, y);
 	}
 	
@@ -62,6 +77,14 @@ public class GuiScrollableGrid extends GuiElement
 	}
 
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
+	{
+	}
+	
+	public void rowClicked(int row, int x, int y)
+	{
+	}
+	
+	public void mouseMovedRow(int row, int x, int y)
 	{
 	}
 }

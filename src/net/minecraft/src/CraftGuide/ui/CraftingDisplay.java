@@ -46,7 +46,7 @@ public class CraftingDisplay extends GuiScrollableGrid
 		super.mouseMoved(x, y);
 	}
 
-	@Override
+	/*@Override
 	public void mousePressed(int x, int y)
 	{
 		ItemStack stack = itemStackUnderMouse();
@@ -57,44 +57,27 @@ public class CraftingDisplay extends GuiScrollableGrid
 		}
 		
 		super.mousePressed(x, y);
-	}
-
-	/*@Override
-	public void renderGridRows(GuiRenderer renderer, int xOffset, int yOffset)
-	{
-		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
-		
-		int first = ((int)scrollBar.getValue()) * 2;
-		int last = first + 8;
-		yOffset += 58 - (int)((scrollBar.getValue() % 1) * 58);
-		
-		if(last > recipes.size())
-		{
-			last = recipes.size();
-		}
-		
-		for(int i = first; i < last; i++)
-		{
-			Recipe recipe = (Recipe)recipes.get(i);
-			int x = xOffset + ((i & 1) == 0? 0 : 87);
-			int y = yOffset + (((i - first - 2) >> 1) * 58);
-			boolean selected = false;
-			
-			if(isMouseOver(mouseX, mouseY))
-			{
-				ICraftGuideRecipe selectedRecipe = recipeAt(mouseX - this.x, mouseY - this.y);
-				if(recipe == selectedRecipe)
-				{
-					selected = true;
-				}
-			}
-			
-			recipe.draw(renderer, x, y, selected);
-		}
-		
-		DrawSelectionBox();
 	}*/
 	
+	@Override
+	public void rowClicked(int row, int x, int y)
+	{
+		ItemStack stack = itemStackUnderMouse(row, x, y);
+		
+		if(stack != null)
+		{
+			setFilter(stack);
+		}
+		
+		super.rowClicked(row, x, y);
+	}
+
+	@Override
+	public void mouseMovedRow(int row, int x, int y)
+	{
+		super.mouseMovedRow(row, x, y);
+	}
+
 	@Override
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
@@ -125,6 +108,11 @@ public class CraftingDisplay extends GuiScrollableGrid
 		}
 		
 		recipe.draw(renderer, xOffset, yOffset, selected);
+		
+		if(selected)
+		{
+			DrawSelectionBox(renderer, recipe);
+		}
 	}
 
 	public void setFilter(ItemStack filter)
@@ -136,13 +124,6 @@ public class CraftingDisplay extends GuiScrollableGrid
 	private void updateScrollbarSize()
 	{
 		setRows(recipeCache.getRecipes().size() / 2);
-		/*float max = (recipeCache.getRecipes().size() - 5) / 2;
-		if(max < 0)
-		{
-			max = 0;
-		}
-		
-		scrollBar.setScale(0, max);*/
 	}
 
 	private Recipe recipeAt(int x, int y)
@@ -163,26 +144,35 @@ public class CraftingDisplay extends GuiScrollableGrid
 		return null;
 	}
 
-	private void DrawSelectionBox()
+	private Recipe recipeAt(int row, int x, int y)
 	{
-		if(isMouseOver(mouseX, mouseY))
+		if(x <= 86 && x > 78)
 		{
-			Recipe recipe = recipeAt(mouseX - x, mouseY - y);
-
-			if(recipe != null)
+			return null;
+		}
+		
+		int index = row * 2 + (x > 86? 1 : 0);
+		
+		if(index < recipeCache.getRecipes().size() && index >= 0)
+		{
+			return (Recipe)recipeCache.getRecipes().get(index);
+		}
+		
+		return null;
+	}
+	
+	private void DrawSelectionBox(GuiRenderer renderer, Recipe recipe)
+	{
+		int x = (mouseX - this.x > 86? mouseX - this.x - 87 : mouseX - this.x);
+		int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
+		
+		if(recipe.getItemUnderMouse(x, y) != null)
+		{
+			IRenderable selection = recipe.getSelectionBox(x, y);
+			
+			if (selection != null)
 			{
-				int x = (mouseX - this.x > 86? mouseX - this.x - 87 : mouseX - this.x);
-				int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
-				
-				if(recipe.getItemUnderMouse(x, y) != null)
-				{
-					IRenderable selection = recipe.getSelectionBox(x, y);
-					
-					if (selection != null)
-					{
-						render(selection, (mouseX - this.x) - x, (mouseY - this.y) - y);
-					}
-				}
+				render(selection, (mouseX - this.x) - x, (mouseY - this.y) - y);
 			}
 		}
 	}
@@ -235,6 +225,28 @@ public class CraftingDisplay extends GuiScrollableGrid
 				int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
 				
 				return recipe.getItemUnderMouse(x, y);
+			}
+		}
+		
+		return null;
+	}
+
+	private ItemStack itemStackUnderMouse(int row, int x, int y)
+	{
+		if(x >= 0 && x < width && y >= 0 && y < height)
+		{
+			Recipe recipe = recipeAt(row, x, y);
+
+			if(recipe != null)
+			{
+				if(x > 86)
+				{
+					return recipe.getItemUnderMouse(x - 86, y);
+				}
+				else
+				{
+					return recipe.getItemUnderMouse(x, y);
+				}
 			}
 		}
 		

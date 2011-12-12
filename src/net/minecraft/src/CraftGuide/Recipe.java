@@ -126,7 +126,11 @@ public class Recipe implements ICraftGuideRecipe
 
 	private boolean areItemsEqual(ItemStack first, ItemStack second, boolean exactMatch)
 	{
-		if(exactMatch)
+		if(first == null)
+		{
+			return (second == null);
+		}
+		else if(exactMatch)
 		{
 			return first.isItemEqual(second);
 		}
@@ -143,7 +147,7 @@ public class Recipe implements ICraftGuideRecipe
 			&& first.itemID == second.itemID
 			&& (
 				first.getItemDamage() == -1 ||
-				second.getItemDamage() == -1||
+				second.getItemDamage() == -1 ||
 				first.getItemDamage() == second.getItemDamage()
 			);
 	}
