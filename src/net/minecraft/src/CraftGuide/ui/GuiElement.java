@@ -189,6 +189,11 @@ public class GuiElement
 		
 		return this;
 	}
+
+	public GuiElement anchor(AnchorPoint point)
+	{
+		return anchor(point, point);
+	}
 	
 	public int absoluteX()
 	{

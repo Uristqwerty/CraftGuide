@@ -45,6 +45,7 @@ public class GuiCraftGuide extends GuiScreen
 	private GuiScrollBar scrollBar;
 	private GuiRightAlignedText rowText;
 	private GuiItemStack filterStack;
+	private CraftingDisplay craftingDisplay;
 
 	private static GuiCraftGuide instance;
 
@@ -82,7 +83,6 @@ public class GuiCraftGuide extends GuiScreen
 
 		new GuiResizeHandle(windowWidth - 8, windowHeight - 8, 8, 8, guideWindow);
 		
-		
 		guideWindow.addElement(
 			new GuiBorderedRect(
 				0, 0, windowWidth, windowHeight,
@@ -90,6 +90,11 @@ public class GuiCraftGuide extends GuiScreen
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
+		
+		guideWindow.addElement(
+			new GuiButton(windowWidth - 8, windowHeight - 8, 8, 8, guiTexture, 0, 191)
+				.anchor(AnchorPoint.BOTTOM_RIGHT)
+			);
 		
 		guideWindow.addElement(
 			new GuiBorderedRect(
@@ -145,14 +150,14 @@ public class GuiCraftGuide extends GuiScreen
 		);
 
 		GuiButton clearButton = new GuiButton(8, 179, 50, 14, guiTexture, 48, 200, 0, 14);
-		clearButton.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_LEFT);
+		clearButton.anchor(AnchorPoint.BOTTOM_LEFT);
 		recipeTab.addElement(clearButton);
 		recipeTab.addElement(
 			new GuiText(9, 163, "Filter", 0xff000000)
-				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_LEFT));
+				.anchor(AnchorPoint.BOTTOM_LEFT));
 		recipeTab.addElement(
 			new GuiText(20, 183, "Clear", 0xff000000)
-				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_LEFT));
+				.anchor(AnchorPoint.BOTTOM_LEFT));
 		
 		rowText = new GuiRightAlignedText(233, 6, "", 0xff000000);
 		rowText.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.TOP_RIGHT);
@@ -166,16 +171,16 @@ public class GuiCraftGuide extends GuiScreen
     				new GuiValueButton(0,   0, 12, 11, guiTexture, 0, 234, -30),
     				new GuiValueButton(0,  11, 12, 10, guiTexture, 0, 214, -3 ),
     				(GuiValueButton) new GuiValueButton(0, 165, 12, 10, guiTexture, 0, 224,  3 )
-						.anchor(AnchorPoint.BOTTOM_RIGHT, AnchorPoint.BOTTOM_RIGHT),
+						.anchor(AnchorPoint.BOTTOM_RIGHT),
     				(GuiValueButton) new GuiValueButton(0, 175, 12, 11, guiTexture, 0, 245,  30)
-						.anchor(AnchorPoint.BOTTOM_RIGHT, AnchorPoint.BOTTOM_RIGHT)
+						.anchor(AnchorPoint.BOTTOM_RIGHT)
 				}
 			);
 		
 		scrollBar.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT);
 		recipeTab.addElement(scrollBar);
 		
-		CraftingDisplay craftingDisplay = new CraftingDisplay(68, 18, 166, 174, scrollBar, recipeCache);
+		craftingDisplay = new CraftingDisplay(68, 18, 166, 174, scrollBar, recipeCache);
 		FilterClearCallback clearCallback = new FilterClearCallback();
 		clearButton.addButtonListener(clearCallback);
 		clearCallback.display = craftingDisplay;
@@ -185,9 +190,9 @@ public class GuiCraftGuide extends GuiScreen
 
 		recipeTab.addElement(
 			new GuiImage(40, 157, 18, 18, guiTexture, 238, 219)
-				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_LEFT));
+				.anchor(AnchorPoint.BOTTOM_LEFT));
 		filterStack = new GuiItemStack(41, 158, false);
-		filterStack.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_LEFT);
+		filterStack.anchor(AnchorPoint.BOTTOM_LEFT);
 		recipeTab.addElement(filterStack);
 		
 		return recipeTab;
@@ -221,7 +226,7 @@ public class GuiCraftGuide extends GuiScreen
 				new GuiValueButton[]{
     				new GuiValueButton(0,   0, 12, 10, guiTexture, 0, 214, -3 ),
     				(GuiValueButton) new GuiValueButton(0, 176, 12, 10, guiTexture, 0, 224,  3 )
-	    					.anchor(AnchorPoint.BOTTOM_RIGHT, AnchorPoint.BOTTOM_RIGHT),
+	    					.anchor(AnchorPoint.BOTTOM_RIGHT),
 				}
 			);
 
@@ -241,7 +246,7 @@ public class GuiCraftGuide extends GuiScreen
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
-		rowText.setText("Rows " + ((int)scrollBar.getValue() + 1) + "-" +  + ((int)scrollBar.getValue() + 3)  + " of " + ((int)scrollBar.getMax() + 3));
+		rowText.setText("Rows " + (craftingDisplay.firstVisibleRow() + 1) + "-" +  + (craftingDisplay.lastVisibleRow())  + " of " + (craftingDisplay.rowCount()));
 		guideWindow.centerOn(width / 2, height / 2);
 		filterStack.setItem(recipeCache.getFilterItem());
 		

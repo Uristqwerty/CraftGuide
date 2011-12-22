@@ -34,10 +34,10 @@ public class GuiScrollableGrid extends GuiElement
 	@Override
 	public void mouseMoved(int x, int y)
 	{
-		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y;
+		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - this.y;
 		int row = scrollY / rowHeight;
 		
-		mouseMovedRow(row, x, scrollY % rowHeight, isMouseOver(x, y));
+		mouseMovedRow(row, x - this.x, scrollY % rowHeight, isMouseOver(x, y));
 		
 		super.mousePressed(x, y);
 	}
@@ -94,7 +94,7 @@ public class GuiScrollableGrid extends GuiElement
 		int row = scrollY / rowHeight;
 		int max = yOffset + height;
 		
-		while(y < max && row < rows)
+		while(y < max && row < rowCount())
 		{
 			renderGridRow(renderer, xOffset, y, row);
 			y += rowHeight;
@@ -146,12 +146,38 @@ public class GuiScrollableGrid extends GuiElement
 			cellClicked(row * columns + column, x - columnX, y);
 		}
 	}
+
+	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
+	{
+		int column = columnAtX(x);
+		int columnX = columnOffset(column);
+		
+		if(column >= 0 && x - columnX < columnWidth && row * columns + column < cells)
+		{
+			mouseMovedCell(row * columns + column, x - columnX, y, inBounds && x >= columnX);
+		}
+	}
+
+	public int rowCount()
+	{
+		return rows;
+	}
+
+	public int firstVisibleRow()
+	{
+		return (int)(scrollBar.getValue());
+	}
+
+	public int lastVisibleRow()
+	{
+		return Math.min((int)(scrollBar.getValue() + (height + rowHeight - 1) / (float)rowHeight), rows);
+	}
 	
-	public void cellClicked(int cell, int x, int y)
+	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
 	{
 	}
 
-	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
+	public void cellClicked(int cell, int x, int y)
 	{
 	}
 	

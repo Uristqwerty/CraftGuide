@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.src.CraftGuide.ui.GuiElement.AnchorPoint;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;

@@ -21,6 +21,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	int mouseRow, mouseRowX, mouseRowY;
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
 	RecipeCache recipeCache;
+	private Recipe recipeUnderMouse;
 	
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
@@ -42,15 +43,8 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	@Override
 	public void mouseMoved(int x, int y)
 	{
-		mouseX = x;
-		mouseY = y;
+		recipeUnderMouse = null;
 		super.mouseMoved(x, y);
-	}
-
-	@Override
-	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
-	{
-		super.mouseMovedRow(row, x, y, inBounds);
 	}
 
 	@Override
@@ -66,22 +60,11 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 
 	private void renderRecipe(GuiRenderer renderer, int xOffset, int yOffset, Recipe recipe)
 	{
-		boolean selected = false;
+		recipe.draw(renderer, xOffset, yOffset, recipe == recipeUnderMouse);
 		
-		if(isMouseOver(mouseX, mouseY))
+		if(recipe == recipeUnderMouse)
 		{
-			ICraftGuideRecipe selectedRecipe = recipeAt(mouseX - this.x, mouseY - this.y);
-			if(recipe == selectedRecipe)
-			{
-				selected = true;
-			}
-		}
-		
-		recipe.draw(renderer, xOffset, yOffset, selected);
-		
-		if(selected)
-		{
-			DrawSelectionBox(renderer, recipe);
+			DrawSelectionBox(renderer, xOffset, yOffset);
 		}
 	}
 
@@ -101,36 +84,28 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		setCells(recipeCache.getRecipes().size());
 	}
 
-	private Recipe recipeAt(int x, int y)
+	@Override
+	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
 	{
-		if(x <= 86 && x > 78)
+		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		
+		if(inBounds && cell < recipes.size())
 		{
-			return null;
+			mouseX = x;
+			mouseY = y;
+			recipeUnderMouse = (Recipe) recipes.get(cell);
 		}
-		
-		int row = (int)(scrollBar.getValue() + y / (float)58);
-		int index = row * 2 + (x > 86? 1 : 0);
-		
-		if(index < recipeCache.getRecipes().size() && index >= 0)
-		{
-			return (Recipe)recipeCache.getRecipes().get(index);
-		}
-		
-		return null;
 	}
 	
-	private void DrawSelectionBox(GuiRenderer renderer, Recipe recipe)
+	private void DrawSelectionBox(GuiRenderer renderer, int xOffset, int yOffset)
 	{
-		int x = (mouseX - this.x > 86? mouseX - this.x - 87 : mouseX - this.x);
-		int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
-		
-		if(recipe.getItemUnderMouse(x, y) != null)
+		if(itemStackUnderMouse() != null)
 		{
-			IRenderable selection = recipe.getSelectionBox(x, y);
+			IRenderable selection = recipeUnderMouse.getSelectionBox(mouseX, mouseY);
 			
 			if (selection != null)
 			{
-				render(selection, (mouseX - this.x) - x, (mouseY - this.y) - y);
+				selection.render(renderer, xOffset, yOffset);
 			}
 		}
 	}
@@ -185,17 +160,9 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 
 	private ItemStack itemStackUnderMouse()
 	{
-		if(isMouseOver(mouseX, mouseY))
+		if(recipeUnderMouse != null)
 		{
-			Recipe recipe = recipeAt(mouseX - x, mouseY - y);
-			
-			if(recipe != null)
-			{
-				int x = (mouseX - this.x > 86? mouseX - this.x - 86 : mouseX - this.x);
-				int y = (mouseY - this.y  + (int)((scrollBar.getValue() % 1) * 58)) % 58;
-				
-				return recipe.getItemUnderMouse(x, y);
-			}
+			return recipeUnderMouse.getItemUnderMouse(mouseX, mouseY);
 		}
 		
 		return null;
