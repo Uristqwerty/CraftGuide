@@ -39,6 +39,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		buttons[5] = new TexturedRect(0, 0, 28, 28, guiTexture, 141, 132);
 		
 		setRows(recipeCache.getCraftTypes().size());
+		setCells(recipeCache.getCraftTypes().size());
 	}
 
 	@Override
@@ -76,8 +77,6 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				}
 			}
 		}
-		
-		super.rowClicked(row, x, y, inBounds);
 	}
 
 	@Override
@@ -97,6 +96,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void setColumns(int columns)
 	{
+		super.setColumns(1);
 	}
 
 	private int setting(CraftType type)

@@ -34,17 +34,17 @@ public class GuiSlider extends GuiButton
 	}
 
 	@Override
-	public void onResize(int oldWidth, int oldHeight)
+	public GuiElement setSize(int width, int height)
 	{
 		float x = getPosX();
 		float y = getPosY();
 		
-		maxX += width - oldWidth;
-		maxY += height - oldHeight;
+		maxX += width - this.width;
+		maxY += height - this.height;
 		
 		setValue(x, y);
 		
-		super.onResize(oldWidth, oldHeight);
+		return super.setSize(this.width, this.height);
 	}
 
 	private void sendSliderEvent()

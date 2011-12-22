@@ -2,6 +2,7 @@ package net.minecraft.src.CraftGuide.ui;
 
 import java.util.List;
 
+import net.minecraft.src.mod_CraftGuide;
 import net.minecraft.src.CraftGuide.Recipe;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
@@ -36,7 +37,7 @@ public class GuiScrollableGrid extends GuiElement
 		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y;
 		int row = scrollY / rowHeight;
 		
-		mouseMovedRow(row, x, scrollY % rowHeight);
+		mouseMovedRow(row, x, scrollY % rowHeight, isMouseOver(x, y));
 		
 		super.mousePressed(x, y);
 	}
@@ -55,7 +56,7 @@ public class GuiScrollableGrid extends GuiElement
 	public void onResize(int oldWidth, int oldHeight)
 	{
 		display.setSize(width, height);
-		setRows(rows);
+		setColumns(Math.max(width / columnWidth, 1));
 		
 		super.onResize(oldWidth, oldHeight);
 	}
@@ -103,13 +104,26 @@ public class GuiScrollableGrid extends GuiElement
 
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
+		for(int i = 0; i < columns && row * columns + i < cells; i++)
+		{
+			int columnX = 
+				mod_CraftGuide.gridPacking? i * columnWidth :
+					columns < 2? 0 :
+						(int)((width - columnWidth) * i / (float)(columns - 1));
+			
+			renderGridCell(renderer, xOffset + columnX, yOffset, row * columns + i);
+		}
 	}
 	
+	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
+	{
+	}
+
 	public void rowClicked(int row, int x, int y, boolean inBounds)
 	{
 	}
 	
-	public void mouseMovedRow(int row, int x, int y)
+	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
 	{
 	}
 }

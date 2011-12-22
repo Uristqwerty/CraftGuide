@@ -48,24 +48,19 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	}
 
 	@Override
-	public void mouseMovedRow(int row, int x, int y)
+	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
 	{
-		super.mouseMovedRow(row, x, y);
+		super.mouseMovedRow(row, x, y, inBounds);
 	}
 
 	@Override
-	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
+	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
 	{
 		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
 		
-		if(row * 2 < recipes.size())
+		if(cell < recipes.size())
 		{
-			renderRecipe(renderer, xOffset, yOffset, (Recipe)recipes.get(row * 2));
-		}
-		
-		if(row * 2 < recipes.size() - 1)
-		{
-			renderRecipe(renderer, xOffset + 87, yOffset, (Recipe)recipes.get(row * 2 + 1));
+			renderRecipe(renderer, xOffset, yOffset, (Recipe)recipes.get(cell));
 		}
 	}
 

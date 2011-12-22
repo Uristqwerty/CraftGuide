@@ -22,6 +22,7 @@ public class mod_CraftGuide extends BaseMod
 	public static int resizeRate;
 	public static int mouseWheelScrollRate;
 	public static boolean pauseWhileOpen = true;
+	public static boolean gridPacking = true;
 	
 	private int itemCraftGuideID = 23361;
 	
@@ -65,6 +66,7 @@ public class mod_CraftGuide extends BaseMod
 		config.setProperty("RecipeList_mouseWheelScrollRate", "3");
 		config.setProperty("PauseWhileOpen", Boolean.toString(true));
 		config.setProperty("resizeRate", "0");
+		config.setProperty("gridPacking", Boolean.toString(true));
 	}
 
 	private void loadProperties()
@@ -106,6 +108,7 @@ public class mod_CraftGuide extends BaseMod
 		catch(NumberFormatException e){}
 		
 		pauseWhileOpen = Boolean.valueOf(config.getProperty("PauseWhileOpen"));
+		gridPacking = Boolean.valueOf(config.getProperty("gridPacking"));
 		
 		if(!configFile.exists())
 		{
