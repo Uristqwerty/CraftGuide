@@ -200,56 +200,25 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		return null;
 	}
-	
+
 	@Override
-	public void rowClicked(int row, int x, int y, boolean inBounds)
+	public void cellClicked(int cell, int x, int y)
 	{
-		ItemStack stack = itemStackUnderMouse(row, x, y, inBounds);
+		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		
+		if(cell < recipes.size())
+		{
+			recipeClicked((Recipe)recipes.get(cell), x, y);
+		}
+	}
+
+	private void recipeClicked(Recipe recipe, int x, int y)
+	{
+		ItemStack stack = recipe.getItemUnderMouse(x, y);
 		
 		if(stack != null)
 		{
 			setFilter(stack);
 		}
-		
-		super.rowClicked(row, x, y, inBounds);
-	}
-
-	private ItemStack itemStackUnderMouse(int row, int x, int y, boolean inBounds)
-	{
-		if(x >= 0 && x < width && y >= 0 && y < height && inBounds)
-		{
-			Recipe recipe = recipeAt(row, x, y);
-
-			if(recipe != null)
-			{
-				if(x > 86)
-				{
-					return recipe.getItemUnderMouse(x - 86, y);
-				}
-				else
-				{
-					return recipe.getItemUnderMouse(x, y);
-				}
-			}
-		}
-		
-		return null;
-	}
-
-	private Recipe recipeAt(int row, int x, int y)
-	{
-		if(x <= 86 && x > 78)
-		{
-			return null;
-		}
-		
-		int index = row * 2 + (x > 86? 1 : 0);
-		
-		if(index < recipeCache.getRecipes().size() && index >= 0)
-		{
-			return (Recipe)recipeCache.getRecipes().get(index);
-		}
-		
-		return null;
 	}
 }

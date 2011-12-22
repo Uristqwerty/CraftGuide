@@ -106,24 +106,56 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		for(int i = 0; i < columns && row * columns + i < cells; i++)
 		{
-			int columnX = 
-				mod_CraftGuide.gridPacking? i * columnWidth :
-					columns < 2? 0 :
-						(int)((width - columnWidth) * i / (float)(columns - 1));
+			int columnX = columnOffset(i);
 			
 			renderGridCell(renderer, xOffset + columnX, yOffset, row * columns + i);
 		}
 	}
-	
-	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
+
+	private int columnOffset(int column)
 	{
+		if(mod_CraftGuide.gridPacking)
+		{
+			return column * columnWidth;
+		}
+		else
+		{
+			return columns < 2? 0 : (int)((width - columnWidth) * column / (float)(columns - 1));
+		}
+	}
+	
+	private int columnAtX(int x)
+	{
+		if(mod_CraftGuide.gridPacking)
+		{
+			return Math.min(x / columnWidth, columns - 1);
+		}
+		else
+		{
+			return (x * columns) / width;
+		}
 	}
 
 	public void rowClicked(int row, int x, int y, boolean inBounds)
 	{
+		int column = columnAtX(x);
+		int columnX = columnOffset(column);
+		
+		if(inBounds && x - columnX < columnWidth && row * columns + column < cells)
+		{
+			cellClicked(row * columns + column, x - columnX, y);
+		}
 	}
 	
+	public void cellClicked(int cell, int x, int y)
+	{
+	}
+
 	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
+	{
+	}
+	
+	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
 	{
 	}
 }
