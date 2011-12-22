@@ -12,23 +12,24 @@ import net.minecraft.src.CraftGuide.RecipeCache;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
-import net.minecraft.src.CraftGuide.ui.Rendering.ToolTip;
+import net.minecraft.src.CraftGuide.ui.Rendering.FloatingItemText;
 
-public class CraftingDisplay extends GuiScrollableGrid
+public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
 	int mouseX;
 	int mouseY;
-	private ToolTip itemName = new ToolTip("-No Item-");
+	int mouseRow, mouseRowX, mouseRowY;
+	private FloatingItemText itemName = new FloatingItemText("-No Item-");
 	RecipeCache recipeCache;
 	
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
-		super(x, y, width, height, scrollBar, 58);
+		super(x, y, width, height, scrollBar, 58, 79);
 
 		this.recipeCache = recipeCache;
-		
+		recipeCache.addListener(this);
+		setColumns(2);
 		updateScrollbarSize();
-		
 	}
 
 	@Override
@@ -44,32 +45,6 @@ public class CraftingDisplay extends GuiScrollableGrid
 		mouseX = x;
 		mouseY = y;
 		super.mouseMoved(x, y);
-	}
-
-	/*@Override
-	public void mousePressed(int x, int y)
-	{
-		ItemStack stack = itemStackUnderMouse();
-		
-		if(stack != null)
-		{
-			setFilter(stack);
-		}
-		
-		super.mousePressed(x, y);
-	}*/
-	
-	@Override
-	public void rowClicked(int row, int x, int y)
-	{
-		ItemStack stack = itemStackUnderMouse(row, x, y);
-		
-		if(stack != null)
-		{
-			setFilter(stack);
-		}
-		
-		super.rowClicked(row, x, y);
 	}
 
 	@Override
@@ -118,12 +93,17 @@ public class CraftingDisplay extends GuiScrollableGrid
 	public void setFilter(ItemStack filter)
 	{
 		recipeCache.filter(filter);
+	}
+
+	@Override
+	public void onChange()
+	{
 		updateScrollbarSize();
 	}
 
 	private void updateScrollbarSize()
 	{
-		setRows(recipeCache.getRecipes().size() / 2);
+		setCells(recipeCache.getRecipes().size());
 	}
 
 	private Recipe recipeAt(int x, int y)
@@ -134,23 +114,6 @@ public class CraftingDisplay extends GuiScrollableGrid
 		}
 		
 		int row = (int)(scrollBar.getValue() + y / (float)58);
-		int index = row * 2 + (x > 86? 1 : 0);
-		
-		if(index < recipeCache.getRecipes().size() && index >= 0)
-		{
-			return (Recipe)recipeCache.getRecipes().get(index);
-		}
-		
-		return null;
-	}
-
-	private Recipe recipeAt(int row, int x, int y)
-	{
-		if(x <= 86 && x > 78)
-		{
-			return null;
-		}
-		
 		int index = row * 2 + (x > 86? 1 : 0);
 		
 		if(index < recipeCache.getRecipes().size() && index >= 0)
@@ -190,6 +153,11 @@ public class CraftingDisplay extends GuiScrollableGrid
 	
 	private List<String> itemText(ItemStack stack)
 	{
+		if(stack.getItem() == null)
+		{
+			return itemTextErr(stack);
+		}
+		
 		List list = stack.func_40712_q();
 		List<String> text = new ArrayList<String>(list.size());
 		boolean first = true;
@@ -213,6 +181,13 @@ public class CraftingDisplay extends GuiScrollableGrid
 		return text;
 	}
 
+	private List<String> itemTextErr(ItemStack stack)
+	{
+		List<String> text = new ArrayList<String>(1);
+		text.add("\247" + Integer.toHexString(15) + "Error: Item #" + Integer.toString(stack.itemID) + " does not exist");
+		return text;
+	}
+
 	private ItemStack itemStackUnderMouse()
 	{
 		if(isMouseOver(mouseX, mouseY))
@@ -230,10 +205,23 @@ public class CraftingDisplay extends GuiScrollableGrid
 		
 		return null;
 	}
-
-	private ItemStack itemStackUnderMouse(int row, int x, int y)
+	
+	@Override
+	public void rowClicked(int row, int x, int y, boolean inBounds)
 	{
-		if(x >= 0 && x < width && y >= 0 && y < height)
+		ItemStack stack = itemStackUnderMouse(row, x, y, inBounds);
+		
+		if(stack != null)
+		{
+			setFilter(stack);
+		}
+		
+		super.rowClicked(row, x, y, inBounds);
+	}
+
+	private ItemStack itemStackUnderMouse(int row, int x, int y, boolean inBounds)
+	{
+		if(x >= 0 && x < width && y >= 0 && y < height && inBounds)
 		{
 			Recipe recipe = recipeAt(row, x, y);
 
@@ -248,6 +236,23 @@ public class CraftingDisplay extends GuiScrollableGrid
 					return recipe.getItemUnderMouse(x, y);
 				}
 			}
+		}
+		
+		return null;
+	}
+
+	private Recipe recipeAt(int row, int x, int y)
+	{
+		if(x <= 86 && x > 78)
+		{
+			return null;
+		}
+		
+		int index = row * 2 + (x > 86? 1 : 0);
+		
+		if(index < recipeCache.getRecipes().size() && index >= 0)
+		{
+			return (Recipe)recipeCache.getRecipes().get(index);
 		}
 		
 		return null;

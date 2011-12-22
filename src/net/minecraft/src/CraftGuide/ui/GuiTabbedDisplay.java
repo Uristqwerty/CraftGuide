@@ -88,4 +88,18 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 		currentTab = tab;
 		changeTab = null;
 	}
+
+	@Override
+	public void onResize(int oldWidth, int oldHeight)
+	{
+		for(GuiElement element: tabMap.values())
+		{
+			if(element != currentTab)
+			{
+				element.onParentResize(oldWidth, oldHeight, width, height);
+			}
+		}
+		
+		super.onResize(oldWidth, oldHeight);
+	}
 }

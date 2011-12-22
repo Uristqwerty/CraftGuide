@@ -18,9 +18,12 @@ public class mod_CraftGuide extends BaseMod
 {
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
-	
+
+	public static int resizeRate;
 	public static int mouseWheelScrollRate;
 	public static boolean pauseWhileOpen = true;
+	
+	private int itemCraftGuideID = 23361;
 	
 	public mod_CraftGuide()
 	{
@@ -43,7 +46,7 @@ public class mod_CraftGuide extends BaseMod
 
 	private void addItems()
 	{
-		itemCraftGuide = new ItemCraftGuide(29361);
+		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
 		ModLoader.AddName(itemCraftGuide, "Crafting Guide");
 		
 		ModLoader.AddRecipe(new ItemStack(itemCraftGuide), new Object[]{
@@ -58,9 +61,10 @@ public class mod_CraftGuide extends BaseMod
 
 	private void setConfigDefaults()
 	{
-		config.setProperty("itemCraftGuideID", "29361");
+		config.setProperty("itemCraftGuideID", "23361");
 		config.setProperty("RecipeList_mouseWheelScrollRate", "3");
 		config.setProperty("PauseWhileOpen", Boolean.toString(true));
+		config.setProperty("resizeRate", "0");
 	}
 
 	private void loadProperties()
@@ -85,7 +89,13 @@ public class mod_CraftGuide extends BaseMod
 		
 		try
 		{
-			int itemCraftGuideID = Integer.valueOf(config.getProperty("itemCraftGuideID"));
+			itemCraftGuideID = Integer.valueOf(config.getProperty("itemCraftGuideID"));
+		}
+		catch(NumberFormatException e){}
+		
+		try
+		{
+			resizeRate = Integer.valueOf(config.getProperty("resizeRate"));
 		}
 		catch(NumberFormatException e){}
 		

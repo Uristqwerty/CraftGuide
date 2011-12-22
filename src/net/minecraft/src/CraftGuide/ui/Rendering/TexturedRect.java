@@ -31,4 +31,16 @@ public class TexturedRect implements IRenderable
 		renderer.setTextureCoords(u, v);
 		renderer.drawTexturedRect(x + xOffset, y + yOffset, width, height);
 	}
+	
+	public void moveBy(int xChange, int yChange)
+	{
+		x += xChange;
+		y += yChange;
+	}
+	
+	public void resizeBy(int widthChange, int heightChange)
+	{
+		width += widthChange;
+		height += heightChange;
+	}
 }

@@ -7,16 +7,16 @@ import org.lwjgl.input.Mouse;
 
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 
-public class ToolTip implements IRenderable
+public class FloatingItemText implements IRenderable
 {
 	private List<String> text = new ArrayList<String>(1);;
 	
-	public ToolTip(List<String> text)
+	public FloatingItemText(List<String> text)
 	{
 		this.text = text;
 	}
 	
-	public ToolTip(String text)
+	public FloatingItemText(String text)
 	{
 		this.text.add(text);
 	}

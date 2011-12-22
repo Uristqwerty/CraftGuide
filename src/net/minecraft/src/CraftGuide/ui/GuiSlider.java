@@ -33,6 +33,20 @@ public class GuiSlider extends GuiButton
 		}
 	}
 
+	@Override
+	public void onResize(int oldWidth, int oldHeight)
+	{
+		float x = getPosX();
+		float y = getPosY();
+		
+		maxX += width - oldWidth;
+		maxY += height - oldHeight;
+		
+		setValue(x, y);
+		
+		super.onResize(oldWidth, oldHeight);
+	}
+
 	private void sendSliderEvent()
 	{
 		for(ISliderListener listener: sliderListeners)

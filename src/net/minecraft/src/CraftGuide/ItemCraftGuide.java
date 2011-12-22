@@ -14,8 +14,6 @@ import net.minecraft.src.World;
 
 public class ItemCraftGuide extends Item
 {
-	private GuiCraftGuide gui = null;
-	
 	public ItemCraftGuide(int i)
 	{
 		super(i);
@@ -25,12 +23,7 @@ public class ItemCraftGuide extends Item
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
-    	if(gui == null)
-    	{
-    		gui = new GuiCraftGuide();
-    	}
-    	
-    	ModLoader.OpenGUI(player, gui);
+    	ModLoader.OpenGUI(player, GuiCraftGuide.getInstance());
         return itemstack;
     }
     

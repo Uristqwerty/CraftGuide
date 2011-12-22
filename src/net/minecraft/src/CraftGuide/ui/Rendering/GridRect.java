@@ -24,4 +24,10 @@ public class GridRect implements IRenderable
 		gridElement.renderGridRows(renderer, x + xOffset, y + yOffset);
 		renderer.clearClippingRegion();
 	}
+
+	public void setSize(int width, int height)
+	{
+		this.width = width;
+		this.height = height;
+	}
 }

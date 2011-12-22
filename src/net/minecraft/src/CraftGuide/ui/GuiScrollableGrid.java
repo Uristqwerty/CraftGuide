@@ -11,14 +11,16 @@ public class GuiScrollableGrid extends GuiElement
 	private GridRect display;
 	/*private*/ GuiScrollBar scrollBar;
 	private int rowHeight;
-	private int rows = 0;
+	private int rows = 0, columns = 1, cells = 0;
+	private int columnWidth = 1;
 	
-	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight)
+	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight, int columnWidth)
 	{
 		super(x, y, width, height);
 		this.display = new GridRect(0, 0, width, height, this);
 		this.rowHeight = rowHeight;
 		this.scrollBar = scrollBar;
+		this.columnWidth = columnWidth;
 	}
 
 	@Override
@@ -45,8 +47,17 @@ public class GuiScrollableGrid extends GuiElement
 		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - this.y;
 		int row = scrollY / rowHeight;
 		
-		rowClicked(row, x - this.x, scrollY % rowHeight);
+		rowClicked(row, x - this.x, scrollY % rowHeight, isMouseOver(x, y));
 		super.mousePressed(x, y);
+	}
+	
+	@Override
+	public void onResize(int oldWidth, int oldHeight)
+	{
+		display.setSize(width, height);
+		setRows(rows);
+		
+		super.onResize(oldWidth, oldHeight);
 	}
 	
 	public void setRows(int rowCount)
@@ -62,6 +73,18 @@ public class GuiScrollableGrid extends GuiElement
 		
 		scrollBar.setScale(0, end);
 	}
+	
+	public void setColumns(int columns)
+	{
+		this.columns = columns;
+		setRows((cells + columns - 1) / columns);
+	}
+	
+	public void setCells(int cells)
+	{
+		this.cells = cells;
+		setRows((cells + columns - 1) / columns);
+	}
 
 	public void renderGridRows(GuiRenderer renderer, int xOffset, int yOffset)
 	{
@@ -70,9 +93,11 @@ public class GuiScrollableGrid extends GuiElement
 		int row = scrollY / rowHeight;
 		int max = yOffset + height;
 		
-		for(; y < max; y += rowHeight, row++)
+		while(y < max && row < rows)
 		{
 			renderGridRow(renderer, xOffset, y, row);
+			y += rowHeight;
+			row++;
 		}
 	}
 
@@ -80,7 +105,7 @@ public class GuiScrollableGrid extends GuiElement
 	{
 	}
 	
-	public void rowClicked(int row, int x, int y)
+	public void rowClicked(int row, int x, int y, boolean inBounds)
 	{
 	}
 	

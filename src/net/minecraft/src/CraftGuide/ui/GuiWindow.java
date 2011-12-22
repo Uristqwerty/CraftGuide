@@ -18,8 +18,7 @@ public class GuiWindow extends GuiElement
 
 	public void centerOn(int centerX, int centerY)
 	{
-		x = centerX - (width / 2);
-		y = centerY - (height / 2);
+		setPosition(centerX - (width / 2), centerY - (height / 2));
 	}
 
 	@Override

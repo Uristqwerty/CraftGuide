@@ -6,9 +6,9 @@ import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
-public class GuiBorderedRect extends GuiElement
+public class GuiBorderedRect extends GuiElement implements IRenderable
 {
-	private IRenderable[] parts = new IRenderable[9];
+	private TexturedRect[] parts = new TexturedRect[9];
 
 	public GuiBorderedRect(int x, int y, int width, int height,
 			GuiTexture texture, int texX, int texY,
@@ -122,5 +122,33 @@ public class GuiBorderedRect extends GuiElement
 		}
 		
 		super.draw();
+	}
+
+	@Override
+	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	{
+		for(IRenderable rect: parts)
+		{
+			rect.render(renderer, xOffset + x, yOffset + y);
+		}
+	}
+	
+	@Override
+	public void onResize(int oldWidth, int oldHeight)
+	{
+		int widthChange = width - oldWidth;
+		int heightChange = height - oldHeight;
+		
+		parts[1].resizeBy(widthChange, 0);
+		parts[3].resizeBy(0, heightChange);
+		parts[4].resizeBy(widthChange, heightChange);
+		parts[5].resizeBy(0, heightChange);
+		parts[7].resizeBy(widthChange, 0);
+		
+		parts[2].moveBy(widthChange, 0);
+		parts[5].moveBy(widthChange, 0);
+		parts[6].moveBy(0, heightChange);
+		parts[7].moveBy(0, heightChange);
+		parts[8].moveBy(widthChange, heightChange);
 	}
 }

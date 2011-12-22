@@ -17,20 +17,23 @@ import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.Overlay;
+import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class GuiRenderer
 {
     private RenderItem itemRenderer = new RenderItem();
-	private int currentTexture = -1;
 	private Minecraft minecraft;
+	private int currentTexture = -1;
 	private int u, v;
+	private int colour, alpha;
 	private float textureWidth = 256, textureHeight = 256;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
-	private int colour, alpha;
 	private GuiCraftGuide guiCraftGuide;
 	
 	private boolean subtexEnabled = false;
 	private int subtex_x, subtex_y, subtex_width, subtex_height;
+	
+	private IRenderable itemError = new TexturedRect(-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 200);
 	
 	public void startFrame(Minecraft mc, GuiCraftGuide gui)
 	{
@@ -322,6 +325,12 @@ public class GuiRenderer
 
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
+		if(itemStack.getItem() == null)
+		{
+			drawItemStackError(x, y);
+			return;
+		}
+		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glPushMatrix();
         GL11.glRotatef(120F, 1.0F, 0.0F, 0.0F);
@@ -347,6 +356,11 @@ public class GuiRenderer
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+	}
+
+	private void drawItemStackError(int x, int y)
+	{
+		itemError.render(this, x, y);
 	}
 
 	public void setClippingRegion(int x, int y, int width, int height)
