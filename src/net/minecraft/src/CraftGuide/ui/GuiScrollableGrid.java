@@ -22,6 +22,8 @@ public class GuiScrollableGrid extends GuiElement
 		this.rowHeight = rowHeight;
 		this.scrollBar = scrollBar;
 		this.columnWidth = columnWidth;
+		
+		scrollBar.setPageSize(height / rowHeight);
 	}
 
 	@Override
@@ -57,6 +59,7 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		display.setSize(width, height);
 		setColumns(Math.max(width / columnWidth, 1));
+		scrollBar.setPageSize(height / rowHeight);
 		
 		super.onResize(oldWidth, oldHeight);
 	}
@@ -73,6 +76,11 @@ public class GuiScrollableGrid extends GuiElement
 		}
 		
 		scrollBar.setScale(0, end);
+	}
+	
+	public void setColumns()
+	{
+		setColumns(width / columnWidth);
 	}
 	
 	public void setColumns(int columns)
@@ -150,11 +158,15 @@ public class GuiScrollableGrid extends GuiElement
 	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
 	{
 		int column = columnAtX(x);
-		int columnX = columnOffset(column);
 		
-		if(column >= 0 && x - columnX < columnWidth && row * columns + column < cells)
+		if(column >= 0 && row * columns + column < cells)
 		{
-			mouseMovedCell(row * columns + column, x - columnX, y, inBounds && x >= columnX);
+			int columnX = columnOffset(column);
+			
+			if(x >= columnX && x - columnX < columnWidth)
+			{
+				mouseMovedCell(row * columns + column, x - columnX, y, inBounds);
+			}
 		}
 	}
 

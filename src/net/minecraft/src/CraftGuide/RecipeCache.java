@@ -33,28 +33,108 @@ public class RecipeCache
 	private RecipeGenerator generator = new RecipeGenerator();
 	private ItemStack filterItem = null;
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
+	private Set<CraftType> currentTypes = null;
+	private SortedSet<CraftType> allItems = new TreeSet<CraftType>();
 	
 	RecipeCache()
 	{
-		Package[] packages = Package.getPackages();
+		reset();
+	}
+
+	public void reset()
+	{
+		Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes = generateRecipes();
+	
+		ReflectionAPI.applyFilters(rawRecipes);
+		filterRawRecipes(rawRecipes);
+		craftResults.clear();
 		
-		List<Object> objects = ReflectionAPI.APIObjects;
+		for(ItemStack key: rawRecipes.keySet())
+		{
+			CraftType type = CraftType.getInstance(key);
+			craftResults.put(type, rawRecipes.get(key));
+		}
 		
-		for(Object object: objects)
+		generateAllItemList();
+		
+		craftingTypes.addAll(craftResults.keySet());
+		setTypes(currentTypes);
+
+		for(IRecipeCacheListener listener: listeners)
+		{
+			listener.onReset(this);
+		}
+	}
+
+	private void generateAllItemList()
+	{
+		allItems.clear();
+		
+		for(List<ICraftGuideRecipe> type: craftResults.values())
+		{
+			for(ICraftGuideRecipe recipe: type)
+			{
+				for(ItemStack item: recipe.getItems())
+				{
+					if(item != null)
+					{
+						allItems.add(CraftType.getInstance(item));
+					}
+				}
+			}
+		}
+		
+		removeUselessDuplicates();
+	}
+
+	private void removeUselessDuplicates()
+	{
+		Map<CraftType, Integer> wild = new HashMap<CraftType, Integer>();
+		for(CraftType item: allItems)
+		{
+			if(item.getStack().getItemDamage() == -1)
+			{
+				wild.put(item, 1);
+			}
+			else
+			{
+				for(CraftType type: wild.keySet())
+				{
+					if(item.getStack().itemID == type.getStack().itemID)
+					{
+						wild.put(type, wild.get(type) + 1);
+					}
+				}
+			}
+		}
+		
+		for(CraftType type: wild.keySet())
+		{
+			if(wild.get(type) == 2)
+			{
+				allItems.remove(type);
+			}
+		}
+	}
+
+	private Map<ItemStack, List<ICraftGuideRecipe>> generateRecipes()
+	{
+		generator.clearRecipes();
+		
+		for(Object object: ReflectionAPI.APIObjects)
 		{
 			if(object instanceof IRecipeProvider)
 			{
 				((IRecipeProvider)object).generateRecipes(generator);
 			}
 		}
-		
-		Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes = new HashMap<ItemStack, List<ICraftGuideRecipe>>();
-		
-		rawRecipes.putAll(generator.getRecipes());
-		
-		ReflectionAPI.applyFilters(rawRecipes);
-		
-		for(Object object: objects)
+
+		return generator.getRecipes();
+	}
+
+	private void filterRawRecipes(Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes)
+	{
+		for(Object object: ReflectionAPI.APIObjects)
 		{
 			if(object instanceof IRecipeFilter2)
 			{
@@ -68,21 +148,12 @@ public class RecipeCache
 				}
 			}
 		}
-		
-		for(ItemStack key: rawRecipes.keySet())
-		{
-			CraftType type = CraftType.getInstance(key);
-			craftResults.put(type, rawRecipes.get(key));
-		}
-		
-		craftingTypes.addAll(craftResults.keySet());
-		
-		setTypes(null);
 	}
 
 	public void setTypes(Set<CraftType> types)
 	{
 		typeResults = new ArrayList<ICraftGuideRecipe>();
+		currentTypes = types;
 		
 		if(types == null)
 		{
@@ -93,12 +164,6 @@ public class RecipeCache
 		}
 		else
 		{
-			/*Set<CraftType> craftTypes = new HashSet<CraftType>();
-			for(ItemStack stack: types)
-			{
-				craftTypes.add(CraftType.getInstance(stack));
-			}*/
-			
 			for(CraftType type: craftingTypes)
 			{
 				if(types.contains(type))
@@ -139,7 +204,7 @@ public class RecipeCache
 		
 		for(IRecipeCacheListener listener: listeners)
 		{
-			listener.onChange();
+			listener.onChange(this);
 		}
 	}
 	
@@ -156,5 +221,10 @@ public class RecipeCache
 	public void addListener(IRecipeCacheListener listener)
 	{
 		listeners.add(listener);
+	}
+
+	public SortedSet<CraftType> getAllItems()
+	{
+		return allItems;
 	}
 }

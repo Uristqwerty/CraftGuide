@@ -74,7 +74,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	}
 
 	@Override
-	public void onChange()
+	public void onChange(RecipeCache cache)
 	{
 		updateScrollbarSize();
 	}
@@ -121,14 +121,14 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		}
 	}
 	
-	private List<String> itemText(ItemStack stack)
+	public static List<String> itemText(ItemStack stack)
 	{
 		if(stack.getItem() == null)
 		{
 			return itemTextErr(stack);
 		}
 		
-		List list = stack.func_40712_q();
+		List list = stack.getItemNameandInformation();//.func_40712_q();
 		List<String> text = new ArrayList<String>(list.size());
 		boolean first = true;
 		
@@ -151,7 +151,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		return text;
 	}
 
-	private List<String> itemTextErr(ItemStack stack)
+	private static List<String> itemTextErr(ItemStack stack)
 	{
 		List<String> text = new ArrayList<String>(1);
 		text.add("\247" + Integer.toHexString(15) + "Error: Item #" + Integer.toString(stack.itemID) + " does not exist");
@@ -187,5 +187,10 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		{
 			setFilter(stack);
 		}
+	}
+
+	@Override
+	public void onReset(RecipeCache cache)
+	{
 	}
 }

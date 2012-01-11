@@ -8,7 +8,9 @@ import java.util.Set;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.CraftType;
 import net.minecraft.src.CraftGuide.RecipeCache;
+import net.minecraft.src.CraftGuide.ui.Rendering.FloatingItemText;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
+import net.minecraft.src.CraftGuide.ui.Rendering.Overlay;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
@@ -16,7 +18,10 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	private GuiBorderedRect background;
 	private RecipeCache recipeCache;
 	private Map<CraftType, Integer> settings = new HashMap<CraftType, Integer>();
-	
+	private FloatingItemText toolTip = new FloatingItemText("");
+	private Overlay toolTipOverlay = new Overlay(toolTip);
+	private String toolTipText = "";
+
 	private TexturedRect buttons[] = new TexturedRect[6];
 	
 	public CraftTypeDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, GuiTexture guiTexture, RecipeCache recipeCache)
@@ -88,7 +93,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	}
 
 	@Override
-	public void onChange()
+	public void onChange(RecipeCache cache)
 	{
 		setRows(recipeCache.getCraftTypes().size());
 	}
@@ -162,5 +167,59 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		}
 		
 		recipeCache.setTypes(set);
+	}
+
+	@Override
+	public void onReset(RecipeCache cache)
+	{
+	}
+	
+	@Override
+	public void draw()
+	{
+		super.draw();
+		if(toolTipText != "")
+		{
+			toolTip.setText(toolTipText);
+			render(toolTipOverlay);
+		}
+	}
+
+	@Override
+	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
+	{
+		super.mouseMovedRow(row, x, y, inBounds);
+		
+		if(y > 1 && y < 30 && inBounds)
+		{
+			if(x >= (width - (3 * 29 + 24)) / 2 + 24 && x < (width - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
+			{
+				int relX = (x - ((width - (3 * 29 + 24)) / 2 + 24));
+				
+				if(relX % 29 != 28)
+				{
+					switch(relX / 29)
+					{
+						case 0:
+							toolTipText = "Show recipes of this type";
+							break;
+							
+						case 1:
+							toolTipText = "Hide recipes of this type";
+							break;
+							
+						case 2:
+							toolTipText = "Show only recipes of this type";
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mouseMoved(int x, int y)
+	{
+		toolTipText = "";
+		super.mouseMoved(x, y);
 	}
 }

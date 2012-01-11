@@ -66,6 +66,25 @@ public class CraftType implements Comparable
 		return 0;
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj != null && obj instanceof CraftType)
+		{
+			CraftType type = (CraftType)obj;
+
+			return type.item == this.item && type.damage == this.damage;
+		}
+		
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return damage * 3571 + item;
+	}
+
 	public ItemStack getStack()
 	{
 		return stack;

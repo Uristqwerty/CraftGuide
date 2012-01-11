@@ -218,4 +218,20 @@ public class GuiElement
 			return parent.absoluteY() + y;
 		}
 	}
+
+	public void onKeyTyped(char eventChar, int eventKey)
+	{
+		for(GuiElement element: children)
+		{
+			element.onKeyTyped(eventChar, eventKey);
+		}
+	}
+	
+	public void scrollWheelTurned(int change)
+	{
+		for(GuiElement element: children)
+		{
+			element.scrollWheelTurned(change);
+		}
+	}
 }

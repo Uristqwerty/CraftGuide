@@ -7,7 +7,7 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 {
 	private GuiElement currentTab = null;
 	private GuiElement changeTab = null;
-	private Map<GuiButton, GuiElement> tabMap = new HashMap<GuiButton, GuiElement>();
+	private Map<Object, GuiElement> tabMap = new HashMap<Object, GuiElement>();
 	
 	public GuiTabbedDisplay(int x, int y, int width, int height)
 	{
@@ -40,17 +40,42 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 		}
 	}
 
-	public void addTab(GuiElement tab, GuiButton button)
+	public GuiTabbedDisplay addTab(GuiElement tab, GuiButton button)
 	{
-		addElement(button);
+		return addTab(tab, button, true);
+	}
+
+	public GuiTabbedDisplay addTab(GuiElement tab, GuiButton button, boolean addAsChild)
+	{
 		button.addButtonListener(this);
+		return addTab(tab, (GuiElement)button, addAsChild);
+	}
+	
+	public GuiTabbedDisplay addTab(GuiElement tab, GuiElement key)
+	{
+		return addTab(tab, key, true);
+	}
+	
+	public GuiTabbedDisplay addTab(GuiElement tab, GuiElement key, boolean addAsChild)
+	{
+		if(addAsChild)
+		{
+			addElement(key);
+		}
 		
-		tabMap.put(button, tab);
+		return addTab(tab, (Object)key);
+	}
+	
+	public GuiTabbedDisplay addTab(GuiElement tab, Object key)
+	{
+		tabMap.put(key, tab);
 		
 		if(currentTab == null)
 		{
 			setTab(tab);
 		}
+		
+		return this;
 	}
 	
 	@Override
@@ -72,11 +97,17 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 			changeTab = tabMap.get(button);
 		}
 	}
+	
+	public void openTab(Object key)
+	{
+		setTab(tabMap.get(key));
+	}
 
 	private void setTab(GuiElement tab)
 	{
 		if(currentTab != null)
 		{
+			currentTab.mouseReleased(0, 0);
 			removeElement(currentTab);
 		}
 		

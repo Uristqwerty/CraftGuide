@@ -1,28 +1,48 @@
 package net.minecraft.src.CraftGuide.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.src.mod_CraftGuide;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 
 public class GuiScrollBar extends GuiElement implements IButtonListener, ISliderListener
 {
 	private GuiSlider handle;
 	private float min = 0, max = 1, value = 0;
-	private float scrollMultiplier = 1;
+	private static float scrollMultiplier = 1;
+	private int pageSize;
+	private Map<GuiElement, Object[]> buttons = new HashMap<GuiElement, Object[]>();
 
-	public GuiScrollBar(int x, int y, int width, int height, GuiSlider handle, GuiValueButton[] scrollButtons)
+	public GuiScrollBar(int x, int y, int width, int height, GuiSlider handle/*, GuiValueButton[] scrollButtons*/)
 	{
 		super(x, y, width, height);
 		
 		this.handle = handle;
 		addElement(handle);
 		handle.addSliderListener(this);
-		
-		for(GuiButton button: scrollButtons)
-		{
-			addElement(button);
-			button.addButtonListener(this);
-		}
 	}
 	
-	public void setScale(float min, float max)
+	public GuiScrollBar addButton(GuiButton button, int scrollValue, boolean scrollPages)
+	{
+		addElement(button);
+		button.addButtonListener(this);
+		buttons.put(button, new Object[]{scrollValue, scrollPages});
+		
+		return this;
+	}
+	
+	public GuiElement setPageSize(int pageSize)
+	{
+		this.pageSize = pageSize;
+		
+		return this;
+	}
+	
+	public GuiScrollBar setScale(float min, float max)
 	{
 		float value = this.max > 0? (this.value - this.min) / (this.max - this.min) : 0;
 		handle.setValue(0, value);
@@ -30,6 +50,8 @@ public class GuiScrollBar extends GuiElement implements IButtonListener, ISlider
 		this.min = min;
 		this.max = max;
 		this.value = (value * (max - min)) + min;
+		
+		return this;
 	}
 	
 	public float getValue()
@@ -42,19 +64,76 @@ public class GuiScrollBar extends GuiElement implements IButtonListener, ISlider
 	{
 		if(eventType == Event.PRESS)
 		{
-    		if(button instanceof GuiValueButton)
-    		{
-    			scroll(((GuiValueButton) button).getValue(), true);
-    		}
+			if(buttons.containsKey(button))
+			{
+				Object[] data = buttons.get(button);
+				
+				if((Boolean)data[1])
+				{
+					scrollPages((Integer)data[0]);
+				}
+				else
+				{
+					scrollLines((Integer)data[0]);
+				}
+			}
 		}
 	}
 	
-	public void scroll(int lines)
+	@Override
+	public void onKeyTyped(char eventChar, int eventKey)
 	{
-		scroll(lines, false);
+		super.onKeyTyped(eventChar, eventKey);
+		
+    	switch(eventKey)
+    	{
+    		case Keyboard.KEY_UP:
+    			scrollLines(-1, true);
+    			break;
+    			
+    		case Keyboard.KEY_DOWN:
+    			scrollLines(1, true);
+    			break;
+    			
+    		case Keyboard.KEY_LEFT:
+    		case Keyboard.KEY_PRIOR:
+    			scrollPages(-1);
+    			break;
+    			
+    		case Keyboard.KEY_RIGHT:
+    		case Keyboard.KEY_NEXT:
+    			scrollPages(1);
+    			break;
+    			
+    		case Keyboard.KEY_HOME:
+    			scrollToStart();
+    			break;
+    			
+    		case Keyboard.KEY_END:
+    			scrollToEnd();
+    			break;
+    	}
 	}
 	
-	public void scroll(int lines, boolean align)
+	@Override
+	public void scrollWheelTurned(int change)
+	{
+		scrollLines(change, true);
+		
+		super.scrollWheelTurned(change);
+	}
+
+	public void scrollPages(int pages)
+	{
+		scrollLines(pages * pageSize, true);
+	}
+
+	public void scrollLines(int lines)
+	{
+		scrollLines(lines, false);
+	}
+	
+	public void scrollLines(int lines, boolean align)
 	{
 		float newValue = value + lines * scrollMultiplier;
 		
@@ -74,11 +153,6 @@ public class GuiScrollBar extends GuiElement implements IButtonListener, ISlider
 	public void scrollToEnd()
 	{
 		setValue(max);
-	}
-	
-	public void setScrollMultiplier(float multiplier)
-	{
-		scrollMultiplier = multiplier;
 	}
 
 	@Override
@@ -106,5 +180,10 @@ public class GuiScrollBar extends GuiElement implements IButtonListener, ISlider
 	public float getMax()
 	{
 		return max;
+	}
+
+	public static void setScrollMultiplier(int i)
+	{
+		scrollMultiplier = i;
 	}
 }

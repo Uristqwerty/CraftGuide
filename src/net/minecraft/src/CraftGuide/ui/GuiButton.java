@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.src.CraftGuide.ui.GuiElement.AnchorPoint;
+import net.minecraft.src.CraftGuide.ui.Rendering.FloatingItemText;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
+import net.minecraft.src.CraftGuide.ui.Rendering.Overlay;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class GuiButton extends GuiElement
@@ -26,6 +28,43 @@ public class GuiButton extends GuiElement
 	
 	private ButtonState currentState = ButtonState.UP;
 
+	private static FloatingItemText toolTip = new FloatingItemText("");
+	private static Overlay toolTipRender = new Overlay(toolTip);
+	private String toolTipText = "";
+	
+	public GuiButton(int x, int y, int width, int height, IRenderable states[])
+	{
+		super(x, y, width, height);
+		
+		if(states.length == 1)
+		{
+			stateImages.put(ButtonState.UP, 		states[0]);
+			stateImages.put(ButtonState.UP_OVER,	states[0]);
+			stateImages.put(ButtonState.DOWN, 		states[0]);
+			stateImages.put(ButtonState.DOWN_OVER,	states[0]);
+		}
+		else if(states.length == 2)
+		{
+			stateImages.put(ButtonState.UP, 		states[0]);
+			stateImages.put(ButtonState.UP_OVER,	states[1]);
+			stateImages.put(ButtonState.DOWN, 		states[0]);
+			stateImages.put(ButtonState.DOWN_OVER,	states[1]);
+		}
+		else if(states.length == 3)
+		{
+			stateImages.put(ButtonState.UP, 		states[0]);
+			stateImages.put(ButtonState.UP_OVER,	states[1]);
+			stateImages.put(ButtonState.DOWN, 		states[0]);
+			stateImages.put(ButtonState.DOWN_OVER,	states[2]);
+		}
+		else if(states.length == 4)
+		{
+			stateImages.put(ButtonState.UP, 		states[0]);
+			stateImages.put(ButtonState.UP_OVER,	states[1]);
+			stateImages.put(ButtonState.DOWN, 		states[2]);
+			stateImages.put(ButtonState.DOWN_OVER,	states[3]);
+		}
+	}
 
 	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v)
 	{
@@ -57,6 +96,12 @@ public class GuiButton extends GuiElement
 	public void draw()
 	{
 		render(stateImages.get(currentState));
+		
+		if(isOver() && !toolTipText.isEmpty())
+		{
+			toolTip.setText(toolTipText);
+			render(toolTipRender);
+		}
 		
 		super.draw();
 	}
@@ -127,5 +172,12 @@ public class GuiButton extends GuiElement
 		{
 			listener.onButtonEvent(this, eventType);
 		}
+	}
+	
+	public GuiButton setToolTip(String text)
+	{
+		toolTipText = text;
+		
+		return this;
 	}
 }

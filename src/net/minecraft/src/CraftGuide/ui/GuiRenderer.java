@@ -37,6 +37,7 @@ public class GuiRenderer
 	
 	public void startFrame(Minecraft mc, GuiCraftGuide gui)
 	{
+		GuiTexture.refreshTextures(mc.renderEngine);
 		currentTexture = -1;
 		minecraft = mc;
 		guiCraftGuide = gui;
@@ -322,7 +323,12 @@ public class GuiRenderer
             textY += 10;
 		}
 	}
-
+	
+	public void drawItemStack(ItemStack itemStack, int x, int y)
+	{
+		drawItemStack(itemStack, x, y, true);
+	}
+	
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
 		if(itemStack.getItem() == null)
@@ -340,7 +346,7 @@ public class GuiRenderer
         GL11.glTranslatef(x, y, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        itemRenderer.field_40268_b = 100.0F;
+        itemRenderer.zLevel = 100.0F;
         
 		itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 		
@@ -349,7 +355,7 @@ public class GuiRenderer
 			itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 		}
 
-        itemRenderer.field_40268_b = 0.0F;
+        itemRenderer.zLevel = 0.0F;
         GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderHelper.disableStandardItemLighting();

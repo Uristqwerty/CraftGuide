@@ -18,7 +18,7 @@ import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class RecipeGenerator implements IRecipeGenerator
 {
-	Map<ItemStack, List<ICraftGuideRecipe>> recipes = new HashMap<ItemStack, List<ICraftGuideRecipe>>();
+	private Map<ItemStack, List<ICraftGuideRecipe>> recipes = new HashMap<ItemStack, List<ICraftGuideRecipe>>();
 	private static ItemStack workbench = new ItemStack(Block.workbench);
 
 	@Override
@@ -86,5 +86,10 @@ public class RecipeGenerator implements IRecipeGenerator
 	public Map<ItemStack, List<ICraftGuideRecipe>> getRecipes()
 	{
 		return recipes;
+	}
+	
+	public void clearRecipes()
+	{
+		recipes.clear();
 	}
 }

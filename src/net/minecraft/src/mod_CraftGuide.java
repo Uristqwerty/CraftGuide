@@ -23,6 +23,8 @@ public class mod_CraftGuide extends BaseMod
 	public static int mouseWheelScrollRate;
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
+	public static long keyboardRepeatDelay = 1000;
+	public static long keyboardRepeatRate = 200;
 	
 	private int itemCraftGuideID = 23361;
 	
@@ -33,7 +35,7 @@ public class mod_CraftGuide extends BaseMod
 	@Override
 	public String getVersion()
 	{
-		return "1.3.1";
+		return "1.4.0";
 	}
 
 	@Override
@@ -43,6 +45,28 @@ public class mod_CraftGuide extends BaseMod
 		addItems();
 		
 		new DefaultRecipeProvider();
+		
+		if(ModLoader.isModLoaded("mod_RedPowerCore"))
+		{
+			try
+			{
+				System.out.println("Trying to load RP2Recipes...");
+				Class.forName("RP2Recipes").newInstance();
+				System.out.println("   Success!");
+			}
+			catch(ClassNotFoundException e)
+			{
+				System.out.println("   Failure! ClassNotFoundException");
+			}
+			catch(InstantiationException e)
+			{
+				System.out.println("   Failure! InstantiationException");
+			}
+			catch(IllegalAccessException e)
+			{
+				System.out.println("   Failure! IllegalAccessException");
+			}
+		}
 	}
 
 	private void addItems()
@@ -67,6 +91,8 @@ public class mod_CraftGuide extends BaseMod
 		config.setProperty("PauseWhileOpen", Boolean.toString(true));
 		config.setProperty("resizeRate", "0");
 		config.setProperty("gridPacking", Boolean.toString(true));
+		config.setProperty("keyboardRepeatDelay", Long.toString(1000));
+		config.setProperty("keyboardRepeatRate", Long.toString(200));
 	}
 
 	private void loadProperties()
@@ -109,6 +135,18 @@ public class mod_CraftGuide extends BaseMod
 		
 		pauseWhileOpen = Boolean.valueOf(config.getProperty("PauseWhileOpen"));
 		gridPacking = Boolean.valueOf(config.getProperty("gridPacking"));
+		
+		try
+		{
+			keyboardRepeatDelay = Long.valueOf(config.getProperty("keyboardRepeatDelay"));
+		}
+		catch(NumberFormatException e){}
+		
+		try
+		{
+			keyboardRepeatRate = Long.valueOf(config.getProperty("keyboardRepeatRate"));
+		}
+		catch(NumberFormatException e){}
 		
 		if(!configFile.exists())
 		{

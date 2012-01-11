@@ -48,4 +48,12 @@ public class GuiWindow extends GuiElement
 			}
 		}
 	}
+	
+	public void setMaxSize(int width, int height)
+	{
+		if(this.width > width || this.height > height)
+		{
+			setSize(Math.min(this.width, width), Math.min(this.height, height));
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package net.minecraft.src.CraftGuide.ui.Rendering;
 
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 
 public class Text implements IRenderable
@@ -29,5 +31,15 @@ public class Text implements IRenderable
 	public void setText(String text)
 	{
 		this.text = text;
+	}
+	
+	public int textWidth()
+	{
+		return ModLoader.getMinecraftInstance().fontRenderer.getStringWidth(text);
+	}
+	
+	public static int textWidth(String text)
+	{
+		return ModLoader.getMinecraftInstance().fontRenderer.getStringWidth(text);
 	}
 }

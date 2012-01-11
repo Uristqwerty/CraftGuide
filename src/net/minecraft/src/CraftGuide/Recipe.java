@@ -1,6 +1,7 @@
 package net.minecraft.src.CraftGuide;
 
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.CraftGuide.API.ExtraSlot;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
@@ -21,7 +22,12 @@ public class Recipe implements ICraftGuideRecipe
 	public Recipe(ItemSlot[] slots, ItemStack[] recipe, IRenderable background, IRenderable backgroundSelected)
 	{
 		this.slots = slots;
-		this.recipe = recipe;
+		this.recipe = new ItemStack[recipe.length];
+		for(int i = 0; i < recipe.length; i++)
+		{
+			this.recipe[i] = recipe[i];
+		}
+		
 		this.background = background;
 		this.backgroundSelected = backgroundSelected;
 		this.selection = new IRenderable[slots.length];
@@ -29,6 +35,13 @@ public class Recipe implements ICraftGuideRecipe
 		for(ItemSlot slot: slots)
 		{
 			selection[slot.index] = new ShadedRect(slot.x, slot.y, slot.width, slot.height, 0xffffff, 0x80);
+
+			if(this.recipe[slot.index] != null && slot.drawQuantity == false && this.recipe[slot.index].stackSize > 1)
+			{
+				ItemStack old = this.recipe[slot.index];
+				
+				this.recipe[slot.index] = new ItemStack(old.itemID, 1, old.getItemDamage());
+			}
 		}
 	}
 	
@@ -55,9 +68,15 @@ public class Recipe implements ICraftGuideRecipe
 		
 		for(ItemSlot slot: slots)
 		{
+			if(slot instanceof ExtraSlot)
+			{
+				renderer.drawItemStack(((ExtraSlot)slot).displayed, x + slot.x, y + slot.y);
+				continue;
+			}
+			
 			if(recipe[slot.index] != null)
 			{
-				renderer.drawItemStack(recipe[slot.index], x + slot.x, y + slot.y, slot.drawQuantity);
+				renderer.drawItemStack(recipe[slot.index], x + slot.x, y + slot.y);
 				
 				if(recipe[slot.index].getItemDamage() == -1)
 				{
