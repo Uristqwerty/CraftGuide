@@ -14,6 +14,7 @@ import net.minecraft.src.World;
 
 public class ItemCraftGuide extends Item
 {
+
 	public ItemCraftGuide(int i)
 	{
 		super(i);
@@ -21,14 +22,16 @@ public class ItemCraftGuide extends Item
 		setItemName("CraftGuideItem");
 	}
 
+	@Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
     	ModLoader.OpenGUI(player, GuiCraftGuide.getInstance());
         return itemstack;
     }
     
-    public int getColorFromDamage(int i)
-    {
-        return 0x9999ff;
-    }
+	@Override
+	public int getColorFromDamage(int i, int j)
+	{
+		return 0x9999ff;
+	}
 }
