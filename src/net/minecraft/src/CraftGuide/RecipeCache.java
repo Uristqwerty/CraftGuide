@@ -52,7 +52,13 @@ public class RecipeCache
 		for(ItemStack key: rawRecipes.keySet())
 		{
 			CraftType type = CraftType.getInstance(key);
-			craftResults.put(type, rawRecipes.get(key));
+			
+			if(!craftResults.containsKey(type))
+			{
+				craftResults.put(type, new ArrayList<ICraftGuideRecipe>());
+			}
+			
+			craftResults.get(type).addAll(rawRecipes.get(key));
 		}
 		
 		generateAllItemList();
