@@ -13,7 +13,6 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.minecraft.src.GuiScreen;
 import net.minecraft.src.mod_CraftGuide;
 import net.minecraft.src.CraftGuide.ui.CraftTypeDisplay;
 import net.minecraft.src.CraftGuide.ui.CraftingDisplay;
@@ -35,38 +34,21 @@ import net.minecraft.src.CraftGuide.ui.GuiWindow;
 import net.minecraft.src.CraftGuide.ui.IButtonListener;
 import net.minecraft.src.CraftGuide.ui.RowCount;
 import net.minecraft.src.CraftGuide.ui.GuiTextInput;
+import net.minecraft.src.CraftGuide.ui.VariableWidthGuiButton;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiSubTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.ShadedRect;
 
-public class GuiCraftGuide extends GuiScreen
+public class GuiCraftGuide extends Gui
 {
-	private GuiRenderer renderer = new GuiRenderer();
 	private RecipeCache recipeCache = new RecipeCache();
-	private GuiWindow guideWindow;
 	private GuiRightAlignedText rowText;
 	private GuiItemStack filterStack;
 	private CraftingDisplay craftingDisplay;
-	private int repeatKey;
-	private char repeatChar;
-	private long nextRepeat;
 
 	private static GuiCraftGuide instance;
-
-	private class FilterClearCallback implements IButtonListener
-	{
-		private CraftingDisplay display;
-		
-		public void onButtonEvent(GuiButton button, Event eventType)
-		{
-			if(eventType == Event.PRESS)
-			{
-				display.setFilter(null);
-			}
-		}
-	}
 	
 	public static GuiCraftGuide getInstance()
 	{
@@ -78,55 +60,56 @@ public class GuiCraftGuide extends GuiScreen
 		return instance;
 	}
 	
+	private static final int initialWindowWidth = 256;
+	private static final int initialWindowHeight = 198;
+	
 	public GuiCraftGuide()
 	{
-		final int windowWidth = 256;
-		final int windowHeight = 198;
+		super(initialWindowWidth, initialWindowHeight);
 
 		GuiTexture guiTexture = GuiTexture.getInstance("/gui/CraftGuide.png");
 
-		guideWindow = new GuiWindow(0, 0, windowWidth, windowHeight, renderer);
 
-		new GuiResizeHandle(windowWidth - 8, windowHeight - 8, 8, 8, guideWindow);
+		new GuiResizeHandle(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, guiWindow);
 		
-		guideWindow.addElement(
+		guiWindow.addElement(
 			new GuiBorderedRect(
-				0, 0, windowWidth, windowHeight,
+				0, 0, initialWindowWidth, initialWindowHeight,
 				guiTexture, 1, 1, 4, 64
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 		
-		guideWindow.addElement(
-			new GuiButton(windowWidth - 8, windowHeight - 8, 8, 8, guiTexture, 0, 191)
+		guiWindow.addElement(
+			new GuiButton(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, guiTexture, 0, 191)
 				.anchor(AnchorPoint.BOTTOM_RIGHT)
 			);
 		
-		guideWindow.addElement(
+		guiWindow.addElement(
 			new GuiBorderedRect(
 				5, 5, 58, 86,
 				guiTexture, 78, 1, 2, 32
 			)
 		);
 		
-		guideWindow.addElement(
-			new GuiTabbedDisplay(0, 0, windowWidth, windowHeight)
+		guiWindow.addElement(
+			new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(
-					generateRecipeTab(windowHeight, windowWidth, guiTexture)
+					generateRecipeTab(guiTexture)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					new GuiButton(6, 6, 28, 28, guiTexture, 1, 76)
 						.setToolTip("Recipe list"))
 				.addTab(
-					generateTypeTab(windowHeight, windowWidth, guiTexture)
+					generateTypeTab(guiTexture)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					new GuiButton(34, 6, 28, 28, guiTexture, 1, 104)
 						.setToolTip("Show/Hide recipes by crafting type"))
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
 	}
 
-	private GuiElement generateRecipeTab(int windowWidth, int windowHeight, GuiTexture guiTexture)
+	private GuiElement generateRecipeTab(GuiTexture guiTexture)
 	{
-		GuiElement recipeTab = new GuiElement(0, 0, windowWidth, windowHeight);
+		GuiElement recipeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		
 		recipeTab.addElement(
 			new GuiBorderedRect(
@@ -158,9 +141,9 @@ public class GuiCraftGuide extends GuiScreen
 		filterStack.anchor(AnchorPoint.BOTTOM_LEFT);
 		recipeTab.addElement(filterStack);
 		
-		GuiElement recipeArea = new GuiElement(0, 0, windowWidth, windowHeight)
+		GuiElement recipeArea = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
-		GuiElement itemListArea = new GuiElement(0, 0, windowWidth, windowHeight)
+		GuiElement itemListArea = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
 
 		recipeArea.addElement(
@@ -195,7 +178,7 @@ public class GuiCraftGuide extends GuiScreen
 		recipeArea.addElement(itemListButton);
 
 		GuiTabbedDisplay recipeDisplay = 
-			(GuiTabbedDisplay) new GuiTabbedDisplay(0, 0, windowWidth, windowHeight)
+			(GuiTabbedDisplay) new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(recipeArea, backButton, false)
 				.addTab(itemListArea, itemListButton, false)
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
@@ -234,17 +217,37 @@ public class GuiCraftGuide extends GuiScreen
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 		
 		GuiTextInput searchInput = 
-			(GuiTextInput) new GuiTextInput(0, 0, 129, 15, 2, 2)
+			(GuiTextInput) new GuiTextInput(0, 0, 93, 15, 2, 2)
 				.addListener(filterGrid)
 				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_RIGHT);
 		
 		itemListButton.addButtonListener(searchInput);
 		
 		itemListArea.addElement(
-			new GuiBorderedRect(106, 179, 129, 15, guiTexture, 78, 1, 2, 32)
+			new GuiBorderedRect(106, 179, 93, 15, guiTexture, 78, 1, 2, 32)
 				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.addElement(searchInput)
 		);
+		
+		class ClearButtonListener implements IButtonListener
+		{
+			private GuiTextInput textInput;
+			public ClearButtonListener(GuiTextInput textInput)
+			{
+				this.textInput = textInput;
+			}
+			public void onButtonEvent(GuiButton button, Event eventType)
+			{
+				textInput.setText("");
+			}
+		}
+		
+		itemListArea.addElement(
+			new VariableWidthGuiButton(202, 180, 32, 13, guiTexture, 48, 204, 50, 13, 0, 13)
+				.addButtonListener(new ClearButtonListener(searchInput))
+				.anchor(AnchorPoint.BOTTOM_RIGHT)
+				.addElement(
+					new GuiText(3, 3, "Clear", 0xff000000)));
 		
 		GuiScrollBar scrollBar = 
 			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186, 
@@ -276,9 +279,9 @@ public class GuiCraftGuide extends GuiScreen
 		return recipeTab;
 	}
 
-	private GuiElement generateTypeTab(int windowWidth, int windowHeight, GuiTexture guiTexture)
+	private GuiElement generateTypeTab(GuiTexture guiTexture)
 	{
-		GuiElement typeTab = new GuiElement(0, 0, windowWidth, windowHeight);
+		GuiElement typeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		typeTab.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
 
 		typeTab.addElement(
@@ -323,106 +326,29 @@ public class GuiCraftGuide extends GuiScreen
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
-		guideWindow.centerOn(width / 2, height / 2);
-		guideWindow.setMaxSize(width, height);
+		guiWindow.centerOn(width / 2, height / 2);
 		filterStack.setItem(recipeCache.getFilterItem());
 		
-		if(nextRepeat != 0 && System.currentTimeMillis() > nextRepeat)
-		{
-			nextRepeat = System.currentTimeMillis() + mod_CraftGuide.keyboardRepeatRate;
-			keyRepeat(repeatChar, repeatKey);
-		}
+		super.drawScreen(mouseX, mouseY, f);
+	}
+
+	private class FilterClearCallback implements IButtonListener
+	{
+		private CraftingDisplay display;
 		
-		if(mod_CraftGuide.pauseWhileOpen)
+		public void onButtonEvent(GuiButton button, Event eventType)
 		{
-			drawDefaultBackground();
+			if(eventType == Event.PRESS)
+			{
+				display.setFilter(null);
+			}
 		}
-
-		renderer.startFrame(mc, this);
-		guideWindow.draw();
-		renderer.endFrame();
-	}
-
-	@Override
-	protected void keyTyped(char eventChar, int eventKey)
-	{
-		super.keyTyped(eventChar, eventKey);
-
-		repeatKey = eventKey;
-		repeatChar = eventChar;
-		nextRepeat = System.currentTimeMillis() + mod_CraftGuide.keyboardRepeatDelay;
-		
-		if(GuiTextInput.inFocus != null)
-		{
-			GuiTextInput.inFocus.onKeyTyped(eventChar, eventKey);
-		}
-		else if(eventKey == Keyboard.KEY_ESCAPE || eventKey == mc.gameSettings.keyBindInventory.keyCode)
-        {
-            mc.thePlayer.closeScreen();
-        }
-        else
-        {
-        	guideWindow.onKeyTyped(eventChar, eventKey);
-        }
-	}
-	
-	private void keyRepeat(char eventChar, int eventKey)
-	{
-		if(GuiTextInput.inFocus != null)
-		{
-			GuiTextInput.inFocus.onKeyTyped(eventChar, eventKey);
-		}
-        else
-        {
-        	guideWindow.onKeyTyped(eventChar, eventKey);
-        }
-	}
-	
-	private void keyReleased(char eventChar, int eventKey)
-	{
-		nextRepeat = 0;
-	}
-	
-	@Override
-	public void handleMouseInput()
-	{
-        int x = (Mouse.getEventX() * width) / mc.displayWidth;
-        int y = height - (Mouse.getEventY() * height) / mc.displayHeight - 1;
-        
-        if(Mouse.getEventButton() == 0)
-        {
-        	guideWindow.updateMouseState(x, y, Mouse.getEventButtonState());
-        }
-        else if(Mouse.getEventButton() == -1)
-        {
-        	guideWindow.updateMouse(x, y);
-		}
-        
-    	if(Mouse.getEventDWheel() != 0)
-    	{
-    		guideWindow.scrollWheelTurned(Mouse.getEventDWheel() > 0? -mod_CraftGuide.mouseWheelScrollRate : mod_CraftGuide.mouseWheelScrollRate);
-    	}
 	}
 
 	@Override
 	public void handleKeyboardInput()
 	{
-        if(Keyboard.getEventKeyState())
-        {
-            if(Keyboard.getEventKey() == Keyboard.KEY_F11)
-            {
-                mc.toggleFullscreen();
-                return;
-            }
-            else
-            {
-            	keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
-            }
-        }
-        else
-        {
-        	keyReleased(Keyboard.getEventCharacter(), Keyboard.getEventKey());
-        }
+		super.handleKeyboardInput();
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
@@ -435,8 +361,20 @@ public class GuiCraftGuide extends GuiScreen
 	}
 
 	@Override
+	public int mouseWheelRate()
+	{
+		return mod_CraftGuide.mouseWheelScrollRate;
+	}
+	
+	@Override
 	public boolean doesGuiPauseGame()
 	{
 		return mod_CraftGuide.pauseWhileOpen;
+	}
+	
+	@Override
+	protected long keyboardRepeatRate()
+	{
+		return mod_CraftGuide.keyboardRepeatRate;
 	}
 }

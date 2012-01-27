@@ -231,4 +231,25 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 	{
 		setFocus(true);
 	}
+	
+	public void setText(String string)
+	{
+		before = string;
+		after = "";
+		
+		for(ITextInputListener listener: listeners)
+		{
+			listener.onTextChanged(this);
+		}
+	}
+	
+/*
+	@Override
+	public void onGuiClosed()
+	{
+		setFocus(false);
+		
+		super.onGuiClosed();
+	}
+*/
 }

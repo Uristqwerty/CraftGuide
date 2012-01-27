@@ -35,7 +35,7 @@ public class mod_CraftGuide extends BaseMod
 	@Override
 	public String getVersion()
 	{
-		return "1.4.0";
+		return "1.4.1 for Minecraft 1.1.0";
 	}
 
 	@Override

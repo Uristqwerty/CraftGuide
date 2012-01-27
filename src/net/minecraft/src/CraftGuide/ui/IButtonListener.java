@@ -7,6 +7,6 @@ public interface IButtonListener
 		PRESS,
 		RELEASE
 	}
-	
+
 	void onButtonEvent(GuiButton button, Event eventType);
 }

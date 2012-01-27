@@ -161,9 +161,11 @@ public class GuiButton extends GuiElement
 		return currentState == ButtonState.UP_OVER || currentState == ButtonState.DOWN_OVER;
 	}
 	
-	public void addButtonListener(IButtonListener listener)
+	public GuiButton addButtonListener(IButtonListener listener)
 	{
 		buttonListeners.add(listener);
+		
+		return this;
 	}
 	
 	private void sendButtonEvent(IButtonListener.Event eventType)

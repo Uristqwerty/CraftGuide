@@ -61,6 +61,8 @@ public class RecipeCache
 			craftResults.get(type).addAll(rawRecipes.get(key));
 		}
 		
+		generator.clearRecipes();
+		
 		generateAllItemList();
 		
 		craftingTypes.addAll(craftResults.keySet());

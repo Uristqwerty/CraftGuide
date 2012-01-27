@@ -126,7 +126,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 				{
 					String name = Item.itemsList[stack.itemID].getItemDisplayName(stack);
 					
-					if(name.toLowerCase().contains(text.toLowerCase()))
+					if(name != null && name.toLowerCase().contains(text.toLowerCase()))
 					{
 						itemResults.add(stack);
 					}

@@ -12,6 +12,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 import net.minecraft.src.Tessellator;
+import net.minecraft.src.CraftGuide.Gui;
 import net.minecraft.src.CraftGuide.GuiCraftGuide;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
@@ -28,19 +29,19 @@ public class GuiRenderer
 	private int colour, alpha;
 	private float textureWidth = 256, textureHeight = 256;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
-	private GuiCraftGuide guiCraftGuide;
+	private Gui gui;
 	
 	private boolean subtexEnabled = false;
 	private int subtex_x, subtex_y, subtex_width, subtex_height;
 	
 	private IRenderable itemError = new TexturedRect(-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 200);
 	
-	public void startFrame(Minecraft mc, GuiCraftGuide gui)
+	public void startFrame(Minecraft mc, Gui gui)
 	{
 		GuiTexture.refreshTextures(mc.renderEngine);
 		currentTexture = -1;
 		minecraft = mc;
-		guiCraftGuide = gui;
+		this.gui = gui;
 		u = 0;
 		v = 0;
     	setColour(0xFFFFFF, 0xFF);
@@ -280,7 +281,7 @@ public class GuiRenderer
 			}
 		}
 		
-		int xMax = guiCraftGuide.width - textWidth - 6;
+		int xMax = gui.width - textWidth - 6;
 		
 		if(x > xMax)
 		{
@@ -331,11 +332,7 @@ public class GuiRenderer
 	
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
-		if(itemStack.getItem() == null)
-		{
-			drawItemStackError(x, y);
-			return;
-		}
+		boolean error = false;
 		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glPushMatrix();
@@ -348,12 +345,19 @@ public class GuiRenderer
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         itemRenderer.zLevel = 100.0F;
         
-		itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-		
-		if(renderOverlay)
-		{
-			itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-		}
+        try
+        {
+			itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+			
+			if(renderOverlay)
+			{
+				itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+			}
+        }
+        catch (Exception e)
+        {
+        	error = true;
+        }
 
         itemRenderer.zLevel = 0.0F;
         GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
@@ -362,6 +366,11 @@ public class GuiRenderer
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+        
+        if(error)
+        {
+    		drawItemStackError(x, y);
+        }
 	}
 
 	private void drawItemStackError(int x, int y)
@@ -373,10 +382,10 @@ public class GuiRenderer
 	{
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		
-		x *= minecraft.displayHeight / (float)guiCraftGuide.height;
-		y *= minecraft.displayWidth / (float)guiCraftGuide.width;
-		height *= minecraft.displayHeight / (float)guiCraftGuide.height;
-		width *= minecraft.displayWidth / (float)guiCraftGuide.width;
+		x *= minecraft.displayHeight / (float)gui.height;
+		y *= minecraft.displayWidth / (float)gui.width;
+		height *= minecraft.displayHeight / (float)gui.height;
+		width *= minecraft.displayWidth / (float)gui.width;
 		
 		GL11.glScissor(x, minecraft.displayHeight - y - height, width, height);
 	}
@@ -388,11 +397,11 @@ public class GuiRenderer
 
 	public int guiXFromMouseX(int x)
 	{
-        return (x * guiCraftGuide.width) / minecraft.displayWidth;
+        return (x * gui.width) / minecraft.displayWidth;
 	}
 
 	public int guiYFromMouseY(int y)
 	{
-        return guiCraftGuide.height - (y * guiCraftGuide.height) / minecraft.displayHeight - 1;
+        return gui.height - (y * gui.height) / minecraft.displayHeight - 1;
 	}
 }

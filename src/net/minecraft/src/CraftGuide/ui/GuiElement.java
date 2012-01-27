@@ -234,4 +234,12 @@ public class GuiElement
 			element.scrollWheelTurned(change);
 		}
 	}
+
+	public void onGuiClosed()
+	{
+		for(GuiElement element: children)
+		{
+			element.onGuiClosed();
+		}
+	}
 }
