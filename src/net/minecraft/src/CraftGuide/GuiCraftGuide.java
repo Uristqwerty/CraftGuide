@@ -14,6 +14,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.src.mod_CraftGuide;
+import net.minecraft.src.CraftGuide.ui.ButtonTemplate;
 import net.minecraft.src.CraftGuide.ui.CraftTypeDisplay;
 import net.minecraft.src.CraftGuide.ui.CraftingDisplay;
 import net.minecraft.src.CraftGuide.ui.FilterSelectGrid;
@@ -34,7 +35,6 @@ import net.minecraft.src.CraftGuide.ui.GuiWindow;
 import net.minecraft.src.CraftGuide.ui.IButtonListener;
 import net.minecraft.src.CraftGuide.ui.RowCount;
 import net.minecraft.src.CraftGuide.ui.GuiTextInput;
-import net.minecraft.src.CraftGuide.ui.VariableWidthGuiButton;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiSubTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
@@ -68,6 +68,8 @@ public class GuiCraftGuide extends Gui
 		super(initialWindowWidth, initialWindowHeight);
 
 		GuiTexture guiTexture = GuiTexture.getInstance("/gui/CraftGuide.png");
+		
+		ButtonTemplate buttonTemplate = new ButtonTemplate(guiTexture, 48, 204, 50, 13, 0, 13);
 
 
 		new GuiResizeHandle(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, guiWindow);
@@ -95,19 +97,19 @@ public class GuiCraftGuide extends Gui
 		guiWindow.addElement(
 			new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(
-					generateRecipeTab(guiTexture)
+					generateRecipeTab(guiTexture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					new GuiButton(6, 6, 28, 28, guiTexture, 1, 76)
 						.setToolTip("Recipe list"))
 				.addTab(
-					generateTypeTab(guiTexture)
+					generateTypeTab(guiTexture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					new GuiButton(34, 6, 28, 28, guiTexture, 1, 104)
 						.setToolTip("Show/Hide recipes by crafting type"))
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
 	}
 
-	private GuiElement generateRecipeTab(GuiTexture guiTexture)
+	private GuiElement generateRecipeTab(GuiTexture guiTexture, ButtonTemplate buttonTemplate)
 	{
 		GuiElement recipeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		
@@ -120,17 +122,13 @@ public class GuiCraftGuide extends Gui
 		);
 
 		GuiButton clearButton = 
-			(GuiButton) new GuiButton(8, 180, 50, 13, guiTexture, 48, 204, 0, 13)
+			(GuiButton) new GuiButton(8, 180, 50, 13, buttonTemplate, "Clear")
 				.anchor(AnchorPoint.BOTTOM_LEFT);
 		
 		recipeTab.addElement(clearButton);
 		
 		recipeTab.addElement(
 			new GuiText(9, 151, "Filter", 0xff000000)
-				.anchor(AnchorPoint.BOTTOM_LEFT));
-		
-		recipeTab.addElement(
-			new GuiText(20, 183, "Clear", 0xff000000)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		recipeTab.addElement(
@@ -163,16 +161,12 @@ public class GuiCraftGuide extends Gui
 		);
 
 		GuiButton backButton =
-			(GuiButton) new GuiButton(8, 166, 50, 13, guiTexture, 48, 204, 0, 13)
-				.anchor(AnchorPoint.BOTTOM_LEFT)
-				.addElement(
-					new GuiText(13, 3, "Back", 0xff000000));
+			(GuiButton) new GuiButton(8, 166, 50, 13, buttonTemplate, "Back")
+				.anchor(AnchorPoint.BOTTOM_LEFT);
 		
 		GuiButton itemListButton = 
-			(GuiButton) new GuiButton(8, 166, 50, 13, guiTexture, 48, 204, 0, 13)
-				.anchor(AnchorPoint.BOTTOM_LEFT)
-				.addElement(
-					new GuiText(6, 3, "Set item", 0xff000000));
+			(GuiButton) new GuiButton(8, 166, 50, 13, buttonTemplate, "Set item")
+				.anchor(AnchorPoint.BOTTOM_LEFT);
 		
 		itemListArea.addElement(backButton);
 		recipeArea.addElement(itemListButton);
@@ -243,11 +237,9 @@ public class GuiCraftGuide extends Gui
 		}
 		
 		itemListArea.addElement(
-			new VariableWidthGuiButton(202, 180, 32, 13, guiTexture, 48, 204, 50, 13, 0, 13)
+			new GuiButton(202, 180, 32, 13, buttonTemplate, "Clear")
 				.addButtonListener(new ClearButtonListener(searchInput))
-				.anchor(AnchorPoint.BOTTOM_RIGHT)
-				.addElement(
-					new GuiText(3, 3, "Clear", 0xff000000)));
+				.anchor(AnchorPoint.BOTTOM_RIGHT));
 		
 		GuiScrollBar scrollBar = 
 			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186, 
@@ -279,7 +271,7 @@ public class GuiCraftGuide extends Gui
 		return recipeTab;
 	}
 
-	private GuiElement generateTypeTab(GuiTexture guiTexture)
+	private GuiElement generateTypeTab(GuiTexture guiTexture, ButtonTemplate buttonTemplate)
 	{
 		GuiElement typeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		typeTab.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);

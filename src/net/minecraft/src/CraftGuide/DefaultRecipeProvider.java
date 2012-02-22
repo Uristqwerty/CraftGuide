@@ -1,5 +1,6 @@
 package net.minecraft.src.CraftGuide;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

@@ -24,47 +24,13 @@ public class GuiButton extends GuiElement
 	}
 	
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
-	protected Map<ButtonState, IRenderable> stateImages = new HashMap<ButtonState, IRenderable>();
+	ButtonTemplate template = new ButtonTemplate();
 	
 	private ButtonState currentState = ButtonState.UP;
 
 	private static FloatingItemText toolTip = new FloatingItemText("");
 	private static Overlay toolTipRender = new Overlay(toolTip);
 	private String toolTipText = "";
-	
-	public GuiButton(int x, int y, int width, int height, IRenderable states[])
-	{
-		super(x, y, width, height);
-		
-		if(states.length == 1)
-		{
-			stateImages.put(ButtonState.UP, 		states[0]);
-			stateImages.put(ButtonState.UP_OVER,	states[0]);
-			stateImages.put(ButtonState.DOWN, 		states[0]);
-			stateImages.put(ButtonState.DOWN_OVER,	states[0]);
-		}
-		else if(states.length == 2)
-		{
-			stateImages.put(ButtonState.UP, 		states[0]);
-			stateImages.put(ButtonState.UP_OVER,	states[1]);
-			stateImages.put(ButtonState.DOWN, 		states[0]);
-			stateImages.put(ButtonState.DOWN_OVER,	states[1]);
-		}
-		else if(states.length == 3)
-		{
-			stateImages.put(ButtonState.UP, 		states[0]);
-			stateImages.put(ButtonState.UP_OVER,	states[1]);
-			stateImages.put(ButtonState.DOWN, 		states[0]);
-			stateImages.put(ButtonState.DOWN_OVER,	states[2]);
-		}
-		else if(states.length == 4)
-		{
-			stateImages.put(ButtonState.UP, 		states[0]);
-			stateImages.put(ButtonState.UP_OVER,	states[1]);
-			stateImages.put(ButtonState.DOWN, 		states[2]);
-			stateImages.put(ButtonState.DOWN_OVER,	states[3]);
-		}
-	}
 
 	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v)
 	{
@@ -81,7 +47,7 @@ public class GuiButton extends GuiElement
 		{
 			IRenderable image = new TexturedRect(0, 0, width, height, texture, u + xOffset, v + yOffset);
 			
-			stateImages.put(state, image);
+			template.setStateImage(state, image);
 			xOffset += dx;
 			yOffset += dy;
 		}
@@ -91,11 +57,27 @@ public class GuiButton extends GuiElement
 	{
 		super(x, y, width, height);
 	}
+	
+	public GuiButton(int x, int y, int width, int height, ButtonTemplate template)
+	{
+		super(x, y, width, height);
+		
+		this.template = template;
+	}
+	
+	public GuiButton(int x, int y, int width, int height, ButtonTemplate template, String text)
+	{
+		this(x, y, width, height, template);
+		
+		addElement(
+			new GuiCentredText(0, 0, width, height, text)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
+	}
 
 	@Override
 	public void draw()
 	{
-		render(stateImages.get(currentState));
+		render(template.getStateImage(currentState, width, height));
 		
 		if(isOver() && !toolTipText.isEmpty())
 		{

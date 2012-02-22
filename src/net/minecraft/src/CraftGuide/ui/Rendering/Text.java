@@ -19,7 +19,7 @@ public class Text implements IRenderable
 	}
 	public Text(int x, int y, String text)
 	{
-		this(x, y, text, 0xffffffff);
+		this(x, y, text, 0xff000000);
 	}
 
 	@Override
@@ -31,6 +31,11 @@ public class Text implements IRenderable
 	public void setText(String text)
 	{
 		this.text = text;
+	}
+	
+	public int textHeight()
+	{
+		return 8;
 	}
 	
 	public int textWidth()
