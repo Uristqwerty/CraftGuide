@@ -190,7 +190,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	{
 		super.mouseMovedRow(row, x, y, inBounds);
 		
-		if(y > 1 && y < 30 && inBounds)
+		if(row < recipeCache.getCraftTypes().size() && y > 1 && y < 30 && inBounds)
 		{
 			if(x >= (width - (3 * 29 + 24)) / 2 + 24 && x < (width - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
 			{

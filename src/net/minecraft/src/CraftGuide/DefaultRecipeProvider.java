@@ -86,6 +86,26 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 			
 			generator.addRecipe(template, new ItemStack[]{in, out});
 		}
+		
+		try
+		{
+			Field forgeMetadataSmelting = FurnaceRecipes.class.getDeclaredField("metaSmeltingList");
+			forgeMetadataSmelting.setAccessible(true);
+			Map recipes = (Map)forgeMetadataSmelting.get(FurnaceRecipes.smelting());
+			
+			for(Object o: recipes.keySet())
+			{
+				List input = (List)o;
+				int blockID = (Integer)input.get(0);
+				int metadata = (Integer)input.get(1);
+				ItemStack in = new ItemStack(blockID, 1, metadata);
+				ItemStack out = (ItemStack)recipes.get(o);
+				
+				generator.addRecipe(template, new ItemStack[]{in, out});
+			}
+		}
+		catch(NoSuchFieldException e){}
+		catch(IllegalAccessException e){}
 	}
 	
 	private void addCraftingRecipes(IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeTemplate templateShapeless, IRecipeGenerator generator)

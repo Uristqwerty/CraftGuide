@@ -128,27 +128,36 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 			return itemTextErr(stack);
 		}
 		
-		List list = stack.getItemNameandInformation();//.func_40712_q();
-		List<String> text = new ArrayList<String>(list.size());
-		boolean first = true;
-		
-		for(Object o: list)
+		try
 		{
-			if(o instanceof String)
+			List list = stack.getItemNameandInformation();//.func_40712_q();
+			List<String> text = new ArrayList<String>(list.size());
+			boolean first = true;
+			
+			for(Object o: list)
 			{
-				if(first)
+				if(o instanceof String)
 				{
-					text.add("\247" + Integer.toHexString(stack.func_40707_s().field_40535_e) + (String)o);
-					first = false;
-				}
-				else
-				{
-					text.add("\2477" + (String)o);
+					if(first)
+					{
+						text.add("\247" + Integer.toHexString(stack.getRarity().field_40535_e) + (String)o);
+						first = false;
+					}
+					else
+					{
+						text.add("\2477" + (String)o);
+					}
 				}
 			}
+			
+			return text;
 		}
-		
-		return text;
+		catch(Exception e)
+		{
+			List<String> text = new ArrayList<String>(1);
+			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(stack.getItemDamage()));
+			return text;
+		}
 	}
 
 	private static List<String> itemTextErr(ItemStack stack)
