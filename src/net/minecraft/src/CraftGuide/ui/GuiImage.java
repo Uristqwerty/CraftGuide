@@ -1,7 +1,6 @@
 package net.minecraft.src.CraftGuide.ui;
 
 import net.minecraft.src.CraftGuide.ui.GuiElement;
-import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 

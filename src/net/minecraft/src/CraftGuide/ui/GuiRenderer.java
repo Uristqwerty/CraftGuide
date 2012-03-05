@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -13,7 +12,6 @@ import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 import net.minecraft.src.Tessellator;
 import net.minecraft.src.CraftGuide.Gui;
-import net.minecraft.src.CraftGuide.GuiCraftGuide;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;

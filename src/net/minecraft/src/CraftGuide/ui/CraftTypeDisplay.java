@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.CraftType;
 import net.minecraft.src.CraftGuide.RecipeCache;
 import net.minecraft.src.CraftGuide.ui.Rendering.FloatingItemText;

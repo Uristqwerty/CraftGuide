@@ -2,7 +2,6 @@ package net.minecraft.src.CraftGuide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,16 +9,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.CraftingManager;
-import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.ShapedRecipes;
-import net.minecraft.src.ShapelessRecipes;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.API.IRecipeFilter2;
-import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
 import net.minecraft.src.CraftGuide.API.IRecipeProvider;
 import net.minecraft.src.CraftGuide.API.IRecipeFilter;
 import net.minecraft.src.CraftGuide.ui.IRecipeCacheListener;

@@ -1,6 +1,5 @@
 package net.minecraft.src.CraftGuide.ui.Rendering;
 
-import net.minecraft.src.FontRenderer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 

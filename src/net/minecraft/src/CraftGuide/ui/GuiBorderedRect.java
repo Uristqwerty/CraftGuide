@@ -3,7 +3,6 @@ package net.minecraft.src.CraftGuide.ui;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiSubTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
-import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
 public class GuiBorderedRect extends GuiElement implements IRenderable

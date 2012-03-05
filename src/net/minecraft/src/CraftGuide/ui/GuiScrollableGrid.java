@@ -1,10 +1,6 @@
 package net.minecraft.src.CraftGuide.ui;
 
-import java.util.List;
-
 import net.minecraft.src.mod_CraftGuide;
-import net.minecraft.src.CraftGuide.Recipe;
-import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
 
 public class GuiScrollableGrid extends GuiElement

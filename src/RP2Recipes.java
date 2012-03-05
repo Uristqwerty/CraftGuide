@@ -1,10 +1,8 @@
 
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
 import net.minecraft.src.CraftGuide.API.ExtraSlot;

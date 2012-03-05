@@ -1,7 +1,6 @@
 package net.minecraft.src.CraftGuide.ui.Rendering;
 
 import net.minecraft.src.CraftGuide.ui.GuiRenderer;
-import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 
 public class TexturedRect implements IRenderable

@@ -3,10 +3,7 @@ package net.minecraft.src.CraftGuide.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.src.mod_CraftGuide;
-
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 
 public class GuiScrollBar extends GuiElement implements IButtonListener, ISliderListener

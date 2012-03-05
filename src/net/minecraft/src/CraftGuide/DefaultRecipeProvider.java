@@ -1,8 +1,6 @@
 package net.minecraft.src.CraftGuide;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +13,9 @@ import net.minecraft.src.ModLoader;
 import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
 import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
-import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
 import net.minecraft.src.CraftGuide.API.IRecipeProvider;
-import net.minecraft.src.CraftGuide.API.IRecipeFilter;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider

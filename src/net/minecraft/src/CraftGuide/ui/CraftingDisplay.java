@@ -3,14 +3,10 @@ package net.minecraft.src.CraftGuide.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.StringTranslate;
 import net.minecraft.src.CraftGuide.Recipe;
 import net.minecraft.src.CraftGuide.RecipeCache;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
-import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.CraftGuide.ui.Rendering.FloatingItemText;
 

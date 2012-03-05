@@ -1,8 +1,6 @@
 package net.minecraft.src.CraftGuide.API;
 
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.CraftGuide.ui.GuiRenderer;
-import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
 
 public interface ICraftGuideRecipe
 {

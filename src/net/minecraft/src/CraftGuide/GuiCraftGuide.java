@@ -1,17 +1,7 @@
 package net.minecraft.src.CraftGuide;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import net.minecraft.src.mod_CraftGuide;
 import net.minecraft.src.CraftGuide.ui.ButtonTemplate;
@@ -24,22 +14,16 @@ import net.minecraft.src.CraftGuide.ui.GuiElement;
 import net.minecraft.src.CraftGuide.ui.GuiElement.AnchorPoint;
 import net.minecraft.src.CraftGuide.ui.GuiImage;
 import net.minecraft.src.CraftGuide.ui.GuiItemStack;
-import net.minecraft.src.CraftGuide.ui.GuiRenderer;
 import net.minecraft.src.CraftGuide.ui.GuiResizeHandle;
 import net.minecraft.src.CraftGuide.ui.GuiRightAlignedText;
 import net.minecraft.src.CraftGuide.ui.GuiSlider;
 import net.minecraft.src.CraftGuide.ui.GuiScrollBar;
 import net.minecraft.src.CraftGuide.ui.GuiTabbedDisplay;
 import net.minecraft.src.CraftGuide.ui.GuiText;
-import net.minecraft.src.CraftGuide.ui.GuiWindow;
 import net.minecraft.src.CraftGuide.ui.IButtonListener;
 import net.minecraft.src.CraftGuide.ui.RowCount;
 import net.minecraft.src.CraftGuide.ui.GuiTextInput;
-import net.minecraft.src.CraftGuide.ui.Rendering.GuiSubTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
-import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
-import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
-import net.minecraft.src.CraftGuide.ui.Rendering.ShadedRect;
 
 public class GuiCraftGuide extends Gui
 {

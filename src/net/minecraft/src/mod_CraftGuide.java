@@ -10,10 +10,6 @@ import java.util.Properties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.CraftGuide.DefaultRecipeProvider;
 import net.minecraft.src.CraftGuide.ItemCraftGuide;
-import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
-import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
-import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
-
 public class mod_CraftGuide extends BaseMod
 {
 	public static ItemCraftGuide itemCraftGuide;
@@ -35,7 +31,7 @@ public class mod_CraftGuide extends BaseMod
 	@Override
 	public String getVersion()
 	{
-		return "1.4.2 for Minecraft 1.1.0";
+		return "1.4.3 for Minecraft 1.1.0";
 	}
 
 	@Override

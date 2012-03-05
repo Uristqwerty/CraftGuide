@@ -1,9 +1,7 @@
 package net.minecraft.src.CraftGuide;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 

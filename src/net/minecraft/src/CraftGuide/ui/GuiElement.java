@@ -1,9 +1,7 @@
 package net.minecraft.src.CraftGuide.ui;
 
-import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.src.CraftGuide.ui.GuiElement;
 import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;

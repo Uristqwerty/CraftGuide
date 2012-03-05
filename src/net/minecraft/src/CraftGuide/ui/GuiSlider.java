@@ -3,7 +3,6 @@ package net.minecraft.src.CraftGuide.ui;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.src.CraftGuide.ui.Rendering.GuiTexture;
 import net.minecraft.src.CraftGuide.ui.Rendering.ITexture;
 
 public class GuiSlider extends GuiButton
