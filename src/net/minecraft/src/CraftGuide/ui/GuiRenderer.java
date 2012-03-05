@@ -279,23 +279,28 @@ public class GuiRenderer
 			}
 		}
 		
-		int xMax = gui.width - textWidth - 6;
+		int xMax = gui.width - textWidth - 4;
 		
 		if(x > xMax)
 		{
 			x = xMax;
 		}
 		
-		if(x < 0)
+		if(x < 3)
 		{
-			x = 0;
+			x = 3;
+		}
+		
+		if(y < 4)
+		{
+			y = 4;
 		}
     	setColour(0x100010, 0xf0);
 		drawRect(x - 3,				y - 4,				textWidth + 6,	1);
 		drawRect(x - 3,				y + textHeight + 3,	textWidth + 6,	1);
 		drawRect(x - 3,				y - 3,				textWidth + 6,	textHeight + 6);
 		drawRect(x - 4,				y - 3,				1,				textHeight + 6);
-		drawRect(x  + textWidth + 3,y - 3,				1,				textHeight + 6);
+		drawRect(x + textWidth + 3,	y - 3,				1,				textHeight + 6);
 		
 		setColour(0x5000ff, 0x50);
 		drawRect(x - 3, y - 3, textWidth + 6, 1);
