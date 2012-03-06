@@ -19,7 +19,7 @@ public class ItemCraftGuide extends Item
 	@Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
-    	ModLoader.OpenGUI(player, GuiCraftGuide.getInstance());
+    	ModLoader.openGUI(player, GuiCraftGuide.getInstance());
         return itemstack;
     }
     

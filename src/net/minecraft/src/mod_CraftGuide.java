@@ -68,9 +68,9 @@ public class mod_CraftGuide extends BaseMod
 	private void addItems()
 	{
 		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
-		ModLoader.AddName(itemCraftGuide, "Crafting Guide");
+		ModLoader.addName(itemCraftGuide, "Crafting Guide");
 		
-		ModLoader.AddRecipe(new ItemStack(itemCraftGuide), new Object[]{
+		ModLoader.addRecipe(new ItemStack(itemCraftGuide), new Object[]{
 			"pbp",
 			"bcb",
 			"pbp",
