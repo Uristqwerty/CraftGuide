@@ -3,9 +3,9 @@ package net.minecraft.src.CraftGuide.newAPI;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class CraftGuideAPIObject
+public class NewCraftGuideAPIObject
 {
-	public CraftGuideAPIObject()
+	public NewCraftGuideAPIObject()
 	{
 		try
 		{

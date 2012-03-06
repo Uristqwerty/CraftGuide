@@ -2,10 +2,10 @@ package net.minecraft.src.CraftGuide.newAPI;
 
 import net.minecraft.src.ItemStack;
 
-public interface ICraftGuideRecipe
+public interface NewICraftGuideRecipe
 {
 	public ItemStack getItem(int index);
-	public ItemSlot getSlotUnderMouse(int x, int y);
+	public NewItemSlot getSlotUnderMouse(int x, int y);
 	
 	public boolean containsItem(ItemStack filter);
 	public boolean containsItem(ItemStack filter, boolean exactMatch);
