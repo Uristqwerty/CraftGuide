@@ -157,7 +157,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 				{
 					if(first)
 					{
-						text.add("\247" + Integer.toHexString(stack.getRarity().field_40535_e) + (String)o);
+						text.add("\247" + Integer.toHexString(stack.getRarity().nameColor/*field_40535_e*/) + (String)o);
 						first = false;
 					}
 					else
