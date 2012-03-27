@@ -3,14 +3,15 @@ package net.minecraft.src.CraftGuide;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
-import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
-import net.minecraft.src.CraftGuide.ui.Rendering.IRenderable;
+import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 import net.minecraft.src.CraftGuide.ui.Rendering.TexturedRect;
 
-public class RecipeTemplate implements IRecipeTemplate
+public class RecipeTemplate implements IRecipeTemplateResizable
 {
 	private ItemSlot[] slots;
-	private IRenderable background, backgroundSelected;
+	private TexturedRect background, backgroundSelected;
+	private int width = 79, height = 58; 
+	
 	ItemStack craftingType;
 	
 	public RecipeTemplate(ItemSlot[] slots, ItemStack craftingType, TexturedRect background, TexturedRect backgroundSelected)
@@ -23,6 +24,25 @@ public class RecipeTemplate implements IRecipeTemplate
 
 	public ICraftGuideRecipe generate(ItemStack[] items)
 	{
-		return new Recipe(slots, items, background, backgroundSelected);
+		return new Recipe(slots, items, background, backgroundSelected).setSize(width, height);
+	}
+
+	@Override
+	public IRecipeTemplateResizable setSize(int width, int height)
+	{
+		this.width = width;
+		this.height = height;
+		
+		if(background != null)
+		{
+			background.setSize(width, height);
+		}
+		
+		if(backgroundSelected != null)
+		{
+			backgroundSelected.setSize(width, height);
+		}
+		
+		return this;
 	}
 }

@@ -116,4 +116,9 @@ public class ReflectionAPI
 	{
 		APIObjects.add(object);
 	}
+	
+	public static void reloadRecipes()
+	{
+		GuiCraftGuide.getInstance().reloadRecipes();
+	}
 }

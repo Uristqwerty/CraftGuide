@@ -6,7 +6,7 @@ import net.minecraft.src.CraftGuide.ui.Rendering.GridRect;
 public class GuiScrollableGrid extends GuiElement
 {
 	private GridRect display;
-	/*private*/ GuiScrollBar scrollBar;
+	private GuiScrollBar scrollBar;
 	private int rowHeight;
 	private int rows = 0, columns = 1, cells = 0;
 	private int columnWidth = 1;
@@ -20,6 +20,8 @@ public class GuiScrollableGrid extends GuiElement
 		this.columnWidth = columnWidth;
 		
 		scrollBar.setPageSize(height / rowHeight);
+		
+		recalculateColumns();
 	}
 
 	@Override
@@ -54,10 +56,16 @@ public class GuiScrollableGrid extends GuiElement
 	public void onResize(int oldWidth, int oldHeight)
 	{
 		display.setSize(width, height);
-		setColumns(Math.max(width / columnWidth, 1));
 		scrollBar.setPageSize(height / rowHeight);
 		
+		recalculateColumns();
+		
 		super.onResize(oldWidth, oldHeight);
+	}
+	
+	public void recalculateColumns()
+	{
+		setColumns(Math.max(width / columnWidth, 1));
 	}
 	
 	public void setRows(int rowCount)
@@ -77,6 +85,19 @@ public class GuiScrollableGrid extends GuiElement
 	public void setColumns()
 	{
 		setColumns(width / columnWidth);
+	}
+	
+	public void setColumnWidth(int newWidth)
+	{
+		columnWidth = newWidth;
+		recalculateColumns();
+	}
+	
+	public void setRowHeight(int newHeight)
+	{
+		rowHeight = newHeight;
+		setRows(rows);
+		scrollBar.setPageSize(height / rowHeight);
 	}
 	
 	public void setColumns(int columns)

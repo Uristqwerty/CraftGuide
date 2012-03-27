@@ -42,4 +42,10 @@ public class TexturedRect implements IRenderable
 		width += widthChange;
 		height += heightChange;
 	}
+	
+	public void setSize(int width, int height)
+	{
+		this.width = width;
+		this.height = height;
+	}
 }

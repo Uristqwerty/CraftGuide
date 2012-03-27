@@ -353,4 +353,9 @@ public class GuiCraftGuide extends Gui
 	{
 		return mod_CraftGuide.keyboardRepeatRate;
 	}
+	
+	public void reloadRecipes()
+	{
+		recipeCache.reset();
+	}
 }

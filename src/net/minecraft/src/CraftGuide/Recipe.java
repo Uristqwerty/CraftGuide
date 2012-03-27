@@ -19,6 +19,8 @@ public class Recipe implements ICraftGuideRecipe
 	private static IRenderable overlayAny = new TexturedRect(
 		-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 238);
 	
+	private int width = 79, height = 58; 
+	
 	public Recipe(ItemSlot[] slots, ItemStack[] recipe, IRenderable background, IRenderable backgroundSelected)
 	{
 		this.slots = slots;
@@ -170,8 +172,27 @@ public class Recipe implements ICraftGuideRecipe
 				first.getItemDamage() == second.getItemDamage()
 			);
 	}
+	
 	public ItemStack[] getItems()
 	{
 		return recipe;
+	}
+	
+	public int width()
+	{
+		return width;
+	}
+	
+	public int height()
+	{
+		return height;
+	}
+
+	public Recipe setSize(int width, int height)
+	{
+		this.width = width;
+		this.height = height;
+		
+		return this;
 	}
 }

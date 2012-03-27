@@ -25,8 +25,8 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 
 		this.recipeCache = recipeCache;
 		recipeCache.addListener(this);
-		setColumns(2);
 		updateScrollbarSize();
+		updateGridSize();
 	}
 
 	@Override
@@ -73,6 +73,22 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	public void onChange(RecipeCache cache)
 	{
 		updateScrollbarSize();
+		updateGridSize();
+	}
+	
+	private void updateGridSize()
+	{
+		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		int maxWidth = 16, maxHeight = 16;
+		
+		for(ICraftGuideRecipe recipe: recipes)
+		{
+			maxWidth = Math.max(maxWidth, ((Recipe)recipe).width());
+			maxHeight = Math.max(maxHeight, ((Recipe)recipe).height());
+		}
+		
+		setColumnWidth(maxWidth);
+		setRowHeight(maxHeight);
 	}
 
 	private void updateScrollbarSize()
@@ -87,9 +103,14 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		if(inBounds && cell < recipes.size())
 		{
-			mouseX = x;
-			mouseY = y;
-			recipeUnderMouse = (Recipe) recipes.get(cell);
+			Recipe recipe = (Recipe) recipes.get(cell);
+			
+			if(x < recipe.width() && y < recipe.height())
+			{
+				mouseX = x;
+				mouseY = y;
+				recipeUnderMouse = recipe;
+			}
 		}
 	}
 	
