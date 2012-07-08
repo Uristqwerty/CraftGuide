@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/Client/jars/bin/lwjgl.jar"/>
 	<classpathentry kind="src" path="/RP2Dummy"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Datafile"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

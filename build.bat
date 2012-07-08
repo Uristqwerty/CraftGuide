@@ -3,16 +3,20 @@ xcopy "eclipse\QuickGuide\src" "src\minecraft" /S /I /Y
 xcopy "eclipse\BrewGuide\src"  "src\minecraft" /S /I /Y
 xcopy "eclipse\CraftHide\src"  "src\minecraft" /S /I /Y
 xcopy "eclipse\RP2Dummy\src"  "src\minecraft" /S /I /Y
+xcopy "eclipse\Datafile\src"  "src\minecraft" /S /I /Y
+xcopy "eclipse\CraftGuide Inventory Search\src"  "src\minecraft" /S /I /Y
 
 runtime\bin\python\python_mcp runtime\recompile.py
 runtime\bin\python\python_mcp runtime\reobfuscate.py
 
 rmdir /S /Q "src\minecraft\net\minecraft\src\CraftGuide"
 rmdir /S /Q "src\minecraft\eloraam"
+rmdir /S /Q "src\minecraft\uristqwerty"
 del /Q "src\minecraft\net\minecraft\src\mod_CraftGuide.java"
 del /Q "src\minecraft\RP2Recipes.java"
 del /Q "src\minecraft\RedPowerBase.java"
 rmdir /S /Q zip\build
+rmdir /S /Q zip\build-resources
 
 del /Q "src\minecraft\net\minecraft\src\mod_QuickGuide.java"
 rmdir /S /Q zip\build-QuickGuide
@@ -25,10 +29,17 @@ del /Q "src\minecraft\net\minecraft\src\mod_CraftHide.java"
 del /Q "src\minecraft\net\minecraft\src\CraftHideFilter.java"
 rmdir /S /Q zip\build-CraftHide
 
+del /Q "src\minecraft\net\minecraft\src\mod_CraftGuideInv.java"
+rmdir /S /Q zip\build-CraftGuideInv
+
 xcopy "eclipse\CraftGuide\gui" "zip\build\gui" /S /I /Y
 xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
+xcopy "reobf\minecraft\uristqwerty" "zip\build\uristqwerty" /S /I /Y
+xcopy "eclipse\CraftGuide\default_theme.txt" "zip\build\" /Y
 xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build\" /Y
 xcopy "reobf\minecraft\RP2Recipes.class" "zip\build" /Y
+
+xcopy "eclipse\CraftGuide\CraftGuide Themes" "zip\build-resources\CraftGuide Themes" /S /I /Y
 
 xcopy "reobf\minecraft\mod_QuickGuide.class" "zip\build-QuickGuide\" /Y
 
@@ -39,7 +50,13 @@ xcopy "reobf\minecraft\BrewGuideRecipes.class" "zip\build-BrewGuide\" /Y
 xcopy "reobf\minecraft\mod_CraftHide.class" "zip\build-CraftHide\" /Y
 xcopy "reobf\minecraft\CraftHideFilter.class" "zip\build-CraftHide\" /Y
 
-cd zip\build
+xcopy "reobf\minecraft\mod_CraftGuideInv.class" "zip\build-CraftGuideInv\" /Y
+
+cd zip\build-resources
+7z d ..\build\uristqwerty\CraftGuide\resources.zip "*"
+7z a ..\build\uristqwerty\CraftGuide\resources.zip "*"
+
+cd ..\build
 7z d ..\CraftGuide-test-build.zip "*"
 7z a ..\CraftGuide-test-build.zip "*"
 
@@ -54,3 +71,7 @@ cd ..\build-BrewGuide
 cd ..\build-CraftHide
 7z d ..\CraftHide-test-build.zip "*"
 7z a ..\CraftHide-test-build.zip "*"
+
+cd ..\build-CraftGuideInv
+7z d ..\CraftGuideInv-test-build.zip "*"
+7z a ..\CraftGuideInv-test-build.zip "*"

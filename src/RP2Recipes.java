@@ -3,14 +3,15 @@
 import java.lang.reflect.Field;
 import java.util.List;
 
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.CraftGuideAPIObject;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.OutputSlot;
+
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.CraftGuide.API.CraftGuideAPIObject;
-import net.minecraft.src.CraftGuide.API.ExtraSlot;
-import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
-import net.minecraft.src.CraftGuide.API.IRecipeProvider;
-import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
-import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
-import net.minecraft.src.CraftGuide.API.OutputSlot;
 
 import eloraam.core.CraftLib;
 
@@ -33,7 +34,7 @@ public class RP2Recipes extends CraftGuideAPIObject implements IRecipeProvider
 				new ItemSlot(21, 39, 16, 16, 7, true),
 				new ItemSlot(39, 39, 16, 16, 8, true),
 				new OutputSlot(59, 31, 16, 16, 9, true),
-				new ExtraSlot(59, 11, 16, 16, 10, alloyFurnace),
+				new ExtraSlot(59, 11, 16, 16, 10, alloyFurnace).showName().clickable(),
 			};
 			
 			IRecipeTemplate template = generator.createRecipeTemplate(craftingSlots, alloyFurnace,

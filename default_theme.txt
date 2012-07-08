@@ -1,0 +1,12 @@
+meta
+[
+    name = "Default theme";
+    version = "0.1";
+    author = "Uristqwerty";
+]
+
+texture base_image
+[
+    source_type = "file";
+    source = "gui/CraftGuide.png"
+]
