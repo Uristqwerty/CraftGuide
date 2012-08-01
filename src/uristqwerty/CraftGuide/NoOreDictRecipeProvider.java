@@ -18,10 +18,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
-import net.minecraft.src.forge.oredict.ShapedOreRecipe;
-import net.minecraft.src.forge.oredict.ShapelessOreRecipe;
 
-public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
+public class NoOreDictRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
 {
 	private final boolean obfuscatedNames = true;
 	
@@ -112,7 +110,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 	private void addCraftingRecipes(IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeTemplate templateShapeless, IRecipeGenerator generator)
 	{
 		List recipes = CraftingManager.getInstance().getRecipeList();
-		
+
 		int errCount = 0;
 		
 		for(Object o: recipes)
@@ -129,14 +127,6 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 				{
 					addShapelessRecipe((ShapelessRecipes)recipe, templateShapeless, generator);
 				}
-				else if(recipe instanceof ShapedOreRecipe)
-				{
-					addShapedOreRecipe((ShapedOreRecipe)recipe, template, templateSmall, generator);
-				}
-				else if(recipe instanceof ShapelessOreRecipe)
-				{
-					addShapelessOreRecipe((ShapelessOreRecipe)recipe, templateShapeless, generator);
-				}
 			}
 			catch(Exception e)
 			{
@@ -145,7 +135,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 				}
 				else if(errCount++ >= 5)
 				{
-					System.out.println("CraftGuide DefaultRecipeProvider: Stack trace limit reached, supressing further stack traces for this source");
+					System.out.println("CraftGuide NoOreDictRecipeProvider: Stack trace limit reached, supressing further stack traces for this source");
 					errCount = -1;
 				}
 				else
@@ -155,48 +145,6 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 				
 				CraftGuideLog.log(e);
 			}
-		}
-	}
-	
-	private void addShapelessOreRecipe(ShapelessOreRecipe recipe, IRecipeTemplate template, IRecipeGenerator generator)
-	{
-		try {
-			Object crafting[] = new Object[10];
-			
-			List items = (List)ModLoader.getPrivateValue(ShapelessOreRecipe.class, recipe, "input");
-			
-			for(int i = 0; i < items.size() && i < 9; i++)
-			{
-				crafting[i] = (ItemStack)items.get(i);
-			}
-			
-			crafting[9] = recipe.getRecipeOutput();
-			
-			generator.addRecipe(template, crafting);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void addShapedOreRecipe(ShapedOreRecipe recipe, IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeGenerator generator)
-	{
-		try {
-			int width = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "width");
-			int height = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "height");
-			Object items[] = ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "input");
-
-			if(width < 3 && height < 3)
-			{
-				addSmallShapedRecipe(width, height, items, recipe, templateSmall, generator);
-			}
-			else
-			{
-				addLargeShapedRecipe(width, height, items, recipe, template, generator);
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -1,15 +1,9 @@
 package net.minecraft.src.CraftGuide;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import uristqwerty.CraftGuide.GuiCraftGuide;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-
-import net.minecraft.src.ItemStack;
 
 public class ReflectionAPI
 {

@@ -323,18 +323,30 @@ public class GuiCraftGuide extends Gui
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
-		guiWindow.centerOn(width / 2, height / 2);
-		
-		if(recipeCache.getFilterItem() != null)
+		try
 		{
-			filterStack.setItem(recipeCache.getFilterItem().getItem());
+			guiWindow.centerOn(width / 2, height / 2);
+			
+			if(recipeCache.getFilterItem() != null)
+			{
+				filterStack.setItem(recipeCache.getFilterItem().getItem());
+			}
+			else
+			{
+				filterStack.setItem(null);
+			}
+			
+			super.drawScreen(mouseX, mouseY, f);
 		}
-		else
+		catch(Exception e)
 		{
-			filterStack.setItem(null);
+			CraftGuideLog.log(e);
 		}
-		
-		super.drawScreen(mouseX, mouseY, f);
+		catch(Error e)
+		{
+			CraftGuideLog.log(e);
+			throw e;
+		}
 	}
 
 	private class FilterClearCallback implements IButtonListener
@@ -353,15 +365,46 @@ public class GuiCraftGuide extends Gui
 	@Override
 	public void handleKeyboardInput()
 	{
-		super.handleKeyboardInput();
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		try
 		{
-			GuiScrollBar.setScrollMultiplier(10);
+			super.handleKeyboardInput();
+			
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			{
+				GuiScrollBar.setScrollMultiplier(10);
+			}
+			else
+			{
+				GuiScrollBar.setScrollMultiplier(1);
+			}
 		}
-		else
+		catch(Exception e)
 		{
-			GuiScrollBar.setScrollMultiplier(1);
+			CraftGuideLog.log(e);
+		}
+		catch(Error e)
+		{
+			CraftGuideLog.log(e);
+			throw e;
+		}
+	}
+
+	@Override
+	public void handleMouseInput()
+	{
+		try
+		{
+			super.handleMouseInput();
+
+		}
+		catch(Exception e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(Error e)
+		{
+			CraftGuideLog.log(e);
+			throw e;
 		}
 	}
 

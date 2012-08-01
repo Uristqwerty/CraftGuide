@@ -40,6 +40,7 @@ public class RecipeCache
 
 	public void reset()
 	{
+		CraftGuideLog.log("(re)loading recipe list...");
 		Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes = generateRecipes();
 	
 		filterRawRecipes(rawRecipes);
@@ -141,12 +142,20 @@ public class RecipeCache
 	private Map<ItemStack, List<ICraftGuideRecipe>> generateRecipes()
 	{
 		generator.clearRecipes();
-		
+		CraftGuideLog.log("  Getting recipes...");
 		for(Object object: ReflectionAPI.APIObjects)
 		{
 			if(object instanceof IRecipeProvider)
 			{
-				((IRecipeProvider)object).generateRecipes(generator);
+				CraftGuideLog.log("    Generating recipes from " + object.getClass().getName());
+				try
+				{
+					((IRecipeProvider)object).generateRecipes(generator);
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
+				}
 			}
 		}
 		

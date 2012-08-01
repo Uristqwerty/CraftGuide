@@ -1,16 +1,13 @@
 package net.minecraft.src.CraftGuide;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
 import net.minecraft.src.CraftGuide.API.IRecipeProvider;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.RecipeGenerator;
-import uristqwerty.CraftGuide.RecipeTemplate;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 
@@ -31,11 +28,20 @@ public class OldAPITranslator implements IRecipeGenerator
 
 	private void generate()
 	{
+		CraftGuideLog.log("  Getting recipes from old API...");
 		for(Object object: ReflectionAPI.APIObjects)
 		{
 			if(object instanceof IRecipeProvider)
 			{
-				((IRecipeProvider)object).generateRecipes(this);
+				CraftGuideLog.log("    Generating recipes from " + object.getClass().getName());
+				try
+				{
+					((IRecipeProvider)object).generateRecipes(this);
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
+				}
 			}
 		}
 	}

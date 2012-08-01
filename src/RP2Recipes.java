@@ -38,7 +38,7 @@ public class RP2Recipes extends CraftGuideAPIObject implements IRecipeProvider
 			};
 			
 			IRecipeTemplate template = generator.createRecipeTemplate(craftingSlots, alloyFurnace,
-				"gui/CraftGuideRecipe.png", 163, 1, 163, 61);
+				"gui/CraftGuideRecipe.png", 163, 121, 163, 181);
 			
 			List recipes = getRecipes();
 			

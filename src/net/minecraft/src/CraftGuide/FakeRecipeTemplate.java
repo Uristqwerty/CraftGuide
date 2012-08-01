@@ -6,7 +6,6 @@ import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.OutputSlot;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 
 public class FakeRecipeTemplate implements IRecipeTemplateResizable

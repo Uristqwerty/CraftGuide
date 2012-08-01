@@ -16,6 +16,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import net.minecraft.src.forge.ForgeHooks;
 public class mod_CraftGuide extends BaseMod
 {
 	public static ItemCraftGuide itemCraftGuide;
@@ -28,10 +29,6 @@ public class mod_CraftGuide extends BaseMod
 	public static boolean alwaysShowID = false;
 	
 	private int itemCraftGuideID = 23361;
-	
-	public mod_CraftGuide()
-	{
-	}
 
 	@Override
 	public String getVersion()
@@ -53,7 +50,37 @@ public class mod_CraftGuide extends BaseMod
 		addItems();
 		extractResources();
 		
-		new DefaultRecipeProvider();
+		CraftGuideLog.init(new File(Minecraft.getMinecraftDir(), "CraftGuide.log"));
+
+		try
+		{
+			CraftGuideLog.log("Detected Forge version: " + ForgeHooks.getBuildVersion());
+			if(ForgeHooks.getBuildVersion() >= 128)
+			{
+				CraftGuideLog.log("  Loading full recipe provider");
+				Class.forName("uristqwerty.CraftGuide.DefaultRecipeProvider").newInstance();
+			}
+			else
+			{
+				CraftGuideLog.log("  Loading legacy recipe provider");
+				Class.forName("uristqwerty.CraftGuide.NoOreDictRecipeProvider").newInstance();
+			}
+		}
+		catch(InstantiationException e)
+		{
+			CraftGuideLog.log(e);
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e);
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			CraftGuideLog.log(e);
+			e.printStackTrace();
+		}
 		
 		ModLoader.setInGameHook(this, true, true);
 		
