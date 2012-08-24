@@ -18,6 +18,7 @@ import net.minecraft.src.ItemStack;
 public class RecipeGenerator implements IRecipeGenerator
 {
 	private Map<ItemStack, List<ICraftGuideRecipe>> recipes = new HashMap<ItemStack, List<ICraftGuideRecipe>>();
+	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private static ItemStack workbench = new ItemStack(Block.workbench);
 
 	@Override
@@ -90,5 +91,18 @@ public class RecipeGenerator implements IRecipeGenerator
 	public void clearRecipes()
 	{
 		recipes.clear();
+	}
+
+	@Override
+	public void setDefaultTypeVisibility(ItemStack type, boolean visible)
+	{
+		if(visible)
+		{
+			disabledTypes.remove(type);
+		}
+		else if(!disabledTypes.contains(type))
+		{
+			disabledTypes.add(type);
+		}
 	}
 }

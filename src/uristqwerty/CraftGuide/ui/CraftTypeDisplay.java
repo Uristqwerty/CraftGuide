@@ -9,13 +9,16 @@ import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
+import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
+import uristqwerty.CraftGuide.ui.Rendering.ShadedRect;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
 	private GuiBorderedRect background;
+	private IRenderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
 	private RecipeCache recipeCache;
 	private Map<CraftType, Integer> settings = new HashMap<CraftType, Integer>();
 	private FloatingItemText toolTip = new FloatingItemText("");
@@ -35,6 +38,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		
 		this.recipeCache = recipeCache;
 		recipeCache.addListener(this);
+		initTypes(recipeCache);
 		
 		buttons[0] = new TexturedRect(0, 0, 28, 28, guiTexture, 113,  76);
 		buttons[1] = new TexturedRect(0, 0, 28, 28, guiTexture, 113, 104);
@@ -47,6 +51,25 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		setCells(recipeCache.getCraftTypes().size());
 	}
 
+	private void initTypes(RecipeCache recipeCache)
+	{
+		Set<CraftType> types = recipeCache.getCraftTypes();
+		Set<CraftType> filteredTypes = recipeCache.getFilterTypes();
+		
+		if(filteredTypes != null)
+		{
+			for(CraftType type: types)
+			{
+				settings.put(type, 1);
+			}
+			
+			for(CraftType type: filteredTypes)
+			{
+				settings.put(type, 0);
+			}
+		}
+	}
+
 	@Override
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
@@ -57,6 +80,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 			CraftType type = (CraftType)types.toArray()[row];
 			background.render(renderer, xOffset, yOffset);
 			renderer.drawItemStack(type.getDisplayStack(), xOffset + 8, yOffset + 8, false);
+
+			if(hidden(type))
+			{
+				hiddenOverlay.render(renderer, xOffset + 8, yOffset + 8);
+			}
 			
 			for(int i = 0; i < 3; i++)
 			{
@@ -64,6 +92,29 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				
 				rect.render(renderer, xOffset + i * 29 + (width - (3 * 29 + 24)) / 2 + 24, yOffset + 2);
 			}
+		}
+	}
+
+	private boolean hidden(CraftType type)
+	{
+		switch(setting(type))
+		{
+			case 2:
+				return false;
+			
+			case 1:
+				return true;
+				
+			default:
+				for(CraftType otherType: settings.keySet())
+				{
+					if(setting(otherType) == 2)
+					{
+						return true;
+					}
+				}
+				
+				return false;
 		}
 	}
 

@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.ui;
 
-import uristqwerty.CraftGuide.mod_CraftGuide;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.ui.Rendering.GridRect;
 
 public class GuiScrollableGrid extends GuiElement
@@ -139,7 +139,7 @@ public class GuiScrollableGrid extends GuiElement
 
 	private int columnOffset(int column)
 	{
-		if(mod_CraftGuide.gridPacking)
+		if(CraftGuide.gridPacking)
 		{
 			return column * columnWidth;
 		}
@@ -151,7 +151,7 @@ public class GuiScrollableGrid extends GuiElement
 	
 	private int columnAtX(int x)
 	{
-		if(mod_CraftGuide.gridPacking)
+		if(CraftGuide.gridPacking)
 		{
 			return Math.min(x / columnWidth, columns - 1);
 		}

@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.ui;
 
 import java.lang.Math;
 
-import uristqwerty.CraftGuide.mod_CraftGuide;
+import uristqwerty.CraftGuide.CraftGuide;
 
 
 public class GuiResizeHandle extends GuiElement
@@ -86,13 +86,13 @@ public class GuiResizeHandle extends GuiElement
 			int xDif = targetX - absoluteX();
 			int yDif = targetY - absoluteY();
 			
-			if(mod_CraftGuide.resizeRate > 0)
+			if(CraftGuide.resizeRate > 0)
 			{
 				int xDir = (int)Math.signum(xDif);
 				int yDir = (int)Math.signum(yDif);
 				
-				xDif = Math.min(Math.abs(xDif), mod_CraftGuide.resizeRate) * xDir;
-				yDif = Math.min(Math.abs(yDif), mod_CraftGuide.resizeRate) * yDir;
+				xDif = Math.min(Math.abs(xDif), CraftGuide.resizeRate) * xDir;
+				yDif = Math.min(Math.abs(yDif), CraftGuide.resizeRate) * yDir;
 			}
 			
 			if(xDif != 0 || yDif != 0)

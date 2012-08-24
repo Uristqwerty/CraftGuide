@@ -5,10 +5,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.common.ITickHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.BaseMod;
@@ -16,8 +25,10 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.forge.ForgeHooks;
-public class mod_CraftGuide extends BaseMod
+import net.minecraftforge.common.ForgeHooks;
+
+@Mod(modid = "CraftGuide_tempPort", name = "CraftGuide", version = "1.5.1")
+public class CraftGuide
 {
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
@@ -27,63 +38,38 @@ public class mod_CraftGuide extends BaseMod
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
 	public static boolean alwaysShowID = false;
-	
+
 	private int itemCraftGuideID = 23361;
 
-	@Override
-	public String getVersion()
-	{
-		return "1.5.0";
-	}
-
-	@Override
-	public boolean onTickInGame(float f, Minecraft minecraft)
-	{
-		GuiCraftGuide.onTickInGame(f, minecraft);
-		return true;
-	}
-
-	@Override
-	public void load()
+	@Init
+	public void init(FMLInitializationEvent event)
 	{
 		loadProperties();
 		addItems();
 		extractResources();
-		
-		CraftGuideLog.init(new File(Minecraft.getMinecraftDir(), "CraftGuide.log"));
+		initKeybind();
+
+		CraftGuideLog.init(new File(Minecraft.getMinecraftDir(),
+				"CraftGuide.log"));
 
 		try
 		{
-			CraftGuideLog.log("Detected Forge version: " + ForgeHooks.getBuildVersion());
-			if(ForgeHooks.getBuildVersion() >= 128)
-			{
-				CraftGuideLog.log("  Loading full recipe provider");
-				Class.forName("uristqwerty.CraftGuide.DefaultRecipeProvider").newInstance();
-			}
-			else
-			{
-				CraftGuideLog.log("  Loading legacy recipe provider");
-				Class.forName("uristqwerty.CraftGuide.NoOreDictRecipeProvider").newInstance();
-			}
+			Class.forName("uristqwerty.CraftGuide.DefaultRecipeProvider").newInstance();
+			Class.forName("uristqwerty.CraftGuide.BrewingRecipes").newInstance();
 		}
-		catch(InstantiationException e)
+		catch(InstantiationException e1)
 		{
-			CraftGuideLog.log(e);
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		catch(IllegalAccessException e)
+		catch(IllegalAccessException e1)
 		{
-			CraftGuideLog.log(e);
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		catch(ClassNotFoundException e)
+		catch(ClassNotFoundException e1)
 		{
-			CraftGuideLog.log(e);
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
-		
-		ModLoader.setInGameHook(this, true, true);
-		
+
 		if(ModLoader.isModLoaded("mod_RedPowerCore"))
 		{
 			try
@@ -111,13 +97,15 @@ public class mod_CraftGuide extends BaseMod
 	{
 		try
 		{
-			ZipInputStream resources = new ZipInputStream(getClass().getResourceAsStream("resources.zip"));
+			ZipInputStream resources = new ZipInputStream(getClass()
+					.getResourceAsStream("resources.zip"));
 			byte[] buffer = new byte[1024 * 16];
 			ZipEntry entry;
 			while((entry = resources.getNextEntry()) != null)
 			{
-				File destination = new File(Minecraft.getMinecraftDir(), entry.getName());
-				
+				File destination = new File(Minecraft.getMinecraftDir(),
+						entry.getName());
+
 				if(!destination.exists())
 				{
 					if(entry.isDirectory())
@@ -128,17 +116,18 @@ public class mod_CraftGuide extends BaseMod
 					{
 						System.out.println("Extracting " + entry.getName());
 						destination.createNewFile();
-						FileOutputStream output = new FileOutputStream(destination);
+						FileOutputStream output = new FileOutputStream(
+								destination);
 						int len;
-						
+
 						while((len = resources.read(buffer, 0, buffer.length)) != -1)
 						{
 							output.write(buffer, 0, len);
 						}
-						
+
 						output.flush();
 						output.close();
-						
+
 					}
 				}
 			}
@@ -153,15 +142,11 @@ public class mod_CraftGuide extends BaseMod
 	{
 		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
 		ModLoader.addName(itemCraftGuide, "Crafting Guide");
-		
-		ModLoader.addRecipe(new ItemStack(itemCraftGuide), new Object[]{
-			"pbp",
-			"bcb",
-			"pbp",
-			Character.valueOf('c'), Block.workbench,
-			Character.valueOf('p'), Item.paper,
-			Character.valueOf('b'), Item.book
-			});
+
+		ModLoader.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
+				"bcb", "pbp", Character.valueOf('c'), Block.workbench,
+				Character.valueOf('p'), Item.paper, Character.valueOf('b'),
+				Item.book});
 	}
 
 	private void setConfigDefaults()
@@ -178,65 +163,86 @@ public class mod_CraftGuide extends BaseMod
 	{
 		File configDir = new File(Minecraft.getMinecraftDir(), "/config/");
 		File configFile = new File(configDir, "CraftGuide.cfg");
-		
+
 		setConfigDefaults();
-		
+
 		if(configFile.exists() && configFile.canRead())
 		{
-			try {
+			try
+			{
 				config.load(new FileInputStream(configFile));
 			}
-			catch(FileNotFoundException e) {
+			catch(FileNotFoundException e)
+			{
 				e.printStackTrace();
 			}
-			catch(IOException e) {
+			catch(IOException e)
+			{
 				e.printStackTrace();
 			}
 		}
-		
+
 		try
 		{
-			itemCraftGuideID = Integer.valueOf(config.getProperty("itemCraftGuideID"));
+			itemCraftGuideID = Integer.valueOf(config
+					.getProperty("itemCraftGuideID"));
 		}
-		catch(NumberFormatException e){}
-		
+		catch(NumberFormatException e)
+		{
+		}
+
 		try
 		{
 			resizeRate = Integer.valueOf(config.getProperty("resizeRate"));
 		}
-		catch(NumberFormatException e){}
-		
+		catch(NumberFormatException e)
+		{
+		}
+
 		try
 		{
-			mouseWheelScrollRate = Integer.valueOf(config.getProperty("RecipeList_mouseWheelScrollRate"));
+			mouseWheelScrollRate = Integer.valueOf(config
+					.getProperty("RecipeList_mouseWheelScrollRate"));
 		}
-		catch(NumberFormatException e){}
-		
+		catch(NumberFormatException e)
+		{
+		}
+
 		pauseWhileOpen = Boolean.valueOf(config.getProperty("PauseWhileOpen"));
 		gridPacking = Boolean.valueOf(config.getProperty("gridPacking"));
 		alwaysShowID = Boolean.valueOf(config.getProperty("alwaysShowID"));
-		
+
 		if(!configFile.exists())
 		{
-			try {
+			try
+			{
 				configFile.createNewFile();
 			}
-			catch(IOException e) {
+			catch(IOException e)
+			{
 				e.printStackTrace();
 			}
 		}
-		
+
 		if(configFile.exists() && configFile.canWrite())
 		{
-			try {
+			try
+			{
 				config.store(new FileOutputStream(configFile), "");
 			}
-			catch(FileNotFoundException e) {
+			catch(FileNotFoundException e)
+			{
 				e.printStackTrace();
 			}
-			catch(IOException e) {
+			catch(IOException e)
+			{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void initKeybind()
+	{
+		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
 	}
 }

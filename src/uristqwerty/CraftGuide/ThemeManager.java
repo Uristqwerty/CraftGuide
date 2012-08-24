@@ -14,7 +14,7 @@ public class ThemeManager
 	public void reload()
 	{
 		currentTheme = new ThemeFile();
-		defaultTheme = new ThemeFile(mod_CraftGuide.class.getResourceAsStream("default_theme.txt"));
+		defaultTheme = new ThemeFile(CraftGuide.class.getResourceAsStream("default_theme.txt"));
 		
 		File themeDir = new File(Minecraft.getMinecraftDir(), "CraftGuide themes");
 	}

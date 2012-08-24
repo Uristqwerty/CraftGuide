@@ -5,7 +5,7 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.Recipe;
 import uristqwerty.CraftGuide.RecipeCache;
-import uristqwerty.CraftGuide.mod_CraftGuide;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.Recipe.SlotReason;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
@@ -167,7 +167,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 					{
 						text.add("\u00a7" + Integer.toHexString(stack.getRarity().rarityColor) + (String)o);
 						
-						if(mod_CraftGuide.alwaysShowID)
+						if(CraftGuide.alwaysShowID)
 						{
 							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + stack.getItemDamage());
 						}

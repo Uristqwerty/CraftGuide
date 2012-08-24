@@ -411,13 +411,13 @@ public class GuiCraftGuide extends Gui
 	@Override
 	public int mouseWheelRate()
 	{
-		return mod_CraftGuide.mouseWheelScrollRate;
+		return CraftGuide.mouseWheelScrollRate;
 	}
 	
 	@Override
 	public boolean doesGuiPauseGame()
 	{
-		return mod_CraftGuide.pauseWhileOpen;
+		return CraftGuide.pauseWhileOpen;
 	}
 	
 	public void reloadRecipes()

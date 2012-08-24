@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,13 @@ public class RecipeCache
 	private List<ICraftGuideRecipe> typeResults;
 	private List<ICraftGuideRecipe> filteredResults;
 	private RecipeGenerator generator = new RecipeGenerator();
-	private SingleItemFilter singleFilterItem =  new SingleItemFilter();
-	private MultipleItemFilter multiFilterItem =  new MultipleItemFilter();
+	private SingleItemFilter singleFilterItem = new SingleItemFilter();
+	private MultipleItemFilter multiFilterItem = new MultipleItemFilter();
 	private IItemFilter filterItem = null;
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
 	private Set<CraftType> currentTypes = null;
 	private SortedSet<CraftType> allItems = new TreeSet<CraftType>();
+	private boolean firstReset = true;
 	
 	RecipeCache()
 	{
@@ -63,6 +65,20 @@ public class RecipeCache
 		generateAllItemList();
 		
 		craftingTypes.addAll(craftResults.keySet());
+		
+		if(firstReset)
+		{
+			currentTypes = new HashSet<CraftType>();
+			currentTypes.addAll(craftingTypes);
+			
+			for(ItemStack stack: generator.disabledTypes)
+			{
+				currentTypes.remove(CraftType.getInstance(stack));
+			}
+			
+			firstReset = false;
+		}
+		
 		setTypes(currentTypes);
 
 		for(IRecipeCacheListener listener: listeners)
@@ -300,5 +316,10 @@ public class RecipeCache
 		{
 			filter((ArrayList)stack);
 		}
+	}
+
+	public Set<CraftType> getFilterTypes()
+	{
+		return currentTypes;
 	}
 }

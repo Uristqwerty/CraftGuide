@@ -23,4 +23,5 @@ public interface IRecipeGenerator
 	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
 
 	public void addRecipe(IRecipeTemplate template, Object[] crafting);
+	public void setDefaultTypeVisibility(ItemStack type, boolean visible);
 }
