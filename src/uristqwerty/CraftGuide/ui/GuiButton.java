@@ -42,7 +42,7 @@ public class GuiButton extends GuiElement
 		int xOffset = 0;
 		for(ButtonState state: ButtonState.values())
 		{
-			IRenderable image = new TexturedRect(0, 0, width, height, texture, u + xOffset, v + yOffset);
+			IRenderable image = new TexturedRect(0, 0, width, height, texture.texture(), u + xOffset, v + yOffset);
 			
 			template.setStateImage(state, image);
 			xOffset += dx;

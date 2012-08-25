@@ -11,6 +11,7 @@ import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.minecraft.Image;
 
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -29,9 +30,9 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private String searchText = "";
 	
 	private static IRenderable overlayAny = new TexturedRect(
-			0, 0, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 238);
+			0, 0, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
 		private static IRenderable overlayForge = new TexturedRect(
-			0, 0, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 181);
+			0, 0, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
 	
 	public FilterSelectGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, GuiTexture guiTexture,
 		RecipeCache recipeCache, GuiButton backButton, GuiTabbedDisplay display)
@@ -45,7 +46,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		setColumns();
 		onReset(recipeCache);
 
-		background = new TexturedRect(0, 0, 18, 18, guiTexture, 238, 219);
+		background = new TexturedRect(0, 0, 18, 18, guiTexture.texture(), 238, 219);
 	}
 
 	@Override

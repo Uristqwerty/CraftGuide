@@ -9,8 +9,8 @@ import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.minecraft.Image;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;
@@ -60,10 +60,10 @@ public class RecipeGenerator implements IRecipeGenerator
 				slots,
 				craftingType,
 				new TexturedRect(0, 0, 79, 58, 
-					GuiTexture.getInstance(backgroundTexture),
+					Image.getImage(backgroundTexture),
 					backgroundX, backgroundY),
 				new TexturedRect(0, 0, 79, 58, 
-					GuiTexture.getInstance(backgroundSelectedTexture),
+					Image.getImage(backgroundSelectedTexture),
 					backgroundSelectedX, backgroundSelectedY));
 	}
 

@@ -14,6 +14,8 @@ import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.ITexture;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.Renderer;
+import uristqwerty.gui.minecraft.Image;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
@@ -21,13 +23,12 @@ import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 import net.minecraft.src.Tessellator;
 
-public class GuiRenderer
+public class GuiRenderer extends Renderer
 {
     private RenderItem itemRenderer = new RenderItem();
 	private Minecraft minecraft;
 	private int currentTexture = -1;
 	private int u, v;
-	private int colour, alpha;
 	private float textureWidth = 256, textureHeight = 256;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
@@ -37,10 +38,11 @@ public class GuiRenderer
 	private boolean subtexEnabled = false;
 	private int subtex_x, subtex_y, subtex_width, subtex_height;
 	
-	private IRenderable itemError = new TexturedRect(-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 200);
+	private IRenderable itemError = new TexturedRect(-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 200);
 	
 	public void startFrame(Minecraft mc, Gui gui)
 	{
+		//System.out.println("startFrame(...)");
 		GuiTexture.refreshTextures(mc.renderEngine);
 		currentTexture = -1;
 		minecraft = mc;
@@ -52,6 +54,7 @@ public class GuiRenderer
 
 	public void endFrame()
 	{
+		//System.out.println("endFrame(...)");
 		for(Overlay overlay: overlays)
 		{
 			overlay.renderOverlay(this);
@@ -62,12 +65,14 @@ public class GuiRenderer
 	
 	public void setColour(int colour)
 	{
-		this.colour = colour;
+		red = ((colour >> 16) & 0xff) / 255.0;
+		green = ((colour >> 8) & 0xff) / 255.0;
+		blue = (colour & 0xff) / 255.0;
 	}
 	
 	public void setAlpha(int alpha)
 	{
-		this.alpha = alpha;
+		this.alpha = alpha / 255.0;
 	}
 	
 	public void setColour(int colour, int alpha)
@@ -81,6 +86,7 @@ public class GuiRenderer
 		texture.setActive(this);
 	}
 	
+	@Override
 	public void setTextureID(int textureID)
 	{
 		clearSubTexture();
@@ -118,7 +124,7 @@ public class GuiRenderer
         GL11.glBlendFunc(770, 771);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_I(colour, alpha);
+        tessellator.setColorRGBA_F((float)red, (float)green, (float)blue, (float)alpha);
         
         if(subtexEnabled)
         {
@@ -195,7 +201,7 @@ public class GuiRenderer
         GL11.glBlendFunc(770, 771);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_I(colour, alpha);
+        tessellator.setColorRGBA_F((float)red, (float)green, (float)blue, (float)alpha);
         tessellator.addVertex(x		   , y + height, 0);
         tessellator.addVertex(x + width, y + height, 0);
         tessellator.addVertex(x + width, y		   , 0);

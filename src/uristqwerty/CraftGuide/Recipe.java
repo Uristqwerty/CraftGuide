@@ -7,10 +7,10 @@ import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.ShadedRect;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.minecraft.Image;
 import net.minecraft.src.ItemStack;
 
 public class Recipe implements ICraftGuideRecipe
@@ -22,9 +22,9 @@ public class Recipe implements ICraftGuideRecipe
 	private IRenderable backgroundSelected;
 	
 	private static IRenderable overlayAny = new TexturedRect(
-		-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 238);
+		-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
 	private static IRenderable overlayForge = new TexturedRect(
-			-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 181);
+			-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
 	
 	private int width = 79, height = 58; 
 	
@@ -53,7 +53,7 @@ public class Recipe implements ICraftGuideRecipe
 		{
 			selection[slot.index] = new ShadedRect(slot.x, slot.y, slot.width, slot.height, 0xffffff, 0x80);
 
-			if(this.recipe[slot.index] != null && slot.drawQuantity == false && displayStack(slot.index).stackSize > 1)
+			if(this.recipe[slot.index] != null && slot.drawQuantity == false && displayStack(slot.index) != null && displayStack(slot.index).stackSize > 1)
 			{
 				ItemStack old = displayStack(slot.index);
 				

@@ -13,6 +13,7 @@ xcopy "eclipse\CraftGuide\gui" "zip\build\gui" /S /I /Y
 xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build\uristqwerty\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\datafile" "zip\build\uristqwerty\datafile" /S /I /Y
+xcopy "reobf\minecraft\uristqwerty\gui" "zip\build\uristqwerty\gui" /S /I /Y
 xcopy "eclipse\CraftGuide\default_theme.txt" "zip\build\" /Y
 xcopy "eclipse\CraftGuide\mcmod.info" "zip\build\" /Y
 

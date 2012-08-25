@@ -2,10 +2,10 @@ package uristqwerty.CraftGuide.ui;
 
 import java.util.ArrayList;
 
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.RenderItemStack;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.minecraft.Image;
 import net.minecraft.src.ItemStack;
 
 public class GuiItemStack extends GuiElement
@@ -13,7 +13,7 @@ public class GuiItemStack extends GuiElement
 	private RenderItemStack renderable;
 	private ArrayList multi;
 	
-	private static IRenderable multiSymbol = new TexturedRect(-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 181);
+	private static IRenderable multiSymbol = new TexturedRect(-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
 	
 	public GuiItemStack(int x, int y, boolean drawQuantity)
 	{

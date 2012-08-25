@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.minecraft.Image;
+import uristqwerty.gui.texture.Texture;
 
 import net.minecraft.src.RenderEngine;
 
@@ -13,9 +15,12 @@ public class GuiTexture implements ITexture
 	private String path;
 	private static Map<String, GuiTexture> textureList = new HashMap<String, GuiTexture>();
 	
+	private Image converted;
+	
 	private GuiTexture(String name)
 	{
 		path = name;
+		converted = Image.getImage(name);
 	}
 
 	public String getPath()
@@ -54,5 +59,11 @@ public class GuiTexture implements ITexture
 	public void setActive(GuiRenderer renderer)
 	{
 		renderer.setTextureID(textureID);
+	}
+
+	@Override
+	public Texture texture()
+	{
+		return converted;
 	}
 }

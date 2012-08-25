@@ -2,18 +2,19 @@ package uristqwerty.CraftGuide.ui.Rendering;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
+import uristqwerty.gui.texture.Texture;
 
 public class TexturedRect implements IRenderable
 {
-	private ITexture texture;
-	private int x, y, width, height, u, v;
+	protected int x, y, width, height, u, v;
+	protected Texture texture;
 
-	public TexturedRect(int x, int y, int width, int height, ITexture texture)
+	public TexturedRect(int x, int y, int width, int height, Texture texture)
 	{
 		this(x, y, width, height, texture, 0, 0);
 	}
 	
-	public TexturedRect(int x, int y, int width, int height, ITexture texture, int u, int v)
+	public TexturedRect(int x, int y, int width, int height, Texture texture, int u, int v)
 	{
 		this.x = x;
 		this.y = y;
@@ -26,9 +27,8 @@ public class TexturedRect implements IRenderable
 
 	public void render(GuiRenderer renderer, int xOffset, int yOffset)
 	{
-		renderer.setTexture(texture);
-		renderer.setTextureCoords(u, v);
-		renderer.drawTexturedRect(x + xOffset, y + yOffset, width, height);
+		//System.out.println("TexturedRect.render( --- , " + xOffset + ", " + yOffset + ")");
+		renderer.drawTexturedRect(texture, x + xOffset, y + yOffset, width, height, u, v);
 	}
 	
 	public void moveBy(int xChange, int yChange)

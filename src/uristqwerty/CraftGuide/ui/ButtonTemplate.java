@@ -20,10 +20,12 @@ public class ButtonTemplate
 	{
 		this(texture, u, v, width, height, 0, 2, dx, dy);
 	}
+	
 	public ButtonTemplate(GuiTexture texture, int u, int v, int width, int height, int spacing, int borderLength, int dx, int dy)
 	{
 		int yOffset = 0;
 		int xOffset = 0;
+		
 		for(ButtonState state: ButtonState.values())
 		{
 			IRenderable image = new GuiBorderedRect(0, 0, 10, 10,

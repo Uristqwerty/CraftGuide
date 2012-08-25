@@ -13,6 +13,7 @@ import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.ShadedRect;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.texture.Texture;
 
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
@@ -30,6 +31,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	public CraftTypeDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, GuiTexture guiTexture, RecipeCache recipeCache)
 	{
 		super(x, y, width, height, scrollBar, 32, 1);
+		Texture texture = guiTexture.texture();
 		
 		background = new GuiBorderedRect(
 			0, 0, width, 32,
@@ -40,12 +42,12 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		recipeCache.addListener(this);
 		initTypes(recipeCache);
 		
-		buttons[0] = new TexturedRect(0, 0, 28, 28, guiTexture, 113,  76);
-		buttons[1] = new TexturedRect(0, 0, 28, 28, guiTexture, 113, 104);
-		buttons[2] = new TexturedRect(0, 0, 28, 28, guiTexture, 113, 132);
-		buttons[3] = new TexturedRect(0, 0, 28, 28, guiTexture, 141,  76);
-		buttons[4] = new TexturedRect(0, 0, 28, 28, guiTexture, 141, 104);
-		buttons[5] = new TexturedRect(0, 0, 28, 28, guiTexture, 141, 132);
+		buttons[0] = new TexturedRect(0, 0, 28, 28, texture, 113,  76);
+		buttons[1] = new TexturedRect(0, 0, 28, 28, texture, 113, 104);
+		buttons[2] = new TexturedRect(0, 0, 28, 28, texture, 113, 132);
+		buttons[3] = new TexturedRect(0, 0, 28, 28, texture, 141,  76);
+		buttons[4] = new TexturedRect(0, 0, 28, 28, texture, 141, 104);
+		buttons[5] = new TexturedRect(0, 0, 28, 28, texture, 141, 132);
 		
 		setRows(recipeCache.getCraftTypes().size());
 		setCells(recipeCache.getCraftTypes().size());

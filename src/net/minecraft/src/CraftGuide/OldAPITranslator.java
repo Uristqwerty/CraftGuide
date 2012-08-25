@@ -8,8 +8,8 @@ import net.minecraft.src.CraftGuide.API.IRecipeProvider;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.RecipeGenerator;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.minecraft.Image;
 
 public class OldAPITranslator implements IRecipeGenerator
 {
@@ -85,10 +85,10 @@ public class OldAPITranslator implements IRecipeGenerator
 					slots,
 					craftingType,
 					new TexturedRect(0, 0, 79, 58, 
-						GuiTexture.getInstance(backgroundTexture),
+						Image.getImage(backgroundTexture),
 						backgroundX, backgroundY),
 					new TexturedRect(0, 0, 79, 58, 
-						GuiTexture.getInstance(backgroundSelectedTexture),
+						Image.getImage(backgroundSelectedTexture),
 						backgroundSelectedX, backgroundSelectedY));
 	}
 

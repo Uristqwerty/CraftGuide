@@ -1,12 +1,13 @@
 package uristqwerty.CraftGuide.ui.Rendering;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.minecraft.Image;
 import net.minecraft.src.ItemStack;
 
 public class RenderItemStack implements IRenderable
 {
 	private static IRenderable overlayAny = new TexturedRect(
-		-1, -1, 18, 18, GuiTexture.getInstance("/gui/CraftGuide.png"), 238, 238);
+		-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
 	
 	private ItemStack item;
 	private boolean drawQuantity;

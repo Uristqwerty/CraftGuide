@@ -1,9 +1,10 @@
 package uristqwerty.CraftGuide.ui;
 
-import uristqwerty.CraftGuide.ui.Rendering.GuiSubTexture;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.texture.SubTexture;
+import uristqwerty.gui.texture.Texture;
 
 public class GuiBorderedRect extends GuiElement implements IRenderable
 {
@@ -45,13 +46,15 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	}
 	
 	public GuiBorderedRect(int x, int y, int width, int height,
-			GuiTexture texture, int texX, int texY,
+			GuiTexture guiTexture, int texX, int texY,
 			int borderLeftWidth, int borderRightWidth,
 			int borderTopHeight, int borderBottomHeight,
 			int interiorWidth, int interiorHeight,
 			int spacing)
 	{
 		super(x, y, width, height);
+		
+		Texture texture = guiTexture.texture();
 		
 		int centreWidth = width - borderLeftWidth - borderRightWidth;
 		int centreHeight = height - borderTopHeight - borderBottomHeight;
@@ -66,7 +69,7 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 		
 		parts[1] = new TexturedRect(borderLeftWidth, 0,
 				centreWidth, borderTopHeight,
-				new GuiSubTexture(texture,
+				new SubTexture(texture,
 						texCentreX, texY,
 						interiorWidth, borderTopHeight),
 				0, 0);
@@ -77,21 +80,21 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 		
 		parts[3] = new TexturedRect(0, borderTopHeight,
 				borderLeftWidth, centreHeight,
-				new GuiSubTexture(texture,
+				new SubTexture(texture,
 						texX, texCentreY,
 						borderLeftWidth, interiorHeight),
 				0, 0);
 		
 		parts[4] = new TexturedRect(borderLeftWidth, borderTopHeight,
 				centreWidth, centreHeight,
-				new GuiSubTexture(texture,
+				new SubTexture(texture,
 						texCentreX, texCentreY,
 						interiorWidth, interiorHeight),
 				0, 0);
 		
 		parts[5] = new TexturedRect(borderLeftWidth + centreWidth, borderTopHeight,
 				borderRightWidth, centreHeight,
-				new GuiSubTexture(texture,
+				new SubTexture(texture,
 						texRightX, texCentreY,
 						borderRightWidth, interiorHeight),
 				0, 0);
@@ -102,7 +105,7 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 		
 		parts[7] = new TexturedRect(borderLeftWidth, borderTopHeight + centreHeight,
 				centreWidth, borderBottomHeight,
-				new GuiSubTexture(texture,
+				new SubTexture(texture,
 						texCentreX, texBottomY,
 						interiorWidth, borderBottomHeight),
 				0, 0);

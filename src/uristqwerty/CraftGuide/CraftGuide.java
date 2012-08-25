@@ -5,27 +5,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.BaseMod;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
-import net.minecraftforge.common.ForgeHooks;
 
 @Mod(modid = "CraftGuide_tempPort", name = "CraftGuide", version = "1.5.1")
 public class CraftGuide
