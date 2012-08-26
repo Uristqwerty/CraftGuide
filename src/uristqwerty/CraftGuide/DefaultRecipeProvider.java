@@ -16,10 +16,7 @@ import net.minecraft.src.CraftingManager;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
@@ -122,21 +119,19 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 			{
 				IRecipe recipe = (IRecipe)o;
 				
-				if(recipe instanceof ShapedRecipes)
+				Object[] items = generator.getCraftingRecipe(recipe, true);
+				
+				if(items.length == 5)
 				{
-					addShapedRecipe((ShapedRecipes)recipe, template, templateSmall, generator);
+					generator.addRecipe(templateSmall, items);
 				}
-				else if(recipe instanceof ShapelessRecipes)
+				else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
 				{
-					addShapelessRecipe((ShapelessRecipes)recipe, templateShapeless, generator);
+					generator.addRecipe(templateShapeless, items);
 				}
-				else if(recipe instanceof ShapedOreRecipe)
+				else
 				{
-					addShapedOreRecipe((ShapedOreRecipe)recipe, template, templateSmall, generator);
-				}
-				else if(recipe instanceof ShapelessOreRecipe)
-				{
-					addShapelessOreRecipe((ShapelessOreRecipe)recipe, templateShapeless, generator);
+					generator.addRecipe(template, items);
 				}
 			}
 			catch(Exception e)
@@ -157,123 +152,5 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 				CraftGuideLog.log(e);
 			}
 		}
-	}
-	
-	private void addShapelessOreRecipe(ShapelessOreRecipe recipe, IRecipeTemplate template, IRecipeGenerator generator)
-	{
-		try {
-			Object crafting[] = new Object[10];
-			
-			List items = (List)ModLoader.getPrivateValue(ShapelessOreRecipe.class, recipe, "input");
-			
-			for(int i = 0; i < items.size() && i < 9; i++)
-			{
-				crafting[i] = (ItemStack)items.get(i);
-			}
-			
-			crafting[9] = recipe.getRecipeOutput();
-			
-			generator.addRecipe(template, crafting);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void addShapedOreRecipe(ShapedOreRecipe recipe, IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeGenerator generator)
-	{
-		try {
-			int width = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "width");
-			int height = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "height");
-			Object items[] = ModLoader.getPrivateValue(ShapedOreRecipe.class, recipe, "input");
-
-			if(width < 3 && height < 3)
-			{
-				addSmallShapedRecipe(width, height, items, recipe, templateSmall, generator);
-			}
-			else
-			{
-				addLargeShapedRecipe(width, height, items, recipe, template, generator);
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void addShapelessRecipe(ShapelessRecipes recipe, IRecipeTemplate template, IRecipeGenerator generator)
-	{
-		try {
-			Object crafting[] = new ItemStack[10];
-			
-			List items = (List)ModLoader.getPrivateValue(ShapelessRecipes.class, recipe, obfuscatedNames? "b": "recipeItems");
-			
-			for(int i = 0; i < items.size() && i < 9; i++)
-			{
-				crafting[i] = items.get(i);
-			}
-			
-			crafting[9] = recipe.getRecipeOutput();
-			
-			generator.addRecipe(template, crafting);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void addShapedRecipe(ShapedRecipes recipe, IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeGenerator generator)
-	{
-		try {
-			int width = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, recipe, obfuscatedNames? "b": "recipeWidth");
-			int height = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, recipe, obfuscatedNames? "c": "recipeHeight");
-			ItemStack items[] = (ItemStack[])ModLoader.getPrivateValue(ShapedRecipes.class, recipe, obfuscatedNames? "d": "recipeItems");
-
-			if(width < 3 && height < 3)
-			{
-				addSmallShapedRecipe(width, height, items, recipe, templateSmall, generator);
-			}
-			else
-			{
-				addLargeShapedRecipe(width, height, items, recipe, template, generator);
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void addSmallShapedRecipe(int width, int height, Object[] items, IRecipe recipe, IRecipeTemplate template, IRecipeGenerator generator)
-	{
-		Object crafting[] = new Object[5];
-		
-		for(int i = 0; i < width && i < 2; i++)
-		{
-			for(int j = 0; j < height && j < 2; j++)
-			{
-				crafting[i + j * 2] = items[i + j * width];
-			}
-		}
-		
-		crafting[4] = recipe.getRecipeOutput();
-		
-		generator.addRecipe(template, crafting);
-	}
-	
-	private void addLargeShapedRecipe(int width, int height, Object[] items, IRecipe recipe, IRecipeTemplate template, IRecipeGenerator generator)
-	{
-		Object crafting[] = new Object[10];
-		
-		for(int i = 0; i < width && i < 3; i++)
-		{
-			for(int j = 0; j < height && j < 3; j++)
-			{
-				crafting[i + j * 3] = items[i + j * width];
-			}
-		}
-		
-		crafting[9] = recipe.getRecipeOutput();
-
-		generator.addRecipe(template, crafting);
 	}
 }

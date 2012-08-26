@@ -37,7 +37,7 @@ public interface IRecipeGenerator
 	 * @return an Object[10], where the first nine elements form
 	 * the 3x3 input grid, and the last element is the recipe output.
 	 */
-	public Object[] getCraftingRecipe(IRecipe recipe);
+	public Object[] getCraftingRecipe(net.minecraft.src.IRecipe recipe);
 	
 	/**
 	 * Takes an IRecipe, and returns an array representing a
@@ -50,5 +50,5 @@ public interface IRecipeGenerator
 	 * 		the recipe fits in a 2x2 grid.
 	 * @return an Object[10] or an Object[5]
 	 */
-	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid);
+	public Object[] getCraftingRecipe(net.minecraft.src.IRecipe recipe, boolean allowSmallGrid);
 }

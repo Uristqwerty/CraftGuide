@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
@@ -14,6 +13,7 @@ import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import uristqwerty.gui.minecraft.Image;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.ShapedRecipes;
@@ -125,7 +125,7 @@ public class RecipeGenerator implements IRecipeGenerator
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
-				Object[] items = (Object[])ModLoader.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b");
+				List items = (List)ModLoader.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
 			else if(recipe instanceof ShapedOreRecipe)
@@ -145,7 +145,7 @@ public class RecipeGenerator implements IRecipeGenerator
 			}
 			else if(recipe instanceof ShapelessOreRecipe)
 			{
-				Object[] items = (Object[])ModLoader.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
+				List items = (List)ModLoader.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
 				return getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
 			}
 		}
@@ -175,13 +175,13 @@ public class RecipeGenerator implements IRecipeGenerator
 		return output;
 	}
 
-	private Object[] getCraftingShapelessRecipe(Object[] items, ItemStack recipeOutput)
+	private Object[] getCraftingShapelessRecipe(List items, ItemStack recipeOutput)
 	{
 		Object[] output = new Object[10];
 		
-		for(int i = 0; i < items.length; i++)
+		for(int i = 0; i < items.size(); i++)
 		{
-			output[i] = items[i];
+			output[i] = items.get(i);
 		}
 		
 		output[9] = recipeOutput;
