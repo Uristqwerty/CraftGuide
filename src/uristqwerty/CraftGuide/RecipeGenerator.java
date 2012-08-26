@@ -42,6 +42,11 @@ public class RecipeGenerator implements IRecipeGenerator
 			String backgroundTexture, int backgroundX, int backgroundY,
 			String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY)
 	{
+		if(craftingType == null)
+		{
+			craftingType = workbench;
+		}
+		
 		return new RecipeTemplate(
 				slots,
 				craftingType,
@@ -95,6 +100,12 @@ public class RecipeGenerator implements IRecipeGenerator
 	@Override
 	public Object[] getCraftingRecipe(IRecipe recipe)
 	{
+		return getCraftingRecipe(recipe, false);
+	}
+
+	@Override
+	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid)
+	{
 		try
 		{
 			if(recipe instanceof ShapedRecipes)
@@ -102,7 +113,15 @@ public class RecipeGenerator implements IRecipeGenerator
 				int width = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b");
 				int height = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c");
 				Object[] items = (Object[])ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d");
-				return getCraftingShapedRecipe(width, height, items, ((ShapedRecipes)recipe).getRecipeOutput());
+				
+				if(allowSmallGrid && width < 3 && height < 3)
+				{
+					return getSmallShapedRecipe(width, height, items, ((ShapedRecipes)recipe).getRecipeOutput());
+				}
+				else
+				{
+					return getCraftingShapedRecipe(width, height, items, ((ShapedRecipes)recipe).getRecipeOutput());
+				}
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
@@ -114,7 +133,15 @@ public class RecipeGenerator implements IRecipeGenerator
 				int width = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "width");
 				int height = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "height");
 				Object[] items = (Object[])ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "input");
-				return getCraftingShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+
+				if(allowSmallGrid && width < 3 && height < 3)
+				{
+					return getSmallShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				}
+				else
+				{
+					return getCraftingShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				}
 			}
 			else if(recipe instanceof ShapelessOreRecipe)
 			{
@@ -130,6 +157,22 @@ public class RecipeGenerator implements IRecipeGenerator
 		}
 		
 		return null;
+	}
+
+	private Object[] getSmallShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)
+	{
+		Object[] output = new Object[5];
+		
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++)
+			{
+				output[y * 2 + x] = items[y * width + x];
+			}
+		}
+		
+		output[4] = recipeOutput;
+		return output;
 	}
 
 	private Object[] getCraftingShapelessRecipe(Object[] items, ItemStack recipeOutput)

@@ -26,15 +26,29 @@ public interface IRecipeGenerator
 	/**
 	 * Takes an IRecipe, and returns an array representing a
 	 * 3x3 crafting grid, plus a single output, for that recipe's
-	 * contents. Each element is either null, an ItemStack, or an array
-	 * containing zero or more ItemStacks (for Forge ore dictionary
-	 * recipes).
+	 * contents. Each element is either null, an ItemStack, or a
+	 * List containing zero or more ItemStacks (for Forge ore
+	 * dictionary recipes).
 	 * <br><br>
 	 * May return null if given an IRecipe implementation that it
 	 * cannot interpret.
+	 * @see #getCraftingRecipe(IRecipe, boolean)
 	 * @param recipe the IRecipe to be read
 	 * @return an Object[10], where the first nine elements form
 	 * the 3x3 input grid, and the last element is the recipe output.
 	 */
 	public Object[] getCraftingRecipe(IRecipe recipe);
+	
+	/**
+	 * Takes an IRecipe, and returns an array representing a
+	 * 3x3 or 2x2 crafting grid, plus a single output.
+	 * <br><br>
+	 * See {@link #getCraftingRecipe(IRecipe)} for details.
+	 * @see #getCraftingRecipe(IRecipe)
+	 * @param recipe
+	 * @param allowSmallGrid	if true, may return an Object[5] if
+	 * 		the recipe fits in a 2x2 grid.
+	 * @return an Object[10] or an Object[5]
+	 */
+	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid);
 }

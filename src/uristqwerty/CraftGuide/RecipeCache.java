@@ -52,6 +52,12 @@ public class RecipeCache
 		{
 			CraftType type = CraftType.getInstance(key);
 			
+			if(type == null)
+			{
+				CraftGuideLog.log("  Error: null type, " + rawRecipes.get(key).size() + " recipes skipped");
+				continue;
+			}
+			
 			if(!craftResults.containsKey(type))
 			{
 				craftResults.put(type, new ArrayList<ICraftGuideRecipe>());
