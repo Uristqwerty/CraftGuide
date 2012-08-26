@@ -2,12 +2,14 @@ package uristqwerty.CraftGuide.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.Gui;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
@@ -91,7 +93,7 @@ public class GuiRenderer extends Renderer
 	{
 		clearSubTexture();
 		
-		if(textureID != currentTexture && textureID != -1 && minecraft != null)
+		if(textureID != -1 && minecraft != null)
 		{
 			minecraft.renderEngine.bindTexture(textureID);
 		}
@@ -400,8 +402,32 @@ public class GuiRenderer extends Renderer
                 }
                 catch(Exception e2)
                 {
-                	
+            		if(!hasLogged(itemStack))
+            		{
+            			CraftGuideLog.log("Failed to render ItemStack {" + (
+            					itemStack == null? "null" : (
+            						"itemID = " + itemStack.itemID +
+            						", itemDamage = " + itemStack.getItemDamage() +
+            						", stackSize = " + itemStack.stackSize)) +
+            					"} (Further stack traces from this particular ItemStack instance will not be logged)");
+            			CraftGuideLog.log(e);
+            			CraftGuideLog.log("Additionally, while trying to render a copy with a data value of 0, rather than -1, the following stack trace occurred:");
+            			CraftGuideLog.log(e2);
+            		}
                 }
+        	}
+        	else
+        	{
+        		if(!hasLogged(itemStack))
+        		{
+        			CraftGuideLog.log("Failed to render ItemStack {" + (
+        					itemStack == null? "null" : (
+        						"itemID = " + itemStack.itemID +
+        						", itemDamage = " + itemStack.getItemDamage() +
+        						", stackSize = " + itemStack.stackSize)) +
+        					"} (Further stack traces from this particular ItemStack instance will not be logged)");
+        			CraftGuideLog.log(e);
+        		}
         	}
         }
         catch(LinkageError e)
@@ -422,6 +448,13 @@ public class GuiRenderer extends Renderer
         }
 	}
 	
+	private HashSet<ItemStack> loggedStacks = new HashSet<ItemStack>();
+	
+	private boolean hasLogged(ItemStack stack)
+	{
+		return !loggedStacks.add(stack);
+	}
+
 	public static ItemStack fixedItemStack(ItemStack itemStack)
 	{
 		ItemStack stack = itemStackFixes.get(itemStack);

@@ -1,9 +1,9 @@
 package net.minecraft.src.CraftGuide;
 
 import uristqwerty.CraftGuide.RecipeTemplate;
+import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.OutputSlot;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
@@ -11,6 +11,7 @@ import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 public class FakeRecipeTemplate implements IRecipeTemplateResizable
 {
 	private RecipeTemplate actualTemplate;
+	private int[] slotMapping;
 
 	public FakeRecipeTemplate(net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot[] slots, ItemStack craftingType,
 			TexturedRect texturedRect, TexturedRect texturedRect2)
@@ -22,10 +23,26 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 			net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot[] oldSlots)
 	{
 		ItemSlot[] slots = new ItemSlot[oldSlots.length];
+		boolean needMapping = false;
 		
 		for(int i = 0; i < slots.length; i++)
 		{
+			if(oldSlots[i].index != i)
+			{
+				needMapping = true;
+			}
+			
 			slots[i] = convertSlot(oldSlots[i]);
+		}
+		
+		if(needMapping)
+		{
+			slotMapping = new int[oldSlots.length];
+			
+			for(int i = 0; i < oldSlots.length; i++)
+			{
+				slotMapping[i] = oldSlots[i].index;
+			}
 		}
 		
 		return slots;
@@ -36,24 +53,28 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 	{
 		if(slot instanceof net.minecraft.src.CraftGuide.API.ExtraSlot2)
 		{
-			return new ExtraSlot(slot.x, slot.y, slot.width, slot.height, slot.index,
+			return new ExtraSlot(slot.x, slot.y, slot.width, slot.height,
 					((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).displayed)
 				.clickable(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canClick)
 				.filterable(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canFilter)
-				.showName(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).showName);
+				.showName(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).showName)
+				.setSlotType(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canFilter?
+						SlotType.OTHER_SLOT : SlotType.DISPLAY_SLOT);
 		}
 		else if(slot instanceof net.minecraft.src.CraftGuide.API.ExtraSlot)
 		{
-			return new ExtraSlot(slot.x, slot.y, slot.width, slot.height, slot.index,
-					((net.minecraft.src.CraftGuide.API.ExtraSlot)slot).displayed);
+			return new ExtraSlot(slot.x, slot.y, slot.width, slot.height,
+					((net.minecraft.src.CraftGuide.API.ExtraSlot)slot).displayed)
+					.setSlotType(SlotType.DISPLAY_SLOT);
 		}
 		else if(slot instanceof net.minecraft.src.CraftGuide.API.OutputSlot)
 		{
-			return new OutputSlot(slot.x, slot.y, slot.width, slot.height, slot.index, slot.drawQuantity);
+			return new ItemSlot(slot.x, slot.y, slot.width, slot.height, slot.drawQuantity)
+							.setSlotType(SlotType.OUTPUT_SLOT);
 		}
 		else
 		{
-			return new ItemSlot(slot.x, slot.y, slot.width, slot.height, slot.index, slot.drawQuantity);
+			return new ItemSlot(slot.x, slot.y, slot.width, slot.height, slot.drawQuantity);
 		}
 	}
 
@@ -67,5 +88,25 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 	{
 		actualTemplate.setSize(width, height);
 		return this;
+	}
+
+	public Object[] convertItemsList(ItemStack[] items)
+	{
+		if(slotMapping == null)
+		{
+			return items;
+		}
+		
+		Object[] result = new Object[slotMapping.length];
+		
+		for(int i = 0; i < slotMapping.length; i++)
+		{
+			if(slotMapping[i] != -1)
+			{
+				result[i] = items[slotMapping[i]];
+			}
+		}
+		
+		return result;
 	}
 }

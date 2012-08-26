@@ -9,9 +9,9 @@ public class ExtraSlot extends ItemSlot
 	public boolean canClick = false;
 	public boolean canFilter = false;
 	
-	public ExtraSlot(int x, int y, int width, int height, int index, ItemStack displayedItem)
+	public ExtraSlot(int x, int y, int width, int height, ItemStack displayedItem)
 	{
-		super(x, y, width, height, index);
+		super(x, y, width, height);
 		displayed = displayedItem;
 	}
 

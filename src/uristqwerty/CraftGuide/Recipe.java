@@ -49,15 +49,16 @@ public class Recipe implements ICraftGuideRecipe
 		this.backgroundSelected = backgroundSelected;
 		this.selection = new IRenderable[slots.length];
 		
-		for(ItemSlot slot: slots)
+		for(int i = 0; i < slots.length; i++)
 		{
-			selection[slot.index] = new ShadedRect(slot.x, slot.y, slot.width, slot.height, 0xffffff, 0x80);
+			ItemSlot slot = slots[i];
+			selection[i] = new ShadedRect(slot.x, slot.y, slot.width, slot.height, 0xffffff, 0x80);
 
-			if(this.recipe[slot.index] != null && slot.drawQuantity == false && displayStack(slot.index) != null && displayStack(slot.index).stackSize > 1)
+			if(this.recipe[i] != null && slot.drawQuantity == false && displayStack(i) != null && displayStack(i).stackSize > 1)
 			{
-				ItemStack old = displayStack(slot.index);
+				ItemStack old = displayStack(i);
 				
-				this.recipe[slot.index] = new ItemStack(old.itemID, 1, old.getItemDamage());
+				this.recipe[i] = new ItemStack(old.itemID, 1, old.getItemDamage());
 			}
 		}
 	}
@@ -122,24 +123,26 @@ public class Recipe implements ICraftGuideRecipe
 			background.render(renderer, x, y);
 		}
 		
-		for(ItemSlot slot: slots)
+		for(int i = 0; i < slots.length; i++)
 		{
+			ItemSlot slot = slots[i];
+			
 			if(slot instanceof ExtraSlot)
 			{
 				renderer.drawItemStack(((ExtraSlot)slot).displayed, x + slot.x, y + slot.y);
 				continue;
 			}
 			
-			if(recipe[slot.index] != null)
+			if(displayStack(i) != null)
 			{
-				renderer.drawItemStack(displayStack(slot.index), x + slot.x, y + slot.y);
+				renderer.drawItemStack(displayStack(i), x + slot.x, y + slot.y);
 				
-				if(displayStack(slot.index).getItemDamage() == -1)
+				if(displayStack(i).getItemDamage() == -1)
 				{
 					overlayAny.render(renderer, x + slot.x, y + slot.y);
 				}
 				
-				if(recipe[slot.index] instanceof ArrayList)
+				if(recipe[i] instanceof ArrayList)
 				{
 					overlayForge.render(renderer, x + slot.x, y + slot.y);
 				}
@@ -147,24 +150,44 @@ public class Recipe implements ICraftGuideRecipe
 		}
 	}
 	
+	public int getSlotIndexUnderMouse(int x, int y)
+	{
+		for(int i = 0; i < slots.length; i++)
+		{
+			ItemSlot slot = slots[i];
+			if(slot != null && y >= slot.y && y < slot.y + slot.height
+							&& x >= slot.x && x < slot.x + slot.width)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
 	@Override
 	public ItemSlot getSlotUnderMouse(int x, int y)
 	{
-		for(ItemSlot slot: slots)
+		int index = getSlotIndexUnderMouse(x, y);
+		
+		if(index != -1)
 		{
-			if(y >= slot.y && y < slot.y + slot.height
-			&& x >= slot.x && x < slot.x + slot.width)
-			{
-				return slot;
-			}
+			return slots[index];
 		}
 		
 		return null;
 	}
-	
-	public ItemSlot getSlotUnderMouse(int x, int y, SlotReason reason)
+
+	private int getSlotIndexUnderMouse(int x, int y, SlotReason reason)
 	{
-		ItemSlot slot = getSlotUnderMouse(x, y);
+		int index = getSlotIndexUnderMouse(x, y);
+		
+		if(index == -1)
+		{
+			return -1;
+		}
+		
+		ItemSlot slot = slots[index];
 		
 		if(slot instanceof ExtraSlot)
 		{
@@ -172,18 +195,18 @@ public class Recipe implements ICraftGuideRecipe
 			|| reason == SlotReason.REASON_NAME && !((ExtraSlot)slot).showName
 			|| reason == SlotReason.REASON_SEARCH && !((ExtraSlot)slot).canFilter)
 			{
-				return null;
+				return -1;
 			}
 		}
 		else if(slot instanceof ExtraSlot)
 		{
 			if(reason != SlotReason.REASON_OTHER)
 			{
-				return null;
+				return -1;
 			}
 		}
 		
-		return slot;
+		return index;
 	}
 
 	public ItemStack getItemUnderMouse(int x, int y)
@@ -193,43 +216,49 @@ public class Recipe implements ICraftGuideRecipe
 
 	public ItemStack getItemStackUnderMouse(int x, int y, SlotReason reason)
 	{
-		ItemSlot slot = getSlotUnderMouse(x, y, reason);
+		int index = getSlotIndexUnderMouse(x, y, reason);
 		
-		if(slot == null)
+		if(index == -1 || slots[index] == null)
 		{
 			return null;
 		}
-		else if(slot instanceof ExtraSlot)
+		else if(slots[index] instanceof ExtraSlot)
 		{
-			return ((ExtraSlot)slot).displayed;
+			return ((ExtraSlot)slots[index]).displayed;
 		}
 
-		return getItemStack(slot.index);
+		return getItemStack(index);
 	}
 
 	public Object getItemUnderMouse(int x, int y, SlotReason reason)
 	{
-		ItemSlot slot = getSlotUnderMouse(x, y, reason);
+		int index = getSlotIndexUnderMouse(x, y, reason);
 		
-		if(slot == null)
+		if(index == -1 || slots[index] == null)
 		{
 			return null;
 		}
-		else if(slot instanceof ExtraSlot)
+		else if(slots[index] instanceof ExtraSlot)
 		{
-			return ((ExtraSlot)slot).displayed;
+			return ((ExtraSlot)slots[index]).displayed;
 		}
 
-		return getItem(slot.index);
+		return getItem(index);
 	}
 
 	public IRenderable getSelectionBox(int x, int y)
 	{
-		ItemSlot slot = getSlotUnderMouse(x, y, SlotReason.REASON_CLICK);
+		int index = getSlotIndexUnderMouse(x, y, SlotReason.REASON_CLICK);
+		ItemSlot slot = null;
+		
+		if(index != -1)
+		{
+			slot = slots[index];
+		}
 		
 		if(slot != null)
 		{
-			return selection[slot.index];
+			return selection[index];
 		}
 		
 		return null;

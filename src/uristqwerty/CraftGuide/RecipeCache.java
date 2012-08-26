@@ -107,10 +107,20 @@ public class RecipeCache
 						{
 							for(ItemStack stack: (ArrayList<ItemStack>)item)
 							{
-								allItems.add(CraftType.getInstance((ItemStack)stack));
+								CraftType craftType = CraftType.getInstance((ItemStack)stack);
+								
+								if(craftType != null)
+								{
+									allItems.add(craftType);
+								}
 							}
 							
-							allItems.add(CraftType.getInstance((ArrayList)item));
+							CraftType craftType = CraftType.getInstance((ArrayList)item);
+							
+							if(craftType != null)
+							{
+								allItems.add(craftType);
+							}
 						}
 					}
 				}
@@ -182,14 +192,17 @@ public class RecipeCache
 
 	private void filterRawRecipes(Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes)
 	{
+		CraftGuideLog.log("  Filtering recipes...");
 		for(Object object: ReflectionAPI.APIObjects)
 		{
 			if(object instanceof IRecipeFilter2)
 			{
+				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
 				rawRecipes = ((IRecipeFilter2)object).removeRecipes(rawRecipes);
 			}
 			else if(object instanceof IRecipeFilter)
 			{
+				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
 				for(ItemStack type: rawRecipes.keySet())
 				{
 					rawRecipes.put(type, ((IRecipeFilter)object).removeRecipes(rawRecipes.get(type)));

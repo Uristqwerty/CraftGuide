@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
@@ -18,9 +19,9 @@ import net.minecraft.src.PotionHelper;
 public class BrewingRecipes extends CraftGuideAPIObject implements IRecipeProvider
 {
 	private final ItemSlot[] slots = new ItemSlot[]{
-		new ItemSlot(12, 12, 16, 16, 0),
-		new ItemSlot(12, 30, 16, 16, 1),
-		new ItemSlot(49, 21, 16, 16, 2),
+		new ItemSlot(12, 12, 16, 16).setSlotType(SlotType.INPUT_SLOT),
+		new ItemSlot(12, 30, 16, 16).setSlotType(SlotType.INPUT_SLOT),
+		new ItemSlot(49, 21, 16, 16).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
 	@Override
@@ -30,8 +31,6 @@ public class BrewingRecipes extends CraftGuideAPIObject implements IRecipeProvid
 		List<ItemStack[]> recipes = getRecipes();
 		IRecipeTemplate template = generator.createRecipeTemplate(slots, stack,
 			"/gui/BrewGuide.png", 1, 1, 82, 1);
-		
-		System.out.println("BrewGuide: " + recipes.size() + " recipes added");
 		
 		for(ItemStack[] recipe: recipes)
 		{

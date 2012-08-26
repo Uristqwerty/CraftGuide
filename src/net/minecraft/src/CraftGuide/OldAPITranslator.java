@@ -95,6 +95,6 @@ public class OldAPITranslator implements IRecipeGenerator
 	@Override
 	public void addRecipe(IRecipeTemplate template, ItemStack[] items)
 	{
-		actualGenerator.addRecipe(((FakeRecipeTemplate)template).getRealTemplate(), items);
+		actualGenerator.addRecipe(((FakeRecipeTemplate)template).getRealTemplate(), ((FakeRecipeTemplate)template).convertItemsList(items));
 	}
 }

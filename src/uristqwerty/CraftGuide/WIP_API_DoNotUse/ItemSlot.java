@@ -2,77 +2,60 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import uristqwerty.CraftGuide.WIP_API.SlotType;
 
 /**
  * When a recipe is rendered, the ItemSlots provided to the template are
  * used to determine the layout of the recipe's items.
  */
-
 public class ItemSlot implements ISlot
 {
-	public int x, y, width, height, index;
+	public int x, y, width, height;
 	public boolean drawQuantity;
+	public SlotType slotType = SlotType.INPUT_SLOT;
+	
+	public static IItemSlotImplementation implementation;
 
-	public ItemSlot(int x, int y, int width, int height, int index)
+	public ItemSlot(int x, int y, int width, int height)
 	{
-		this(x, y, width, height, index, false);
+		this(x, y, width, height, false);
 	}
 	
-	public ItemSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
+	public ItemSlot(int x, int y, int width, int height, boolean drawQuantity)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.index = index;
 		this.drawQuantity = drawQuantity;
 	}
 
 	@Override
 	public void init(IRenderer renderer)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void draw(IRenderer renderer, int x, int y, Object data, boolean isMouseOver)
+	public void draw(IRenderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver)
 	{
-		ItemStack stack = item(data);
-		
-		if(stack != null)
-		{
-			renderer.renderItemStack(x, y, stack);
-		}
+		implementation.draw(this, renderer, x, y, data[dataIndex], isMouseOver);
 	}
 
 	@Override
-	public List<String> getTooltip(Object data)
+	public List<String> getTooltip(Object[] data, int dataIndex)
 	{
-		ItemStack stack = item(data);
-		
-		if(stack == null)
-		{
-			return null;
-		}
-		else
-		{
-			return Util.instance.getItemStackText(stack);
-		}
+		return implementation.getTooltip(this, data[dataIndex]);
+	}
+
+	@Override
+	public boolean contains(Object search, Object[] data, int dataIndex, SlotType type)
+	{
+		return implementation.contains(this, search, data[dataIndex], type);
 	}
 	
-	public static ItemStack item(Object data)
+	public ItemSlot setSlotType(SlotType type)
 	{
-		if(data instanceof ItemStack)
-		{
-			return (ItemStack)data;
-		}
-		else if(data instanceof List && ((List)data).size() > 0)
-		{
-			return item(((List)data).get(0));
-		}
-
-		return null;
+		slotType = type;
+		return this;
 	}
 }

@@ -34,7 +34,7 @@ public class CraftType implements Comparable
 		{
 			return getInstance((ItemStack)stack);
 		}
-		else if(stack instanceof ArrayList)
+		else if(stack instanceof ArrayList && ((ArrayList)stack).size() > 0)
 		{
 			return getInstance((ArrayList)stack);
 		}

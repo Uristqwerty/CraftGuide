@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
@@ -26,44 +27,44 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 	private final boolean obfuscatedNames = true;
 	
 	private final ItemSlot[] craftingSlots = new ItemSlot[]{
-		new ItemSlot( 3,  3, 16, 16, 0),
-		new ItemSlot(21,  3, 16, 16, 1),
-		new ItemSlot(39,  3, 16, 16, 2),
-		new ItemSlot( 3, 21, 16, 16, 3),
-		new ItemSlot(21, 21, 16, 16, 4),
-		new ItemSlot(39, 21, 16, 16, 5),
-		new ItemSlot( 3, 39, 16, 16, 6),
-		new ItemSlot(21, 39, 16, 16, 7),
-		new ItemSlot(39, 39, 16, 16, 8),
-		new ItemSlot(59, 21, 16, 16, 9, true),
+		new ItemSlot( 3,  3, 16, 16),
+		new ItemSlot(21,  3, 16, 16),
+		new ItemSlot(39,  3, 16, 16),
+		new ItemSlot( 3, 21, 16, 16),
+		new ItemSlot(21, 21, 16, 16),
+		new ItemSlot(39, 21, 16, 16),
+		new ItemSlot( 3, 39, 16, 16),
+		new ItemSlot(21, 39, 16, 16),
+		new ItemSlot(39, 39, 16, 16),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
 	private final ItemSlot[] smallCraftingSlots = new ItemSlot[]{
-		new ItemSlot(12, 12, 16, 16, 0),
-		new ItemSlot(30, 12, 16, 16, 1),
-		new ItemSlot(12, 30, 16, 16, 2),
-		new ItemSlot(30, 30, 16, 16, 3),
-		new ItemSlot(59, 21, 16, 16, 4, true),
+		new ItemSlot(12, 12, 16, 16),
+		new ItemSlot(30, 12, 16, 16),
+		new ItemSlot(12, 30, 16, 16),
+		new ItemSlot(30, 30, 16, 16),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
 	private final ItemSlot[] furnaceSlots = new ItemSlot[]{
-		new ItemSlot(13, 21, 16, 16, 0),
-		new ItemSlot(50, 21, 16, 16, 1, true),
+		new ItemSlot(13, 21, 16, 16),
+		new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 
 	@Override
 	public void generateRecipes(IRecipeGenerator generator)
 	{
 		IRecipeTemplate craftingTemplate = generator.createRecipeTemplate(
-			craftingSlots,
+			craftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 1, 82, 1);
 		
 		IRecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
-			craftingSlots,
+			craftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 121, 82, 121);
 		
 		IRecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(
-			smallCraftingSlots,
+			smallCraftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 61, 82, 61);
 		
 		IRecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
