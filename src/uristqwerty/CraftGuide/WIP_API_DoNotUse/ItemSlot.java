@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
+import uristqwerty.CraftGuide.api.SlotType;
 
 /**
  * When a recipe is rendered, the ItemSlots provided to the template are
@@ -16,6 +16,18 @@ public class ItemSlot implements ISlot
 	
 	public static IItemSlotImplementation implementation;
 
+	@Deprecated
+	public ItemSlot(int x, int y, int width, int height, int index)
+	{
+		this(x, y, width, height);
+	}
+
+	@Deprecated
+	public ItemSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
+	{
+		this(x, y, width, height, drawQuantity);
+	}
+	
 	public ItemSlot(int x, int y, int width, int height)
 	{
 		this(x, y, width, height, false);

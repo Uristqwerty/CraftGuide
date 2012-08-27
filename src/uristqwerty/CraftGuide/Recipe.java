@@ -3,13 +3,13 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.ItemStack;

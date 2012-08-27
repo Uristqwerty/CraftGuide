@@ -9,6 +9,7 @@ import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.BlankTexture;
 import uristqwerty.gui.texture.BorderedTexture;
@@ -48,6 +49,23 @@ public class RecipeGenerator implements IRecipeGenerator
 						new SubTexture (source, 120, 37, 32, 2),
 						new TextureClip(source, 153, 37,  2, 2),
 				}, 2);
+	}
+	
+	@Override
+	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots,
+			ItemStack craftingType, String backgroundTexture, int backgroundX,
+			int backgroundY, int backgroundSelectedX, int backgroundSelectedY)
+	{
+		return createRecipeTemplate((ISlot[])slots, craftingType, backgroundTexture, backgroundX, backgroundY, backgroundSelectedX, backgroundSelectedY);
+	}
+
+	@Override
+	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots,
+			ItemStack craftingType, String backgroundTexture, int backgroundX,
+			int backgroundY, String backgroundSelectedTexture,
+			int backgroundSelectedX, int backgroundSelectedY)
+	{
+		return createRecipeTemplate((ISlot[])slots, craftingType, backgroundTexture, backgroundX, backgroundY, backgroundSelectedTexture, backgroundSelectedX, backgroundSelectedY);
 	}
 
 	@Override

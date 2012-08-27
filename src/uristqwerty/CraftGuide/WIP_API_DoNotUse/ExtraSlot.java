@@ -2,7 +2,9 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
+import net.minecraft.src.ItemStack;
+
+import uristqwerty.CraftGuide.api.SlotType;
 
 public class ExtraSlot extends ItemSlot
 {
@@ -12,6 +14,12 @@ public class ExtraSlot extends ItemSlot
 	
 	@Deprecated
 	public boolean canFilter = false;
+	
+	@Deprecated
+	public ExtraSlot(int x, int y, int width, int height, int index, ItemStack displayedItem)
+	{
+		this(x, y, width, height, displayedItem);
+	}
 	
 	public ExtraSlot(int x, int y, int width, int height, Object displayedItem)
 	{

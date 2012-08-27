@@ -4,12 +4,13 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
+import uristqwerty.CraftGuide.api.SlotType;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CraftingManager;
@@ -21,7 +22,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
 {
-	private final ItemSlot[] shapelessCraftingSlots = new ItemSlot[]{
+	private final ISlot[] shapelessCraftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16),
 		new ItemSlot(21,  3, 16, 16),
 		new ItemSlot(39,  3, 16, 16),
@@ -34,7 +35,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
-	private final ItemSlot[] craftingSlots = new ItemSlot[]{
+	private final ISlot[] craftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(21,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(39,  3, 16, 16).drawOwnBackground(),
@@ -47,7 +48,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
-	private final ItemSlot[] smallCraftingSlots = new ItemSlot[]{
+	private final ISlot[] smallCraftingSlots = new ItemSlot[]{
 		new ItemSlot(12, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(30, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(12, 30, 16, 16).drawOwnBackground(),
@@ -55,7 +56,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
-	private final ItemSlot[] furnaceSlots = new ItemSlot[]{
+	private final ISlot[] furnaceSlots = new ItemSlot[]{
 		new ItemSlot(13, 21, 16, 16),
 		new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};

@@ -533,4 +533,67 @@ public class GuiRenderer extends Renderer implements IRenderer
 		drawRect(x, y, width, height);
 		setColor(0xff, 0xff, 0xff, 0xff);
 	}
+
+	@Override
+	public void renderRect(int x, int y, int width, int height, int color_rgb, int alpha)
+	{
+		renderRect(x, y, width, height,
+				(color_rgb >> 16) & 0xff,
+				(color_rgb >>  8) & 0xff,
+				(color_rgb >>  0) & 0xff,
+				alpha);
+	}
+
+	@Override
+	public void renderRect(int x, int y, int width, int height, int color_argb)
+	{
+		renderRect(x, y, width, height, color_argb & 0x00ffffff, (color_argb >> 24) & 0xff);
+	}
+
+	@Override
+	public void renderVerticalGradient(int x, int y, int width, int height, int topColor_argb, int bottomColor_argb)
+	{
+		renderGradient(x, y, width, height, topColor_argb, topColor_argb, bottomColor_argb, bottomColor_argb);
+	}
+
+	@Override
+	public void renderHorizontalGradient(int x, int y, int width, int height, int leftColor_argb, int rightColor_argb)
+	{
+		renderGradient(x, y, width, height, leftColor_argb, rightColor_argb, leftColor_argb, rightColor_argb);
+	}
+
+	@Override
+	public void renderGradient(int x, int y, int width, int height, int topLeftColor_argb, int topRightColor_argb,
+			int bottomLeftColor_argb, int bottomRightColor_argb)
+	{
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(770, 771);
+	    
+	    GL11.glBegin(GL11.GL_QUADS);
+	    	glColor1i(topLeftColor_argb);
+	        GL11.glVertex2i(x, y);
+
+	    	glColor1i(bottomLeftColor_argb);
+	        GL11.glVertex2i(x, y + height);
+
+	    	glColor1i(bottomRightColor_argb);
+	        GL11.glVertex2i(x + width, y + height);
+
+	    	glColor1i(topRightColor_argb);
+	        GL11.glVertex2i(x + width, y);
+	    GL11.glEnd();
+	    
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_BLEND);
+	}
+
+	private void glColor1i(int color)
+	{
+		GL11.glColor4d(
+				(color >> 16) & 0xff,
+				(color >>  8) & 0xff,
+				(color >>  0) & 0xff,
+				(color >> 24) & 0xff);
+	}
 }

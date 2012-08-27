@@ -46,8 +46,7 @@ public abstract class Util
 	public abstract IItemFilter getCommonFilter(Object item);
 
 	/**
-	 * Gets a texture usable with 
-	 * {@link IRenderer#renderRect(int, int, int, int, NamedTexture)},
+	 * Gets a texture usable with {@link IRenderer#renderRect}
 	 * from a String identifier. At the moment, it only accepts the
 	 * hardcoded values "ItemStack-Any", "ItemStack-Background", and
 	 * "ItemStack-OreDict", but the eventual intention is to load the

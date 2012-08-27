@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
+import uristqwerty.CraftGuide.api.SlotType;
 
 public interface IItemSlotImplementation
 {

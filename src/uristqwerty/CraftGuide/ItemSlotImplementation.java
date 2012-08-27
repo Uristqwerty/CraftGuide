@@ -4,13 +4,13 @@ import java.util.List;
 
 import net.minecraft.src.ItemStack;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemSlotImplementation;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.SlotType;
 
 public class ItemSlotImplementation implements IItemSlotImplementation
 {

@@ -2,6 +2,12 @@ package uristqwerty.gui.texture;
 
 import uristqwerty.gui.Renderer;
 
+/**
+ * Represents a subsection of a larger texture, shifted so that
+ * the sections's top left corner is at (0, 0). When drawn, loops
+ * the subsection to form an arbitrarily large virtual texture, to
+ * fully cover the drawn rectangle.
+ */
 public class SubTexture implements Texture
 {
 	private final Texture source;

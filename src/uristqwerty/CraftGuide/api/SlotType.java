@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.WIP_API;
+package uristqwerty.CraftGuide.api;
 
 /**
  * SlotType is used to declare the purpose of an ISlot, used

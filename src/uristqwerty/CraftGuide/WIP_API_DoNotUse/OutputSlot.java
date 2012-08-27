@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
-import uristqwerty.CraftGuide.WIP_API.SlotType;
+import uristqwerty.CraftGuide.api.SlotType;
 
 /**
  * Indicates that this slot represents a recipe output,
@@ -11,6 +11,18 @@ import uristqwerty.CraftGuide.WIP_API.SlotType;
  */
 public class OutputSlot extends ItemSlot
 {
+	@Deprecated
+	public OutputSlot(int x, int y, int width, int height, int index)
+	{
+		this(x, y, width, height);
+	}
+	
+	@Deprecated
+	public OutputSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
+	{
+		this(x, y, width, height, drawQuantity);
+	}
+	
 	public OutputSlot(int x, int y, int width, int height)
 	{
 		super(x, y, width, height);

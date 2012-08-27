@@ -1,9 +1,9 @@
 package net.minecraft.src.CraftGuide;
 
 import uristqwerty.CraftGuide.RecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.gui.texture.Texture;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;

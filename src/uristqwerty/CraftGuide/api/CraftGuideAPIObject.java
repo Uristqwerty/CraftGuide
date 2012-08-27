@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +14,6 @@ import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
  * <li>{@link IRecipeProvider}
  */
 
-@Deprecated
 public class CraftGuideAPIObject
 {
 	public CraftGuideAPIObject()

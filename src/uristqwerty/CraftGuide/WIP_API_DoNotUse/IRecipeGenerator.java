@@ -30,6 +30,12 @@ public interface IRecipeGenerator
 	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
 	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
 
+	@Deprecated
+	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
+	
+	@Deprecated
+	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
+
 	public void addRecipe(IRecipeTemplate template, Object[] crafting);
 	public void addRecipe(ICraftGuideRecipe recipe, ItemStack craftingType);
 	
