@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.Gui;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.ITexture;
@@ -18,6 +20,7 @@ import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import uristqwerty.gui.Renderer;
 import uristqwerty.gui.minecraft.Image;
+import uristqwerty.gui.texture.Texture;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
@@ -25,11 +28,10 @@ import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 import net.minecraft.src.Tessellator;
 
-public class GuiRenderer extends Renderer
+public class GuiRenderer extends Renderer implements IRenderer
 {
     private RenderItem itemRenderer = new RenderItem();
 	private Minecraft minecraft;
-	private int currentTexture = -1;
 	private int u, v;
 	private float textureWidth = 256, textureHeight = 256;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
@@ -46,7 +48,6 @@ public class GuiRenderer extends Renderer
 	{
 		//System.out.println("startFrame(...)");
 		GuiTexture.refreshTextures(mc.renderEngine);
-		currentTexture = -1;
 		minecraft = mc;
 		this.gui = gui;
 		u = 0;
@@ -56,7 +57,6 @@ public class GuiRenderer extends Renderer
 
 	public void endFrame()
 	{
-		//System.out.println("endFrame(...)");
 		for(Overlay overlay: overlays)
 		{
 			overlay.renderOverlay(this);
@@ -65,22 +65,33 @@ public class GuiRenderer extends Renderer
 		overlays.clear();
 	}
 	
+	public void setColour(int colour, int alpha)
+	{
+		setColour(colour);
+		setAlpha(alpha);
+	}
+	
 	public void setColour(int colour)
 	{
-		red = ((colour >> 16) & 0xff) / 255.0;
-		green = ((colour >> 8) & 0xff) / 255.0;
-		blue = (colour & 0xff) / 255.0;
+		setColor((colour >> 16) & 0xff, (colour >> 8) & 0xff, colour & 0xff);
+	}
+
+	public void setColor(int red, int green, int blue, int alpha)
+	{
+		setColor(red, green, blue);
+		setAlpha(alpha);
+	}
+
+	public void setColor(int red, int green, int blue)
+	{
+		this.red = red / 255.0;
+		this.green = green / 255.0;
+		this.blue = blue / 255.0;
 	}
 	
 	public void setAlpha(int alpha)
 	{
 		this.alpha = alpha / 255.0;
-	}
-	
-	public void setColour(int colour, int alpha)
-	{
-		setColour(colour);
-		setAlpha(alpha);
 	}
 
 	public void setTexture(ITexture texture)
@@ -385,7 +396,7 @@ public class GuiRenderer extends Renderer
         }
         catch(Exception e)
         {
-        	if(itemStack.getItemDamage() == -1)
+        	if(itemStack != null && itemStack.getItemDamage() == -1)
         	{
         		try
                 {
@@ -497,5 +508,29 @@ public class GuiRenderer extends Renderer
 	public int guiYFromMouseY(int y)
 	{
         return gui.height - (y * gui.height) / minecraft.displayHeight - 1;
+	}
+
+	@Override
+	public void renderItemStack(int x, int y, ItemStack stack)
+	{
+		drawItemStack(stack, x, y);
+	}
+
+	@Override
+	public void renderRect(int x, int y, int width, int height, NamedTexture texture)
+	{
+		if(texture != null)
+		{
+			setColor(255, 255, 255, 255);
+			drawTexturedRect((Texture)texture, x, y, width, height, 0, 0);
+		}
+	}
+
+	@Override
+	public void renderRect(int x, int y, int width, int height, int red, int green, int blue, int alpha)
+	{
+		setColor(red, green, blue, alpha);
+		drawRect(x, y, width, height);
+		setColor(0xff, 0xff, 0xff, 0xff);
 	}
 }

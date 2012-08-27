@@ -11,7 +11,7 @@ import uristqwerty.CraftGuide.WIP_API.SlotType;
 public class ItemSlot implements ISlot
 {
 	public int x, y, width, height;
-	public boolean drawQuantity;
+	public boolean drawQuantity, drawBackground;
 	public SlotType slotType = SlotType.INPUT_SLOT;
 	
 	public static IItemSlotImplementation implementation;
@@ -31,28 +31,53 @@ public class ItemSlot implements ISlot
 	}
 
 	@Override
-	public void init(IRenderer renderer)
-	{
-	}
-
-	@Override
 	public void draw(IRenderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver)
 	{
 		implementation.draw(this, renderer, x, y, data[dataIndex], isMouseOver);
 	}
 
 	@Override
-	public List<String> getTooltip(Object[] data, int dataIndex)
+	public List<String> getTooltip(int x, int y, Object[] data, int dataIndex)
 	{
 		return implementation.getTooltip(this, data[dataIndex]);
 	}
 
 	@Override
-	public boolean contains(Object search, Object[] data, int dataIndex, SlotType type)
+	public boolean matches(IItemFilter search, Object[] data, int dataIndex, SlotType type)
 	{
-		return implementation.contains(this, search, data[dataIndex], type);
+		return implementation.matches(this, search, data[dataIndex], type);
+	}
+
+	@Override
+	public boolean isPointInBounds(int x, int y, Object[] data, int dataIndex)
+	{
+		return implementation.isPointInBounds(this, x, y);
+	}
+
+	@Override
+	public IItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex)
+	{
+		return implementation.getClickedFilter(x, y, data[dataIndex]);
 	}
 	
+	public ItemSlot drawOwnBackground(boolean draw)
+	{
+		drawBackground = draw;
+		return this;
+	}
+	
+	public ItemSlot drawOwnBackground()
+	{
+		return drawOwnBackground(true);
+	}
+	
+	/**
+	 * Sets the {@link SlotType} associated with this ItemSlot.
+	 * The SlotType is used for searches, both from in-game, and
+	 * from the use of the API
+	 * @param type
+	 * @return this ItemSlot, to permit method chaining
+	 */
 	public ItemSlot setSlotType(SlotType type)
 	{
 		slotType = type;

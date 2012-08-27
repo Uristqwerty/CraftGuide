@@ -4,7 +4,7 @@ import uristqwerty.CraftGuide.RecipeTemplate;
 import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.texture.Texture;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 
@@ -14,9 +14,9 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 	private int[] slotMapping;
 
 	public FakeRecipeTemplate(net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot[] slots, ItemStack craftingType,
-			TexturedRect texturedRect, TexturedRect texturedRect2)
+			Texture background, Texture backgroundSelected)
 	{
-		actualTemplate = new RecipeTemplate(convertItemSlots(slots), craftingType, texturedRect, texturedRect2);
+		actualTemplate = new RecipeTemplate(convertItemSlots(slots), craftingType, background, backgroundSelected);
 	}
 
 	private ItemSlot[] convertItemSlots(
@@ -47,7 +47,8 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 		
 		return slots;
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	private ItemSlot convertSlot(
 			net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot slot)
 	{

@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.ui.Rendering;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 
-public class CentredText extends Text implements IRenderable
+public class CentredText extends Text
 {
 	private int width, height;
 

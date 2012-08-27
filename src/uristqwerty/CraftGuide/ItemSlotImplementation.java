@@ -5,13 +5,26 @@ import java.util.List;
 import net.minecraft.src.ItemStack;
 
 import uristqwerty.CraftGuide.WIP_API.SlotType;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemSlotImplementation;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
 
 public class ItemSlotImplementation implements IItemSlotImplementation
 {
+	private NamedTexture overlayAny;
+	private NamedTexture overlayForge;
+	private NamedTexture background;
+
+	public ItemSlotImplementation()
+	{
+		overlayAny = Util.instance.getTexture("ItemStack-Any");
+		overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+		background = Util.instance.getTexture("ItemStack-Background");
+	}
+	
 	@Override
 	public List<String> getTooltip(ItemSlot itemSlot, Object data)
 	{
@@ -28,13 +41,36 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 	}
 
 	@Override
-	public void draw(ItemSlot itemSlot, IRenderer renderer, int x, int y, Object data, boolean isMouseOver)
+	public void draw(ItemSlot itemSlot, IRenderer renderer, int recipeX, int recipeY, Object data, boolean isMouseOver)
 	{
+		int x = recipeX + itemSlot.x;
+		int y = recipeY + itemSlot.y;
 		ItemStack stack = item(data);
+		
+		if(itemSlot.drawBackground)
+		{
+			renderer.renderRect(x - 1, y - 1, 18, 18, background);
+		}
 		
 		if(stack != null)
 		{
+			
 			renderer.renderItemStack(x, y, stack);
+			
+			if(isMouseOver)
+			{
+				renderer.renderRect(x, y, 16, 16, 0xff, 0xff, 0xff, 0x80);
+			}
+			
+			if(stack.getItemDamage() == -1)
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
+			}
+			
+			if(data instanceof List)
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+			}
 		}
 	}
 	
@@ -57,30 +93,27 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 	}
 
 	@Override
-	public boolean contains(ItemSlot itemSlot, Object search, Object data, SlotType type)
+	public boolean matches(ItemSlot itemSlot, IItemFilter search, Object data, SlotType type)
 	{
-		if(type != itemSlot.slotType && (type != SlotType.ANY_SLOT ||
-				type == SlotType.DISPLAY_SLOT || type == SlotType.HIDDEN_SLOT)
-				|| !(search instanceof ItemStack))
+		if(type != itemSlot.slotType && (
+				type != SlotType.ANY_SLOT ||
+				type == SlotType.DISPLAY_SLOT ||
+				type == SlotType.HIDDEN_SLOT))
 		{
 			return false;
 		}
 		
-		if(data == null)
+		if(data == null || data instanceof ItemStack)
 		{
-			return search == null;
-		}
-		else if(data instanceof ItemStack)
-		{
-			return compare((ItemStack)data, (ItemStack)search);
+			return search.matches(data);
 		}
 		else if(data instanceof List)
 		{
 			for(Object content: (List)data)
 			{
-				if(content instanceof ItemStack)
+				if(search.matches(content))
 				{
-					return compare((ItemStack)content, (ItemStack)search);
+					return true;
 				}
 			}
 		}
@@ -88,11 +121,18 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 		return false;
 	}
 
-	private boolean compare(ItemStack object, ItemStack search)
+	@Override
+	public boolean isPointInBounds(ItemSlot itemSlot, int x, int y)
 	{
-		return object.itemID == search.itemID && (
-				object.getItemDamage() == search.getItemDamage() ||
-				object.getItemDamage() == -1 ||
-				search.getItemDamage() == -1);
+		return x >= itemSlot.x
+			&& x < itemSlot.x + itemSlot.width
+			&& y >= itemSlot.y
+			&& y < itemSlot.y + itemSlot.height;
+	}
+
+	@Override
+	public IItemFilter getClickedFilter(int x, int y, Object object)
+	{
+		return Util.instance.getCommonFilter(object);
 	}
 }

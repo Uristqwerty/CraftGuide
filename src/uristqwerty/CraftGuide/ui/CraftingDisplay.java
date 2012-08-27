@@ -1,18 +1,14 @@
 package uristqwerty.CraftGuide.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import uristqwerty.CraftGuide.Recipe;
 import uristqwerty.CraftGuide.RecipeCache;
-import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.CraftGuide.Recipe.SlotReason;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
-
-import net.minecraft.src.ItemStack;
 
 public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
@@ -21,8 +17,8 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	int mouseRow, mouseRowX, mouseRowY;
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
 	private IRenderable itemNameOverlay = new Overlay(itemName);
-	RecipeCache recipeCache;
-	private Recipe recipeUnderMouse;
+	private RecipeCache recipeCache;
+	private ICraftGuideRecipe recipeUnderMouse;
 	
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
@@ -55,21 +51,23 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		if(cell < recipes.size())
 		{
-			renderRecipe(renderer, xOffset, yOffset, (Recipe)recipes.get(cell));
+			renderRecipe(renderer, xOffset, yOffset, recipes.get(cell));
 		}
 	}
 
-	private void renderRecipe(GuiRenderer renderer, int xOffset, int yOffset, Recipe recipe)
+	private void renderRecipe(IRenderer renderer, int xOffset, int yOffset, ICraftGuideRecipe recipe)
 	{
-		recipe.draw(renderer, xOffset, yOffset, recipe == recipeUnderMouse);
-		
 		if(recipe == recipeUnderMouse)
 		{
-			DrawSelectionBox(renderer, xOffset, yOffset);
+			recipe.draw(renderer, xOffset, yOffset, true, mouseX, mouseY);
+		}
+		else
+		{
+			recipe.draw(renderer, xOffset, yOffset, false, -1, -1);
 		}
 	}
 
-	public void setFilter(Object filter)
+	public void setFilter(IItemFilter filter)
 	{
 		recipeCache.filter(filter);
 	}
@@ -88,8 +86,8 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		for(ICraftGuideRecipe recipe: recipes)
 		{
-			maxWidth = Math.max(maxWidth, ((Recipe)recipe).width());
-			maxHeight = Math.max(maxHeight, ((Recipe)recipe).height());
+			maxWidth = Math.max(maxWidth, recipe.width());
+			maxHeight = Math.max(maxHeight, recipe.height());
 		}
 		
 		setColumnWidth(maxWidth);
@@ -108,7 +106,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		if(inBounds && cell < recipes.size())
 		{
-			Recipe recipe = (Recipe) recipes.get(cell);
+			ICraftGuideRecipe recipe = recipes.get(cell);
 			
 			if(x < recipe.width() && y < recipe.height())
 			{
@@ -119,93 +117,18 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		}
 	}
 	
-	private void DrawSelectionBox(GuiRenderer renderer, int xOffset, int yOffset)
-	{
-		IRenderable selection = recipeUnderMouse.getSelectionBox(mouseX, mouseY);
-		
-		if (selection != null)
-		{
-			selection.render(renderer, xOffset, yOffset);
-		}
-	}
-	
 	private void drawSelectionName()
-	{
-		ItemStack stack = itemStackUnderMouse();
-		
-		if(stack != null)
-		{
-			itemName.setText(itemText(stack));
-			render(itemNameOverlay);
-		}
-	}
-	
-	public static List<String> itemText(ItemStack stack)
-	{
-		if(stack.getItem() == null)
-		{
-			return itemTextErr(stack);
-		}
-		
-		try
-		{
-			List list = stack.getItemNameandInformation();
-			
-			if(stack.getItemDamage() == -1 && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
-			{
-				list = GuiRenderer.fixedItemStack(stack).getItemNameandInformation();
-			}
-			
-			List<String> text = new ArrayList<String>(list.size());
-			boolean first = true;
-			
-			for(Object o: list)
-			{
-				if(o instanceof String)
-				{
-					if(first)
-					{
-						text.add("\u00a7" + Integer.toHexString(stack.getRarity().rarityColor) + (String)o);
-						
-						if(CraftGuide.alwaysShowID)
-						{
-							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + stack.getItemDamage());
-						}
-						
-						first = false;
-					}
-					else
-					{
-						text.add("\u00a77" + (String)o);
-					}
-				}
-			}
-			
-			return text;
-		}
-		catch(Exception e)
-		{
-			List<String> text = new ArrayList<String>(1);
-			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(stack.getItemDamage()));
-			return text;
-		}
-	}
-
-	private static List<String> itemTextErr(ItemStack stack)
-	{
-		List<String> text = new ArrayList<String>(1);
-		text.add("\247" + Integer.toHexString(15) + "Error: Item #" + Integer.toString(stack.itemID) + " does not exist");
-		return text;
-	}
-
-	private ItemStack itemStackUnderMouse()
 	{
 		if(recipeUnderMouse != null)
 		{
-			return recipeUnderMouse.getItemStackUnderMouse(mouseX, mouseY, SlotReason.REASON_NAME);
+			List<String> text = recipeUnderMouse.getItemText(mouseX, mouseY);
+			
+			if(text != null)
+			{
+				itemName.setText(text);
+				render(itemNameOverlay);
+			}
 		}
-		
-		return null;
 	}
 
 	@Override
@@ -215,13 +138,13 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		
 		if(cell < recipes.size())
 		{
-			recipeClicked((Recipe)recipes.get(cell), x, y);
+			recipeClicked(recipes.get(cell), x, y);
 		}
 	}
 
-	private void recipeClicked(Recipe recipe, int x, int y)
+	private void recipeClicked(ICraftGuideRecipe recipe, int x, int y)
 	{
-		Object stack = recipe.getItemUnderMouse(x, y, SlotReason.REASON_CLICK);
+		IItemFilter stack = recipe.getRecipeClickedResult(x, y);
 		
 		if(stack != null)
 		{

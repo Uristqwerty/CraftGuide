@@ -17,10 +17,31 @@ import net.minecraft.src.ItemStack;
 
 public interface IRecipeGenerator
 {
-	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
-	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
+	/**
+	 * Creates an {@link IRecipeTemplate} for the provided ISlot[],
+	 * associated with the provided crafting type. Create a default
+	 * background based on the size of the template.
+	 * @param slots
+	 * @param craftingType
+	 * @return
+	 */
+	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType);
+	
+	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
+	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
 
 	public void addRecipe(IRecipeTemplate template, Object[] crafting);
+	public void addRecipe(ICraftGuideRecipe recipe, ItemStack craftingType);
+	
+	/**
+	 * Sets whether a certain type of recipe is initially visible.
+	 * <br><br>
+	 * Useful for hiding recipe types that have a lot of recipes, but
+	 * few people need, so they would normally just add excessive
+	 * clutter to the recipe list.
+	 * @param type an ItemStack associated with the recipe type
+	 * @param visible whether it is initially visible or not
+	 */
 	public void setDefaultTypeVisibility(ItemStack type, boolean visible);
 	
 	/**

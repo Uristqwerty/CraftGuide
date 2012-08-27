@@ -1,14 +1,14 @@
 package uristqwerty.CraftGuide;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.src.ItemStack;
 
 public class MultipleItemFilter extends ItemFilter
 {
-	private ArrayList<ItemStack> comparison;
+	private List<ItemStack> comparison;
 	
-	public void setItems(ArrayList stack)
+	public MultipleItemFilter(List stack)
 	{
 		comparison = stack;
 	}
@@ -38,9 +38,9 @@ public class MultipleItemFilter extends ItemFilter
 		{
 			return matches((ItemStack)stack);
 		}
-		else if(stack instanceof ArrayList)
+		else if(stack instanceof List)
 		{
-			for(ItemStack item: (ArrayList<ItemStack>)stack)
+			for(ItemStack item: (List<ItemStack>)stack)
 			{
 				if(matches(item))
 				{

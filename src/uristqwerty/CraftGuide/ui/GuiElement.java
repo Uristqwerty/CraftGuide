@@ -154,10 +154,6 @@ public class GuiElement
 		}
 	}
 	
-	public void onResize(int oldWidth, int oldHeight)
-	{
-	}
-	
 	public GuiElement setPosition(int x, int y)
 	{
 		this.x = x;
@@ -171,14 +167,6 @@ public class GuiElement
 		}
 		
 		return this;
-	}
-
-	public void onParentMove()
-	{
-	}
-	
-	public void onMove()
-	{
 	}
 	
 	public GuiElement anchor(AnchorPoint topLeft, AnchorPoint bottomRight)
@@ -240,5 +228,20 @@ public class GuiElement
 		{
 			element.onGuiClosed();
 		}
+	}
+	
+	public void onResize(int oldWidth, int oldHeight)
+	{
+		/** Default implementation: Do nothing */
+	}
+
+	public void onParentMove()
+	{
+		/** Default implementation: Do nothing */
+	}
+	
+	public void onMove()
+	{
+		/** Default implementation: Do nothing */
 	}
 }

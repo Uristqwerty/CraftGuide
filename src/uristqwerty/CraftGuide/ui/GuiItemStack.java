@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.RenderItemStack;
@@ -11,7 +11,7 @@ import net.minecraft.src.ItemStack;
 public class GuiItemStack extends GuiElement
 {
 	private RenderItemStack renderable;
-	private ArrayList multi;
+	private List multi;
 	
 	private static IRenderable multiSymbol = new TexturedRect(-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
 	
@@ -34,10 +34,10 @@ public class GuiItemStack extends GuiElement
 		{
 			renderable.setItem((ItemStack)item);
 		}
-		else if(item instanceof ArrayList && ((ArrayList)item).size() > 0)
+		else if(item instanceof List && ((List)item).size() > 0)
 		{
-			renderable.setItem((ItemStack)((ArrayList)item).get(0));
-			multi = (ArrayList)item;
+			renderable.setItem((ItemStack)((List)item).get(0));
+			multi = (List)item;
 		}
 	}
 

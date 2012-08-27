@@ -1,5 +1,7 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
+import java.util.List;
+
 import net.minecraft.src.ItemStack;
 
 /**
@@ -13,12 +15,12 @@ import net.minecraft.src.ItemStack;
 
 public interface ICraftGuideRecipe
 {
-	public Object getItem(int index);
-	public ItemStack getItemStack(int index);
-	public ItemSlot getSlotUnderMouse(int x, int y);
-	
 	public boolean containsItem(ItemStack filter);
-	public boolean containsItem(ItemStack filter, boolean exactMatch);
-	public Object[] getItems();
 	public boolean containsItem(IItemFilter filter);
+	public Object[] getItems();
+	public int width();
+	public int height();
+	public IItemFilter getRecipeClickedResult(int x, int y);
+	public List<String> getItemText(int mouseX, int mouseY);
+	public void draw(IRenderer renderer, int xOffset, int yOffset, boolean isMouseOver, int mouseX, int mouseY);
 }

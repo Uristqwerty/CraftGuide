@@ -22,7 +22,7 @@ public class CraftGuideAPIObject
 	{
 		try
 		{
-			Class c= Class.forName("uristqwerty.CraftGuide.ReflectionAPI");
+			Class c = Class.forName("uristqwerty.CraftGuide.ReflectionAPI");
 			
 			Method m = c.getMethod("registerAPIObject", Object.class);
 			m.invoke(null, this);

@@ -129,7 +129,7 @@ public class GuiScrollableGrid extends GuiElement
 
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
-		for(int i = 0; i < columns && row * columns + i < cells; i++)
+		for(int i = 0; i < columns; i++)
 		{
 			int columnX = columnOffset(i);
 			
@@ -204,13 +204,28 @@ public class GuiScrollableGrid extends GuiElement
 	
 	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
 	{
+		/** Default implementation: Do nothing */
 	}
 
 	public void cellClicked(int cell, int x, int y)
 	{
+		/** Default implementation: Do nothing */
 	}
 	
-	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
+	/**
+	 * Called by the default implementation of {@link renderGridRow} one
+	 * time for each column in the row. Override this in order to render
+	 * each cell individually.
+	 * <br><br>
+	 * (x, y) is the absolute screen position of this cell's top left corner.
+	 * @param renderer
+	 * @param x
+	 * @param y
+	 * @param cell [previous cells in this row] + ([number of previous rows]
+	 * * [cells per row])
+	 */
+	public void renderGridCell(GuiRenderer renderer, int x, int y, int cell)
 	{
+		/** Default implementation: Do nothing */
 	}
 }

@@ -9,10 +9,15 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
@@ -20,7 +25,7 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 
-@Mod(modid = "CraftGuide_tempPort", name = "CraftGuide", version = "1.5.1")
+@Mod(modid = "CraftGuide_forge", name = "CraftGuide", version = "1.5.2")
 public class CraftGuide
 {
 	public static ItemCraftGuide itemCraftGuide;
@@ -33,14 +38,21 @@ public class CraftGuide
 	public static boolean alwaysShowID = false;
 
 	private int itemCraftGuideID = 23361;
+	
+	@PreInit
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		loadProperties();
+		initKeybind();
+		Util.instance = new UtilImplementation();
+		ItemSlot.implementation = new ItemSlotImplementation();
+	}
 
 	@Init
 	public void init(FMLInitializationEvent event)
 	{
-		loadProperties();
 		addItems();
 		extractResources();
-		initKeybind();
 
 		CraftGuideLog.init(new File(Minecraft.getMinecraftDir(),
 				"CraftGuide.log"));
@@ -96,8 +108,7 @@ public class CraftGuide
 			ZipEntry entry;
 			while((entry = resources.getNextEntry()) != null)
 			{
-				File destination = new File(Minecraft.getMinecraftDir(),
-						entry.getName());
+				File destination = new File(Minecraft.getMinecraftDir(), entry.getName());
 
 				if(!destination.exists())
 				{

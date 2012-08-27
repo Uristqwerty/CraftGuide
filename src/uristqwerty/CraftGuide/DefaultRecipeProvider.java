@@ -21,9 +21,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
 {
-	private final boolean obfuscatedNames = true;
-	
-	private final ItemSlot[] craftingSlots = new ItemSlot[]{
+	private final ItemSlot[] shapelessCraftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16),
 		new ItemSlot(21,  3, 16, 16),
 		new ItemSlot(39,  3, 16, 16),
@@ -36,12 +34,25 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
+	private final ItemSlot[] craftingSlots = new ItemSlot[]{
+		new ItemSlot( 3,  3, 16, 16).drawOwnBackground(),
+		new ItemSlot(21,  3, 16, 16).drawOwnBackground(),
+		new ItemSlot(39,  3, 16, 16).drawOwnBackground(),
+		new ItemSlot( 3, 21, 16, 16).drawOwnBackground(),
+		new ItemSlot(21, 21, 16, 16).drawOwnBackground(),
+		new ItemSlot(39, 21, 16, 16).drawOwnBackground(),
+		new ItemSlot( 3, 39, 16, 16).drawOwnBackground(),
+		new ItemSlot(21, 39, 16, 16).drawOwnBackground(),
+		new ItemSlot(39, 39, 16, 16).drawOwnBackground(),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+	};
+	
 	private final ItemSlot[] smallCraftingSlots = new ItemSlot[]{
-		new ItemSlot(12, 12, 16, 16),
-		new ItemSlot(30, 12, 16, 16),
-		new ItemSlot(12, 30, 16, 16),
-		new ItemSlot(30, 30, 16, 16),
-		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
+		new ItemSlot(12, 12, 16, 16).drawOwnBackground(),
+		new ItemSlot(30, 12, 16, 16).drawOwnBackground(),
+		new ItemSlot(12, 30, 16, 16).drawOwnBackground(),
+		new ItemSlot(30, 30, 16, 16).drawOwnBackground(),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
 	private final ItemSlot[] furnaceSlots = new ItemSlot[]{
@@ -52,17 +63,12 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 	@Override
 	public void generateRecipes(IRecipeGenerator generator)
 	{
-		IRecipeTemplate craftingTemplate = generator.createRecipeTemplate(
-			craftingSlots, null,
-			"/gui/CraftGuideRecipe.png",  1, 1, 82, 1);
+		IRecipeTemplate craftingTemplate = generator.createRecipeTemplate(craftingSlots, null);
+		IRecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlots, null);
 		
 		IRecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
-			craftingSlots, null,
+			shapelessCraftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 121, 82, 121);
-		
-		IRecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(
-			smallCraftingSlots, null,
-			"/gui/CraftGuideRecipe.png",  1, 61, 82, 61);
 		
 		IRecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
 			furnaceSlots, new ItemStack(Block.stoneOvenActive),
@@ -79,7 +85,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		for(Object o: furnaceRecipes.keySet())
 		{
 			int blockID = (Integer)o;
-			ItemStack in = new ItemStack(blockID, 1, 0);
+			ItemStack in = new ItemStack(blockID, 1, -1);
 			ItemStack out = (ItemStack)furnaceRecipes.get(o);
 			
 			generator.addRecipe(template, new ItemStack[]{in, out});
@@ -90,15 +96,14 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		{
 			Field forgeMetadataSmelting = FurnaceRecipes.class.getDeclaredField("metaSmeltingList");
 			forgeMetadataSmelting.setAccessible(true);
-			Map recipes = (Map)forgeMetadataSmelting.get(FurnaceRecipes.smelting());
+			Map<List<Integer>, ItemStack> recipes = (Map<List<Integer>, ItemStack>)forgeMetadataSmelting.get(FurnaceRecipes.smelting());
 			
-			for(Object o: recipes.keySet())
+			for(List<Integer> input: recipes.keySet())
 			{
-				List input = (List)o;
-				int blockID = (Integer)input.get(0);
-				int metadata = (Integer)input.get(1);
+				int blockID = input.get(0);
+				int metadata = input.get(1);
 				ItemStack in = new ItemStack(blockID, 1, metadata);
-				ItemStack out = (ItemStack)recipes.get(o);
+				ItemStack out = recipes.get(input);
 				
 				generator.addRecipe(template, new ItemStack[]{in, out});
 			}

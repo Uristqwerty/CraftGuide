@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.src.ItemStack;
 
@@ -8,7 +8,7 @@ public class SingleItemFilter extends ItemFilter
 {
 	private ItemStack comparison;
 	
-	public void setItem(ItemStack stack)
+	public SingleItemFilter(ItemStack stack)
 	{
 		comparison = stack;
 	}
@@ -20,9 +20,9 @@ public class SingleItemFilter extends ItemFilter
 		{
 			return areItemsEqual((ItemStack)stack, comparison);
 		}
-		else if(stack instanceof ArrayList)
+		else if(stack instanceof List)
 		{
-			for(ItemStack item: (ArrayList<ItemStack>)stack)
+			for(ItemStack item: (List<ItemStack>)stack)
 			{
 				if(areItemsEqual(item, comparison))
 				{

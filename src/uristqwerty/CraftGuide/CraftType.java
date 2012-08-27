@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.minecraft.src.ItemStack;
 
-public class CraftType implements Comparable
+public class CraftType implements Comparable<CraftType>
 {
 	private static Map<Integer, Map<Integer, CraftType>> cache = new HashMap<Integer, Map<Integer, CraftType>>();
 	private static Map<ArrayList, CraftType> arrayListCache = new HashMap<ArrayList, CraftType>();
@@ -89,10 +89,8 @@ public class CraftType implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object o)
+	public int compareTo(CraftType other)
 	{
-		CraftType other = (CraftType)o;
-		
 		if(this.item != other.item)
 		{
 			return this.item > other.item? 1 : -1;

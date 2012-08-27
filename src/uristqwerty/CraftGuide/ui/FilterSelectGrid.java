@@ -5,6 +5,7 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
 import uristqwerty.CraftGuide.ui.IButtonListener.Event;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
@@ -54,7 +55,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	{
 		if(cell < itemResults.size())
 		{
-			recipeCache.filter(itemResults.get(cell));
+			recipeCache.filter(Util.instance.getCommonFilter(itemResults.get(cell)));
 			display.onButtonEvent(backButton, Event.PRESS);
 		}
 	}
@@ -65,7 +66,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		if(inBounds && cell < itemResults.size())
 		{
 			overItem = true;
-			itemName.setText(CraftingDisplay.itemText(displayItem(cell)));
+			itemName.setText(Util.instance.getItemStackText(displayItem(cell)));
 		}
 	}
 

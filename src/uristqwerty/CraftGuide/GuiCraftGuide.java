@@ -3,6 +3,7 @@ package uristqwerty.CraftGuide;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
 import uristqwerty.CraftGuide.ui.ButtonTemplate;
 import uristqwerty.CraftGuide.ui.CraftTypeDisplay;
 import uristqwerty.CraftGuide.ui.CraftingDisplay;
@@ -14,7 +15,6 @@ import uristqwerty.CraftGuide.ui.GuiImage;
 import uristqwerty.CraftGuide.ui.GuiItemStack;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.GuiResizeHandle;
-import uristqwerty.CraftGuide.ui.GuiRightAlignedText;
 import uristqwerty.CraftGuide.ui.GuiScrollBar;
 import uristqwerty.CraftGuide.ui.GuiSlider;
 import uristqwerty.CraftGuide.ui.GuiTabbedDisplay;
@@ -32,7 +32,6 @@ import net.minecraft.src.ItemStack;
 public class GuiCraftGuide extends Gui
 {
 	private RecipeCache recipeCache = new RecipeCache();
-	private GuiRightAlignedText rowText;
 	private GuiItemStack filterStack;
 	private CraftingDisplay craftingDisplay;
 	private GuiWindow guiOverlay;
@@ -51,7 +50,7 @@ public class GuiCraftGuide extends Gui
 
 	public void setFilterItem(ItemStack item)
 	{
-		recipeCache.filter(item.copy());
+		recipeCache.filter(Util.instance.getCommonFilter(item.copy()));
 	}
 	
 	private static final int initialWindowWidth = 256;
@@ -66,7 +65,12 @@ public class GuiCraftGuide extends Gui
 		ButtonTemplate buttonTemplate = new ButtonTemplate(guiTexture, 48, 204, 50, 13, 0, 13);
 
 
-		new GuiResizeHandle(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, guiWindow);
+		guiWindow.addElement(
+			new GuiResizeHandle(
+				initialWindowWidth - 8, initialWindowHeight - 8, 8, 8,
+				guiWindow
+			)
+		);
 		
 		guiWindow.addElement(
 			new GuiBorderedRect(
@@ -205,7 +209,7 @@ public class GuiCraftGuide extends Gui
 		FilterSelectGrid filterGrid = 
 			(FilterSelectGrid) new FilterSelectGrid(68, 18, 166, 158, 
 			filterSelectScrollBar, guiTexture,
-			recipeCache, (GuiButton)backButton, recipeDisplay)
+			recipeCache, backButton, recipeDisplay)
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
 		
 		itemListArea.addElement(new RowCount(233, 6, filterGrid).anchor(AnchorPoint.TOP_RIGHT));
@@ -235,6 +239,7 @@ public class GuiCraftGuide extends Gui
 			{
 				this.textInput = textInput;
 			}
+			@Override
 			public void onButtonEvent(GuiButton button, Event eventType)
 			{
 				textInput.setText("");
@@ -353,6 +358,7 @@ public class GuiCraftGuide extends Gui
 	{
 		private CraftingDisplay display;
 		
+		@Override
 		public void onButtonEvent(GuiButton button, Event eventType)
 		{
 			if(eventType == Event.PRESS)
@@ -435,7 +441,7 @@ public class GuiCraftGuide extends Gui
 	
 	public void drawOverlay(float f, Minecraft minecraft)
 	{
-		renderer.startFrame(mc, this);
+		renderer.startFrame(minecraft, this);
 		guiOverlay.draw();
 		renderer.endFrame();
 	}

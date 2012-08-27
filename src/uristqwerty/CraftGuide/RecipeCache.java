@@ -27,8 +27,6 @@ public class RecipeCache
 	private List<ICraftGuideRecipe> typeResults;
 	private List<ICraftGuideRecipe> filteredResults;
 	private RecipeGenerator generator = new RecipeGenerator();
-	private SingleItemFilter singleFilterItem = new SingleItemFilter();
-	private MultipleItemFilter multiFilterItem = new MultipleItemFilter();
 	private IItemFilter filterItem = null;
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
 	private Set<CraftType> currentTypes = null;
@@ -107,13 +105,13 @@ public class RecipeCache
 					{
 						if(item instanceof ItemStack)
 						{
-							allItems.add(CraftType.getInstance((ItemStack)item));
+							allItems.add(CraftType.getInstance(item));
 						}
 						else if(item instanceof ArrayList)
 						{
 							for(ItemStack stack: (ArrayList<ItemStack>)item)
 							{
-								CraftType craftType = CraftType.getInstance((ItemStack)stack);
+								CraftType craftType = CraftType.getInstance(stack);
 								
 								if(craftType != null)
 								{
@@ -121,7 +119,7 @@ public class RecipeCache
 								}
 							}
 							
-							CraftType craftType = CraftType.getInstance((ArrayList)item);
+							CraftType craftType = CraftType.getInstance(item);
 							
 							if(craftType != null)
 							{
@@ -167,6 +165,11 @@ public class RecipeCache
 			if(wild.get(type) == 2)
 			{
 				allItems.remove(type);
+			}
+			else if(wild.get(type) == 1)
+			{
+				allItems.remove(type);
+				allItems.add(CraftType.getInstance(new ItemStack(type.getDisplayStack().itemID, 1, 0)));
 			}
 		}
 	}
@@ -293,48 +296,6 @@ public class RecipeCache
 	public SortedSet<CraftType> getAllItems()
 	{
 		return allItems;
-	}
-
-	public void filter(ItemStack stack)
-	{
-		if(stack == null)
-		{
-			filter((IItemFilter)null);
-		}
-		else
-		{
-			singleFilterItem.setItem(stack);
-			filter(singleFilterItem);
-		}
-	}
-	
-	public void filter(ArrayList stack)
-	{
-		if(stack == null)
-		{
-			filter((IItemFilter)null);
-		}
-		else
-		{
-			multiFilterItem.setItems(stack);
-			filter(multiFilterItem);
-		}
-	}
-
-	public void filter(Object stack)
-	{
-		if(stack == null)
-		{
-			filter((IItemFilter)null);
-		}
-		else if(stack instanceof ItemStack)
-		{
-			filter((ItemStack)stack);
-		}
-		else if(stack instanceof ArrayList)
-		{
-			filter((ArrayList)stack);
-		}
 	}
 
 	public Set<CraftType> getFilterTypes()

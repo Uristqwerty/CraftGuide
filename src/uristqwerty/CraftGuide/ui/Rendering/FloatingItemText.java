@@ -10,7 +10,7 @@ import uristqwerty.CraftGuide.ui.GuiRenderer;
 
 public class FloatingItemText implements IRenderable
 {
-	private List<String> text = new ArrayList<String>(1);;
+	private List<String> text = new ArrayList<String>(1);
 	
 	public FloatingItemText(List<String> text)
 	{

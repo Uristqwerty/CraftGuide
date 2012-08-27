@@ -10,5 +10,9 @@ public interface IItemSlotImplementation
 	
 	public void draw(ItemSlot itemSlot, IRenderer renderer, int x, int y, Object data, boolean isMouseOver);
 
-	public boolean contains(ItemSlot itemSlot, Object search, Object data, SlotType type);
+	public boolean isPointInBounds(ItemSlot itemSlot, int x, int y);
+
+	public IItemFilter getClickedFilter(int x, int y, Object object);
+
+	public boolean matches(ItemSlot itemSlot, IItemFilter search, Object object, SlotType type);
 }

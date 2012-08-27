@@ -11,6 +11,7 @@ public class ThemeManager
 	ThemeFile defaultTheme;
 	Collection<ThemeFile> themes;
 	
+	@SuppressWarnings("unused")
 	public void reload()
 	{
 		currentTheme = new ThemeFile();

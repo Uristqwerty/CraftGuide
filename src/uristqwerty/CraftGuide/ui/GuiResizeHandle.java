@@ -21,8 +21,9 @@ public class GuiResizeHandle extends GuiElement
 	
 	public GuiResizeHandle(int x, int y, int width, int height, GuiElement element, AnchorPoint corner)
 	{
-		this(x, y, width, height, element, AnchorPoint.BOTTOM_RIGHT, element.width, element.height);
+		this(x, y, width, height, element, corner, element.width, element.height);
 	}
+	
 	public GuiResizeHandle(int x, int y, int width, int height,
 		GuiElement element, int minimumWidth, int minimumHeight)
 	{
@@ -36,7 +37,6 @@ public class GuiResizeHandle extends GuiElement
 		
 		this.corner = corner;
 		target = element;
-		target.addElement(this);
 		minWidth = minimumWidth;
 		minHeight = minimumHeight;
 		
@@ -97,6 +97,16 @@ public class GuiResizeHandle extends GuiElement
 			
 			if(xDif != 0 || yDif != 0)
 			{
+				if(corner == AnchorPoint.TOP_LEFT || corner == AnchorPoint.TOP_RIGHT)
+				{
+					yDif = -yDif;
+				}
+				
+				if(corner == AnchorPoint.TOP_LEFT || corner == AnchorPoint.BOTTOM_LEFT)
+				{
+					xDif = -xDif;
+				}
+				
 				target.setSize(
 					Math.max(target.width  + xDif, minWidth),
 					Math.max(target.height + yDif, minHeight));

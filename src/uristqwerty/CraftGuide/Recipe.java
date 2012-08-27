@@ -1,42 +1,30 @@
 package uristqwerty.CraftGuide;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
+import uristqwerty.CraftGuide.WIP_API.SlotType;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
-import uristqwerty.CraftGuide.ui.Rendering.ShadedRect;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
-import uristqwerty.gui.minecraft.Image;
 import net.minecraft.src.ItemStack;
 
 public class Recipe implements ICraftGuideRecipe
 {
-	protected ItemSlot[] slots;
+	protected ISlot[] slots;
 	protected IRenderable[] selection;
 	protected Object[] recipe;
 	private IRenderable background;
 	private IRenderable backgroundSelected;
 	
-	private static IRenderable overlayAny = new TexturedRect(
-		-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
-	private static IRenderable overlayForge = new TexturedRect(
-			-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
-	
 	private int width = 79, height = 58; 
 	
-	public enum SlotReason
-	{
-		REASON_CLICK,
-		REASON_NAME,
-		REASON_SEARCH,
-		REASON_OTHER,
-	}
-	
-	public Recipe(ItemSlot[] slots, Object[] items, IRenderable background, IRenderable backgroundSelected)
+	public Recipe(ISlot[] slots, Object[] items, IRenderable background, IRenderable backgroundSelected)
 	{
 		this.slots = slots;
 		this.recipe = new Object[items.length];
@@ -47,17 +35,13 @@ public class Recipe implements ICraftGuideRecipe
 		
 		this.background = background;
 		this.backgroundSelected = backgroundSelected;
-		this.selection = new IRenderable[slots.length];
 		
 		for(int i = 0; i < slots.length; i++)
 		{
-			ItemSlot slot = slots[i];
-			selection[i] = new ShadedRect(slot.x, slot.y, slot.width, slot.height, 0xffffff, 0x80);
-
-			if(this.recipe[i] != null && slot.drawQuantity == false && displayStack(i) != null && displayStack(i).stackSize > 1)
+			if(this.recipe[i] != null && slots[i] instanceof ItemSlot && !((ItemSlot)slots[i]).drawQuantity && displayStack(i) != null && displayStack(i).stackSize > 1)
 			{
 				ItemStack old = displayStack(i);
-				
+			
 				this.recipe[i] = new ItemStack(old.itemID, 1, old.getItemDamage());
 			}
 		}
@@ -89,63 +73,29 @@ public class Recipe implements ICraftGuideRecipe
 			return null;
 		}
 	}
-
-	@Override
-	public ItemStack getItemStack(int index)
-	{
-		if(index >= 0 && index < slots.length)
-		{
-			return displayStack(index);
-		}
-		
-		return null;
-	}
-
-	@Override
-	public Object getItem(int index)
-	{
-		if(index >= 0 && index < slots.length)
-		{
-			return recipe[index];
-		}
-		
-		return null;
-	}
 	
-	public void draw(GuiRenderer renderer, int x, int y, boolean selected)
+	@Override
+	public void draw(IRenderer renderer, int x, int y, boolean mouseOverRecipe, int mouseX, int mouseY)
 	{
-		if(selected)
+		if(mouseOverRecipe)
 		{
-			backgroundSelected.render(renderer, x, y);
+			backgroundSelected.render((GuiRenderer)renderer, x, y);
 		}
 		else
 		{
-			background.render(renderer, x, y);
+			background.render((GuiRenderer)renderer, x, y);
 		}
 		
 		for(int i = 0; i < slots.length; i++)
 		{
-			ItemSlot slot = slots[i];
-			
-			if(slot instanceof ExtraSlot)
+			if(mouseOverRecipe)
 			{
-				renderer.drawItemStack(((ExtraSlot)slot).displayed, x + slot.x, y + slot.y);
-				continue;
+				boolean mouseOverSlot = slots[i].isPointInBounds(mouseX, mouseY, recipe, i);
+				slots[i].draw(renderer, x, y, recipe, i, mouseOverSlot);
 			}
-			
-			if(displayStack(i) != null)
+			else
 			{
-				renderer.drawItemStack(displayStack(i), x + slot.x, y + slot.y);
-				
-				if(displayStack(i).getItemDamage() == -1)
-				{
-					overlayAny.render(renderer, x + slot.x, y + slot.y);
-				}
-				
-				if(recipe[i] instanceof ArrayList)
-				{
-					overlayForge.render(renderer, x + slot.x, y + slot.y);
-				}
+				slots[i].draw(renderer, x, y, recipe, i, false);
 			}
 		}
 	}
@@ -154,9 +104,7 @@ public class Recipe implements ICraftGuideRecipe
 	{
 		for(int i = 0; i < slots.length; i++)
 		{
-			ItemSlot slot = slots[i];
-			if(slot != null && y >= slot.y && y < slot.y + slot.height
-							&& x >= slot.x && x < slot.x + slot.width)
+			if(slots[i].isPointInBounds(x, y, recipe, i))
 			{
 				return i;
 			}
@@ -164,201 +112,27 @@ public class Recipe implements ICraftGuideRecipe
 		
 		return -1;
 	}
-	
-	@Override
-	public ItemSlot getSlotUnderMouse(int x, int y)
-	{
-		int index = getSlotIndexUnderMouse(x, y);
-		
-		if(index != -1)
-		{
-			return slots[index];
-		}
-		
-		return null;
-	}
-
-	private int getSlotIndexUnderMouse(int x, int y, SlotReason reason)
-	{
-		int index = getSlotIndexUnderMouse(x, y);
-		
-		if(index == -1)
-		{
-			return -1;
-		}
-		
-		ItemSlot slot = slots[index];
-		
-		if(slot instanceof ExtraSlot)
-		{
-			if(reason == SlotReason.REASON_CLICK && !((ExtraSlot)slot).canClick
-			|| reason == SlotReason.REASON_NAME && !((ExtraSlot)slot).showName
-			|| reason == SlotReason.REASON_SEARCH && !((ExtraSlot)slot).canFilter)
-			{
-				return -1;
-			}
-		}
-		else if(slot instanceof ExtraSlot)
-		{
-			if(reason != SlotReason.REASON_OTHER)
-			{
-				return -1;
-			}
-		}
-		
-		return index;
-	}
-
-	public ItemStack getItemUnderMouse(int x, int y)
-	{
-		return getItemStackUnderMouse(x, y, SlotReason.REASON_OTHER);
-	}
-
-	public ItemStack getItemStackUnderMouse(int x, int y, SlotReason reason)
-	{
-		int index = getSlotIndexUnderMouse(x, y, reason);
-		
-		if(index == -1 || slots[index] == null)
-		{
-			return null;
-		}
-		else if(slots[index] instanceof ExtraSlot)
-		{
-			return ((ExtraSlot)slots[index]).displayed;
-		}
-
-		return getItemStack(index);
-	}
-
-	public Object getItemUnderMouse(int x, int y, SlotReason reason)
-	{
-		int index = getSlotIndexUnderMouse(x, y, reason);
-		
-		if(index == -1 || slots[index] == null)
-		{
-			return null;
-		}
-		else if(slots[index] instanceof ExtraSlot)
-		{
-			return ((ExtraSlot)slots[index]).displayed;
-		}
-
-		return getItem(index);
-	}
-
-	public IRenderable getSelectionBox(int x, int y)
-	{
-		int index = getSlotIndexUnderMouse(x, y, SlotReason.REASON_CLICK);
-		ItemSlot slot = null;
-		
-		if(index != -1)
-		{
-			slot = slots[index];
-		}
-		
-		if(slot != null)
-		{
-			return selection[index];
-		}
-		
-		return null;
-	}
 
 	@Override
 	public boolean containsItem(IItemFilter filter)
 	{
-		for(Object item: recipe)
+		for(int i = 0; i < slots.length; i++)
 		{
-			if(filter.matches(item))
+			if(slots[i].matches(filter, recipe, i, SlotType.ANY_SLOT))
 			{
 				return true;
 			}
 		}
 		
-		for(ItemSlot slot: slots)
-		{
-			if(slot instanceof ExtraSlot && ((ExtraSlot)slot).canFilter)
-			{
-				if(filter.matches(((ExtraSlot)slot).displayed))
-				{
-					return true;
-				}
-			}
-		}
-		
 		return false;
 	}
 
 	@Override
-	public boolean containsItem(ItemStack filter)
+	public boolean containsItem(ItemStack stack)
 	{
-		return containsItem(filter, false);
-	}
-
-	@Override
-	public boolean containsItem(ItemStack filter, boolean exactMatch)
-	{
-		for(Object item: recipe)
-		{
-			if(item instanceof ItemStack)
-			{
-				if(areItemsEqual((ItemStack)item, filter, exactMatch))
-				{
-					return true;
-				}
-			}
-			else if(item instanceof ArrayList)
-			{
-				for(ItemStack stack: (ArrayList<ItemStack>)item)
-				{
-					if(areItemsEqual(stack, filter, exactMatch))
-					{
-						return true;
-					}
-				}
-			}
-		}
+		IItemFilter filter = Util.instance.getCommonFilter(stack);
 		
-		for(ItemSlot slot: slots)
-		{
-			if(slot instanceof ExtraSlot && ((ExtraSlot)slot).canFilter)
-			{
-				if(areItemsEqual(((ExtraSlot)slot).displayed, filter, exactMatch))
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-
-	private boolean areItemsEqual(ItemStack first, ItemStack second, boolean exactMatch)
-	{
-		if(first == null)
-		{
-			return (second == null);
-		}
-		else if(exactMatch)
-		{
-			return first.isItemEqual(second);
-		}
-		else
-		{
-			return areItemsEqual(first, second);
-		}
-	}
-	
-	private boolean areItemsEqual(ItemStack first, ItemStack second)
-	{
-		return first != null
-			&& second != null
-			&& first.itemID == second.itemID
-			&& (
-				first.getItemDamage() == -1 ||
-				second.getItemDamage() == -1 ||
-				first.getItemDamage() == second.getItemDamage()
-			);
+		return containsItem(filter);
 	}
 
 	@Override
@@ -367,11 +141,13 @@ public class Recipe implements ICraftGuideRecipe
 		return recipe;
 	}
 	
+	@Override
 	public int width()
 	{
 		return width;
 	}
-	
+
+	@Override
 	public int height()
 	{
 		return height;
@@ -383,5 +159,35 @@ public class Recipe implements ICraftGuideRecipe
 		this.height = height;
 		
 		return this;
+	}
+
+	@Override
+	public List<String> getItemText(int x, int y)
+	{
+		int slot = getSlotIndexUnderMouse(x, y);
+		
+		if(slot == -1 || slots[slot] == null)
+		{
+			return null;
+		}
+		else
+		{
+			return slots[slot].getTooltip(x, y, recipe, slot);
+		}
+	}
+
+	@Override
+	public IItemFilter getRecipeClickedResult(int x, int y)
+	{
+		int slot = getSlotIndexUnderMouse(x, y);
+		
+		if(slot == -1 || slots[slot] == null)
+		{
+			return null;
+		}
+		else
+		{
+			return slots[slot].getClickedFilter(x, y, recipe, slot);
+		}
 	}
 }
