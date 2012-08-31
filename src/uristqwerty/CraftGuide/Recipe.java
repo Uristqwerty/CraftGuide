@@ -3,20 +3,20 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import net.minecraft.src.ItemStack;
 
-public class Recipe implements ICraftGuideRecipe
+public class Recipe implements CraftGuideRecipe
 {
-	protected ISlot[] slots;
+	protected Slot[] slots;
 	protected IRenderable[] selection;
 	protected Object[] recipe;
 	private IRenderable background;
@@ -24,7 +24,7 @@ public class Recipe implements ICraftGuideRecipe
 	
 	private int width = 79, height = 58; 
 	
-	public Recipe(ISlot[] slots, Object[] items, IRenderable background, IRenderable backgroundSelected)
+	public Recipe(Slot[] slots, Object[] items, IRenderable background, IRenderable backgroundSelected)
 	{
 		this.slots = slots;
 		this.recipe = new Object[items.length];
@@ -75,7 +75,7 @@ public class Recipe implements ICraftGuideRecipe
 	}
 	
 	@Override
-	public void draw(IRenderer renderer, int x, int y, boolean mouseOverRecipe, int mouseX, int mouseY)
+	public void draw(Renderer renderer, int x, int y, boolean mouseOverRecipe, int mouseX, int mouseY)
 	{
 		if(mouseOverRecipe)
 		{
@@ -114,7 +114,7 @@ public class Recipe implements ICraftGuideRecipe
 	}
 
 	@Override
-	public boolean containsItem(IItemFilter filter)
+	public boolean containsItem(ItemFilter filter)
 	{
 		for(int i = 0; i < slots.length; i++)
 		{
@@ -130,7 +130,7 @@ public class Recipe implements ICraftGuideRecipe
 	@Override
 	public boolean containsItem(ItemStack stack)
 	{
-		IItemFilter filter = Util.instance.getCommonFilter(stack);
+		ItemFilter filter = Util.instance.getCommonFilter(stack);
 		
 		return containsItem(filter);
 	}
@@ -177,7 +177,7 @@ public class Recipe implements ICraftGuideRecipe
 	}
 
 	@Override
-	public IItemFilter getRecipeClickedResult(int x, int y)
+	public ItemFilter getRecipeClickedResult(int x, int y)
 	{
 		int slot = getSlotIndexUnderMouse(x, y);
 		

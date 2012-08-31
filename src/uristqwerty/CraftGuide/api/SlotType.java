@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.api;
 
 /**
- * SlotType is used to declare the purpose of an ISlot, used
+ * SlotType is used to declare the purpose of a {@link Slot}, used
  * by searches (both in-game and through the API).
  */
 public enum SlotType
@@ -33,7 +33,6 @@ public enum SlotType
 	DISPLAY_SLOT,
 	/**
 	 * Does not show up in searches for {@link ANY_SLOT}.
-	 * 
 	 */
 	HIDDEN_SLOT,
 }

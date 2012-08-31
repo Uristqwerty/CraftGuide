@@ -7,21 +7,21 @@ import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
 import net.minecraft.src.CraftGuide.API.IRecipeProvider;
 import net.minecraft.src.CraftGuide.API.IRecipeTemplate;
 import uristqwerty.CraftGuide.CraftGuideLog;
-import uristqwerty.CraftGuide.RecipeGenerator;
+import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.TextureClip;
 
 public class OldAPITranslator implements IRecipeGenerator
 {
-	private RecipeGenerator actualGenerator;
+	private RecipeGeneratorImplementation actualGenerator;
 	private static ItemStack workbench = new ItemStack(Block.workbench);
 	
-	public OldAPITranslator(RecipeGenerator generator)
+	public OldAPITranslator(RecipeGeneratorImplementation generator)
 	{
 		actualGenerator = generator;
 	}
 
-	public static void generateRecipes(RecipeGenerator generator)
+	public static void generateRecipes(RecipeGeneratorImplementation generator)
 	{
 		new OldAPITranslator(generator).generate();
 	}

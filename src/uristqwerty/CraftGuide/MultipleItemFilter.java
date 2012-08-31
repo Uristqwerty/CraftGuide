@@ -2,28 +2,22 @@ package uristqwerty.CraftGuide;
 
 import java.util.List;
 
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Util;
+
 import net.minecraft.src.ItemStack;
 
-public class MultipleItemFilter extends ItemFilter
+public class MultipleItemFilter implements ItemFilter
 {
 	private List<ItemStack> comparison;
+	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
+	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
 	
 	public MultipleItemFilter(List stack)
 	{
 		comparison = stack;
-	}
-
-	@Override
-	public ItemStack getDisplayStack()
-	{
-		if(comparison == null || comparison.size() < 1)
-		{
-			return null;
-		}
-		else
-		{
-			return comparison.get(0);
-		}
 	}
 
 	@Override
@@ -70,8 +64,55 @@ public class MultipleItemFilter extends ItemFilter
 	}
 
 	@Override
-	public Object getItem()
+	public void draw(Renderer renderer, int x, int y)
 	{
-		return comparison;
+		if(comparison.size() > 0)
+		{
+			ItemStack stack = comparison.get(0);
+			renderer.renderItemStack(x, y, stack);
+			
+			if(stack.getItemDamage() == -1)
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
+			}
+			
+			renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+		}
+	}
+
+	@Override
+	public List<String> getTooltip()
+	{
+		if(comparison.size() > 0)
+		{
+			List<String> text = Util.instance.getItemStackText(comparison.get(0));
+			
+			if(comparison.size() > 1)
+			{
+				text.add("\u00a77Other items:");
+				for(int i = 1; i < comparison.size(); i++)
+				{
+					text.add("\u00a77  " + comparison.get(i).getItemName());
+				}
+			}
+			
+			return text;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	public boolean areItemsEqual(ItemStack first, ItemStack second)
+	{
+		return first != null
+			&& second != null
+			&& first.itemID == second.itemID
+			&& (
+				first.getItemDamage() == -1 ||
+				second.getItemDamage() == -1 ||
+				first.getItemDamage() == second.getItemDamage()
+			);
 	}
 }

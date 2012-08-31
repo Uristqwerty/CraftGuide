@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
@@ -20,6 +20,12 @@ public abstract class Util
 	public static Util instance;
 	
 	/**
+	 * Causes CraftGuide to clear its list of recipes, and reload them with
+	 * exactly the same process that was originally used to build the list.
+	 */
+	public abstract void reloadRecipes();
+	
+	/**
 	 * Converts the passed ItemStack's name and information into a List
 	 * of Strings for display, similar to how GuiContainer does it.
 	 * Additionally, contains logic to try an alternative if given a stack
@@ -35,7 +41,7 @@ public abstract class Util
 	public abstract List<String> getItemStackText(ItemStack stack);
 	
 	/**
-	 * Gets a standard {@link IItemFilter} for any of the common types:
+	 * Gets a standard {@link ItemFilter} for any of the common types:
 	 * <li>ItemStack
 	 * <li>List of ItemStacks
 	 * <li>String
@@ -43,10 +49,10 @@ public abstract class Util
 	 * @param item
 	 * @return
 	 */
-	public abstract IItemFilter getCommonFilter(Object item);
+	public abstract ItemFilter getCommonFilter(Object item);
 
 	/**
-	 * Gets a texture usable with {@link IRenderer#renderRect}
+	 * Gets a texture usable with {@link Renderer#renderRect}
 	 * from a String identifier. At the moment, it only accepts the
 	 * hardcoded values "ItemStack-Any", "ItemStack-Background", and
 	 * "ItemStack-OreDict", but the eventual intention is to load the
@@ -58,4 +64,15 @@ public abstract class Util
 	 * @return
 	 */
 	public abstract NamedTexture getTexture(String identifier);
+	
+	/**
+	 * Returns the number of partial ticks for this frame. I don't know
+	 * quite what they do, but it's the third parameter to 
+	 * {@link net.minecraft.src.GuiScreen#drawScreen}, so I'm assuming
+	 * that at least something needs it. Rather than pass it as an
+	 * extra argument to every drawing method, it is stored at the
+	 * start of rendering the GUI, and can be retrieved with this method.
+	 * @return
+	 */
+	public abstract float getPartialTicks();
 }

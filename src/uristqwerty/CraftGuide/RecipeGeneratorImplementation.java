@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.RecipeGenerator;
+import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.BlankTexture;
 import uristqwerty.gui.texture.BorderedTexture;
@@ -26,15 +25,15 @@ import net.minecraft.src.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class RecipeGenerator implements IRecipeGenerator
+public class RecipeGeneratorImplementation implements RecipeGenerator
 {
-	private Map<ItemStack, List<ICraftGuideRecipe>> recipes = new HashMap<ItemStack, List<ICraftGuideRecipe>>();
+	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private Texture defaultBackground = new BlankTexture();
 	private Texture defaultBackgroundSelected;
 	private static ItemStack workbench = new ItemStack(Block.workbench);
 	
-	public RecipeGenerator()
+	public RecipeGeneratorImplementation()
 	{
 		Texture source = Image.getImage("/gui/CraftGuide.png");
 		defaultBackgroundSelected = new BorderedTexture(
@@ -50,26 +49,9 @@ public class RecipeGenerator implements IRecipeGenerator
 						new TextureClip(source, 153, 37,  2, 2),
 				}, 2);
 	}
-	
-	@Override
-	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots,
-			ItemStack craftingType, String backgroundTexture, int backgroundX,
-			int backgroundY, int backgroundSelectedX, int backgroundSelectedY)
-	{
-		return createRecipeTemplate((ISlot[])slots, craftingType, backgroundTexture, backgroundX, backgroundY, backgroundSelectedX, backgroundSelectedY);
-	}
 
 	@Override
-	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots,
-			ItemStack craftingType, String backgroundTexture, int backgroundX,
-			int backgroundY, String backgroundSelectedTexture,
-			int backgroundSelectedX, int backgroundSelectedY)
-	{
-		return createRecipeTemplate((ISlot[])slots, craftingType, backgroundTexture, backgroundX, backgroundY, backgroundSelectedTexture, backgroundSelectedX, backgroundSelectedY);
-	}
-
-	@Override
-	public IRecipeTemplate createRecipeTemplate(ISlot[] slots,
+	public RecipeTemplate createRecipeTemplate(Slot[] slots,
 			ItemStack craftingType, String backgroundTexture, int backgroundX,
 			int backgroundY, int backgroundSelectedX, int backgroundSelectedY)
 	{
@@ -79,7 +61,7 @@ public class RecipeGenerator implements IRecipeGenerator
 	}
 
 	@Override
-	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType,
+	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType,
 			String backgroundTexture, int backgroundX, int backgroundY,
 			String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY)
 	{
@@ -88,7 +70,7 @@ public class RecipeGenerator implements IRecipeGenerator
 			craftingType = workbench;
 		}
 		
-		return new RecipeTemplate(
+		return new DefaultRecipeTemplate(
 				slots,
 				craftingType,
 				new TextureClip(
@@ -100,37 +82,37 @@ public class RecipeGenerator implements IRecipeGenerator
 	}
 	
 	@Override
-	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType)
+	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType)
 	{
 		if(craftingType == null)
 		{
 			craftingType = workbench;
 		}
 		
-		return new RecipeTemplate(slots, craftingType, defaultBackground, defaultBackgroundSelected);
+		return new DefaultRecipeTemplate(slots, craftingType, defaultBackground, defaultBackgroundSelected);
 	}
 
 	@Override
-	public void addRecipe(IRecipeTemplate template, Object[] items)
+	public void addRecipe(RecipeTemplate template, Object[] items)
 	{
 		addRecipe(template.generate(items), template.getCraftingType());
 	}
 
 	@Override
-	public void addRecipe(ICraftGuideRecipe recipe, ItemStack craftingType)
+	public void addRecipe(CraftGuideRecipe recipe, ItemStack craftingType)
 	{
-		List<ICraftGuideRecipe> recipeList = recipes.get(craftingType);
+		List<CraftGuideRecipe> recipeList = recipes.get(craftingType);
 		
 		if(recipeList == null)
 		{
-			recipeList = new LinkedList<ICraftGuideRecipe>();
+			recipeList = new LinkedList<CraftGuideRecipe>();
 			recipes.put(craftingType, recipeList);
 		}
 		
 		recipeList.add(recipe);
 	}
 
-	public Map<ItemStack, List<ICraftGuideRecipe>> getRecipes()
+	public Map<ItemStack, List<CraftGuideRecipe>> getRecipes()
 	{
 		return recipes;
 	}

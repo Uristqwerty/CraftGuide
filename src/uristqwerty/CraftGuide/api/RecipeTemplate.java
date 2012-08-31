@@ -1,10 +1,10 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import net.minecraft.src.ItemStack;
 
 /**
  */
-public interface IRecipeTemplate
+public interface RecipeTemplate
 {
 	/**
 	 * Sets the width and height that will be used for recipes
@@ -13,7 +13,7 @@ public interface IRecipeTemplate
 	 * @param height
 	 * @return this template, to allow method chaining
 	 */
-	public IRecipeTemplate setSize(int width, int height);
+	public RecipeTemplate setSize(int width, int height);
 	
 	/**
 	 * Gets an ItemStack that represents the type of the recipe.
@@ -26,5 +26,11 @@ public interface IRecipeTemplate
 	 */
 	public ItemStack getCraftingType();
 	
-	public ICraftGuideRecipe generate(Object[] items);
+	/**
+	 * Generate a recipe from an Object[] representing the contents
+	 * of the recipe.
+	 * @param items
+	 * @return
+	 */
+	public CraftGuideRecipe generate(Object[] items);
 }

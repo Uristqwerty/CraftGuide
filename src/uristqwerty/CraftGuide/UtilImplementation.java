@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.NamedTextureObject;
 import uristqwerty.gui.minecraft.Image;
@@ -14,9 +14,11 @@ import uristqwerty.gui.texture.SubTexture;
 
 public class UtilImplementation extends Util
 {
+	private NamedTextureObject textFilter = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 239, 163, 16, 16));
 	private NamedTextureObject itemStackAny = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 238, 18, 18));
 	private NamedTextureObject itemStackOreDict = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 181, 18, 18));
 	private NamedTextureObject itemStackBackground = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 219, 18, 18));
+	public float partialTicks;
 	
 	@Override
 	public NamedTexture getTexture(String identifier)
@@ -33,12 +35,16 @@ public class UtilImplementation extends Util
 		{
 			return itemStackBackground;
 		}
+		else if("TextFilter".equalsIgnoreCase(identifier))
+		{
+			return textFilter;
+		}
 		
 		return null;
 	}
 
 	@Override
-	public IItemFilter getCommonFilter(Object stack)
+	public ItemFilter getCommonFilter(Object stack)
 	{
 		if(stack == null)
 		{
@@ -116,5 +122,17 @@ public class UtilImplementation extends Util
 			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(stack.getItemDamage()));
 			return text;
 		}
+	}
+
+	@Override
+	public void reloadRecipes()
+	{
+		GuiCraftGuide.getInstance().reloadRecipes();
+	}
+
+	@Override
+	public float getPartialTicks()
+	{
+		return partialTicks;
 	}
 }

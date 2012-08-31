@@ -4,21 +4,24 @@ import java.util.List;
 
 import net.minecraft.src.ItemStack;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemSlotImplementation;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.ItemSlotImplementation;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.api.Util;
 
-public class ItemSlotImplementation implements IItemSlotImplementation
+/**
+ * It's a rather silly name, but since it's only directly used in one other class...
+ */
+public class ItemSlotImplementationImplementation implements ItemSlotImplementation
 {
 	private NamedTexture overlayAny;
 	private NamedTexture overlayForge;
 	private NamedTexture background;
 
-	public ItemSlotImplementation()
+	public ItemSlotImplementationImplementation()
 	{
 		overlayAny = Util.instance.getTexture("ItemStack-Any");
 		overlayForge = Util.instance.getTexture("ItemStack-OreDict");
@@ -41,7 +44,7 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 	}
 
 	@Override
-	public void draw(ItemSlot itemSlot, IRenderer renderer, int recipeX, int recipeY, Object data, boolean isMouseOver)
+	public void draw(ItemSlot itemSlot, Renderer renderer, int recipeX, int recipeY, Object data, boolean isMouseOver)
 	{
 		int x = recipeX + itemSlot.x;
 		int y = recipeY + itemSlot.y;
@@ -93,7 +96,7 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 	}
 
 	@Override
-	public boolean matches(ItemSlot itemSlot, IItemFilter search, Object data, SlotType type)
+	public boolean matches(ItemSlot itemSlot, ItemFilter search, Object data, SlotType type)
 	{
 		if(type != itemSlot.slotType && (
 				type != SlotType.ANY_SLOT ||
@@ -131,7 +134,7 @@ public class ItemSlotImplementation implements IItemSlotImplementation
 	}
 
 	@Override
-	public IItemFilter getClickedFilter(int x, int y, Object object)
+	public ItemFilter getClickedFilter(int x, int y, Object object)
 	{
 		return Util.instance.getCommonFilter(object);
 	}

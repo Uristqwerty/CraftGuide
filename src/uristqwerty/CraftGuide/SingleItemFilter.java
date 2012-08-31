@@ -2,11 +2,17 @@ package uristqwerty.CraftGuide;
 
 import java.util.List;
 
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Util;
+
 import net.minecraft.src.ItemStack;
 
-public class SingleItemFilter extends ItemFilter
+public class SingleItemFilter implements ItemFilter
 {
 	private ItemStack comparison;
+	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
 	
 	public SingleItemFilter(ItemStack stack)
 	{
@@ -39,14 +45,31 @@ public class SingleItemFilter extends ItemFilter
 	}
 
 	@Override
-	public ItemStack getDisplayStack()
+	public void draw(Renderer renderer, int x, int y)
 	{
-		return comparison;
+		renderer.renderItemStack(x, y, comparison);
+		
+		if(comparison.getItemDamage() == -1)
+		{
+			renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
+		}
 	}
 
 	@Override
-	public Object getItem()
+	public List<String> getTooltip()
 	{
-		return comparison;
+		return Util.instance.getItemStackText(comparison);
+	}
+
+	public boolean areItemsEqual(ItemStack first, ItemStack second)
+	{
+		return first != null
+			&& second != null
+			&& first.itemID == second.itemID
+			&& (
+				first.getItemDamage() == -1 ||
+				second.getItemDamage() == -1 ||
+				first.getItemDamage() == second.getItemDamage()
+			);
 	}
 }

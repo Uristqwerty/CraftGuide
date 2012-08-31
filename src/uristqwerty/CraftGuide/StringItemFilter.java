@@ -1,17 +1,22 @@
 package uristqwerty.CraftGuide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.Util;
 
-public class StringItemFilter implements IItemFilter
+public class StringItemFilter implements ItemFilter
 {
 	private String comparison;
+	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 	
 	public StringItemFilter(String string)
 	{
-		comparison = string;
+		comparison = string.toLowerCase();
 	}
 	
 	@Override
@@ -25,7 +30,7 @@ public class StringItemFilter implements IItemFilter
 			{
 				if(o instanceof String)
 				{
-					if(((String)o).indexOf(comparison) != -1)
+					if(((String)o).toLowerCase().contains(comparison))
 					{
 						return true;
 					}
@@ -36,7 +41,19 @@ public class StringItemFilter implements IItemFilter
 		}
 		else if(item instanceof String)
 		{
-			return ((String)item).indexOf(comparison) != -1;
+			return ((String)item).toLowerCase().contains(comparison);
+		}
+		else if(item instanceof List)
+		{
+			for(Object o: (List)item)
+			{
+				if(matches(o))
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		else
 		{
@@ -45,14 +62,16 @@ public class StringItemFilter implements IItemFilter
 	}
 
 	@Override
-	public ItemStack getDisplayStack()
+	public void draw(Renderer renderer, int x, int y)
 	{
-		return null;
+		renderer.renderRect(x, y, 16, 16, textImage);
 	}
 
 	@Override
-	public Object getItem()
+	public List<String> getTooltip()
 	{
-		return comparison;
+		List<String> text = new ArrayList<String>(1);
+		text.add("\u00a77Text search: '" + comparison + "'");
+		return text;
 	}
 }

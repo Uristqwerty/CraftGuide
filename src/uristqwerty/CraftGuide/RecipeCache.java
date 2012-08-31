@@ -3,6 +3,7 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeFilter2;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
+import uristqwerty.CraftGuide.api.BasicRecipeFilter;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.RecipeFilter;
+import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.ui.IRecipeCacheListener;
 
 import net.minecraft.src.ItemStack;
@@ -23,11 +24,11 @@ import net.minecraft.src.CraftGuide.OldAPITranslator;
 public class RecipeCache
 {
 	private SortedSet<CraftType> craftingTypes = new TreeSet<CraftType>();
-	private Map<CraftType, List<ICraftGuideRecipe>> craftResults = new HashMap<CraftType, List<ICraftGuideRecipe>>();
-	private List<ICraftGuideRecipe> typeResults;
-	private List<ICraftGuideRecipe> filteredResults;
-	private RecipeGenerator generator = new RecipeGenerator();
-	private IItemFilter filterItem = null;
+	private Map<CraftType, List<CraftGuideRecipe>> craftResults = new HashMap<CraftType, List<CraftGuideRecipe>>();
+	private List<CraftGuideRecipe> typeResults;
+	private List<CraftGuideRecipe> filteredResults;
+	private RecipeGeneratorImplementation generator = new RecipeGeneratorImplementation();
+	private ItemFilter filterItem = null;
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
 	private Set<CraftType> currentTypes = null;
 	private SortedSet<CraftType> allItems = new TreeSet<CraftType>();
@@ -41,7 +42,7 @@ public class RecipeCache
 	public void reset()
 	{
 		CraftGuideLog.log("(re)loading recipe list...");
-		Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes = generateRecipes();
+		Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
 	
 		filterRawRecipes(rawRecipes);
 		craftResults.clear();
@@ -58,7 +59,7 @@ public class RecipeCache
 			
 			if(!craftResults.containsKey(type))
 			{
-				craftResults.put(type, new ArrayList<ICraftGuideRecipe>());
+				craftResults.put(type, new ArrayList<CraftGuideRecipe>());
 			}
 			
 			craftResults.get(type).addAll(rawRecipes.get(key));
@@ -95,9 +96,9 @@ public class RecipeCache
 	{
 		allItems.clear();
 		
-		for(List<ICraftGuideRecipe> type: craftResults.values())
+		for(List<CraftGuideRecipe> type: craftResults.values())
 		{
-			for(ICraftGuideRecipe recipe: type)
+			for(CraftGuideRecipe recipe: type)
 			{
 				for(Object item: recipe.getItems())
 				{
@@ -174,18 +175,18 @@ public class RecipeCache
 		}
 	}
 
-	private Map<ItemStack, List<ICraftGuideRecipe>> generateRecipes()
+	private Map<ItemStack, List<CraftGuideRecipe>> generateRecipes()
 	{
 		generator.clearRecipes();
 		CraftGuideLog.log("  Getting recipes...");
 		for(Object object: ReflectionAPI.APIObjects)
 		{
-			if(object instanceof IRecipeProvider)
+			if(object instanceof RecipeProvider)
 			{
 				CraftGuideLog.log("    Generating recipes from " + object.getClass().getName());
 				try
 				{
-					((IRecipeProvider)object).generateRecipes(generator);
+					((RecipeProvider)object).generateRecipes(generator);
 				}
 				catch(Exception e)
 				{
@@ -199,22 +200,36 @@ public class RecipeCache
 		return generator.getRecipes();
 	}
 
-	private void filterRawRecipes(Map<ItemStack, List<ICraftGuideRecipe>> rawRecipes)
+	private void filterRawRecipes(Map<ItemStack, List<CraftGuideRecipe>> rawRecipes)
 	{
 		CraftGuideLog.log("  Filtering recipes...");
 		for(Object object: ReflectionAPI.APIObjects)
 		{
-			if(object instanceof IRecipeFilter2)
+			if(object instanceof RecipeFilter)
 			{
 				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
-				rawRecipes = ((IRecipeFilter2)object).removeRecipes(rawRecipes);
-			}
-			else if(object instanceof IRecipeFilter)
-			{
-				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
+				
 				for(ItemStack type: rawRecipes.keySet())
 				{
-					rawRecipes.put(type, ((IRecipeFilter)object).removeRecipes(rawRecipes.get(type)));
+					rawRecipes.put(type, ((RecipeFilter)object).filterRecipes(rawRecipes.get(type), type));
+				}
+			}
+			else if(object instanceof BasicRecipeFilter)
+			{
+
+				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
+				
+				for(ItemStack type: rawRecipes.keySet())
+				{
+					Iterator<CraftGuideRecipe> iterator = rawRecipes.get(type).iterator();
+					
+					while(iterator.hasNext())
+					{
+						if(!((BasicRecipeFilter)object).shouldKeepRecipe(iterator.next(), type))
+						{
+							iterator.remove();
+						}
+					}
 				}
 			}
 		}
@@ -222,7 +237,7 @@ public class RecipeCache
 
 	public void setTypes(Set<CraftType> types)
 	{
-		typeResults = new ArrayList<ICraftGuideRecipe>();
+		typeResults = new ArrayList<CraftGuideRecipe>();
 		currentTypes = types;
 		
 		if(types == null)
@@ -246,12 +261,12 @@ public class RecipeCache
 		filter(filterItem);
 	}
 
-	public List<ICraftGuideRecipe> getRecipes()
+	public List<CraftGuideRecipe> getRecipes()
 	{
 		return filteredResults;
 	}
 	
-	public void filter(IItemFilter filter)
+	public void filter(ItemFilter filter)
 	{
 		filterItem = filter;
 		
@@ -261,9 +276,9 @@ public class RecipeCache
 		}
 		else
 		{
-			filteredResults = new ArrayList<ICraftGuideRecipe>();
+			filteredResults = new ArrayList<CraftGuideRecipe>();
 			
-			for(ICraftGuideRecipe recipe: typeResults)
+			for(CraftGuideRecipe recipe: typeResults)
 			{
 				if(recipe.containsItem(filter))
 				{
@@ -278,7 +293,7 @@ public class RecipeCache
 		}
 	}
 	
-	public IItemFilter getFilterItem()
+	public ItemFilter getFilter()
 	{
 		return filterItem;
 	}

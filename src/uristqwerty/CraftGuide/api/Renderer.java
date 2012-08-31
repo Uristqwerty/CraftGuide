@@ -1,12 +1,12 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import net.minecraft.src.ItemStack;
 
 /**
  * Provides useful methods to render common things, in 
- * {@link ISlot#draw} and {@link ICraftGuideRecipe#draw}.
+ * {@link Slot#draw} and {@link CraftGuideRecipe#draw}.
  */
-public interface IRenderer
+public interface Renderer
 {
 	/**
 	 * Draws an ItemStack at the specified screen coordinates.

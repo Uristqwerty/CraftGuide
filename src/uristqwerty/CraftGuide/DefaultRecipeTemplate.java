@@ -1,23 +1,23 @@
 package uristqwerty.CraftGuide;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import uristqwerty.gui.texture.Texture;
 import net.minecraft.src.ItemStack;
 
-public class RecipeTemplate implements IRecipeTemplate
+public class DefaultRecipeTemplate implements RecipeTemplate
 {
-	private ISlot[] slots;
+	private Slot[] slots;
 	private Texture backgroundTexture, backgroundSelectedTexture;
 	private IRenderable background, backgroundSelected;
 	private int width = 79, height = 58; 
 	
 	private ItemStack craftingType;
 	
-	public RecipeTemplate(ISlot[] slots, ItemStack craftingType, Texture background, Texture backgroundSelected)
+	public DefaultRecipeTemplate(Slot[] slots, ItemStack craftingType, Texture background, Texture backgroundSelected)
 	{
 		this.slots = slots;
 		this.backgroundTexture = background;
@@ -28,13 +28,13 @@ public class RecipeTemplate implements IRecipeTemplate
 	}
 
 	@Override
-	public ICraftGuideRecipe generate(Object[] items)
+	public CraftGuideRecipe generate(Object[] items)
 	{
 		return new Recipe(slots, items, background, backgroundSelected).setSize(width, height);
 	}
 
 	@Override
-	public IRecipeTemplate setSize(int width, int height)
+	public RecipeTemplate setSize(int width, int height)
 	{
 		this.width = width;
 		this.height = height;

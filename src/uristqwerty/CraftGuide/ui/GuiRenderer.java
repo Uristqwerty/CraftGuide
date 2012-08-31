@@ -11,8 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.Gui;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
+import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.ITexture;
@@ -28,7 +27,7 @@ import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 import net.minecraft.src.Tessellator;
 
-public class GuiRenderer extends Renderer implements IRenderer
+public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.Renderer
 {
     private RenderItem itemRenderer = new RenderItem();
 	private Minecraft minecraft;

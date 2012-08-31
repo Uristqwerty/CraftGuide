@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.ui;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.NamedTexture;
+import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.gui.Renderer;
 import uristqwerty.gui.texture.Texture;
 

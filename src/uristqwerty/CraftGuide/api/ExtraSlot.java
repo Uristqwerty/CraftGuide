@@ -1,25 +1,23 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
 
-import uristqwerty.CraftGuide.api.SlotType;
-
+/**
+ * An extension of ItemSlot that allows certain interactions
+ * to be disabled, and uses fixed Object provided during
+ * initialisation rather than the object matching this slot
+ * in the recipe.
+ * <br><br>
+ * Unlike in the old API, there is no "can filter" option,
+ * as that can be accomplished through {@link #setSlotType}
+ * which is already present in ItemSlot.
+ */
 public class ExtraSlot extends ItemSlot
 {
 	public Object displayed;
 	public boolean showName = false;
 	public boolean canClick = false;
-	
-	@Deprecated
-	public boolean canFilter = false;
-	
-	@Deprecated
-	public ExtraSlot(int x, int y, int width, int height, int index, ItemStack displayedItem)
-	{
-		this(x, y, width, height, displayedItem);
-	}
 	
 	public ExtraSlot(int x, int y, int width, int height, Object displayedItem)
 	{
@@ -28,7 +26,7 @@ public class ExtraSlot extends ItemSlot
 	}
 	
 	@Override
-	public void draw(IRenderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver)
+	public void draw(Renderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver)
 	{
 		implementation.draw(this, renderer, x, y, displayed, canClick && isMouseOver);
 	}
@@ -47,7 +45,7 @@ public class ExtraSlot extends ItemSlot
 	}
 	
 	@Override
-	public IItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex)
+	public ItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex)
 	{
 		if(canClick)
 		{
@@ -85,30 +83,6 @@ public class ExtraSlot extends ItemSlot
 	}
 
 	/**
-	 * Sets whether this slot is considered when searching.
-	 * <br><br>
-	 * {@link ItemSlot#setSlotType(SlotType)} is preferred, as
-	 * it is more flexible and specific
-	 * 
-	 * @param filterable
-	 * @return this ExtraSlot, to permit method chaining
-	 */
-	@Deprecated
-	public ExtraSlot filterable(boolean filterable)
-	{
-		if(filterable)
-		{
-			setSlotType(SlotType.MACHINE_SLOT);
-		}
-		else
-		{
-			setSlotType(SlotType.DISPLAY_SLOT);
-		}
-		canFilter = filterable;
-		return this;
-	}
-
-	/**
 	 * A shortened version of {@link #clickable(boolean)}
 	 * that passes true
 	 * 
@@ -128,20 +102,5 @@ public class ExtraSlot extends ItemSlot
 	public ExtraSlot showName()
 	{
 		return showName(true);
-	}
-
-	/**
-	 * A shortened version of {@link #filterable(boolean)}
-	 * that passes true
-	 * <br><br>
-	 * {@link ItemSlot#setSlotType(SlotType)} is preferred, as
-	 * it is more flexible and specific
-	 * 
-	 * @return this ExtraSlot, to permit method chaining
-	 */
-	@Deprecated
-	public ExtraSlot filterable()
-	{
-		return filterable(true);
 	}
 }

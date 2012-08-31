@@ -9,8 +9,8 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.Util;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.Mod;
@@ -36,6 +36,7 @@ public class CraftGuide
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
 	public static boolean alwaysShowID = false;
+	public static boolean textSearchRequiresShift;
 
 	private int itemCraftGuideID = 23361;
 	
@@ -45,7 +46,7 @@ public class CraftGuide
 		loadProperties();
 		initKeybind();
 		Util.instance = new UtilImplementation();
-		ItemSlot.implementation = new ItemSlotImplementation();
+		ItemSlot.implementation = new ItemSlotImplementationImplementation();
 	}
 
 	@Init
@@ -161,6 +162,7 @@ public class CraftGuide
 		config.setProperty("resizeRate", "0");
 		config.setProperty("gridPacking", Boolean.toString(true));
 		config.setProperty("alwaysShowID", Boolean.toString(false));
+		config.setProperty("textSearchRequiresShift", Boolean.toString(false));
 	}
 
 	private void loadProperties()
@@ -215,6 +217,7 @@ public class CraftGuide
 		pauseWhileOpen = Boolean.valueOf(config.getProperty("PauseWhileOpen"));
 		gridPacking = Boolean.valueOf(config.getProperty("gridPacking"));
 		alwaysShowID = Boolean.valueOf(config.getProperty("alwaysShowID"));
+		textSearchRequiresShift = Boolean.valueOf(config.getProperty("textSearchRequiresShift"));
 
 		if(!configFile.exists())
 		{

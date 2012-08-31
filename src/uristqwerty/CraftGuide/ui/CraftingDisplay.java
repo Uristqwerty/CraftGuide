@@ -3,9 +3,9 @@ package uristqwerty.CraftGuide.ui;
 import java.util.List;
 
 import uristqwerty.CraftGuide.RecipeCache;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IItemFilter;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRenderer;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
@@ -18,7 +18,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
 	private IRenderable itemNameOverlay = new Overlay(itemName);
 	private RecipeCache recipeCache;
-	private ICraftGuideRecipe recipeUnderMouse;
+	private CraftGuideRecipe recipeUnderMouse;
 	
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
@@ -47,7 +47,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	@Override
 	public void renderGridCell(GuiRenderer renderer, int xOffset, int yOffset, int cell)
 	{
-		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
 		
 		if(cell < recipes.size())
 		{
@@ -55,7 +55,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		}
 	}
 
-	private void renderRecipe(IRenderer renderer, int xOffset, int yOffset, ICraftGuideRecipe recipe)
+	private void renderRecipe(Renderer renderer, int xOffset, int yOffset, CraftGuideRecipe recipe)
 	{
 		if(recipe == recipeUnderMouse)
 		{
@@ -67,7 +67,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		}
 	}
 
-	public void setFilter(IItemFilter filter)
+	public void setFilter(ItemFilter filter)
 	{
 		recipeCache.filter(filter);
 	}
@@ -81,10 +81,10 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	
 	private void updateGridSize()
 	{
-		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
 		int maxWidth = 16, maxHeight = 16;
 		
-		for(ICraftGuideRecipe recipe: recipes)
+		for(CraftGuideRecipe recipe: recipes)
 		{
 			maxWidth = Math.max(maxWidth, recipe.width());
 			maxHeight = Math.max(maxHeight, recipe.height());
@@ -102,11 +102,11 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	@Override
 	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
 	{
-		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
 		
 		if(inBounds && cell < recipes.size())
 		{
-			ICraftGuideRecipe recipe = recipes.get(cell);
+			CraftGuideRecipe recipe = recipes.get(cell);
 			
 			if(x < recipe.width() && y < recipe.height())
 			{
@@ -134,7 +134,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	@Override
 	public void cellClicked(int cell, int x, int y)
 	{
-		List<ICraftGuideRecipe> recipes = recipeCache.getRecipes();
+		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
 		
 		if(cell < recipes.size())
 		{
@@ -142,9 +142,9 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 		}
 	}
 
-	private void recipeClicked(ICraftGuideRecipe recipe, int x, int y)
+	private void recipeClicked(CraftGuideRecipe recipe, int x, int y)
 	{
-		IItemFilter stack = recipe.getRecipeClickedResult(x, y);
+		ItemFilter stack = recipe.getRecipeClickedResult(x, y);
 		
 		if(stack != null)
 		{

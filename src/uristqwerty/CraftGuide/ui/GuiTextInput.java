@@ -169,7 +169,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 				
 				return;
 			}
-			else if(Character.toString(eventChar).matches("[a-zA-Z0-9 _-]"))
+			else if(eventChar != 0)
 			{
 				before = before + eventChar;
 			}

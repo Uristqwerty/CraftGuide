@@ -1,8 +1,8 @@
 package net.minecraft.src.CraftGuide;
 
-import uristqwerty.CraftGuide.RecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
+import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import uristqwerty.CraftGuide.api.ExtraSlot;
+import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.gui.texture.Texture;
 import net.minecraft.src.ItemStack;
@@ -10,13 +10,13 @@ import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 
 public class FakeRecipeTemplate implements IRecipeTemplateResizable
 {
-	private RecipeTemplate actualTemplate;
+	private DefaultRecipeTemplate actualTemplate;
 	private int[] slotMapping;
 
 	public FakeRecipeTemplate(net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot[] slots, ItemStack craftingType,
 			Texture background, Texture backgroundSelected)
 	{
-		actualTemplate = new RecipeTemplate(convertItemSlots(slots), craftingType, background, backgroundSelected);
+		actualTemplate = new DefaultRecipeTemplate(convertItemSlots(slots), craftingType, background, backgroundSelected);
 	}
 
 	private ItemSlot[] convertItemSlots(
@@ -48,7 +48,6 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 		return slots;
 	}
 
-	@SuppressWarnings("deprecation")
 	private ItemSlot convertSlot(
 			net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot slot)
 	{
@@ -57,7 +56,6 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 			return new ExtraSlot(slot.x, slot.y, slot.width, slot.height,
 					((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).displayed)
 				.clickable(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canClick)
-				.filterable(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canFilter)
 				.showName(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).showName)
 				.setSlotType(((net.minecraft.src.CraftGuide.API.ExtraSlot2)slot).canFilter?
 						SlotType.OTHER_SLOT : SlotType.DISPLAY_SLOT);
@@ -79,7 +77,7 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 		}
 	}
 
-	public uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate getRealTemplate()
+	public uristqwerty.CraftGuide.api.RecipeTemplate getRealTemplate()
 	{
 		return actualTemplate;
 	}

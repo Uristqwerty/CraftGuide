@@ -3,10 +3,13 @@ package uristqwerty.CraftGuide.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
-import uristqwerty.CraftGuide.ui.IButtonListener.Event;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
 import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
@@ -14,7 +17,6 @@ import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
 import uristqwerty.gui.minecraft.Image;
 
-import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
 public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheListener, ITextInputListener
@@ -29,6 +31,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private IRenderable itemNameOverlay = new Overlay(itemName);
 	private boolean overItem = false;
 	private String searchText = "";
+	
+	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 	
 	private static IRenderable overlayAny = new TexturedRect(
 			0, 0, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
@@ -56,17 +60,37 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		if(cell < itemResults.size())
 		{
 			recipeCache.filter(Util.instance.getCommonFilter(itemResults.get(cell)));
-			display.onButtonEvent(backButton, Event.PRESS);
+			display.openTab(backButton);
 		}
+		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
+		{
+			recipeCache.filter(Util.instance.getCommonFilter(searchText));
+			display.openTab(backButton);
+		}
+	}
+
+	@Override
+	public void mouseMoved(int x, int y)
+	{
+		overItem = false;
+		super.mouseMoved(x, y);
 	}
 
 	@Override
 	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
 	{
-		if(inBounds && cell < itemResults.size())
+		if(inBounds)
 		{
-			overItem = true;
-			itemName.setText(Util.instance.getItemStackText(displayItem(cell)));
+			if(cell < itemResults.size())
+			{
+				overItem = true;
+				itemName.setText(Util.instance.getItemStackText(displayItem(cell)));
+			}
+			else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
+			{
+				overItem = true;
+				itemName.setText("\u00a77Text search: '" + searchText + "'");
+			}
 		}
 	}
 
@@ -89,6 +113,11 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			{
 				overlayForge.render(renderer, xOffset, yOffset);
 			}
+		}
+		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
+		{
+			background.render(renderer, xOffset, yOffset);
+			renderer.renderRect(xOffset + 1, yOffset + 1, 16, 16, textImage);
 		}
 	}
 
@@ -120,12 +149,6 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			render(itemNameOverlay);
 		}
 	}
-	@Override
-	public void mouseMoved(int x, int y)
-	{
-		overItem = false;
-		super.mouseMoved(x, y);
-	}
 
 	@Override
 	public void onReset(RecipeCache cache)
@@ -145,6 +168,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			{
 				itemResults.add(((CraftType)item).getStack());
 			}
+			
+			setCells(itemResults.size());
 		}
 		else
 		{
@@ -152,25 +177,23 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			{
 				ItemStack stack = ((CraftType)item).getDisplayStack();
 				
-				if(Item.itemsList[stack.itemID] != null)
+				try
 				{
-					try
+					for(String line: (List<String>)stack.getItemNameandInformation())
 					{
-						String name = Item.itemsList[stack.itemID].getItemDisplayName(stack);
-						
-						if(name != null && name.toLowerCase().contains(text.toLowerCase()))
+						if(line != null && line.toLowerCase().contains(text.toLowerCase()))
 						{
 							itemResults.add(stack);
 						}
 					}
-					catch (Exception e)
-					{
-					}
+				}
+				catch (Exception e)
+				{
 				}
 			}
+			
+			setCells(itemResults.size() + 1);
 		}
-
-		setCells(itemResults.size());
 	}
 
 
@@ -182,6 +205,11 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void onSubmit(GuiTextInput input)
 	{
+		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || CraftGuide.textSearchRequiresShift == false)
+		{
+			recipeCache.filter(Util.instance.getCommonFilter(input.getText()));
+			display.openTab(backButton);
+		}
 	}
 
 	@Override

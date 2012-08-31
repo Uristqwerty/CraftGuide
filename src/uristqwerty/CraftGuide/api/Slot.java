@@ -1,12 +1,40 @@
-package uristqwerty.CraftGuide.WIP_API_DoNotUse;
+package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
-import uristqwerty.CraftGuide.api.SlotType;
-
-public interface ISlot
+/**
+ * A Slot represents a single component of a recipe being displayed by
+ * CraftGuide. Similar to how Minecraft handles items and blocks, one
+ * instance of a slot is used to handle the logic of multiple recipes.
+ * <br><br>
+ * Each method's parameters include an Object[] representing the specific
+ * recipe, and the index of the Object related to this slot, allowing
+ * implementations that react differently based on more than one component
+ * of the recipe.
+ * <br><br>
+ * Slot is only used by the default implementation of CraftGuideRecipe, a
+ * custom implementation may opt to ignore any part of this, or not use it
+ * entirely, but if it does, then it should provide some sort of logic to
+ * perform the same functionality. For example, one mod may opt to extend
+ * this interface with a number of more specific methods, and implement a
+ * recipe that mainly uses the alternate methods in certain situations.
+ * For most mods, however, the existing recipe mechanics should be
+ * sufficient (most shouldn't even need more than the provided ItemSlot).
+ */
+public interface Slot
 {
-	public void draw(IRenderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver);
+	/**
+	 * This method is called in order to draw this slot. (x, y) is the
+	 * absolute coordinate of the top left corner of the containing
+	 * recipe.
+	 * @param renderer
+	 * @param x
+	 * @param y
+	 * @param data
+	 * @param dataIndex
+	 * @param isMouseOver
+	 */
+	public void draw(Renderer renderer, int x, int y, Object[] data, int dataIndex, boolean isMouseOver);
 	
 	/**
 	 * When this slot is clicked on in a recipe, this method is called in
@@ -22,7 +50,7 @@ public interface ISlot
 	 * @param dataIndex this slot's index in data
 	 * @return null, or an IItemFilter
 	 */
-	public IItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex);
+	public ItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex);
 	
 	/**
 	 * This method is used by CraftGuide to determine whether a specific point
@@ -53,12 +81,12 @@ public interface ISlot
 	public List<String> getTooltip(int x, int y, Object[] data, int dataIndex);
 
 	/**
-	 * Used to test if a specific slot matches the searched {@link IItemFilter}
+	 * Used to test if a specific slot matches the searched {@link ItemFilter}
 	 * 
 	 * @param filter	the Object being compared the the contents of this slot
 	 * @param data		the recipe's raw data array
 	 * @param dataIndex	this slot's index
 	 * @param type		the type of slot that is being searched for
 	 */
-	public boolean matches(IItemFilter filter, Object[] data, int dataIndex, SlotType type);
+	public boolean matches(ItemFilter filter, Object[] data, int dataIndex, SlotType type);
 }

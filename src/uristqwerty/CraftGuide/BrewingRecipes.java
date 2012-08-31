@@ -5,32 +5,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.RecipeGenerator;
+import uristqwerty.CraftGuide.api.RecipeProvider;
+import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.PotionHelper;
 
-public class BrewingRecipes extends CraftGuideAPIObject implements IRecipeProvider
+public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
-	private final ISlot[] slots = new ItemSlot[]{
+	private final Slot[] slots = new ItemSlot[]{
 		new ItemSlot(12, 12, 16, 16).setSlotType(SlotType.INPUT_SLOT),
 		new ItemSlot(12, 30, 16, 16).setSlotType(SlotType.INPUT_SLOT),
 		new ItemSlot(49, 21, 16, 16).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
 	@Override
-	public void generateRecipes(IRecipeGenerator generator)
+	public void generateRecipes(RecipeGenerator generator)
 	{
 		ItemStack stack = new ItemStack(Item.brewingStand);
 		List<ItemStack[]> recipes = getRecipes();
-		IRecipeTemplate template = generator.createRecipeTemplate(slots, stack,
+		RecipeTemplate template = generator.createRecipeTemplate(slots, stack,
 			"/gui/BrewGuide.png", 1, 1, 82, 1);
 		
 		for(ItemStack[] recipe: recipes)

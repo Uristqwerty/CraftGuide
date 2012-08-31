@@ -4,12 +4,12 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeProvider;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeTemplate;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ISlot;
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.ItemSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.RecipeGenerator;
+import uristqwerty.CraftGuide.api.RecipeProvider;
+import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
 import net.minecraft.src.Block;
@@ -20,9 +20,9 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecipeProvider
+public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider
 {
-	private final ISlot[] shapelessCraftingSlots = new ItemSlot[]{
+	private final Slot[] shapelessCraftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16),
 		new ItemSlot(21,  3, 16, 16),
 		new ItemSlot(39,  3, 16, 16),
@@ -35,7 +35,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
-	private final ISlot[] craftingSlots = new ItemSlot[]{
+	private final Slot[] craftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(21,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(39,  3, 16, 16).drawOwnBackground(),
@@ -48,7 +48,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
-	private final ISlot[] smallCraftingSlots = new ItemSlot[]{
+	private final Slot[] smallCraftingSlots = new ItemSlot[]{
 		new ItemSlot(12, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(30, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(12, 30, 16, 16).drawOwnBackground(),
@@ -56,22 +56,22 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
-	private final ISlot[] furnaceSlots = new ItemSlot[]{
+	private final Slot[] furnaceSlots = new ItemSlot[]{
 		new ItemSlot(13, 21, 16, 16),
 		new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 
 	@Override
-	public void generateRecipes(IRecipeGenerator generator)
+	public void generateRecipes(RecipeGenerator generator)
 	{
-		IRecipeTemplate craftingTemplate = generator.createRecipeTemplate(craftingSlots, null);
-		IRecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlots, null);
+		RecipeTemplate craftingTemplate = generator.createRecipeTemplate(craftingSlots, null);
+		RecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlots, null);
 		
-		IRecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
+		RecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
 			shapelessCraftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 121, 82, 121);
 		
-		IRecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
+		RecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
 			furnaceSlots, new ItemStack(Block.stoneOvenActive),
 			"/gui/CraftGuideRecipe.png",  1, 181, 82, 181);
 		
@@ -79,7 +79,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		addFurnaceRecipes(furnaceTemplate, generator);
 	}
 	
-	private void addFurnaceRecipes(IRecipeTemplate template, IRecipeGenerator generator)
+	private void addFurnaceRecipes(RecipeTemplate template, RecipeGenerator generator)
 	{
 		Map furnaceRecipes = FurnaceRecipes.smelting().getSmeltingList();
 		
@@ -113,7 +113,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements IRecip
 		catch(IllegalAccessException e){}
 	}
 	
-	private void addCraftingRecipes(IRecipeTemplate template, IRecipeTemplate templateSmall, IRecipeTemplate templateShapeless, IRecipeGenerator generator)
+	private void addCraftingRecipes(RecipeTemplate template, RecipeTemplate templateSmall, RecipeTemplate templateShapeless, RecipeGenerator generator)
 	{
 		List recipes = CraftingManager.getInstance().getRecipeList();
 		

@@ -1,9 +1,8 @@
 package uristqwerty.CraftGuide;
 
-
 import org.lwjgl.input.Keyboard;
 
-import uristqwerty.CraftGuide.WIP_API_DoNotUse.Util;
+import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.ButtonTemplate;
 import uristqwerty.CraftGuide.ui.CraftTypeDisplay;
 import uristqwerty.CraftGuide.ui.CraftingDisplay;
@@ -12,7 +11,6 @@ import uristqwerty.CraftGuide.ui.GuiBorderedRect;
 import uristqwerty.CraftGuide.ui.GuiButton;
 import uristqwerty.CraftGuide.ui.GuiElement;
 import uristqwerty.CraftGuide.ui.GuiImage;
-import uristqwerty.CraftGuide.ui.GuiItemStack;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.GuiResizeHandle;
 import uristqwerty.CraftGuide.ui.GuiScrollBar;
@@ -32,7 +30,7 @@ import net.minecraft.src.ItemStack;
 public class GuiCraftGuide extends Gui
 {
 	private RecipeCache recipeCache = new RecipeCache();
-	private GuiItemStack filterStack;
+	private FilterDisplay filter;
 	private CraftingDisplay craftingDisplay;
 	private GuiWindow guiOverlay;
 
@@ -144,9 +142,9 @@ public class GuiCraftGuide extends Gui
 			new GuiImage(40, 146, 18, 18, guiTexture, 238, 219)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 		
-		filterStack = new GuiItemStack(41, 147, false);
-		filterStack.anchor(AnchorPoint.BOTTOM_LEFT);
-		recipeTab.addElement(filterStack);
+		filter = new FilterDisplay(41, 147);
+		filter.anchor(AnchorPoint.BOTTOM_LEFT);
+		recipeTab.addElement(filter);
 		
 		GuiElement recipeArea = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
@@ -330,16 +328,9 @@ public class GuiCraftGuide extends Gui
 	{
 		try
 		{
+			((UtilImplementation)Util.instance).partialTicks = f;
 			guiWindow.centerOn(width / 2, height / 2);
-			
-			if(recipeCache.getFilterItem() != null)
-			{
-				filterStack.setItem(recipeCache.getFilterItem().getItem());
-			}
-			else
-			{
-				filterStack.setItem(null);
-			}
+			filter.setFilter(recipeCache.getFilter());
 			
 			super.drawScreen(mouseX, mouseY, f);
 		}
