@@ -25,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
-import net.minecraft.src.Tessellator;
 
 public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.Renderer
 {
@@ -45,7 +44,6 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 	
 	public void startFrame(Minecraft mc, Gui gui)
 	{
-		//System.out.println("startFrame(...)");
 		GuiTexture.refreshTextures(mc.renderEngine);
 		minecraft = mc;
 		this.gui = gui;
@@ -129,125 +127,9 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 		this.v = v;
 	}
 
-	public void drawTexturedRect(int x, int y, int width, int height)
+	public void drawGradient(int x, int y, int width, int height, int topColor, int bottomColor)
 	{
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(770, 771);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_F((float)red, (float)green, (float)blue, (float)alpha);
-        
-        if(subtexEnabled)
-        {
-        	drawSubTexRect(tessellator, x, y, width, height);
-        }
-        else
-        {
-        	drawTexturedRect(tessellator, x, y, width, height, 0, 0);
-        }
-        
-        tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
-	}
-
-	private void drawSubTexRect(Tessellator tessellator, int x, int y, int width, int height)
-	{
-		if(subtex_width < 1 || subtex_height < 1)
-		{
-			return;
-		}
-		
-		int texX = u % subtex_width;
-		int texY = v % subtex_height;
-		int rectX = x;
-		int rectY = y;
-		
-		while(rectX < x + width)
-		{
-			int subWidth = subtex_width - texX;
-			
-			if(rectX + subWidth > x + width)
-			{
-				subWidth = x + width - rectX;
-			}
-			
-			while(rectY < y + height)
-			{
-				int subHeight = subtex_height - texY;
-				
-				if(rectY + subHeight > y + height)
-				{
-					subHeight = y + height - rectY;
-				}
-				
-				drawTexturedRect(tessellator, rectX, rectY, subWidth, subHeight, texX + subtex_x, texY + subtex_y);
-				
-				rectY += subtex_height - texY;
-				texY = 0;
-			}
-			
-			texY = v % subtex_height;
-			rectY = y;
-			
-			rectX += subtex_width - texX;
-			texX = 0;
-		}
-	}
-
-	private void drawTexturedRect(Tessellator tessellator, int x, int y, int width, int height, int u, int v)
-	{
-		u += this.u;
-		v += this.v;
-		
-        tessellator.addVertexWithUV(x		 , y + height, 0, (u) / textureWidth		, (v + height) / textureHeight);
-        tessellator.addVertexWithUV(x + width, y + height, 0, (u + width) / textureWidth, (v + height) / textureHeight);
-        tessellator.addVertexWithUV(x + width, y		 , 0, (u + width) / textureWidth, (v) / textureHeight);
-        tessellator.addVertexWithUV(x		 , y		 , 0, (u) / textureWidth		, (v) / textureHeight);
-	}
-
-	public void drawRect(int x, int y, int width, int height)
-	{
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBlendFunc(770, 771);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_F((float)red, (float)green, (float)blue, (float)alpha);
-        tessellator.addVertex(x		   , y + height, 0);
-        tessellator.addVertex(x + width, y + height, 0);
-        tessellator.addVertex(x + width, y		   , 0);
-        tessellator.addVertex(x		   , y		   , 0);
-        tessellator.draw();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
-	}
-	
-	public void drawGradient(int x, int y, int width, int height, int topColour, int bottomColour)
-	{
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBlendFunc(770, 771);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-        tessellator.setColorRGBA_I(bottomColour & 0xffffff, bottomColour >> 24 & 0xff);
-        tessellator.addVertex(x		   , y + height, 0);
-        tessellator.addVertex(x + width, y + height, 0);
-        
-        tessellator.setColorRGBA_I(topColour & 0xffffff, topColour >> 24 & 0xff);
-        tessellator.addVertex(x + width, y		   , 0);
-        tessellator.addVertex(x		   , y		   , 0);
-        
-        tessellator.draw();
-        
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
+		renderVerticalGradient(x, y, width, height, topColor, bottomColor);
 	}
 
 	public void render(IRenderable renderable, int xOffset, int yOffset)
@@ -590,9 +472,9 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 	private void glColor1i(int color)
 	{
 		GL11.glColor4d(
-				(color >> 16) & 0xff,
-				(color >>  8) & 0xff,
-				(color >>  0) & 0xff,
-				(color >> 24) & 0xff);
+				((color >> 16) & 0xff) / 255.0,
+				((color >>  8) & 0xff) / 255.0,
+				((color >>  0) & 0xff) / 255.0,
+				((color >> 24) & 0xff) / 255.0);
 	}
 }

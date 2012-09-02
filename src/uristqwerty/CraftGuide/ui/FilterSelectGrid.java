@@ -32,6 +32,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private boolean overItem = false;
 	private String searchText = "";
 	
+	private int lastMouseX, lastMouseY;
+	
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 	
 	private static IRenderable overlayAny = new TexturedRect(
@@ -73,6 +75,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	public void mouseMoved(int x, int y)
 	{
 		overItem = false;
+		lastMouseX = x;
+		lastMouseY = y;
 		super.mouseMoved(x, y);
 	}
 
@@ -194,6 +198,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			
 			setCells(itemResults.size() + 1);
 		}
+		
+		mouseMoved(lastMouseX, lastMouseY);
 	}
 
 

@@ -13,6 +13,7 @@ import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.Util;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.PreInit;
@@ -55,8 +56,7 @@ public class CraftGuide
 		addItems();
 		extractResources();
 
-		CraftGuideLog.init(new File(Minecraft.getMinecraftDir(),
-				"CraftGuide.log"));
+		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
 		try
 		{
@@ -101,6 +101,13 @@ public class CraftGuide
 
 	private void extractResources()
 	{
+		File outputBase = themeDirectory();
+		
+		if(outputBase == null)
+		{
+			return;
+		}
+		
 		try
 		{
 			ZipInputStream resources = new ZipInputStream(getClass()
@@ -109,7 +116,7 @@ public class CraftGuide
 			ZipEntry entry;
 			while((entry = resources.getNextEntry()) != null)
 			{
-				File destination = new File(Minecraft.getMinecraftDir(), entry.getName());
+				File destination = new File(outputBase, entry.getName());
 
 				if(!destination.exists())
 				{
@@ -165,14 +172,37 @@ public class CraftGuide
 		config.setProperty("textSearchRequiresShift", Boolean.toString(false));
 	}
 
+	/**
+	 * Load configuration. If a configuration file exists in the new
+	 * location, load from there. If not, but one exists in the old
+	 * location, use that instead. If neither exists, just use the
+	 * defaults.
+	 * 
+	 * Afterwards, save it back to the new configuration directory
+	 * (to create it if it doesn't exist, or to update it if it was
+	 * created by an earlier version of CraftGuide that didn't have
+	 * exactly the same set of properties).
+	 */
 	private void loadProperties()
 	{
-		File configDir = new File(Minecraft.getMinecraftDir(), "/config/");
-		File configFile = new File(configDir, "CraftGuide.cfg");
+		File oldConfigDir = new File(Minecraft.getMinecraftDir(), "/config/");
+		File oldConfigFile = new File(oldConfigDir, "CraftGuide.cfg");
+		File newConfigDir = configDirectory();
+		File newConfigFile = newConfigDir == null? null : new File(newConfigDir, "CraftGuide.cfg");
+		File configFile = null;
 
+		if(newConfigFile != null && newConfigFile.exists())
+		{
+			configFile = newConfigFile;
+		}
+		else if(oldConfigFile.exists() && oldConfigFile.canRead())
+		{
+			configFile = oldConfigFile;
+		}
+		
 		setConfigDefaults();
 
-		if(configFile.exists() && configFile.canRead())
+		if(configFile != null && configFile.exists() && configFile.canRead())
 		{
 			try
 			{
@@ -219,11 +249,11 @@ public class CraftGuide
 		alwaysShowID = Boolean.valueOf(config.getProperty("alwaysShowID"));
 		textSearchRequiresShift = Boolean.valueOf(config.getProperty("textSearchRequiresShift"));
 
-		if(!configFile.exists())
+		if(newConfigFile != null && !newConfigFile.exists())
 		{
 			try
 			{
-				configFile.createNewFile();
+				newConfigFile.createNewFile();
 			}
 			catch(IOException e)
 			{
@@ -231,11 +261,11 @@ public class CraftGuide
 			}
 		}
 
-		if(configFile.exists() && configFile.canWrite())
+		if(newConfigFile != null && newConfigFile.exists() && newConfigFile.canWrite())
 		{
 			try
 			{
-				config.store(new FileOutputStream(configFile), "");
+				config.store(new FileOutputStream(newConfigFile), "");
 			}
 			catch(FileNotFoundException e)
 			{
@@ -251,5 +281,36 @@ public class CraftGuide
 	private void initKeybind()
 	{
 		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
+	}
+
+	public static File themeDirectory()
+	{
+		File configDir = configDirectory();
+		
+		if(configDir == null)
+		{
+			return null;
+		}
+		
+		File dir = new File(configDir, "themes");
+		
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			return null;
+		}
+		
+		return dir;
+	}
+
+	private static File configDirectory()
+	{
+		File dir = new File(Loader.instance().getConfigDir(), "CraftGuide");
+		
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			return null;
+		}
+		
+		return dir;
 	}
 }

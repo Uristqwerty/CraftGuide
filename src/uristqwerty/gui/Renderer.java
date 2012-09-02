@@ -12,6 +12,24 @@ public abstract class Renderer
 	protected double alpha;
 	
 	public abstract void setTextureID(int textureID);
+	
+	public void drawRect(int x, int y, int width, int height)
+	{
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_BLEND);
+	    GL11.glBlendFunc(770, 771);
+	    
+	    GL11.glColor4d(red, green, blue, alpha);
+	    GL11.glBegin(GL11.GL_QUADS);
+	        GL11.glVertex2i(x, y);
+	        GL11.glVertex2i(x, y + height);
+	        GL11.glVertex2i(x + width, y + height);
+	        GL11.glVertex2i(x + width, y);
+	    GL11.glEnd();
+	    
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
 
 	public void drawTexturedRect(
 			int x, int y, int width, int height,

@@ -1,0 +1,4 @@
+<theme>
+	<metadata name="Base Theme" description="This theme defines the standard set of images and textures used by CraftGuide" id="theme_base"></metadata>
+	<image id="base_image">
+		<source type="file" location-type="filesystem-relative" path="base.png"></source></image></theme>

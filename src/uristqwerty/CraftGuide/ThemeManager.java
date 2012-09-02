@@ -5,18 +5,21 @@ import java.util.Collection;
 
 import net.minecraft.client.Minecraft;
 
+@SuppressWarnings("unused")
 public class ThemeManager
 {
-	ThemeFile currentTheme;
-	ThemeFile defaultTheme;
-	Collection<ThemeFile> themes;
+	private Theme currentTheme;
+	private Collection<ThemeFile> themes;
 	
-	@SuppressWarnings("unused")
 	public void reload()
 	{
-		currentTheme = new ThemeFile();
-		defaultTheme = new ThemeFile(CraftGuide.class.getResourceAsStream("default_theme.txt"));
+		currentTheme = new Theme();
 		
-		File themeDir = new File(Minecraft.getMinecraftDir(), "CraftGuide themes");
+		File themeDir = CraftGuide.themeDirectory();
+		
+		if(!themeDir.isDirectory())
+		{
+			return;
+		}
 	}
 }

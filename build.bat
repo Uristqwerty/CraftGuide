@@ -17,12 +17,13 @@ xcopy "reobf\minecraft\uristqwerty\gui" "zip\build\uristqwerty\gui" /S /I /Y
 xcopy "eclipse\CraftGuide\default_theme.txt" "zip\build\" /Y
 xcopy "eclipse\CraftGuide\mcmod.info" "zip\build\" /Y
 
-xcopy "eclipse\CraftGuide\CraftGuide Themes" "zip\build-resources\CraftGuide Themes" /S /I /Y
+xcopy "eclipse\CraftGuide\themes" "zip\build-resources\themes" /S /I /Y
 
-cd zip\build-resources
-7z d ..\build\uristqwerty\CraftGuide\resources.zip "*"
-7z a ..\build\uristqwerty\CraftGuide\resources.zip "*"
+if not exist zip\build-resources\themes mkdir zip\build-resources\themes
+cd zip\build-resources\themes
+7z d ..\..\build\uristqwerty\CraftGuide\resources.zip "*"
+7z a ..\..\build\uristqwerty\CraftGuide\resources.zip "*"
 
-cd ..\build
+cd ..\..\build
 7z d ..\CraftGuide-test-build.zip "*"
 7z a ..\CraftGuide-test-build.zip "*"
