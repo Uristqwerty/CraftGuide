@@ -11,11 +11,10 @@ import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
-import uristqwerty.gui.minecraft.Image;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.TexturedRect;
+import uristqwerty.gui.texture.Texture;
 
 import net.minecraft.src.ItemStack;
 
@@ -24,24 +23,21 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private GuiButton backButton;
 	private GuiTabbedDisplay display;
 	private RecipeCache recipeCache;
-	private IRenderable background;
+	private Renderable gridBackground;
 	private Object[] items;
 	private List<Object> itemResults = new ArrayList<Object>();
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
-	private IRenderable itemNameOverlay = new Overlay(itemName);
+	private Renderable itemNameOverlay = new Overlay(itemName);
 	private boolean overItem = false;
 	private String searchText = "";
 	
 	private int lastMouseX, lastMouseY;
 	
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
-	
-	private static IRenderable overlayAny = new TexturedRect(
-			0, 0, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 238);
-		private static IRenderable overlayForge = new TexturedRect(
-			0, 0, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 181);
-	
-	public FilterSelectGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, GuiTexture guiTexture,
+	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
+	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+
+	public FilterSelectGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, Texture texture,
 		RecipeCache recipeCache, GuiButton backButton, GuiTabbedDisplay display)
 	{
 		super(x, y, width, height, scrollBar, 18, 18);
@@ -53,7 +49,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		setColumns();
 		onReset(recipeCache);
 
-		background = new TexturedRect(0, 0, 18, 18, guiTexture.texture(), 238, 219);
+		gridBackground = new TexturedRect(0, 0, 18, 18, texture, 238, 219);
 	}
 
 	@Override
@@ -103,24 +99,24 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	{
 		if(cell < itemResults.size())
 		{
-			background.render(renderer, xOffset, yOffset);
+			gridBackground.render(renderer, xOffset, yOffset);
 			ItemStack stack = displayItem(cell);
 			
 			renderer.drawItemStack(stack, xOffset + 1, yOffset + 1);
 			
 			if(stack.getItemDamage() == -1)
 			{
-				overlayAny.render(renderer, xOffset, yOffset);
+				renderer.renderRect(xOffset, yOffset, 18, 18, overlayAny);
 			}
 			
 			if(itemResults.get(cell) instanceof ArrayList)
 			{
-				overlayForge.render(renderer, xOffset, yOffset);
+				renderer.renderRect(xOffset, yOffset, 18, 18, overlayForge);
 			}
 		}
 		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
 		{
-			background.render(renderer, xOffset, yOffset);
+			gridBackground.render(renderer, xOffset, yOffset);
 			renderer.renderRect(xOffset + 1, yOffset + 1, 16, 16, textImage);
 		}
 	}
@@ -187,7 +183,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 					{
 						if(line != null && line.toLowerCase().contains(text.toLowerCase()))
 						{
-							itemResults.add(stack);
+							itemResults.add(((CraftType)item).getStack());
 						}
 					}
 				}

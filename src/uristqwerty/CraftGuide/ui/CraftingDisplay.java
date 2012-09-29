@@ -7,8 +7,8 @@ import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
+import uristqwerty.gui.rendering.Renderable;
 
 public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
@@ -16,7 +16,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	int mouseY;
 	int mouseRow, mouseRowX, mouseRowY;
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
-	private IRenderable itemNameOverlay = new Overlay(itemName);
+	private Renderable itemNameOverlay = new Overlay(itemName);
 	private RecipeCache recipeCache;
 	private CraftGuideRecipe recipeUnderMouse;
 	

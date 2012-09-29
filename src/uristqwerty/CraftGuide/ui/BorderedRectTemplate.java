@@ -1,10 +1,10 @@
 package uristqwerty.CraftGuide.ui;
 
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
+import uristqwerty.gui.texture.Texture;
 
 public class BorderedRectTemplate
 {
-	public GuiTexture texture;
+	public Texture texture;
 	public int texX, texY;
 	public int borderLeftWidth, borderRightWidth;
 	public int borderTopHeight, borderBottomHeight;
@@ -12,13 +12,13 @@ public class BorderedRectTemplate
 	public int spacing;
 	
 	public BorderedRectTemplate(
-			GuiTexture texture, int texX, int texY,
+			Texture texture, int texX, int texY,
 			int borderSize, int interiorSize)
 	{
 		this(texture, texX, texY, borderSize, interiorSize, 1);
 	}
 
-	public BorderedRectTemplate(GuiTexture texture, int texX, int texY,
+	public BorderedRectTemplate(Texture texture, int texX, int texY,
 			int borderSize, int interiorSize, int spacing)
 	{
 		this(texture, texX, texY,
@@ -26,7 +26,7 @@ public class BorderedRectTemplate
 			spacing);
 	}
 
-	public BorderedRectTemplate(GuiTexture texture, int texX, int texY,
+	public BorderedRectTemplate(Texture texture, int texX, int texY,
 			int borderWidth, int borderHeight,
 			int interiorWidth, int interiorHeight,
 			int spacing)
@@ -38,7 +38,7 @@ public class BorderedRectTemplate
 				spacing);
 	}
 
-	public BorderedRectTemplate(GuiTexture texture, int texX, int texY,
+	public BorderedRectTemplate(Texture texture, int texX, int texY,
 			int borderLeftWidth, int borderRightWidth, int borderTopHeight,
 			int borderBottomHeight, int interiorWidth, int interiorHeight,
 			int spacing)

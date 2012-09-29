@@ -11,20 +11,20 @@ import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
+import uristqwerty.gui.rendering.Renderable;
 import net.minecraft.src.ItemStack;
 
 public class Recipe implements CraftGuideRecipe
 {
 	protected Slot[] slots;
-	protected IRenderable[] selection;
+	protected Renderable[] selection;
 	protected Object[] recipe;
-	private IRenderable background;
-	private IRenderable backgroundSelected;
+	private Renderable background;
+	private Renderable backgroundSelected;
 	
 	private int width = 79, height = 58; 
 	
-	public Recipe(Slot[] slots, Object[] items, IRenderable background, IRenderable backgroundSelected)
+	public Recipe(Slot[] slots, Object[] items, Renderable background, Renderable backgroundSelected)
 	{
 		this.slots = slots;
 		this.recipe = new Object[items.length];

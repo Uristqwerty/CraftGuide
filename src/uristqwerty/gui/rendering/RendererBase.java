@@ -1,20 +1,28 @@
-package uristqwerty.gui;
+package uristqwerty.gui.rendering;
 
 import org.lwjgl.opengl.GL11;
 
 import uristqwerty.gui.texture.Texture;
 
-public abstract class Renderer
+/**
+ * Defines the core functionality required to render GUI components.
+ */
+public abstract class RendererBase
 {
 	protected double red;
 	protected double green;
 	protected double blue;
 	protected double alpha;
 	
+	public static RendererBase instance;
+	
 	public abstract void setTextureID(int textureID);
+	public abstract void drawText(String text, int x, int y);
+	public abstract void drawTextWithShadow(String text, int x, int y);
 	
 	public void drawRect(int x, int y, int width, int height)
 	{
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glBlendFunc(770, 771);
@@ -35,6 +43,7 @@ public abstract class Renderer
 			int x, int y, int width, int height,
 			double u, double v, double u2, double v2)
 	{
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glBlendFunc(770, 771);
@@ -62,5 +71,32 @@ public abstract class Renderer
 	{
 		texture.renderRect(this, x, y, width, height, u, v);
 	}
+	
+	public void setColorRgb(int colour)
+	{
+		setColor((colour >> 16) & 0xff, (colour >> 8) & 0xff, colour & 0xff);
+	}
+	
+	public void setColor(int color)
+	{
+		setColor((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff, (color >> 24) & 0xff);
+	}
 
+	public void setColor(int red, int green, int blue, int alpha)
+	{
+		setColor(red, green, blue);
+		setAlpha(alpha);
+	}
+
+	public void setColor(int red, int green, int blue)
+	{
+		this.red = red / 255.0;
+		this.green = green / 255.0;
+		this.blue = blue / 255.0;
+	}
+	
+	public void setAlpha(int alpha)
+	{
+		this.alpha = alpha / 255.0;
+	}
 }

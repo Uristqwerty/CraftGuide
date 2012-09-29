@@ -4,31 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.ui.GuiButton.ButtonState;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
-
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.texture.Texture;
 
 public class ButtonTemplate
 {
-	private Map<ButtonState, IRenderable> stateImages = new HashMap<ButtonState, IRenderable>();
+	private Map<ButtonState, Renderable> stateImages = new HashMap<ButtonState, Renderable>();
 	
 	public ButtonTemplate()
 	{
 	}
 	
-	public ButtonTemplate(GuiTexture texture, int u, int v, int width, int height, int dx, int dy)
+	public ButtonTemplate(Texture texture, int u, int v, int width, int height, int dx, int dy)
 	{
 		this(texture, u, v, width, height, 0, 2, dx, dy);
 	}
 	
-	public ButtonTemplate(GuiTexture texture, int u, int v, int width, int height, int spacing, int borderLength, int dx, int dy)
+	public ButtonTemplate(Texture texture, int u, int v, int width, int height, int spacing, int borderLength, int dx, int dy)
 	{
 		int yOffset = 0;
 		int xOffset = 0;
 		
 		for(ButtonState state: ButtonState.values())
 		{
-			IRenderable image = new GuiBorderedRect(0, 0, 10, 10,
+			Renderable image = new GuiBorderedRect(0, 0, 10, 10,
 					texture, u + xOffset, v + yOffset, borderLength, borderLength,
 					width - (borderLength + spacing) * 2, height - (borderLength + spacing) * 2, spacing);
 			
@@ -39,9 +39,9 @@ public class ButtonTemplate
 		
 	}
 	
-	public IRenderable getStateImage(ButtonState state, int width, int height)
+	public Renderable getStateImage(ButtonState state, int width, int height)
 	{
-		IRenderable image = stateImages.get(state);
+		Renderable image = stateImages.get(state);
 		
 		if(image != null)
 		{
@@ -54,7 +54,7 @@ public class ButtonTemplate
 		return image;
 	}
 	
-	public ButtonTemplate setStateImage(ButtonState state, IRenderable image)
+	public ButtonTemplate setStateImage(ButtonState state, Renderable image)
 	{
 		stateImages.put(state, image);
 		

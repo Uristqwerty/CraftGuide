@@ -1,29 +1,24 @@
 xcopy "eclipse\CraftGuide\src" "src\minecraft" /S /I /Y
-xcopy "eclipse\Datafile\src"  "src\minecraft" /S /I /Y
+del src\minecraft\mcmod.info
 
 runtime\bin\python\python_mcp runtime\recompile.py
 runtime\bin\python\python_mcp runtime\reobfuscate.py
+eclipse\CraftGuide\build.resources.bat
 
 rmdir /S /Q "src\minecraft\net\minecraft\src\CraftGuide"
 rmdir /S /Q "src\minecraft\uristqwerty"
 rmdir /S /Q zip\build
-rmdir /S /Q zip\build-resources
 
-xcopy "eclipse\CraftGuide\gui" "zip\build\gui" /S /I /Y
+if not exist zip\build mkdir zip\build
+
+xcopy "eclipse\CraftGuide\images\gui" "zip\build\gui" /S /I /Y
+xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build\uristqwerty\CraftGuide" /S /I /Y
-xcopy "reobf\minecraft\uristqwerty\datafile" "zip\build\uristqwerty\datafile" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\gui" "zip\build\uristqwerty\gui" /S /I /Y
-xcopy "eclipse\CraftGuide\default_theme.txt" "zip\build\" /Y
-xcopy "eclipse\CraftGuide\mcmod.info" "zip\build\" /Y
+xcopy "eclipse\CraftGuide\src\mcmod.info" "zip\build\" /Y
+xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build\uristqwerty\CraftGuide" /Y
 
-xcopy "eclipse\CraftGuide\themes" "zip\build-resources\themes" /S /I /Y
-
-if not exist zip\build-resources\themes mkdir zip\build-resources\themes
-cd zip\build-resources\themes
-7z d ..\..\build\uristqwerty\CraftGuide\resources.zip "*"
-7z a ..\..\build\uristqwerty\CraftGuide\resources.zip "*"
-
-cd ..\..\build
-7z d ..\CraftGuide-test-build.zip "*"
+cd zip\build
+DEL ..\CraftGuide-test-build.zip
 7z a ..\CraftGuide-test-build.zip "*"

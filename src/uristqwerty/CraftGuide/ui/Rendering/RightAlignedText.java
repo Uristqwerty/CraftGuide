@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.ui.Rendering;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.minecraft.Text;
+import uristqwerty.gui.rendering.RendererBase;
 
 public class RightAlignedText extends Text
 {
@@ -15,8 +16,10 @@ public class RightAlignedText extends Text
 	}
 	
 	@Override
-	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	public void render(RendererBase renderer, int xOffset, int yOffset)
 	{
-		renderer.drawRightAlignedText(x + xOffset, y + yOffset, text, color);
+		renderer.setColor(color);
+		renderer.drawText(text, x + xOffset - textWidth(), y + yOffset);
+		renderer.setColor(0xffffffff);
 	}
 }

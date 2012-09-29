@@ -3,6 +3,7 @@ package uristqwerty.CraftGuide.ui;
 import java.lang.Math;
 
 import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.gui.components.GuiElement;
 
 
 public class GuiResizeHandle extends GuiElement
@@ -21,7 +22,7 @@ public class GuiResizeHandle extends GuiElement
 	
 	public GuiResizeHandle(int x, int y, int width, int height, GuiElement element, AnchorPoint corner)
 	{
-		this(x, y, width, height, element, corner, element.width, element.height);
+		this(x, y, width, height, element, corner, element.width(), element.height());
 	}
 	
 	public GuiResizeHandle(int x, int y, int width, int height,
@@ -50,24 +51,30 @@ public class GuiResizeHandle extends GuiElement
 
 		if(dragging)
 		{
-			targetX = absoluteX() + x - this.x - targetOffsetX;
-			targetY = absoluteY() + y - this.y - targetOffsetY;
+			targetX = absoluteX() + x - bounds.x() - targetOffsetX;
+			targetY = absoluteY() + y - bounds.y() - targetOffsetY;
 		}
 	}
-
+	
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		super.mousePressed(x, y);
-		
-		if(isMouseOver(x, y))
+		if(containsPoint(x, y))
 		{
 			dragging = true;
 			targetX = absoluteX();
 			targetY = absoluteY();
-			targetOffsetX = x - this.x;
-			targetOffsetY = y - this.y;
+			targetOffsetX = x - bounds.x();
+			targetOffsetY = y - bounds.y();
 		}
+		
+		super.mousePressed(x, y);
+	}
+	
+	@Override
+	public void elementClicked(int x, int y)
+	{
+		super.elementClicked(x, y);
 	}
 
 	@Override
@@ -108,8 +115,8 @@ public class GuiResizeHandle extends GuiElement
 				}
 				
 				target.setSize(
-					Math.max(target.width  + xDif, minWidth),
-					Math.max(target.height + yDif, minHeight));
+					Math.max(target.width()  + xDif, minWidth),
+					Math.max(target.height() + yDif, minHeight));
 			}
 		}
 		

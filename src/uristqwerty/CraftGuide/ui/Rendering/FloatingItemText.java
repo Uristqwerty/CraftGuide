@@ -6,9 +6,11 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
 
 
-public class FloatingItemText implements IRenderable
+public class FloatingItemText implements Renderable
 {
 	private List<String> text;
 	
@@ -34,9 +36,15 @@ public class FloatingItemText implements IRenderable
 		this.text = text;
 	}
 
-	@Override
+	//@Override
 	public void render(GuiRenderer renderer, int xOffset, int yOffset)
 	{
 		renderer.drawFloatingText(renderer.guiXFromMouseX(Mouse.getX()) + 12, renderer.guiYFromMouseY(Mouse.getY()) - 13, text);
+	}
+
+	@Override
+	public void render(RendererBase renderer, int x, int y)
+	{
+		render((GuiRenderer)renderer, x, y);
 	}
 }

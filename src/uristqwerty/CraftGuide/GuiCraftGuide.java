@@ -9,20 +9,21 @@ import uristqwerty.CraftGuide.ui.CraftingDisplay;
 import uristqwerty.CraftGuide.ui.FilterSelectGrid;
 import uristqwerty.CraftGuide.ui.GuiBorderedRect;
 import uristqwerty.CraftGuide.ui.GuiButton;
-import uristqwerty.CraftGuide.ui.GuiElement;
-import uristqwerty.CraftGuide.ui.GuiImage;
-import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.GuiResizeHandle;
 import uristqwerty.CraftGuide.ui.GuiScrollBar;
 import uristqwerty.CraftGuide.ui.GuiSlider;
 import uristqwerty.CraftGuide.ui.GuiTabbedDisplay;
 import uristqwerty.CraftGuide.ui.GuiText;
 import uristqwerty.CraftGuide.ui.GuiTextInput;
-import uristqwerty.CraftGuide.ui.GuiWindow;
 import uristqwerty.CraftGuide.ui.IButtonListener;
 import uristqwerty.CraftGuide.ui.RowCount;
-import uristqwerty.CraftGuide.ui.GuiElement.AnchorPoint;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.components.Image;
+import uristqwerty.gui.components.Window;
+import uristqwerty.gui.components.GuiElement.AnchorPoint;
+import uristqwerty.gui.minecraft.Gui;
+import uristqwerty.gui.texture.DynamicTexture;
+import uristqwerty.gui.texture.Texture;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
@@ -32,7 +33,7 @@ public class GuiCraftGuide extends Gui
 	private RecipeCache recipeCache = new RecipeCache();
 	private FilterDisplay filter;
 	private CraftingDisplay craftingDisplay;
-	private GuiWindow guiOverlay;
+	private Window guiOverlay;
 
 	private static GuiCraftGuide instance;
 	
@@ -58,9 +59,9 @@ public class GuiCraftGuide extends Gui
 	{
 		super(initialWindowWidth, initialWindowHeight);
 
-		GuiTexture guiTexture = GuiTexture.getInstance("/gui/CraftGuide.png");
+		Texture texture = DynamicTexture.instance("base_image");//Image.getImage("/gui/CraftGuide.png");
 		
-		ButtonTemplate buttonTemplate = new ButtonTemplate(guiTexture, 48, 204, 50, 13, 0, 13);
+		ButtonTemplate buttonTemplate = new ButtonTemplate(texture, 48, 204, 50, 13, 0, 13);
 
 
 		guiWindow.addElement(
@@ -73,57 +74,57 @@ public class GuiCraftGuide extends Gui
 		guiWindow.addElement(
 			new GuiBorderedRect(
 				0, 0, initialWindowWidth, initialWindowHeight,
-				guiTexture, 1, 1, 4, 64
+				texture, 1, 1, 4, 64
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 		
 		guiWindow.addElement(
-			new GuiButton(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, guiTexture, 0, 191)
+			new GuiButton(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, texture, 0, 191)
 				.anchor(AnchorPoint.BOTTOM_RIGHT)
 			);
 		
 		guiWindow.addElement(
 			new GuiBorderedRect(
 				5, 5, 58, 86,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 		);
 		
 		guiWindow.addElement(
 			new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(
-					generateRecipeTab(guiTexture, buttonTemplate)
+					generateRecipeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
-					new GuiButton(6, 6, 28, 28, guiTexture, 1, 76)
+					new GuiButton(6, 6, 28, 28, texture, 1, 76)
 						.setToolTip("Recipe list"))
 				.addTab(
-					generateTypeTab(guiTexture, buttonTemplate)
+					generateTypeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
-					new GuiButton(34, 6, 28, 28, guiTexture, 1, 104)
+					new GuiButton(34, 6, 28, 28, texture, 1, 104)
 						.setToolTip("Show/Hide recipes by crafting type"))
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
 		
 
-		guiOverlay = new GuiWindow(0, 0, 0, 0, new GuiRenderer());
+		guiOverlay = new Window(0, 0, 0, 0, renderer);
 		
 		guiOverlay.addElement(
 			new GuiBorderedRect(
 				0, 0, 0, 0,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 	}
 
-	private GuiElement generateRecipeTab(GuiTexture guiTexture, ButtonTemplate buttonTemplate)
+	private GuiElement generateRecipeTab(Texture texture, ButtonTemplate buttonTemplate)
 	{
 		GuiElement recipeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		
 		recipeTab.addElement(
 			new GuiBorderedRect(
 				237, 5, 14, 188,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
 		);
@@ -139,7 +140,7 @@ public class GuiCraftGuide extends Gui
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		recipeTab.addElement(
-			new GuiImage(40, 146, 18, 18, guiTexture, 238, 219)
+			new Image(40, 146, 18, 18, texture, 238, 219)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 		
 		filter = new FilterDisplay(41, 147);
@@ -154,7 +155,7 @@ public class GuiCraftGuide extends Gui
 		recipeArea.addElement(
 			new GuiBorderedRect(
 				67, 17, 168, 176,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
@@ -162,7 +163,7 @@ public class GuiCraftGuide extends Gui
 		itemListArea.addElement(
 			new GuiBorderedRect(
 				67, 17, 168, 160,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
@@ -188,16 +189,16 @@ public class GuiCraftGuide extends Gui
 		
 		GuiScrollBar filterSelectScrollBar = 
 			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186,
-				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, guiTexture, 0, 199)
+				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
-				.addButton(new GuiButton(0,   0, 12, 11, guiTexture, 0, 234), -10, true)
-				.addButton(new GuiButton(0,  11, 12, 10, guiTexture, 0, 214), -1, true)
+				.addButton(new GuiButton(0,   0, 12, 11, texture, 0, 234), -10, true)
+				.addButton(new GuiButton(0,  11, 12, 10, texture, 0, 214), -1, true)
 				.addButton(
-					(GuiButton)new GuiButton(0, 165, 12, 10, guiTexture, 0, 224)
+					(GuiButton)new GuiButton(0, 165, 12, 10, texture, 0, 224)
 						.anchor(AnchorPoint.BOTTOM_RIGHT),
 					1, true)
 				.addButton(
-					(GuiButton)new GuiButton(0, 175, 12, 11, guiTexture, 0, 245)
+					(GuiButton)new GuiButton(0, 175, 12, 11, texture, 0, 245)
 						.anchor(AnchorPoint.BOTTOM_RIGHT),
 					10, true)
 				.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT);
@@ -206,9 +207,9 @@ public class GuiCraftGuide extends Gui
 		
 		FilterSelectGrid filterGrid = 
 			(FilterSelectGrid) new FilterSelectGrid(68, 18, 166, 158, 
-			filterSelectScrollBar, guiTexture,
-			recipeCache, backButton, recipeDisplay)
-				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
+				filterSelectScrollBar, texture,
+				recipeCache, backButton, recipeDisplay)
+					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
 		
 		itemListArea.addElement(new RowCount(233, 6, filterGrid).anchor(AnchorPoint.TOP_RIGHT));
 		itemListArea.addElement(filterGrid);
@@ -225,7 +226,7 @@ public class GuiCraftGuide extends Gui
 		itemListButton.addButtonListener(searchInput);
 		
 		itemListArea.addElement(
-			new GuiBorderedRect(106, 179, 93, 15, guiTexture, 78, 1, 2, 32)
+			new GuiBorderedRect(106, 179, 93, 15, texture, 78, 1, 2, 32)
 				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.addElement(searchInput)
 		);
@@ -251,16 +252,16 @@ public class GuiCraftGuide extends Gui
 		
 		GuiScrollBar scrollBar = 
 			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186, 
-				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, guiTexture, 0, 199)
+				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
-				.addButton(new GuiButton(0,   0, 12, 11, guiTexture, 0, 234), -10, true)
-				.addButton(new GuiButton(0,  11, 12, 10, guiTexture, 0, 214), -1, true)
+				.addButton(new GuiButton(0,   0, 12, 11, texture, 0, 234), -10, true)
+				.addButton(new GuiButton(0,  11, 12, 10, texture, 0, 214), -1, true)
 				.addButton(
-					(GuiButton)new GuiButton(0, 165, 12, 10, guiTexture, 0, 224)
+					(GuiButton)new GuiButton(0, 165, 12, 10, texture, 0, 224)
 						.anchor(AnchorPoint.BOTTOM_RIGHT),
 					1, true)
 				.addButton(
-					(GuiButton)new GuiButton(0, 175, 12, 11, guiTexture, 0, 245)
+					(GuiButton)new GuiButton(0, 175, 12, 11, texture, 0, 245)
 						.anchor(AnchorPoint.BOTTOM_RIGHT),
 					10, true)
 				.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT);
@@ -279,7 +280,7 @@ public class GuiCraftGuide extends Gui
 		return recipeTab;
 	}
 
-	private GuiElement generateTypeTab(GuiTexture guiTexture, ButtonTemplate buttonTemplate)
+	private GuiElement generateTypeTab(Texture texture, ButtonTemplate buttonTemplate)
 	{
 		GuiElement typeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight);
 		typeTab.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
@@ -287,7 +288,7 @@ public class GuiCraftGuide extends Gui
 		typeTab.addElement(
 			new GuiBorderedRect(
 				67, 5, 168, 188,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
@@ -295,18 +296,18 @@ public class GuiCraftGuide extends Gui
 		typeTab.addElement(
 			new GuiBorderedRect(
 				237, 5, 14, 188,
-				guiTexture, 78, 1, 2, 32
+				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
 		);
 		
 		GuiScrollBar scrollBar = 
 			new GuiScrollBar(238, 6, 12, 186, 
-				(GuiSlider) new GuiSlider(0, 10, 12, 166, 12, 15, guiTexture, 0, 199)
+				(GuiSlider) new GuiSlider(0, 10, 12, 166, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
-				.addButton(new GuiButton(0, 0, 12, 10, guiTexture, 0, 214), -1, true)
+				.addButton(new GuiButton(0, 0, 12, 10, texture, 0, 214), -1, true)
 				.addButton(
-					(GuiButton) new GuiButton(0, 176, 12, 10, guiTexture, 0, 224)
+					(GuiButton) new GuiButton(0, 176, 12, 10, texture, 0, 224)
 						.anchor(AnchorPoint.BOTTOM_RIGHT),
 					1, true);
 
@@ -315,7 +316,7 @@ public class GuiCraftGuide extends Gui
 		
 		typeTab.addElement(
 			new CraftTypeDisplay(
-				68, 6, 166, 186, scrollBar, guiTexture, recipeCache
+				68, 6, 166, 186, scrollBar, texture, recipeCache
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);

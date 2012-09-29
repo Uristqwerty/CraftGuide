@@ -1,9 +1,10 @@
-package uristqwerty.CraftGuide.ui.Rendering;
+package uristqwerty.gui.minecraft;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
 import net.minecraft.src.ModLoader;
 
-public class Text implements IRenderable
+public class Text implements Renderable
 {
 	protected int x, y;
 	protected String text;
@@ -20,11 +21,13 @@ public class Text implements IRenderable
 	{
 		this(x, y, text, 0xff000000);
 	}
-
+	
 	@Override
-	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	public void render(RendererBase renderer, int x, int y)
 	{
-		renderer.drawText(x + xOffset, y + yOffset, text, color);
+		renderer.setColor(color);
+		renderer.drawText(text, x + this.x, y + this.y);
+		renderer.setColor(0xffffffff);
 	}
 	
 	public void setText(String text)

@@ -1,3 +1,4 @@
 <theme>
 	<metadata>
-		<requirement id="theme_base"></requirement></metadata></theme>
+		<id>test_theme</id>
+		<dependency>theme_base</dependency></metadata></theme>

@@ -1,0 +1,6 @@
+<theme>
+	<metadata>
+		<id>invalid-theme</id></metadata>
+	<image id="invalid_image">
+		<source type="file">invalid.jpg</source>
+		<source type="parent-theme">this_image_id_does_not_exist</source></image></theme>

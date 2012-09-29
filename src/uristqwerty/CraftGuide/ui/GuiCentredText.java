@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.ui;
 
 import uristqwerty.CraftGuide.ui.Rendering.CentredText;
+import uristqwerty.gui.components.GuiElement;
 
 public class GuiCentredText extends GuiElement
 {
@@ -16,7 +17,7 @@ public class GuiCentredText extends GuiElement
 	@Override
 	public void onResize(int oldWidth, int oldHeight)
 	{
-		text.setSize(width, height);
+		text.setSize(bounds.width(), bounds.height());
 		
 		super.onResize(oldWidth, oldHeight);
 	}

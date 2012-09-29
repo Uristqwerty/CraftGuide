@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.gui.components.GuiElement;
+
 
 public class GuiScrollBar extends GuiElement implements IButtonListener, ISliderListener
 {

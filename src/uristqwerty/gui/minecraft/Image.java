@@ -1,11 +1,21 @@
 package uristqwerty.gui.minecraft;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.src.ModLoader;
 
-import uristqwerty.gui.Renderer;
+import uristqwerty.gui.rendering.RendererBase;
 import uristqwerty.gui.texture.Texture;
 
 public class Image implements Texture
@@ -13,7 +23,7 @@ public class Image implements Texture
 	private int texID;
 	private static Map<String, Image> cache = new HashMap<String, Image>();
 	
-	public static Image getImage(String filename)
+	public static Image fromJar(String filename)
 	{
 		Image image = cache.get(filename);
 		
@@ -26,13 +36,87 @@ public class Image implements Texture
 		return image;
 	}
 	
+	public static Image fromFile(File directory, String filename)
+	{
+		Image image = cache.get(filename);
+		
+		if(image == null)
+		{
+			image = new Image(LoadImageFile(directory, filename));
+			cache.put(filename, image);
+		}
+		
+		return image;
+	}
+	
+	private static int LoadImageFile(File directory, String filename)
+	{
+		try
+		{
+			int width = 4;
+			int height = 4;
+
+			InputStream input = new FileInputStream(new File(directory, filename));
+			BufferedImage image = ImageIO.read(input);
+			
+			while(width < image.getWidth())
+			{
+				width *= 2;
+			}
+			
+			while(height < image.getHeight())
+			{
+				height *= 2;
+			}
+			
+			ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
+			
+			for(int y = 0; y < height; y++)
+			{
+				for(int x = 0; x < width; x++)
+				{
+					int pixel = (y * width + x) * 4;
+					
+					if(x < image.getWidth() && y < image.getHeight())
+					{
+						int rgb = image.getRGB(x, y);
+						pixels.put(pixel + 0, (byte)((rgb >> 16) & 0xff));
+						pixels.put(pixel + 1, (byte)((rgb >>  8) & 0xff));
+						pixels.put(pixel + 2, (byte)((rgb >>  0) & 0xff));
+						pixels.put(pixel + 3, (byte)((rgb >> 24) & 0xff));
+					}
+					else
+					{
+						pixels.put(pixel + 0, (byte)0x7f);
+						pixels.put(pixel + 1, (byte)0x7f);
+						pixels.put(pixel + 2, (byte)0x7f);
+						pixels.put(pixel + 3, (byte)0x7f);
+					}
+				}
+			}
+			
+			int texID = GL11.glGenTextures();
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
+
+			return texID;
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 	private Image(int textureID)
 	{
 		texID = textureID;
 	}
 	
 	@Override
-	public void renderRect(Renderer renderer, int x, int y, int width, int height, int textureX, int textureY)
+	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int textureX, int textureY)
 	{
 		double u = (textureX % 256) / 256.0;
 		double v = (textureY % 256) / 256.0;

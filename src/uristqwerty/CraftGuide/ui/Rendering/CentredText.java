@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.ui.Rendering;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.minecraft.Text;
+import uristqwerty.gui.rendering.RendererBase;
 
 public class CentredText extends Text
 {
@@ -20,9 +21,11 @@ public class CentredText extends Text
 	}
 	
 	@Override
-	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	public void render(RendererBase renderer, int xOffset, int yOffset)
 	{
-		renderer.drawText(x + xOffset + (width + 1 - textWidth()) / 2, y + yOffset + (height + 1 - textHeight()) / 2, text, color);
+		renderer.setColor(color);
+		renderer.drawText(text, x + xOffset + (width + 1 - textWidth()) / 2, y + yOffset + (height + 1 - textHeight()) / 2);
+		renderer.setColor(0xffffffff);
 	}
 
 	public void setSize(int width, int height)

@@ -1,6 +1,9 @@
 package uristqwerty.gui.texture;
 
-import uristqwerty.gui.Renderer;
+import uristqwerty.gui.Rect;
+import uristqwerty.gui.editor.TextureMeta;
+import uristqwerty.gui.editor.TextureMeta.TextureParameter;
+import uristqwerty.gui.rendering.RendererBase;
 
 /**
  * Represents a subsection of a larger texture, shifted so that
@@ -8,22 +11,33 @@ import uristqwerty.gui.Renderer;
  * draws the portion, if any, of the drawn area that overlaps with
  * the subsection.
  */
+@TextureMeta(name = "clip")
 public class TextureClip implements Texture
 {
-	private final Texture source;
-	private final int u, v, width, height;
+	@TextureParameter
+	public Texture source;
+	
+	@TextureParameter
+	public Rect rect;
 
 	public TextureClip(Texture source, int u, int v, int width, int height)
 	{
 		this.source = source;
-		this.u = u;
-		this.v = v;
-		this.width = width;
-		this.height = height;
+		rect = new Rect(u, v, width, height);
+	}
+
+	public TextureClip(Texture source, Rect rect)
+	{
+		this.source = source;
+		this.rect = rect;
+	}
+
+	public TextureClip()
+	{
 	}
 
 	@Override
-	public void renderRect(Renderer renderer, int x, int y, int width, int height, int u, int v)
+	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
 		if(u < 0)
 		{
@@ -31,9 +45,9 @@ public class TextureClip implements Texture
 			u = 0;
 		}
 		
-		if(u + width > this.width)
+		if(u + width > rect.width)
 		{
-			width = this.width - u;
+			width = rect.width - u;
 		}
 		
 		if(v < 0)
@@ -42,14 +56,14 @@ public class TextureClip implements Texture
 			v = 0;
 		}
 		
-		if(v + height > this.height)
+		if(v + height > rect.height)
 		{
-			height = this.height - v;
+			height = rect.height - v;
 		}
 		
 		if(width > 0 && height > 0)
 		{
-			source.renderRect(renderer, x, y, width, height, u + this.u, v + this.v);
+			source.renderRect(renderer, x, y, width, height, u + rect.x, v + rect.y);
 		}
 	}
 }

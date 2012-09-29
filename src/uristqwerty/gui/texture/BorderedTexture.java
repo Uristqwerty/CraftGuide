@@ -1,6 +1,6 @@
 package uristqwerty.gui.texture;
 
-import uristqwerty.gui.Renderer;
+import uristqwerty.gui.rendering.RendererBase;
 
 public class BorderedTexture implements Texture
 {
@@ -24,7 +24,7 @@ public class BorderedTexture implements Texture
 	}
 
 	@Override
-	public void renderRect(Renderer renderer, int x, int y, int width, int height, int u, int v)
+	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
 		textures[0].renderRect(renderer, x, y, borderWidth, borderHeight, 0, 0);
 		textures[1].renderRect(renderer, x + borderWidth, y, width - borderWidth * 2, borderHeight, 0, 0);

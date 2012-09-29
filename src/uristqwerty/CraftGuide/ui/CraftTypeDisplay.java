@@ -8,18 +8,16 @@ import java.util.Set;
 import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.ui.Rendering.ShadedRect;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.TexturedRect;
 import uristqwerty.gui.texture.Texture;
-
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
-	private GuiBorderedRect background;
-	private IRenderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
+	private GuiBorderedRect displayBackground;
+	private Renderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
 	private RecipeCache recipeCache;
 	private Map<CraftType, Integer> settings = new HashMap<CraftType, Integer>();
 	private FloatingItemText toolTip = new FloatingItemText("");
@@ -28,14 +26,13 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 
 	private TexturedRect buttons[] = new TexturedRect[6];
 	
-	public CraftTypeDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, GuiTexture guiTexture, RecipeCache recipeCache)
+	public CraftTypeDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, Texture texture, RecipeCache recipeCache)
 	{
 		super(x, y, width, height, scrollBar, 32, 1);
-		Texture texture = guiTexture.texture();
 		
-		background = new GuiBorderedRect(
+		displayBackground = new GuiBorderedRect(
 			0, 0, width, 32,
-			guiTexture, 117, 1, 2, 32
+			texture, 117, 1, 2, 32
 		);
 		
 		this.recipeCache = recipeCache;
@@ -80,7 +77,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		if(row < types.size())
 		{
 			CraftType type = (CraftType)types.toArray()[row];
-			background.render(renderer, xOffset, yOffset);
+			displayBackground.render(renderer, xOffset, yOffset);
 			renderer.drawItemStack(type.getDisplayStack(), xOffset + 8, yOffset + 8, false);
 
 			if(hidden(type))
@@ -92,7 +89,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 			{
 				TexturedRect rect = buttons[i == setting(type)? i + 3 : i];
 				
-				rect.render(renderer, xOffset + i * 29 + (width - (3 * 29 + 24)) / 2 + 24, yOffset + 2);
+				rect.render(renderer, xOffset + i * 29 + (bounds.width() - (3 * 29 + 24)) / 2 + 24, yOffset + 2);
 			}
 		}
 	}
@@ -125,9 +122,9 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	{
 		if(y > 1 && y < 30 && inBounds)
 		{
-			if(x >= (width - (3 * 29 + 24)) / 2 + 24 && x < (width - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
+			if(x >= (bounds.width() - (3 * 29 + 24)) / 2 + 24 && x < (bounds.width() - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
 			{
-				int relX = (x - ((width - (3 * 29 + 24)) / 2 + 24));
+				int relX = (x - ((bounds.width() - (3 * 29 + 24)) / 2 + 24));
 				
 				if(relX % 29 != 28)
 				{
@@ -140,7 +137,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void onResize(int oldWidth, int oldHeight)
 	{
-		background.setSize(width, 32);
+		displayBackground.setSize(bounds.width(), 32);
 		
 		super.onResize(oldWidth, oldHeight);
 	}
@@ -245,9 +242,9 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		
 		if(row < recipeCache.getCraftTypes().size() && y > 1 && y < 30 && inBounds)
 		{
-			if(x >= (width - (3 * 29 + 24)) / 2 + 24 && x < (width - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
+			if(x >= (bounds.width() - (3 * 29 + 24)) / 2 + 24 && x < (bounds.width() - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
 			{
-				int relX = (x - ((width - (3 * 29 + 24)) / 2 + 24));
+				int relX = (x - ((bounds.width() - (3 * 29 + 24)) / 2 + 24));
 				
 				if(relX % 29 != 28)
 				{

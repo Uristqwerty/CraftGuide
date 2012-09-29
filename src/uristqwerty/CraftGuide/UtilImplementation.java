@@ -9,15 +9,21 @@ import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.NamedTextureObject;
-import uristqwerty.gui.minecraft.Image;
-import uristqwerty.gui.texture.SubTexture;
+import uristqwerty.gui.texture.DynamicTexture;
 
 public class UtilImplementation extends Util
 {
-	private NamedTextureObject textFilter = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 239, 163, 16, 16));
-	private NamedTextureObject itemStackAny = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 238, 18, 18));
-	private NamedTextureObject itemStackOreDict = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 181, 18, 18));
-	private NamedTextureObject itemStackBackground = new NamedTextureObject(new SubTexture(Image.getImage("/gui/CraftGuide.png"), 238, 219, 18, 18));
+	/*
+	private NamedTextureObject textFilter = new NamedTextureObject(new SubTexture(CraftGuide.currentTheme.getTexture("base_image"), 239, 163, 16, 16));
+	private NamedTextureObject itemStackAny = new NamedTextureObject(new SubTexture(CraftGuide.currentTheme.getTexture("base_image"), 238, 238, 18, 18));
+	private NamedTextureObject itemStackOreDict = new NamedTextureObject(new SubTexture(CraftGuide.currentTheme.getTexture("base_image"), 238, 181, 18, 18));
+	private NamedTextureObject itemStackBackground = new NamedTextureObject(new SubTexture(CraftGuide.currentTheme.getTexture("base_image"), 238, 219, 18, 18));
+	*/
+	private NamedTextureObject textFilter = new NamedTextureObject(DynamicTexture.instance("text-filter"));
+	private NamedTextureObject itemStackAny = new NamedTextureObject(DynamicTexture.instance("stack-any"));
+	private NamedTextureObject itemStackOreDict = new NamedTextureObject(DynamicTexture.instance("stack-oredict"));
+	private NamedTextureObject itemStackBackground = new NamedTextureObject(DynamicTexture.instance("stack-background"));
+
 	public float partialTicks;
 	
 	@Override

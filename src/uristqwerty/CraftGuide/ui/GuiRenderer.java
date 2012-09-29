@@ -10,15 +10,13 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
-import uristqwerty.CraftGuide.Gui;
 import uristqwerty.CraftGuide.api.NamedTexture;
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
-import uristqwerty.CraftGuide.ui.Rendering.ITexture;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
-import uristqwerty.gui.Renderer;
-import uristqwerty.gui.minecraft.Image;
+import uristqwerty.gui.minecraft.Gui;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui.rendering.TexturedRect;
+import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
 
 import net.minecraft.client.Minecraft;
@@ -26,30 +24,22 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.RenderHelper;
 import net.minecraft.src.RenderItem;
 
-public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.Renderer
+public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
     private RenderItem itemRenderer = new RenderItem();
 	private Minecraft minecraft;
-	private int u, v;
-	private float textureWidth = 256, textureHeight = 256;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
 
 	private static Map<ItemStack, ItemStack> itemStackFixes = new HashMap<ItemStack, ItemStack>();
 	
-	private boolean subtexEnabled = false;
-	private int subtex_x, subtex_y, subtex_width, subtex_height;
-	
-	private IRenderable itemError = new TexturedRect(-1, -1, 18, 18, Image.getImage("/gui/CraftGuide.png"), 238, 200);
+	private Renderable itemError = new TexturedRect(-1, -1, 18, 18, DynamicTexture.instance("item_error"), 238, 200);
 	
 	public void startFrame(Minecraft mc, Gui gui)
 	{
-		GuiTexture.refreshTextures(mc.renderEngine);
 		minecraft = mc;
 		this.gui = gui;
-		u = 0;
-		v = 0;
-    	setColour(0xFFFFFF, 0xFF);
+    	setColor(0xFFFFFFFF);
 	}
 
 	public void endFrame()
@@ -62,69 +52,19 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 		overlays.clear();
 	}
 	
-	public void setColour(int colour, int alpha)
+	public void setColor(int colour, int alpha)
 	{
-		setColour(colour);
+		setColorRgb(colour);
 		setAlpha(alpha);
-	}
-	
-	public void setColour(int colour)
-	{
-		setColor((colour >> 16) & 0xff, (colour >> 8) & 0xff, colour & 0xff);
-	}
-
-	public void setColor(int red, int green, int blue, int alpha)
-	{
-		setColor(red, green, blue);
-		setAlpha(alpha);
-	}
-
-	public void setColor(int red, int green, int blue)
-	{
-		this.red = red / 255.0;
-		this.green = green / 255.0;
-		this.blue = blue / 255.0;
-	}
-	
-	public void setAlpha(int alpha)
-	{
-		this.alpha = alpha / 255.0;
-	}
-
-	public void setTexture(ITexture texture)
-	{
-		texture.setActive(this);
 	}
 	
 	@Override
 	public void setTextureID(int textureID)
 	{
-		clearSubTexture();
-		
 		if(textureID != -1 && minecraft != null)
 		{
 			minecraft.renderEngine.bindTexture(textureID);
 		}
-	}
-
-	public void setSubTexture(int x, int y, int width, int height)
-	{
-		subtexEnabled = true;
-		subtex_x = x;
-		subtex_y = y;
-		subtex_width = width;
-		subtex_height = height;
-	}
-	
-	public void clearSubTexture()
-	{
-		subtexEnabled = false;
-	}
-
-	public void setTextureCoords(int u, int v)
-	{
-		this.u = u;
-		this.v = v;
 	}
 
 	public void drawGradient(int x, int y, int width, int height, int topColor, int bottomColor)
@@ -132,7 +72,7 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 		renderVerticalGradient(x, y, width, height, topColor, bottomColor);
 	}
 
-	public void render(IRenderable renderable, int xOffset, int yOffset)
+	public void render(Renderable renderable, int xOffset, int yOffset)
 	{
 		renderable.render(this, xOffset, yOffset);
 	}
@@ -142,24 +82,21 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 		overlays.add(overlay);
 	}
 
-	public void drawShadowedText(int x, int y, String text)
+	@Override
+	public void drawText(String text, int x, int y)
 	{
-		minecraft.fontRenderer.drawStringWithShadow(text, x, y, 0xffffffff);
+		minecraft.fontRenderer.drawString(text, x, y, currentColor());
 	}
 
-	public void drawText(int x, int y, String text)
+	@Override
+	public void drawTextWithShadow(String text, int x, int y)
 	{
-		minecraft.fontRenderer.drawString(text, x, y, 0xffffffff);
+		minecraft.fontRenderer.drawStringWithShadow(text, x, y, currentColor());
 	}
-
-	public void drawText(int x, int y, String text, int color)
+	
+	private int currentColor()
 	{
-		minecraft.fontRenderer.drawString(text, x, y, color);
-	}
-
-	public void drawRightAlignedText(int x, int y, String text, int color)
-	{
-		drawText(x - minecraft.fontRenderer.getStringWidth(text), y, text, color);
+		return ((((int)(alpha * 255)) & 0xff) << 24) | ((((int)(red * 255)) & 0xff) << 16) | ((((int)(green * 255)) & 0xff) << 8) | (((int)(blue * 255)) & 0xff);
 	}
 
 	public void drawFloatingText(int x, int y, String text)
@@ -210,29 +147,29 @@ public class GuiRenderer extends Renderer implements uristqwerty.CraftGuide.api.
 			y = 4;
 		}
 		
-    	setColour(0x100010, 0xf0);
+    	setColor(0xf0100010);
 		drawRect(x - 3,				y - 4,				textWidth + 6,	1);
 		drawRect(x - 3,				y + textHeight + 3,	textWidth + 6,	1);
 		drawRect(x - 3,				y - 3,				textWidth + 6,	textHeight + 6);
 		drawRect(x - 4,				y - 3,				1,				textHeight + 6);
 		drawRect(x + textWidth + 3,	y - 3,				1,				textHeight + 6);
 		
-		setColour(0x5000ff, 0x50);
+		setColor(0x505000ff);
 		drawRect(x - 3, y - 3, textWidth + 6, 1);
 		
-		setColour(0x28007f, 0x50);
+		setColor(0x5028007f);
 		drawRect(x - 3, y + textHeight + 2,	textWidth + 6, 1);
 		
 		drawGradient(x - 3,				y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		drawGradient(x + textWidth + 2, y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		
-    	setColour(0xFFFFFF, 0xFF);
+    	setColor(0xffffffff);
 		
 		int textY = y;
 		boolean first = true;
 		for(String s: text)
 		{
-        	drawShadowedText(x, textY, s);
+        	drawTextWithShadow(s, x, textY);
         	
 			if(first)
 			{

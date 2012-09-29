@@ -85,10 +85,10 @@ public class OldAPITranslator implements IRecipeGenerator
 					slots,
 					craftingType,
 					new TextureClip(
-							Image.getImage(backgroundTexture),
+							Image.fromJar(backgroundTexture),
 							backgroundX, backgroundY, 79, 58),
 					new TextureClip(
-							Image.getImage(backgroundSelectedTexture),
+							Image.fromJar(backgroundSelectedTexture),
 							backgroundSelectedX, backgroundSelectedY, 79, 58));
 	}
 

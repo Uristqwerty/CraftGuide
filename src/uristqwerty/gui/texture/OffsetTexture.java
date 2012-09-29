@@ -1,6 +1,6 @@
 package uristqwerty.gui.texture;
 
-import uristqwerty.gui.Renderer;
+import uristqwerty.gui.rendering.RendererBase;
 
 public class OffsetTexture implements Texture
 {
@@ -15,7 +15,7 @@ public class OffsetTexture implements Texture
 	}
 
 	@Override
-	public void renderRect(Renderer renderer, int x, int y, int width, int height, int u, int v)
+	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
 		base.renderRect(renderer, x, y, width, height, u + this.u, v + this.v);
 	}

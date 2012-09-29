@@ -127,7 +127,11 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 				
 				Object[] items = generator.getCraftingRecipe(recipe, true);
 				
-				if(items.length == 5)
+				if(items == null)
+				{
+					continue;
+				}
+				else if(items.length == 5)
 				{
 					generator.addRecipe(templateSmall, items);
 				}

@@ -1,24 +1,25 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.gui.minecraft;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
 import uristqwerty.CraftGuide.ui.GuiTextInput;
-import uristqwerty.CraftGuide.ui.GuiWindow;
+import uristqwerty.gui.components.Window;
+import uristqwerty.gui.rendering.RendererBase;
 
 import net.minecraft.src.GuiScreen;
 
 public class Gui extends GuiScreen
 {
-	protected GuiRenderer renderer = new GuiRenderer();
-	protected GuiWindow guiWindow;
+	protected GuiRenderer renderer = (GuiRenderer)RendererBase.instance;
+	protected Window guiWindow;
 
 	public Gui(int windowWidth, int windowHeight)
 	{
 		super();
 
-		guiWindow = new GuiWindow(0, 0, windowWidth, windowHeight, renderer);
+		guiWindow = new Window(0, 0, windowWidth, windowHeight, renderer);
 	}
 
 	@Override

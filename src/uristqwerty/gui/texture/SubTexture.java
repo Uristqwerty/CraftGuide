@@ -1,6 +1,6 @@
 package uristqwerty.gui.texture;
 
-import uristqwerty.gui.Renderer;
+import uristqwerty.gui.rendering.RendererBase;
 
 /**
  * Represents a subsection of a larger texture, shifted so that
@@ -23,7 +23,7 @@ public class SubTexture implements Texture
 	}
 	
 	@Override
-	public void renderRect(Renderer renderer, int x, int y, int width, int height, int u, int v)
+	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
 		if(this.width < 1 || this.height < 1)
 		{
@@ -53,7 +53,7 @@ public class SubTexture implements Texture
 		}
 	}
 	
-	private void renderRectColumn(Renderer renderer, int x, int y, int width, int height, int u, int v)
+	private void renderRectColumn(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
 		int v1 = (((v % this.height) + this.height) % this.height) + this.v;
 		int v2 = v1 + height;

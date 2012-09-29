@@ -5,12 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.Util;
+import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui.theme.Theme;
+import uristqwerty.gui.theme.ThemeManager;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.Loader;
@@ -41,22 +46,28 @@ public class CraftGuide
 
 	private int itemCraftGuideID = 23361;
 	
+	public static Theme currentTheme;
+	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		loadProperties();
-		initKeybind();
+		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
+		RendererBase.instance = new GuiRenderer();
 		Util.instance = new UtilImplementation();
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
+		
+		loadProperties();
+		initKeybind();
+		extractResources();
+		
+		ThemeManager.instance.reload();
+		currentTheme = ThemeManager.instance.buildTheme("theme_base");
 	}
 
 	@Init
 	public void init(FMLInitializationEvent event)
 	{
 		addItems();
-		extractResources();
-
-		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
 		try
 		{
@@ -110,36 +121,40 @@ public class CraftGuide
 		
 		try
 		{
-			ZipInputStream resources = new ZipInputStream(getClass()
-					.getResourceAsStream("resources.zip"));
-			byte[] buffer = new byte[1024 * 16];
-			ZipEntry entry;
-			while((entry = resources.getNextEntry()) != null)
+			InputStream stream = getClass().getResourceAsStream("CraftGuideResources.zip");
+			
+			if(stream != null)
 			{
-				File destination = new File(outputBase, entry.getName());
-
-				if(!destination.exists())
+				ZipInputStream resources = new ZipInputStream(stream);
+				byte[] buffer = new byte[1024 * 16];
+				ZipEntry entry;
+				while((entry = resources.getNextEntry()) != null)
 				{
-					if(entry.isDirectory())
-					{
-						destination.mkdir();
-					}
-					else
-					{
-						System.out.println("Extracting " + entry.getName());
-						destination.createNewFile();
-						FileOutputStream output = new FileOutputStream(
-								destination);
-						int len;
+					File destination = new File(outputBase, entry.getName());
 
-						while((len = resources.read(buffer, 0, buffer.length)) != -1)
+					if(!destination.exists())
+					{
+						if(entry.isDirectory())
 						{
-							output.write(buffer, 0, len);
+							destination.mkdirs();
 						}
+						else
+						{
+							System.out.println("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'");
+							destination.getParentFile().mkdirs();
+							destination.createNewFile();
+							FileOutputStream output = new FileOutputStream(
+									destination);
+							int len;
 
-						output.flush();
-						output.close();
+							while((len = resources.read(buffer, 0, buffer.length)) != -1)
+							{
+								output.write(buffer, 0, len);
+							}
 
+							output.flush();
+							output.close();
+						}
 					}
 				}
 			}

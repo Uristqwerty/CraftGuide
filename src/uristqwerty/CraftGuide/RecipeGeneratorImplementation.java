@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.BlankTexture;
 import uristqwerty.gui.texture.BorderedTexture;
+import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.texture.TextureClip;
@@ -35,7 +37,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	
 	public RecipeGeneratorImplementation()
 	{
-		Texture source = Image.getImage("/gui/CraftGuide.png");
+		Texture source = DynamicTexture.instance("base_image");
 		defaultBackgroundSelected = new BorderedTexture(
 				new Texture[]{
 						new TextureClip(source, 117,  1,  2, 2),
@@ -74,10 +76,10 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				slots,
 				craftingType,
 				new TextureClip(
-						Image.getImage(backgroundTexture),
+						Image.fromJar(backgroundTexture),
 						backgroundX, backgroundY, 79, 58),
 				new TextureClip(
-						Image.getImage(backgroundSelectedTexture),
+						Image.fromJar(backgroundSelectedTexture),
 						backgroundSelectedX, backgroundSelectedY, 79, 58));
 	}
 	
@@ -148,9 +150,9 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		{
 			if(recipe instanceof ShapedRecipes)
 			{
-				int width = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b");
-				int height = (Integer)ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c");
-				Object[] items = (Object[])ModLoader.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d");
+				int width = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeWidth");
+				int height = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeHeight");
+				Object[] items = (Object[])getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d", "recipeItems");
 				
 				if(allowSmallGrid && width < 3 && height < 3)
 				{
@@ -163,7 +165,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
-				List items = (List)ModLoader.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b");
+				List items = (List)getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
 			else if(recipe instanceof ShapedOreRecipe)
@@ -195,6 +197,30 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		}
 		
 		return null;
+	}
+
+	private <T> Object getPrivateValue(Class<? super T> objectClass, T object, String obfuscatedName, String name)
+	{
+		try
+		{
+			Field field;
+			try
+			{
+				field = objectClass.getDeclaredField(obfuscatedName);
+			}
+			catch(NoSuchFieldException e)
+			{
+				field = objectClass.getDeclaredField(name);
+			}
+			
+			field.setAccessible(true);
+			return field.get(object);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	private Object[] getSmallShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)

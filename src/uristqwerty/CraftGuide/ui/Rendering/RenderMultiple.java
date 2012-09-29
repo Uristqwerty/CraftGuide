@@ -1,18 +1,19 @@
 package uristqwerty.CraftGuide.ui.Rendering;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
 
-public class RenderMultiple implements IRenderable
+public class RenderMultiple implements Renderable
 {
-	IRenderable render[];
+	Renderable render[];
 	int x, y;
 	
-	public RenderMultiple(IRenderable render[])
+	public RenderMultiple(Renderable render[])
 	{
 		this(0, 0, render);
 	}
 	
-	public RenderMultiple(int x, int y, IRenderable render[])
+	public RenderMultiple(int x, int y, Renderable render[])
 	{
 		this.x = x;
 		this.y = y;
@@ -20,11 +21,11 @@ public class RenderMultiple implements IRenderable
 	}
 
 	@Override
-	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	public void render(RendererBase renderer, int x, int y)
 	{
-		for(IRenderable renderable: render)
+		for(Renderable renderable: render)
 		{
-			renderable.render(renderer, xOffset + x, yOffset + y);
+			renderable.render(renderer, x + this.x, y + this.y);
 		}
 	}
 }

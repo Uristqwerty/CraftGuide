@@ -1,5 +1,7 @@
 package uristqwerty.CraftGuide.ui;
 
+import uristqwerty.gui.components.GuiElement;
+
 public class RowCount extends GuiElement
 {
 	GuiScrollableGrid grid;
@@ -9,7 +11,7 @@ public class RowCount extends GuiElement
 	{
 		super(x, y, 0, 0);
 		
-		text = new GuiRightAlignedText(0, 0, "", 0x000000);
+		text = new GuiRightAlignedText(0, 0, "", 0xff000000);
 		addElement(text);
 		this.grid = grid;
 	}

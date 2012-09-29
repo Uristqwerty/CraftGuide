@@ -4,10 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import uristqwerty.CraftGuide.ui.Rendering.FloatingItemText;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
-import uristqwerty.CraftGuide.ui.Rendering.ITexture;
 import uristqwerty.CraftGuide.ui.Rendering.Overlay;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.TexturedRect;
+import uristqwerty.gui.texture.Texture;
 
 
 public class GuiButton extends GuiElement
@@ -29,12 +30,12 @@ public class GuiButton extends GuiElement
 	private static Overlay toolTipRender = new Overlay(toolTip);
 	private String toolTipText = "";
 
-	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v)
+	public GuiButton(int x, int y, int width, int height, Texture texture, int u, int v)
 	{
 		this(x, y, width, height, texture, u, v, width, 0);
 	}
 	
-	public GuiButton(int x, int y, int width, int height, ITexture texture, int u, int v, int dx, int dy)
+	public GuiButton(int x, int y, int width, int height, Texture texture, int u, int v, int dx, int dy)
 	{
 		super(x, y, width, height);
 		
@@ -42,7 +43,7 @@ public class GuiButton extends GuiElement
 		int xOffset = 0;
 		for(ButtonState state: ButtonState.values())
 		{
-			IRenderable image = new TexturedRect(0, 0, width, height, texture.texture(), u + xOffset, v + yOffset);
+			Renderable image = new TexturedRect(0, 0, width, height, texture, u + xOffset, v + yOffset);
 			
 			template.setStateImage(state, image);
 			xOffset += dx;
@@ -74,7 +75,7 @@ public class GuiButton extends GuiElement
 	@Override
 	public void draw()
 	{
-		render(template.getStateImage(currentState, width, height));
+		render(template.getStateImage(currentState, bounds.width(), bounds.height()));
 		
 		if(isOver() && !toolTipText.isEmpty())
 		{
@@ -88,13 +89,13 @@ public class GuiButton extends GuiElement
 	@Override
 	public void mouseMoved(int x, int y)
 	{
-		updateState(isMouseOver(x, y), isHeld());
+		updateState(containsPoint(x, y), isHeld());
 	}
 
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		if(isMouseOver(x, y))
+		if(containsPoint(x, y))
 		{
 			if(!isHeld())
 			{
@@ -112,7 +113,7 @@ public class GuiButton extends GuiElement
 			sendButtonEvent(IButtonListener.Event.RELEASE);
 		}
 		
-		updateState(isMouseOver(x, y), false);
+		updateState(containsPoint(x, y), false);
 	}
 	
 	private void updateState(boolean over, boolean held)

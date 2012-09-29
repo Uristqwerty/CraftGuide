@@ -8,7 +8,8 @@ import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
-import uristqwerty.CraftGuide.ui.Rendering.Text;
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.minecraft.Text;
 
 public class GuiTextInput extends GuiElement implements IButtonListener
 {
@@ -48,16 +49,21 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		if(!isMouseOver(x, y))
+		if(!containsPoint(x, y))
 		{
 			setFocus(false);
 		}
-		else
-		{
-			setFocus(true);
-			moveCursor(xToCharIndex(x - this.x - xText));
-		}
+		
 		super.mousePressed(x, y);
+	}
+	
+	@Override
+	public void elementClicked(int x, int y)
+	{
+		setFocus(true);
+		moveCursor(xToCharIndex(x - bounds.x() - xText));
+		
+		super.elementClicked(x, y);
 	}
 
 	private int xToCharIndex(int x)

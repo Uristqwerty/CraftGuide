@@ -1,4 +1,20 @@
 <theme>
-	<metadata name="Base Theme" description="This theme defines the standard set of images and textures used by CraftGuide" id="theme_base"></metadata>
+	<metadata>
+		<id>theme_base</id>
+		<name>Base Theme</name>
+		<description>This theme defines the standard set of images and textures used by CraftGuide</description></metadata>
 	<image id="base_image">
-		<source type="file" location-type="filesystem-relative" path="base.png"></source></image></theme>
+		<source type="file">base.png</source>
+		<source type="file-jar">/gui/CraftGuide.png</source></image>
+	<texture type="clip" id="stack-any">
+		<source>base_image</source>
+		<rect x="238" y="238" width="18" height="18"></rect></texture>
+	<texture type="clip" id="stack-background">
+		<source>base_image</source>
+		<rect x="238" y="219" width="18" height="18"></rect></texture>
+    <texture type="clip" id="stack-oredict">
+        <source>base_image</source>
+        <rect x="238" y="181" width="18" height="18"></rect></texture>
+    <texture type="clip" id="text-filter">
+        <source>base_image</source>
+        <rect x="239" y="163" width="16" height="16"></rect></texture></theme>

@@ -1,32 +1,40 @@
 package uristqwerty.CraftGuide.ui.Rendering;
 
 import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
 
-public class ShadedRect implements IRenderable
+public class ShadedRect implements Renderable
 {
 	private int x, y, width, height;
-	private int colour, alpha;
+	private int color, alpha;
 
 	public ShadedRect(int x, int y, int width, int height, int colour)
 	{
 		this(x, y, width, height, colour, 0xff);
 	}
 	
-	public ShadedRect(int x, int y, int width, int height, int colour, int alpha)
+	public ShadedRect(int x, int y, int width, int height, int color, int alpha)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.colour = colour;
+		this.color = color;
 		this.alpha = alpha;
 	}
 	
-	@Override
+	//@Override
 	public void render(GuiRenderer renderer, int xOffset, int yOffset)
 	{
-		renderer.setColour(colour, alpha);
+		renderer.setColor(color, alpha);
 		renderer.drawRect(x + xOffset, y + yOffset, width, height);
-		renderer.setColour(0xffffff, 0xff);
+		renderer.setColor(0xffffff, 0xff);
+	}
+	
+	@Override
+	public void render(RendererBase renderer, int x, int y)
+	{
+		render((GuiRenderer)renderer, x, y);
 	}
 }

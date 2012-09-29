@@ -3,6 +3,8 @@ package uristqwerty.CraftGuide.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import uristqwerty.gui.components.GuiElement;
+
 public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 {
 	private GuiElement currentTab = null;
@@ -127,7 +129,7 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 		{
 			if(element != currentTab)
 			{
-				element.onParentResize(oldWidth, oldHeight, width, height);
+				element.onParentResize(oldWidth, oldHeight, bounds.width(), bounds.height());
 			}
 		}
 		

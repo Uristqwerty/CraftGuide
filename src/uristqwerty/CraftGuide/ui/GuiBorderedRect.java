@@ -1,17 +1,18 @@
 package uristqwerty.CraftGuide.ui;
 
-import uristqwerty.CraftGuide.ui.Rendering.GuiTexture;
-import uristqwerty.CraftGuide.ui.Rendering.IRenderable;
-import uristqwerty.CraftGuide.ui.Rendering.TexturedRect;
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui.rendering.TexturedRect;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.Texture;
 
-public class GuiBorderedRect extends GuiElement implements IRenderable
+public class GuiBorderedRect extends GuiElement implements Renderable
 {
 	private TexturedRect[] parts = new TexturedRect[9];
 
 	public GuiBorderedRect(int x, int y, int width, int height,
-			GuiTexture texture, int texX, int texY,
+			Texture texture, int texX, int texY,
 			int borderLength, int interiorLength)
 	{
 		this(x, y, width, height,
@@ -20,7 +21,7 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	}
 	
 	public GuiBorderedRect(int x, int y, int width, int height,
-			GuiTexture texture, int texX, int texY,
+			Texture texture, int texX, int texY,
 			int borderLength, int interiorLength,
 			int spacing)
 	{
@@ -32,7 +33,7 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	}
 	
 	public GuiBorderedRect(int x, int y, int width, int height,
-			GuiTexture texture, int texX, int texY,
+			Texture texture, int texX, int texY,
 			int borderWidth, int borderHeight,
 			int interiorWidth, int interiorHeight,
 			int spacing)
@@ -46,15 +47,13 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	}
 	
 	public GuiBorderedRect(int x, int y, int width, int height,
-			GuiTexture guiTexture, int texX, int texY,
+			Texture texture, int texX, int texY,
 			int borderLeftWidth, int borderRightWidth,
 			int borderTopHeight, int borderBottomHeight,
 			int interiorWidth, int interiorHeight,
 			int spacing)
 	{
 		super(x, y, width, height);
-		
-		Texture texture = guiTexture.texture();
 		
 		int centreWidth = width - borderLeftWidth - borderRightWidth;
 		int centreHeight = height - borderTopHeight - borderBottomHeight;
@@ -128,7 +127,7 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	@Override
 	public void draw()
 	{
-		for(IRenderable rect: parts)
+		for(Renderable rect: parts)
 		{
 			render(rect);
 		}
@@ -137,19 +136,19 @@ public class GuiBorderedRect extends GuiElement implements IRenderable
 	}
 
 	@Override
-	public void render(GuiRenderer renderer, int xOffset, int yOffset)
+	public void render(RendererBase renderer, int x, int y)
 	{
-		for(IRenderable rect: parts)
+		for(Renderable rect: parts)
 		{
-			rect.render(renderer, xOffset + x, yOffset + y);
+			rect.render(renderer, x + bounds.x(), y + bounds.y());
 		}
 	}
 	
 	@Override
 	public void onResize(int oldWidth, int oldHeight)
 	{
-		int widthChange = width - oldWidth;
-		int heightChange = height - oldHeight;
+		int widthChange = bounds.width() - oldWidth;
+		int heightChange = bounds.height() - oldHeight;
 		
 		parts[1].resizeBy(widthChange, 0);
 		parts[3].resizeBy(0, heightChange);

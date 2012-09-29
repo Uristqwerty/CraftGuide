@@ -3,7 +3,8 @@ package uristqwerty.CraftGuide.ui;
 import java.util.LinkedList;
 import java.util.List;
 
-import uristqwerty.CraftGuide.ui.Rendering.ITexture;
+import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.texture.Texture;
 
 
 public class GuiSlider extends GuiButton
@@ -17,8 +18,8 @@ public class GuiSlider extends GuiButton
 	public void mousePressed(int x, int y)
 	{
 		super.mousePressed(x, y);
-		dx = x - this.x;
-		dy = y - this.y;
+		dx = x - bounds.x();
+		dy = y - bounds.y();
 	}
 
 	@Override
@@ -39,12 +40,12 @@ public class GuiSlider extends GuiButton
 		float x = getPosX();
 		float y = getPosY();
 		
-		maxX += width - this.width;
-		maxY += height - this.height;
+		maxX += width - bounds.width();
+		maxY += height - bounds.height();
 		
 		setValue(x, y);
 		
-		return super.setSize(this.width, this.height);
+		return super.setSize(bounds.width(), bounds.height());
 	}
 
 	private void sendSliderEvent()
@@ -62,8 +63,9 @@ public class GuiSlider extends GuiButton
 
 	private void updatePosition(int x, int y)
 	{
-		this.x = clampValue(x, minX, maxX);
-		this.y = clampValue(y, minY, maxY);
+		x = clampValue(x, minX, maxX);
+		y = clampValue(y, minY, maxY);
+		setPosition(x, y);
 	}
 	
 	public void setValue(float x, float y)
@@ -87,7 +89,7 @@ public class GuiSlider extends GuiButton
 	}
 
 	public GuiSlider(int x, int y, int width, int height, int buttonWidth, int buttonHeight,
-		ITexture texture, int u, int v)
+		Texture texture, int u, int v)
 	{
 		super(x, y, buttonWidth, buttonHeight, texture, u, v);
 		
@@ -99,11 +101,11 @@ public class GuiSlider extends GuiButton
 	
 	public float getPosX()
 	{
-		return (x - minX)/(float)(maxX - minX);
+		return (bounds.x() - minX)/(float)(maxX - minX);
 	}
 	
 	public float getPosY()
 	{
-		return (y - minY)/(float)(maxY - minY);
+		return (bounds.y() - minY)/(float)(maxY - minY);
 	}
 }
