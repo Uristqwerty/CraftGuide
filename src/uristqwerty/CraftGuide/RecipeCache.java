@@ -11,15 +11,14 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.CraftGuide.OldAPITranslator;
 import uristqwerty.CraftGuide.api.BasicRecipeFilter;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.RecipeFilter;
 import uristqwerty.CraftGuide.api.RecipeProvider;
-import uristqwerty.CraftGuide.ui.IRecipeCacheListener;
-
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.CraftGuide.OldAPITranslator;
+import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
 
 public class RecipeCache
 {
@@ -33,8 +32,8 @@ public class RecipeCache
 	private Set<CraftType> currentTypes = null;
 	private SortedSet<CraftType> allItems = new TreeSet<CraftType>();
 	private boolean firstReset = true;
-	
-	RecipeCache()
+
+	public RecipeCache()
 	{
 		reset();
 	}
@@ -43,47 +42,47 @@ public class RecipeCache
 	{
 		CraftGuideLog.log("(re)loading recipe list...");
 		Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
-	
+
 		filterRawRecipes(rawRecipes);
 		craftResults.clear();
-		
+
 		for(ItemStack key: rawRecipes.keySet())
 		{
 			CraftType type = CraftType.getInstance(key);
-			
+
 			if(type == null)
 			{
 				CraftGuideLog.log("  Error: null type, " + rawRecipes.get(key).size() + " recipes skipped");
 				continue;
 			}
-			
+
 			if(!craftResults.containsKey(type))
 			{
 				craftResults.put(type, new ArrayList<CraftGuideRecipe>());
 			}
-			
+
 			craftResults.get(type).addAll(rawRecipes.get(key));
 		}
-		
+
 		generator.clearRecipes();
-		
+
 		generateAllItemList();
-		
+
 		craftingTypes.addAll(craftResults.keySet());
-		
+
 		if(firstReset)
 		{
 			currentTypes = new HashSet<CraftType>();
 			currentTypes.addAll(craftingTypes);
-			
+
 			for(ItemStack stack: generator.disabledTypes)
 			{
 				currentTypes.remove(CraftType.getInstance(stack));
 			}
-			
+
 			firstReset = false;
 		}
-		
+
 		setTypes(currentTypes);
 
 		for(IRecipeCacheListener listener: listeners)
@@ -95,7 +94,7 @@ public class RecipeCache
 	private void generateAllItemList()
 	{
 		allItems.clear();
-		
+
 		for(List<CraftGuideRecipe> type: craftResults.values())
 		{
 			for(CraftGuideRecipe recipe: type)
@@ -113,15 +112,15 @@ public class RecipeCache
 							for(ItemStack stack: (ArrayList<ItemStack>)item)
 							{
 								CraftType craftType = CraftType.getInstance(stack);
-								
+
 								if(craftType != null)
 								{
 									allItems.add(craftType);
 								}
 							}
-							
+
 							CraftType craftType = CraftType.getInstance(item);
-							
+
 							if(craftType != null)
 							{
 								allItems.add(craftType);
@@ -131,7 +130,7 @@ public class RecipeCache
 				}
 			}
 		}
-		
+
 		removeUselessDuplicates();
 	}
 
@@ -144,7 +143,7 @@ public class RecipeCache
 			{
 				continue;
 			}
-			
+
 			if(((ItemStack)item.getStack()).getItemDamage() == -1)
 			{
 				wild.put(item, 1);
@@ -160,7 +159,7 @@ public class RecipeCache
 				}
 			}
 		}
-		
+
 		for(CraftType type: wild.keySet())
 		{
 			if(wild.get(type) == 2)
@@ -171,6 +170,42 @@ public class RecipeCache
 			{
 				allItems.remove(type);
 				allItems.add(CraftType.getInstance(new ItemStack(type.getDisplayStack().itemID, 1, 0)));
+			}
+		}
+
+		wild.clear();
+		for(CraftType item: allItems)
+		{
+			if(item.getStack() instanceof ArrayList &&
+					((ArrayList)item.getStack()).size() == 1 &&
+					((ArrayList)item.getStack()).get(0) != null)
+			{
+				wild.put(item, 1);
+				ItemStack stack = (ItemStack)((ArrayList)item.getStack()).get(0);
+
+				for(CraftType item2: allItems)
+				{
+					if(item2.getStack() instanceof ItemStack)
+					{
+						ItemStack stack2 = (ItemStack)item2.getStack();
+						if(stack.itemID == stack2.itemID && (
+								stack.getItemDamage() == -1 ||
+								stack2.getItemDamage() == -1 ||
+								stack.getItemDamage() == stack2.getItemDamage()))
+						{
+							wild.put(item, 2);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		for(CraftType type: wild.keySet())
+		{
+			if(wild.get(type) == 2)
+			{
+				allItems.remove(type);
 			}
 		}
 	}
@@ -194,7 +229,7 @@ public class RecipeCache
 				}
 			}
 		}
-		
+
 		OldAPITranslator.generateRecipes(generator);
 
 		return generator.getRecipes();
@@ -208,7 +243,7 @@ public class RecipeCache
 			if(object instanceof RecipeFilter)
 			{
 				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
-				
+
 				for(ItemStack type: rawRecipes.keySet())
 				{
 					rawRecipes.put(type, ((RecipeFilter)object).filterRecipes(rawRecipes.get(type), type));
@@ -218,11 +253,11 @@ public class RecipeCache
 			{
 
 				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
-				
+
 				for(ItemStack type: rawRecipes.keySet())
 				{
 					Iterator<CraftGuideRecipe> iterator = rawRecipes.get(type).iterator();
-					
+
 					while(iterator.hasNext())
 					{
 						if(!((BasicRecipeFilter)object).shouldKeepRecipe(iterator.next(), type))
@@ -239,7 +274,7 @@ public class RecipeCache
 	{
 		typeResults = new ArrayList<CraftGuideRecipe>();
 		currentTypes = types;
-		
+
 		if(types == null)
 		{
 			for(CraftType type: craftingTypes)
@@ -257,7 +292,7 @@ public class RecipeCache
 				}
 			}
 		}
-		
+
 		filter(filterItem);
 	}
 
@@ -265,11 +300,11 @@ public class RecipeCache
 	{
 		return filteredResults;
 	}
-	
+
 	public void filter(ItemFilter filter)
 	{
 		filterItem = filter;
-		
+
 		if(filter == null)
 		{
 			filteredResults = typeResults;
@@ -277,7 +312,7 @@ public class RecipeCache
 		else
 		{
 			filteredResults = new ArrayList<CraftGuideRecipe>();
-			
+
 			for(CraftGuideRecipe recipe: typeResults)
 			{
 				if(recipe.containsItem(filter))
@@ -286,13 +321,13 @@ public class RecipeCache
 				}
 			}
 		}
-		
+
 		for(IRecipeCacheListener listener: listeners)
 		{
 			listener.onChange(this);
 		}
 	}
-	
+
 	public ItemFilter getFilter()
 	{
 		return filterItem;

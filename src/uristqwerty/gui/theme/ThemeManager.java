@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.src.ModLoader;
-
-import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui.theme.reader.ThemeReader;
 
 public class ThemeManager
@@ -19,26 +18,27 @@ public class ThemeManager
 	private ThemeReader xmlReader = new ThemeReader();
 	public Map<String, Theme> themeList;
 	public boolean debugOutput = false;
-	
+
 	public static ThemeManager instance = new ThemeManager();
-	
+	public static Theme currentTheme;
+
 	public void reload()
 	{
-		File themeDir = CraftGuide.themeDirectory();
-		
+		File themeDir = CraftGuideClient.themeDirectory();
+
 		if(themeDir == null || !themeDir.isDirectory())
 		{
 			return;
 		}
-		
+
 		Map<String, Theme> themes = new HashMap<String, Theme>();
-		
+
 		CraftGuideLog.log("(re)loading themes...");
-		
+
 		for(File file: themeDir.listFiles())
 		{
 			Theme theme = null;
-			
+
 			if(file.isDirectory())
 			{
 				CraftGuideLog.log("  Trying to load directory: " + file.getName());
@@ -49,7 +49,7 @@ public class ThemeManager
 				CraftGuideLog.log("  Trying to load file: " + file.getName());
 				theme = loadFile(file);
 			}
-			
+
 			if(theme != null)
 			{
 				CraftGuideLog.log("    Loaded " + file.getName());
@@ -60,10 +60,10 @@ public class ThemeManager
 				CraftGuideLog.log("    Failed to load " + file.getName());
 			}
 		}
-		
+
 		Map<String, Theme> validatedThemes = new HashMap<String, Theme>();
 		List<String> processed = new ArrayList<String>();
-		
+
 		debug("Validating themes:");
 		while(themes.size() > 0)
 		{
@@ -72,14 +72,14 @@ public class ThemeManager
 			{
 				debug("    Theme '" + themeID + "':");
 				Theme theme = themes.get(themeID);
-				
+
 				if(theme.loadError != null)
 				{
 					debug("      Already marked as having an error");
 					processed.add(themeID);
 					continue;
 				}
-				
+
 				boolean hasDependencies = true;
 
 				debug("      Checking dependencies...");
@@ -102,21 +102,21 @@ public class ThemeManager
 						break;
 					}
 				}
-				
+
 				if(theme.loadError != null)
 				{
 					debug("      Dependency error '" + theme.loadError + "'");
 					processed.add(themeID);
 					continue;
 				}
-				
+
 				if(!hasDependencies)
 				{
 					continue;
 				}
-				
+
 				debug("      All dependencies processed without error. Validating theme...");
-				
+
 				for(String imageID: theme.images.keySet())
 				{
 					debug("      Checking image sources for image '" + imageID + "'");
@@ -124,54 +124,54 @@ public class ThemeManager
 					for(Object[] imageSource: theme.images.get(imageID))
 					{
 						debug("        Source '" + imageSource + "'");
-						
+
 						if(validImage(theme, imageSource, validatedThemes))
 						{
 							valid = true;
 							break;
 						}
 					}
-					
+
 					if(!valid)
 					{
 						theme.loadError = "Unable to locate valid source for image '" + imageID + "'";
 						break;
 					}
 				}
-				
+
 				processed.add(themeID);
 			}
-			
+
 			if(processed.size() > 0)
 			{
 				debug("  " + processed.size() + " themes validated");
-				
+
 				for(String themeID: processed)
 				{
 					validatedThemes.put(themeID, themes.get(themeID));
 					themes.remove(themeID);
 				}
-				
+
 				processed.clear();
 			}
 			else
 			{
 				debug("  No themes validated, marking remaining themes as having a cyclic dependency");
-				
+
 				for(String themeID: themes.keySet())
 				{
 					Theme theme = themes.get(themeID);
 					theme.loadError = "Possible cyclic dependency";
 					validatedThemes.put(themeID, theme);
 				}
-				
+
 				break;
 			}
 		}
-		
+
 
 		debug("Result:");
-		
+
 		for(String themeID: validatedThemes.keySet())
 		{
 			if(validatedThemes.get(themeID).loadError == null)
@@ -183,7 +183,7 @@ public class ThemeManager
 				debug("  '" + themeID + "' failed to load with error \"" + validatedThemes.get(themeID).loadError + "\"");
 			}
 		}
-		
+
 		themeList = validatedThemes;
 	}
 
@@ -198,13 +198,13 @@ public class ThemeManager
 			for(String id: theme.dependencies)
 			{
 				debug("              Checking theme '" + id + "'");
-				
+
 				if(definesImage(validatedThemes.get(id), source, validatedThemes))
 				{
 					return true;
 				}
 			}
-			
+
 			debug("            No parent theme defines image.");
 			return false;
 		}
@@ -225,7 +225,7 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file"))
 		{
 			debug("            Checking theme location for '" + source + "'");
-			
+
 			if(theme.fileSourceType == Theme.SourceType.DIRECTORY)
 			{
 				return new File((File)imageSource[2], source).isFile();
@@ -234,13 +234,13 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("builtin:"))
 		{
 			String builtin = source;
-			
+
 			if(builtin.equalsIgnoreCase("error"))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -258,7 +258,7 @@ public class ThemeManager
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -269,13 +269,13 @@ public class ThemeManager
 			if(file.getName().startsWith("theme"))
 			{
 				CraftGuideLog.log("    Found " + file.getName());
-				
+
 				if(!file.isDirectory() && file.getName().endsWith(".xml"))
 				{
 					try
 					{
 						Theme theme = xmlReader.read(new FileInputStream(file), dir);
-	
+
 						if(theme != null)
 						{
 							theme.fileSource = dir;
@@ -288,11 +288,11 @@ public class ThemeManager
 						e.printStackTrace();
 					}
 				}
-				
+
 				CraftGuideLog.log("      Could not read " + file.getName());
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -300,7 +300,7 @@ public class ThemeManager
 	{
 		return null;
 	}
-	
+
 	private void debug(String text)
 	{
 		if(debugOutput)
@@ -312,7 +312,7 @@ public class ThemeManager
 	public Theme buildTheme(String string)
 	{
 		Theme theme = themeList.get(string);
-		
+
 		if(theme == null)
 		{
 			return null;
@@ -336,19 +336,19 @@ public class ThemeManager
 			if(!combined.dependencies.contains(dependency))
 			{
 				Theme dep = themeList.get(dependency);
-				
+
 				if(dep != null)
 				{
 					merge(combined, dep);
 				}
 			}
 		}
-		
+
 		if(combined.dependencies.contains(theme.id))
 		{
 			return;
 		}
-		
+
 		combined.dependencies.add(theme.id);
 		combined.images.putAll(theme.images);
 		combined.textures.putAll(theme.textures);

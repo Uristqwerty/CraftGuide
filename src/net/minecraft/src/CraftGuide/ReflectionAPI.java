@@ -3,19 +3,19 @@ package net.minecraft.src.CraftGuide;
 import java.util.LinkedList;
 import java.util.List;
 
-import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.CraftGuide;
 
 public class ReflectionAPI
 {
 	public static List<Object> APIObjects = new LinkedList<Object>();
-	
+
 	public static void registerAPIObject(Object object)
 	{
 		APIObjects.add(object);
 	}
-	
+
 	public static void reloadRecipes()
 	{
-		GuiCraftGuide.getInstance().reloadRecipes();
+		CraftGuide.side.reloadRecipes();
 	}
 }

@@ -5,35 +5,28 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import uristqwerty.CraftGuide.api.ItemSlot;
-import uristqwerty.CraftGuide.api.Util;
-import uristqwerty.CraftGuide.ui.GuiRenderer;
-import uristqwerty.gui.rendering.RendererBase;
-import uristqwerty.gui.theme.Theme;
-import uristqwerty.gui.theme.ThemeManager;
-
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = "CraftGuide_forge", name = "CraftGuide", version = "1.5.2")
 public class CraftGuide
 {
+	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.CraftGuideClient",
+				serverSide = "uristqwerty.CraftGuide.server.CraftGuideServer")
+	public static CraftGuideSide side;
+
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
 
@@ -42,26 +35,26 @@ public class CraftGuide
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
 	public static boolean alwaysShowID = false;
-	public static boolean textSearchRequiresShift;
+	public static boolean textSearchRequiresShift = false;
+	public static boolean enableKeybind = true;
 
 	private int itemCraftGuideID = 23361;
-	
-	public static Theme currentTheme;
-	
+
+
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
-		RendererBase.instance = new GuiRenderer();
-		Util.instance = new UtilImplementation();
+
+		side.preInit();
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
-		
+
 		loadProperties();
-		initKeybind();
-		extractResources();
-		
-		ThemeManager.instance.reload();
-		currentTheme = ThemeManager.instance.buildTheme("theme_base");
+
+		if(enableKeybind)
+		{
+			side.initKeybind();
+		}
 	}
 
 	@Init
@@ -110,61 +103,6 @@ public class CraftGuide
 		}
 	}
 
-	private void extractResources()
-	{
-		File outputBase = themeDirectory();
-		
-		if(outputBase == null)
-		{
-			return;
-		}
-		
-		try
-		{
-			InputStream stream = getClass().getResourceAsStream("CraftGuideResources.zip");
-			
-			if(stream != null)
-			{
-				ZipInputStream resources = new ZipInputStream(stream);
-				byte[] buffer = new byte[1024 * 16];
-				ZipEntry entry;
-				while((entry = resources.getNextEntry()) != null)
-				{
-					File destination = new File(outputBase, entry.getName());
-
-					if(!destination.exists())
-					{
-						if(entry.isDirectory())
-						{
-							destination.mkdirs();
-						}
-						else
-						{
-							System.out.println("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'");
-							destination.getParentFile().mkdirs();
-							destination.createNewFile();
-							FileOutputStream output = new FileOutputStream(
-									destination);
-							int len;
-
-							while((len = resources.read(buffer, 0, buffer.length)) != -1)
-							{
-								output.write(buffer, 0, len);
-							}
-
-							output.flush();
-							output.close();
-						}
-					}
-				}
-			}
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	private void addItems()
 	{
 		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
@@ -185,6 +123,7 @@ public class CraftGuide
 		config.setProperty("gridPacking", Boolean.toString(true));
 		config.setProperty("alwaysShowID", Boolean.toString(false));
 		config.setProperty("textSearchRequiresShift", Boolean.toString(false));
+		config.setProperty("enableKeybind", Boolean.toString(true));
 	}
 
 	/**
@@ -192,7 +131,7 @@ public class CraftGuide
 	 * location, load from there. If not, but one exists in the old
 	 * location, use that instead. If neither exists, just use the
 	 * defaults.
-	 * 
+	 *
 	 * Afterwards, save it back to the new configuration directory
 	 * (to create it if it doesn't exist, or to update it if it was
 	 * created by an earlier version of CraftGuide that didn't have
@@ -200,7 +139,7 @@ public class CraftGuide
 	 */
 	private void loadProperties()
 	{
-		File oldConfigDir = new File(Minecraft.getMinecraftDir(), "/config/");
+		File oldConfigDir = Loader.instance().getConfigDir();
 		File oldConfigFile = new File(oldConfigDir, "CraftGuide.cfg");
 		File newConfigDir = configDirectory();
 		File newConfigFile = newConfigDir == null? null : new File(newConfigDir, "CraftGuide.cfg");
@@ -214,7 +153,7 @@ public class CraftGuide
 		{
 			configFile = oldConfigFile;
 		}
-		
+
 		setConfigDefaults();
 
 		if(configFile != null && configFile.exists() && configFile.canRead())
@@ -235,8 +174,7 @@ public class CraftGuide
 
 		try
 		{
-			itemCraftGuideID = Integer.valueOf(config
-					.getProperty("itemCraftGuideID"));
+			itemCraftGuideID = Integer.valueOf(config.getProperty("itemCraftGuideID"));
 		}
 		catch(NumberFormatException e)
 		{
@@ -263,6 +201,7 @@ public class CraftGuide
 		gridPacking = Boolean.valueOf(config.getProperty("gridPacking"));
 		alwaysShowID = Boolean.valueOf(config.getProperty("alwaysShowID"));
 		textSearchRequiresShift = Boolean.valueOf(config.getProperty("textSearchRequiresShift"));
+		enableKeybind = Boolean.valueOf(config.getProperty("enableKeybind"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{
@@ -293,39 +232,15 @@ public class CraftGuide
 		}
 	}
 
-	private void initKeybind()
-	{
-		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
-	}
-
-	public static File themeDirectory()
-	{
-		File configDir = configDirectory();
-		
-		if(configDir == null)
-		{
-			return null;
-		}
-		
-		File dir = new File(configDir, "themes");
-		
-		if(!dir.exists() && !dir.mkdirs())
-		{
-			return null;
-		}
-		
-		return dir;
-	}
-
-	private static File configDirectory()
+	public static File configDirectory()
 	{
 		File dir = new File(Loader.instance().getConfigDir(), "CraftGuide");
-		
+
 		if(!dir.exists() && !dir.mkdirs())
 		{
 			return null;
 		}
-		
+
 		return dir;
 	}
 }

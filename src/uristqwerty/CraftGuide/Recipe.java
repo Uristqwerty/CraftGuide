@@ -10,7 +10,7 @@ import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui.rendering.Renderable;
 import net.minecraft.src.ItemStack;
 

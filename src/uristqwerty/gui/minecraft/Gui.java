@@ -1,19 +1,20 @@
 package uristqwerty.gui.minecraft;
 
+import net.minecraft.src.GuiScreen;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
-import uristqwerty.CraftGuide.ui.GuiTextInput;
+import uristqwerty.CraftGuide.client.ui.GuiRenderer;
+import uristqwerty.CraftGuide.client.ui.GuiTextInput;
 import uristqwerty.gui.components.Window;
 import uristqwerty.gui.rendering.RendererBase;
-
-import net.minecraft.src.GuiScreen;
 
 public class Gui extends GuiScreen
 {
 	protected GuiRenderer renderer = (GuiRenderer)RendererBase.instance;
 	protected Window guiWindow;
+	private boolean firstFrame = false;
 
 	public Gui(int windowWidth, int windowHeight)
 	{
@@ -26,7 +27,7 @@ public class Gui extends GuiScreen
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
 		guiWindow.setMaxSize(width, height);
-		
+
 		if(doesGuiPauseGame())
 		{
 			drawDefaultBackground();
@@ -35,16 +36,20 @@ public class Gui extends GuiScreen
 		renderer.startFrame(mc, this);
 		guiWindow.draw();
 		renderer.endFrame();
+		firstFrame = false;
 	}
 
 	@Override
 	protected void keyTyped(char eventChar, int eventKey)
 	{
 		super.keyTyped(eventChar, eventKey);
-		
+
 		if(GuiTextInput.inFocus != null)
 		{
-			GuiTextInput.inFocus.onKeyTyped(eventChar, eventKey);
+			if(!firstFrame)
+			{
+				GuiTextInput.inFocus.onKeyTyped(eventChar, eventKey);
+			}
 		}
 		else if(eventKey == Keyboard.KEY_ESCAPE || eventKey == mc.gameSettings.keyBindInventory.keyCode)
         {
@@ -55,13 +60,13 @@ public class Gui extends GuiScreen
         	guiWindow.onKeyTyped(eventChar, eventKey);
         }
 	}
-	
+
 	@Override
 	public void handleMouseInput()
 	{
         int x = (Mouse.getEventX() * width) / mc.displayWidth;
         int y = height - (Mouse.getEventY() * height) / mc.displayHeight - 1;
-        
+
         if(Mouse.getEventButton() == 0)
         {
         	guiWindow.updateMouseState(x, y, Mouse.getEventButtonState());
@@ -70,7 +75,7 @@ public class Gui extends GuiScreen
         {
         	guiWindow.updateMouse(x, y);
 		}
-        
+
     	if(Mouse.getEventDWheel() != 0)
     	{
     		guiWindow.scrollWheelTurned(Mouse.getEventDWheel() > 0? -mouseWheelRate() : mouseWheelRate());
@@ -93,15 +98,22 @@ public class Gui extends GuiScreen
             }
         }
 	}
-	
+
 	public int mouseWheelRate()
 	{
 		return 1;
 	}
-	
+
 	@Override
 	public void onGuiClosed()
 	{
 		guiWindow.onGuiClosed();
+	}
+
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		firstFrame = true;
 	}
 }

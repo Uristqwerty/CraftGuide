@@ -3,7 +3,6 @@ package uristqwerty.CraftGuide;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.World;
 
 public class ItemCraftGuide extends Item
@@ -19,10 +18,10 @@ public class ItemCraftGuide extends Item
 	@Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
-    	ModLoader.openGUI(player, GuiCraftGuide.getInstance());
+		CraftGuide.side.openGUI(player);
         return itemstack;
     }
-    
+
 	@Override
 	public int getColorFromDamage(int i, int j)
 	{

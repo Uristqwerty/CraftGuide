@@ -3,7 +3,8 @@ package uristqwerty.gui.components;
 import java.util.EnumMap;
 import java.util.Map;
 
-import uristqwerty.CraftGuide.ui.GuiRenderer;
+import uristqwerty.CraftGuide.client.ui.GuiRenderer;
+import uristqwerty.gui.Rect;
 import uristqwerty.gui.rendering.Renderable;
 
 public class Window extends GuiElement
@@ -18,11 +19,11 @@ public class Window extends GuiElement
 	private GuiRenderer renderer;
 	private boolean mousePressed;
 	private Map<Layer, GuiElement> layers = new EnumMap<Layer, GuiElement>(Layer.class);
-	
+
 	public Window(int x, int y, int width, int height, GuiRenderer renderer)
 	{
 		super(x, y, width, height);
-		
+
 		this.renderer = renderer;
 	}
 
@@ -47,12 +48,12 @@ public class Window extends GuiElement
 		if(mousePressed != buttonState)
 		{
 			mousePressed = buttonState;
-			
+
 			if(buttonState)
 			{
 				mousePressed(x, y);
 				GuiElement element = getElementAtPoint(x, y);
-				
+
 				if(element != null)
 				{
 					element.elementClicked(x - element.absoluteX(), y - element.absoluteY());
@@ -64,14 +65,14 @@ public class Window extends GuiElement
 			}
 		}
 	}
-	
+
 	@Override
 	public void mousePressed(int x, int y)
 	{
 		getLayer(Layer.MAIN).mousePressed(x - bounds.x(), y - bounds.y());
 		getLayer(Layer.POPUP).mousePressed(x - bounds.x(), y - bounds.y());
 	}
-	
+
 	@Override
 	public void draw()
 	{
@@ -80,22 +81,22 @@ public class Window extends GuiElement
 		getLayer(Layer.POPUP).draw();
 		getLayer(Layer.TOOLTIP).draw();
 	}
-	
+
 	@Override
 	public GuiElement getElementAtPoint(int x, int y)
 	{
 		GuiElement element = null;
-		
+
 		element = getLayer(Layer.POPUP).getElementAtPoint(x - bounds.x(), y - bounds.y());
-		
-		if(element == null && element != getLayer(Layer.POPUP))
+
+		if(element == null)
 		{
 			element = getLayer(Layer.MAIN).getElementAtPoint(x - bounds.x(), y - bounds.y());
 		}
-		
+
 		return element;
 	}
-	
+
 	public void setMaxSize(int width, int height)
 	{
 		if(bounds.width() > width || bounds.height() > height)
@@ -103,23 +104,24 @@ public class Window extends GuiElement
 			setSize(Math.min(bounds.width(), width), Math.min(bounds.height(), height));
 		}
 	}
-	
+
 	@Override
 	public GuiElement getLayer(Layer layer)
 	{
 		GuiElement element = layers.get(layer);
-		
+
 		if(element == null)
 		{
-			element = new GuiElement(bounds.rect());
-			element.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
+			element = new GuiElement(new Rect(0, 0, bounds.width(), bounds.height()))
+					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+					.setClickable(false);
 			layers.put(layer, element);
 			super.addElement(element);
 		}
-		
+
 		return element;
 	}
-	
+
 	@Override
 	public GuiElement addElement(GuiElement element)
 	{
