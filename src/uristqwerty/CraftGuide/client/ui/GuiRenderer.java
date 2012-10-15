@@ -7,6 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.RenderHelper;
+import net.minecraft.src.RenderItem;
+
 import org.lwjgl.opengl.GL11;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
@@ -19,11 +24,6 @@ import uristqwerty.gui.rendering.TexturedRect;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.RenderHelper;
-import net.minecraft.src.RenderItem;
-
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
     private RenderItem itemRenderer = new RenderItem();
@@ -32,9 +32,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	private Gui gui;
 
 	private static Map<ItemStack, ItemStack> itemStackFixes = new HashMap<ItemStack, ItemStack>();
-	
+
 	private Renderable itemError = new TexturedRect(-1, -1, 18, 18, DynamicTexture.instance("item_error"), 238, 200);
-	
+
 	public void startFrame(Minecraft mc, Gui gui)
 	{
 		minecraft = mc;
@@ -48,16 +48,16 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		{
 			overlay.renderOverlay(this);
 		}
-		
+
 		overlays.clear();
 	}
-	
+
 	public void setColor(int colour, int alpha)
 	{
 		setColorRgb(colour);
 		setAlpha(alpha);
 	}
-	
+
 	@Override
 	public void setTextureID(int textureID)
 	{
@@ -93,7 +93,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		minecraft.fontRenderer.drawStringWithShadow(text, x, y, currentColor());
 	}
-	
+
 	private int currentColor()
 	{
 		return ((((int)(alpha * 255)) & 0xff) << 24) | ((((int)(red * 255)) & 0xff) << 16) | ((((int)(green * 255)) & 0xff) << 8) | (((int)(blue * 255)) & 0xff);
@@ -105,16 +105,16 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		list.add(text);
 		drawFloatingText(x, y, list);
 	}
-	
+
 	public void drawFloatingText(int x, int y, List<String> text)
 	{
 		int textWidth = 0;
 		int textHeight = (text.size() > 1)? text.size() * 10: 8;
-				
+
 		for(String s: text)
 		{
 			int w;
-			
+
 			if(s.charAt(0) == '\u00a7')
 			{
 				w = minecraft.fontRenderer.getStringWidth(s.substring(2));
@@ -123,73 +123,73 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 			{
 				w = minecraft.fontRenderer.getStringWidth(s);
 			}
-			
+
 			if(w > textWidth)
 			{
 				textWidth = w;
 			}
 		}
-		
+
 		int xMax = gui.width - textWidth - 4;
-		
+
 		if(x > xMax)
 		{
 			x = xMax;
 		}
-		
+
 		if(x < 3)
 		{
 			x = 3;
 		}
-		
+
 		if(y < 4)
 		{
 			y = 4;
 		}
-		
+
     	setColor(0xf0100010);
 		drawRect(x - 3,				y - 4,				textWidth + 6,	1);
 		drawRect(x - 3,				y + textHeight + 3,	textWidth + 6,	1);
 		drawRect(x - 3,				y - 3,				textWidth + 6,	textHeight + 6);
 		drawRect(x - 4,				y - 3,				1,				textHeight + 6);
 		drawRect(x + textWidth + 3,	y - 3,				1,				textHeight + 6);
-		
+
 		setColor(0x505000ff);
 		drawRect(x - 3, y - 3, textWidth + 6, 1);
-		
+
 		setColor(0x5028007f);
 		drawRect(x - 3, y + textHeight + 2,	textWidth + 6, 1);
-		
+
 		drawGradient(x - 3,				y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		drawGradient(x + textWidth + 2, y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
-		
+
     	setColor(0xffffffff);
-		
+
 		int textY = y;
 		boolean first = true;
 		for(String s: text)
 		{
         	drawTextWithShadow(s, x, textY);
-        	
+
 			if(first)
 			{
                 textY += 2;
                 first = false;
 			}
-			
+
             textY += 10;
 		}
 	}
-	
+
 	public void drawItemStack(ItemStack itemStack, int x, int y)
 	{
 		drawItemStack(itemStack, x, y, true);
 	}
-	
+
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
 		boolean error = true;
-		
+
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glPushMatrix();
         GL11.glRotatef(120F, 1.0F, 0.0F, 0.0F);
@@ -200,16 +200,16 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         itemRenderer.zLevel = 100.0F;
-        
+
         try
         {
 			itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-			
+
 			if(renderOverlay)
 			{
 				itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 			}
-			
+
 			error = false;
         }
         catch(Exception e)
@@ -219,14 +219,14 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         		try
                 {
         			itemStack = fixedItemStack(itemStack);
-        			
+
         			itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-        			
+
         			if(renderOverlay)
         			{
         				itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
         			}
-        			
+
         			error = false;
                 }
                 catch(Exception e2)
@@ -270,15 +270,15 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
-        
+
         if(error)
         {
     		drawItemStackError(x, y);
         }
 	}
-	
+
 	private HashSet<ItemStack> loggedStacks = new HashSet<ItemStack>();
-	
+
 	private boolean hasLogged(ItemStack stack)
 	{
 		return !loggedStacks.add(stack);
@@ -287,12 +287,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	public static ItemStack fixedItemStack(ItemStack itemStack)
 	{
 		ItemStack stack = itemStackFixes.get(itemStack);
-		
+
 		if(stack == null)
 		{
 			stack = new ItemStack(itemStack.itemID, itemStack.stackSize, 0);
 		}
-		
+
 		return stack;
 	}
 
@@ -304,12 +304,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	public void setClippingRegion(int x, int y, int width, int height)
 	{
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		
+
 		x *= minecraft.displayHeight / (float)gui.height;
 		y *= minecraft.displayWidth / (float)gui.width;
 		height *= minecraft.displayHeight / (float)gui.height;
 		width *= minecraft.displayWidth / (float)gui.width;
-		
+
 		GL11.glScissor(x, minecraft.displayHeight - y - height, width, height);
 	}
 
@@ -386,8 +386,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glBlendFunc(770, 771);
-	    
+
 	    GL11.glBegin(GL11.GL_QUADS);
 	    	glColor1i(topLeftColor_argb);
 	        GL11.glVertex2i(x, y);
@@ -401,7 +402,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	    	glColor1i(topRightColor_argb);
 	        GL11.glVertex2i(x + width, y);
 	    GL11.glEnd();
-	    
+
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

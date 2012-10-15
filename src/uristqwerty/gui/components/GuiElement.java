@@ -64,20 +64,16 @@ public class GuiElement
 
 	public GuiElement getElementAtPoint(int x, int y)
 	{
-		//System.out.println("getElementAtPoint(" + x + ", " + y + "), bounds " + bounds.toString() + ", class " + this.getClass().getName());
 		if(!containsPoint(x, y))
 		{
-			//System.out.println("  Does not contain point");
 			return null;
 		}
-
-		//System.out.println("  Contains point, checking " + children.size() + " children");
 
 		GuiElement clicked = clickable? this : null;
 
 		for(GuiElement child: children)
 		{
-			GuiElement element = child.getElementAtPoint(x, y);
+			GuiElement element = child.getElementAtPoint(x - bounds.x(), y - bounds.y());
 
 			if(element != null)
 			{
@@ -109,11 +105,11 @@ public class GuiElement
 				}
 			}
 		}
-		/*
 		Map<String, Object> values = getTemplate(template);
 
 		if(values != null)
 		{
+			/*
 			//GuiElementMeta meta = this.getClass().getAnnotation(GuiElementMeta.class);
 
 			for(Field field: this.getClass().getFields())
@@ -134,8 +130,8 @@ public class GuiElement
 						}
 					}
 				}
-			}
-		}*/
+			}*/
+		}
 	}
 
 	private Map<String, Object> getTemplate(String template)

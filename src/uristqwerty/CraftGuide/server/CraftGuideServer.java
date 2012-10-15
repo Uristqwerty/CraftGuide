@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.server;
 
 import net.minecraft.src.EntityPlayer;
 import uristqwerty.CraftGuide.CraftGuideSide;
+import uristqwerty.CraftGuide.api.Util;
 
 public class CraftGuideServer implements CraftGuideSide
 {
@@ -13,6 +14,7 @@ public class CraftGuideServer implements CraftGuideSide
 	@Override
 	public void preInit()
 	{
+		Util.instance = new UtilImplementationServer();
 		// TODO Auto-generated method stub
 	}
 

@@ -1,5 +1,8 @@
 package uristqwerty.CraftGuide;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.ItemStack;
+
 import org.lwjgl.input.Keyboard;
 
 import uristqwerty.CraftGuide.api.Util;
@@ -335,7 +338,7 @@ public class GuiCraftGuide extends Gui
 	{
 		try
 		{
-			((UtilImplementationClient)Util.instance).partialTicks = f;
+			((UtilImplementationCommon)Util.instance).partialTicks = f;
 			guiWindow.centerOn(width / 2, height / 2);
 			filter.setFilter(recipeCache.getFilter());
 

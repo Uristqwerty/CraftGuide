@@ -2,6 +2,7 @@ package uristqwerty.gui.components;
 
 import java.util.Arrays;
 
+import uristqwerty.gui.components.Window.Layer;
 import uristqwerty.gui.minecraft.Text;
 import uristqwerty.gui.texture.BorderedTexture;
 import uristqwerty.gui.texture.DynamicTexture;
@@ -15,10 +16,10 @@ public class DropdownSelector extends GuiElement
 	private String[] options;
 	private int selected = -1;
 	private String selection = null;
-	
+
 	private Text selectedText = new Text(0, 0, "");
 	private ScrollPane selectionPane;
-	
+
 	public DropdownSelector(int x, int y, int width, int height)
 	{
 		super(x, y, width, height);
@@ -38,50 +39,42 @@ public class DropdownSelector extends GuiElement
 						new TextureClip(texture, 71, 71, 4, 4),
 				}, 4);
 	}
-	
+
 	@Override
 	public void mousePressed(int x, int y)
-	{/*
-		if(open)
+	{
+		if(open && !popupContainsPoint(x, y))
 		{
-			if(containsPoint(x, y) && !popupContainsPoint(x, y))
-			{
-				open = false;
-				getLayer(Layer.POPUP).removeElement(selectionPane);
-			}
+			open = false;
+			getLayer(Layer.POPUP).removeElement(selectionPane);
 		}
-		else
-		{
-			if(containsPoint(x, y))
-			{
-				open = true;
-				getLayer(Layer.POPUP).addElement(selectionPane);
-			}
-		}
-		
-		selection = "(" + x + ", " + y + ")";*/
-		
+
 		super.mousePressed(x, y);
 	}
-	
+
 	@Override
 	public void elementClicked(int x, int y)
 	{
-		selection = "Click: (" + x + ", " + y + ")";
+		if(!open)
+		{
+			open = true;
+			getLayer(Layer.POPUP).addElement(selectionPane);
+		}
+
 		super.elementClicked(x, y);
 	}
-	
-	/*private boolean popupContainsPoint(int x, int y)
+
+	private boolean popupContainsPoint(int x, int y)
 	{
 		// TODO Auto-generated method stub
 		return false;
-	}*/
+	}
 
 	public void setOptions(String[] list)
 	{
 		selected = -1;
 		options = Arrays.copyOf(list, list.length);
-		
+
 		for(int i = 0; i < options.length; i++)
 		{
 			if(options[i].equals(selection))
@@ -90,18 +83,18 @@ public class DropdownSelector extends GuiElement
 				break;
 			}
 		}
-		
+
 		if(selected == -1)
 		{
 			selection = null;
 		}
 	}
-	
+
 	public String getCurrentSelection()
 	{
 		return selection;
 	}
-	
+
 	@Override
 	public void draw()
 	{
@@ -109,13 +102,13 @@ public class DropdownSelector extends GuiElement
 		{
 			selectionPane.setPositionAbsolute(this.absoluteX(), this.absoluteY() + bounds.height());
 		}
-		
+
 		if(selection != null)
 		{
 			selectedText.setText(selection);
 			render(selectedText);
 		}
-		
+
 		super.draw();
 	}
 }

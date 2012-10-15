@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.client;
+package uristqwerty.CraftGuide;
 
 import java.util.ArrayList;
 import java.util.List;

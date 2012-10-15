@@ -6,6 +6,7 @@ import java.util.Map;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui.Rect;
 import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui.texture.Texture;
 
 public class Window extends GuiElement
 {
@@ -36,6 +37,12 @@ public class Window extends GuiElement
 	public void render(Renderable renderable, int xOffset, int yOffset)
 	{
 		renderer.render(renderable, xOffset + bounds.x(), yOffset + bounds.y());
+	}
+
+	@Override
+	public void render(Texture texture, int x, int y, int width, int height)
+	{
+		texture.renderRect(renderer, x, y, width, height, 0, 0);
 	}
 
 	public void updateMouse(int x, int y)
