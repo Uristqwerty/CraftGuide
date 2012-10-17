@@ -1,9 +1,37 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
+import uristqwerty.CraftGuide.api.SlotType;
+
+/**
+ * Indicates that this slot represents a recipe output,
+ * for use in searches. Added before
+ * {@link ItemSlot#setSlotType(SlotType)} existed,
+ * .setSlotType(...) should be preferred as this class
+ * may eventually be removed.
+ */
 public class OutputSlot extends ItemSlot
 {
-	public OutputSlot(int i, int i2, int i3, int i4, int i5, boolean b)
+	@Deprecated
+	public OutputSlot(int x, int y, int width, int height, int index)
 	{
-		super(i, i2, i3, i4, i5, b);
+		this(x, y, width, height);
+	}
+	
+	@Deprecated
+	public OutputSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
+	{
+		this(x, y, width, height, drawQuantity);
+	}
+	
+	public OutputSlot(int x, int y, int width, int height)
+	{
+		super(x, y, width, height);
+		setSlotType(SlotType.OUTPUT_SLOT);
+	}
+
+	public OutputSlot(int x, int y, int width, int height, boolean drawQuantity)
+	{
+		super(x, y, width, height, drawQuantity);
+		setSlotType(SlotType.OUTPUT_SLOT);
 	}
 }
