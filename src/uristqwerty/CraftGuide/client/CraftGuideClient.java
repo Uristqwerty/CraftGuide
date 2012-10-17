@@ -1,7 +1,10 @@
 package uristqwerty.CraftGuide.client;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -33,7 +36,67 @@ public class CraftGuideClient implements CraftGuideSide
 		Util.instance = new UtilImplementationClient();
 		extractResources();
 		ThemeManager.instance.reload();
-		ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
+
+		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(readThemeChoice());
+
+		if(ThemeManager.currentTheme == null)
+		{
+			ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
+		}
+	}
+
+	private String readThemeChoice()
+	{
+		File dir = themeDirectory();
+
+		if(dir == null)
+		{
+			return "theme_base";
+		}
+
+		File file = new File(dir, "currentTheme.txt");
+
+		if(!file.exists())
+		{
+			try
+			{
+				file.createNewFile();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+
+			if(file.canWrite())
+			{
+				try
+				{
+					FileWriter writer = new FileWriter(file);
+					writer.write("theme_base");
+					writer.close();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		else if(file.canRead())
+		{
+			try
+			{
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+				String line = reader.readLine();
+				reader.close();
+				return line;
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return "theme_base";
 	}
 
 	@Override
@@ -78,7 +141,7 @@ public class CraftGuideClient implements CraftGuideSide
 
 		try
 		{
-			InputStream stream = getClass().getResourceAsStream("CraftGuideResources.zip");
+			InputStream stream = CraftGuide.class.getResourceAsStream("CraftGuideResources.zip");
 
 			if(stream != null)
 			{
@@ -89,29 +152,25 @@ public class CraftGuideClient implements CraftGuideSide
 				{
 					File destination = new File(outputBase, entry.getName());
 
-					if(!destination.exists())
+					if(entry.isDirectory())
 					{
-						if(entry.isDirectory())
-						{
-							destination.mkdirs();
-						}
-						else
-						{
-							System.out.println("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'");
-							destination.getParentFile().mkdirs();
-							destination.createNewFile();
-							FileOutputStream output = new FileOutputStream(
-									destination);
-							int len;
+						destination.mkdirs();
+					}
+					else
+					{
+						System.out.println("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'");
+						destination.getParentFile().mkdirs();
+						destination.createNewFile();
+						FileOutputStream output = new FileOutputStream(destination);
+						int len;
 
-							while((len = resources.read(buffer, 0, buffer.length)) != -1)
-							{
-								output.write(buffer, 0, len);
-							}
-
-							output.flush();
-							output.close();
+						while((len = resources.read(buffer, 0, buffer.length)) != -1)
+						{
+							output.write(buffer, 0, len);
 						}
+
+						output.flush();
+						output.close();
 					}
 				}
 			}

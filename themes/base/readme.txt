@@ -1,3 +1,3 @@
 Note: Do not alter any of the files in this directory, they are overwritten when CraftGuide loads.
 
-If you want to replace them entirely, copy them to a new theme, and make your edits there. Anything changed in that theme will overwrite the defaults when that theme loads.
+If you want to customize or completely replace this, create a new theme and change currentTheme.txt so that the new theme loads instead of this one.

@@ -75,13 +75,13 @@ close($outfile);
 if($override eq "")
 {
     $build += 1;
-}
 
-open($versionfile, ">", "eclipse/CraftGuide/version.txt");
-print $versionfile "BUILD\t\t$build\n";
-print $versionfile "VERSION\t\t$version\n";
-print $versionfile "OVERRIDE\t$override\n";
-close $versionfile;
+    open($versionfile, ">", "eclipse/CraftGuide/version.txt");
+    print $versionfile "BUILD\t\t$build\n";
+    print $versionfile "VERSION\t\t$version\n";
+    print $versionfile "OVERRIDE\t$override\n";
+    close $versionfile;
+}
 
 open(my $buildzip, ">", "eclipse/CraftGuide/build-zip.bat");
 print $buildzip "cd zip\\build\n";

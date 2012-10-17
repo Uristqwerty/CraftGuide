@@ -1,6 +1,8 @@
 <theme>
 	<metadata>
-		<id>invalid-theme</id></metadata>
+		<id>invalid-theme</id>
+		<description>This theme intentionally references a nonexistant image, as a test to ensure that the theme loader is able to detect that this theme is invalid.</description>
+		<name>Invalid theme</name></metadata>
 	<image id="invalid_image">
 		<source type="file">invalid.jpg</source>
 		<source type="parent-theme">this_image_id_does_not_exist</source></image></theme>

@@ -1,1 +1,4 @@
 bin/*
+out/*
+build-zip.bat
+CraftGuideResources.zip

@@ -1,4 +1,5 @@
 <theme>
 	<metadata>
 		<id>test_theme</id>
-		<dependency>theme_base</dependency></metadata></theme>
+		<dependency>theme_base</dependency>
+		<description>This theme is an early test of the dependency system.</description></metadata></theme>
