@@ -231,6 +231,7 @@ public class RecipeCache
 		}
 
 		OldAPITranslator.generateRecipes(generator);
+		WipAPITranslator.generateRecipes(generator);
 
 		return generator.getRecipes();
 	}
