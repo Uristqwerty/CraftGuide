@@ -12,11 +12,12 @@ import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.client.ui.Rendering.ShadedRect;
 import uristqwerty.gui.rendering.Renderable;
 import uristqwerty.gui.rendering.TexturedRect;
+import uristqwerty.gui.texture.BorderedTexture;
 import uristqwerty.gui.texture.Texture;
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {
-	private GuiBorderedRect displayBackground;
+	private Texture displayBackground;
 	private Renderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
 	private RecipeCache recipeCache;
 	private Map<CraftType, Integer> settings = new HashMap<CraftType, Integer>();
@@ -25,27 +26,24 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	private String toolTipText = "";
 
 	private TexturedRect buttons[] = new TexturedRect[6];
-	
+
 	public CraftTypeDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, Texture texture, RecipeCache recipeCache)
 	{
 		super(x, y, width, height, scrollBar, 32, 1);
-		
-		displayBackground = new GuiBorderedRect(
-			0, 0, width, 32,
-			texture, 117, 1, 2, 32
-		);
-		
+
+		displayBackground = new BorderedTexture(texture, 117, 1, 1, 32, 2);
+
 		this.recipeCache = recipeCache;
 		recipeCache.addListener(this);
 		initTypes(recipeCache);
-		
+
 		buttons[0] = new TexturedRect(0, 0, 28, 28, texture, 113,  76);
 		buttons[1] = new TexturedRect(0, 0, 28, 28, texture, 113, 104);
 		buttons[2] = new TexturedRect(0, 0, 28, 28, texture, 113, 132);
 		buttons[3] = new TexturedRect(0, 0, 28, 28, texture, 141,  76);
 		buttons[4] = new TexturedRect(0, 0, 28, 28, texture, 141, 104);
 		buttons[5] = new TexturedRect(0, 0, 28, 28, texture, 141, 132);
-		
+
 		setRows(recipeCache.getCraftTypes().size());
 		setCells(recipeCache.getCraftTypes().size());
 	}
@@ -54,14 +52,14 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	{
 		Set<CraftType> types = recipeCache.getCraftTypes();
 		Set<CraftType> filteredTypes = recipeCache.getFilterTypes();
-		
+
 		if(filteredTypes != null)
 		{
 			for(CraftType type: types)
 			{
 				settings.put(type, 1);
 			}
-			
+
 			for(CraftType type: filteredTypes)
 			{
 				settings.put(type, 0);
@@ -73,22 +71,22 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
 		Set<CraftType> types = recipeCache.getCraftTypes();
-		
+
 		if(row < types.size())
 		{
 			CraftType type = (CraftType)types.toArray()[row];
-			displayBackground.render(renderer, xOffset, yOffset);
+			displayBackground.renderRect(renderer, xOffset, yOffset, width(), rowHeight, 0, 0);
 			renderer.drawItemStack(type.getDisplayStack(), xOffset + 8, yOffset + 8, false);
 
 			if(hidden(type))
 			{
 				hiddenOverlay.render(renderer, xOffset + 8, yOffset + 8);
 			}
-			
+
 			for(int i = 0; i < 3; i++)
 			{
 				TexturedRect rect = buttons[i == setting(type)? i + 3 : i];
-				
+
 				rect.render(renderer, xOffset + i * 29 + (bounds.width() - (3 * 29 + 24)) / 2 + 24, yOffset + 2);
 			}
 		}
@@ -100,10 +98,10 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		{
 			case 2:
 				return false;
-			
+
 			case 1:
 				return true;
-				
+
 			default:
 				for(CraftType otherType: settings.keySet())
 				{
@@ -112,7 +110,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 						return true;
 					}
 				}
-				
+
 				return false;
 		}
 	}
@@ -125,7 +123,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 			if(x >= (bounds.width() - (3 * 29 + 24)) / 2 + 24 && x < (bounds.width() - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
 			{
 				int relX = (x - ((bounds.width() - (3 * 29 + 24)) / 2 + 24));
-				
+
 				if(relX % 29 != 28)
 				{
 					set(row, relX / 29);
@@ -135,19 +133,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	}
 
 	@Override
-	public void onResize(int oldWidth, int oldHeight)
-	{
-		displayBackground.setSize(bounds.width(), 32);
-		
-		super.onResize(oldWidth, oldHeight);
-	}
-
-	@Override
 	public void onChange(RecipeCache cache)
 	{
 		setRows(recipeCache.getCraftTypes().size());
 	}
-	
+
 	@Override
 	public void setColumns(int columns)
 	{
@@ -160,20 +150,20 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		{
 			settings.put(type, 0);
 		}
-		
+
 		return settings.get(type);
 	}
-	
+
 	private void set(int row, int setting)
 	{
 		Set<CraftType> types = recipeCache.getCraftTypes();
-		
+
 		if(row < types.size())
 		{
 			CraftType type = (CraftType)types.toArray()[row];
 
 			settings.put(type, setting);
-			
+
 			settingChanged(type, setting);
 		}
 	}
@@ -190,14 +180,14 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				}
 			}
 		}
-		
+
 		updateFilter();
 	}
 
 	private void updateFilter()
 	{
 		Set<CraftType> set = new HashSet<CraftType>();
-		
+
 		for(CraftType type: settings.keySet())
 		{
 			if(setting(type) == 2)
@@ -207,7 +197,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				return;
 			}
 		}
-		
+
 		for(CraftType type: recipeCache.getCraftTypes())
 		{
 			if(setting(type) != 1)
@@ -215,7 +205,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				set.add(type);
 			}
 		}
-		
+
 		recipeCache.setTypes(set);
 	}
 
@@ -223,7 +213,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	public void onReset(RecipeCache cache)
 	{
 	}
-	
+
 	@Override
 	public void draw()
 	{
@@ -239,13 +229,13 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	public void mouseMovedRow(int row, int x, int y, boolean inBounds)
 	{
 		super.mouseMovedRow(row, x, y, inBounds);
-		
+
 		if(row < recipeCache.getCraftTypes().size() && y > 1 && y < 30 && inBounds)
 		{
 			if(x >= (bounds.width() - (3 * 29 + 24)) / 2 + 24 && x < (bounds.width() - (3 * 29 + 24)) / 2 + 24 + 3 * 29)
 			{
 				int relX = (x - ((bounds.width() - (3 * 29 + 24)) / 2 + 24));
-				
+
 				if(relX % 29 != 28)
 				{
 					switch(relX / 29)
@@ -253,11 +243,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 						case 0:
 							toolTipText = "Show recipes of this type";
 							break;
-							
+
 						case 1:
 							toolTipText = "Hide recipes of this type";
 							break;
-							
+
 						case 2:
 							toolTipText = "Show only recipes of this type";
 					}

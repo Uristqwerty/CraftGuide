@@ -27,6 +27,7 @@ public class Gui extends GuiScreen
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
 		guiWindow.setMaxSize(width, height);
+		guiWindow.update();
 
 		if(doesGuiPauseGame())
 		{

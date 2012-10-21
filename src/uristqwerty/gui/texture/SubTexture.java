@@ -1,5 +1,8 @@
 package uristqwerty.gui.texture;
 
+import uristqwerty.gui.Rect;
+import uristqwerty.gui.editor.TextureMeta;
+import uristqwerty.gui.editor.TextureMeta.TextureParameter;
 import uristqwerty.gui.rendering.RendererBase;
 
 /**
@@ -8,57 +11,62 @@ import uristqwerty.gui.rendering.RendererBase;
  * the subsection to form an arbitrarily large virtual texture, to
  * fully cover the drawn rectangle.
  */
+@TextureMeta(name = "subtexture")
 public class SubTexture implements Texture
 {
-	private final Texture source;
-	private final int u, v, width, height;
-	
+	@TextureParameter
+	public Texture source;
+
+	@TextureParameter
+	public Rect rect;
+
 	public SubTexture(Texture source, int u, int v, int width, int height)
 	{
 		this.source = source;
-		this.u = u;
-		this.v = v;
-		this.width = width;
-		this.height = height;
+		this.rect = new Rect(u, v, width, height);
 	}
-	
+
+	public SubTexture()
+	{
+	}
+
 	@Override
 	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
-		if(this.width < 1 || this.height < 1)
+		if(rect.width < 1 || rect.height < 1)
 		{
 			return;
 		}
-		
-		u = ((u % this.width) + this.width) % this.width; //Properly handle negatives
 
-		if(u + width <= this.width)
+		u = ((u % rect.width) + rect.width) % rect.width; //Properly handle negatives
+
+		if(u + width <= rect.width)
 		{
-			renderRectColumn(renderer, x, y, width, height, this.u + u, v);
+			renderRectColumn(renderer, x, y, width, height, rect.x + u, v);
 		}
 		else
 		{
 			if(u != 0)
 			{
-				renderRectColumn(renderer, x, y, this.width - (u % this.width), height, this.u + (u % this.width), v);
+				renderRectColumn(renderer, x, y, rect.width - (u % rect.width), height, rect.x + (u % rect.width), v);
 			}
 
 			int segment_start;
-			for(segment_start = u; segment_start + this.width < width; segment_start += this.width)
+			for(segment_start = u; segment_start + rect.width < width; segment_start += rect.width)
 			{
-				renderRectColumn(renderer, x + segment_start, y, this.width, height, this.u, v);
+				renderRectColumn(renderer, x + segment_start, y, rect.width, height, rect.x, v);
 			}
 
-			renderRectColumn(renderer, x + segment_start, y, width - segment_start, height, this.u, v);
+			renderRectColumn(renderer, x + segment_start, y, width - segment_start, height, rect.x, v);
 		}
 	}
-	
+
 	private void renderRectColumn(RendererBase renderer, int x, int y, int width, int height, int u, int v)
 	{
-		int v1 = (((v % this.height) + this.height) % this.height) + this.v;
+		int v1 = (((v % rect.height) + rect.height) % rect.height) + rect.y;
 		int v2 = v1 + height;
-		
-		if(v2 < this.v + this.height)
+
+		if(v2 < rect.y + rect.height)
 		{
 			source.renderRect(renderer, x, y, width, height, u, v1);
 		}
@@ -66,16 +74,16 @@ public class SubTexture implements Texture
 		{
 			if(v != 0)
 			{
-				source.renderRect(renderer, x, y, width, this.height - (v % this.height), u, this.v + (v % this.height));
+				source.renderRect(renderer, x, y, width, rect.height - (v % rect.height), u, rect.y + (v % rect.height));
 			}
 
 			int segment_start;
-			for(segment_start = v; segment_start + this.height < height; segment_start += this.height)
+			for(segment_start = v; segment_start + rect.height < height; segment_start += rect.height)
 			{
-				source.renderRect(renderer, x, y + segment_start, width, this.height, u, this.v);
+				source.renderRect(renderer, x, y + segment_start, width, rect.height, u, rect.y);
 			}
 
-			source.renderRect(renderer, x, y + segment_start, width, height - segment_start, u, this.v);
+			source.renderRect(renderer, x, y + segment_start, width, height - segment_start, u, rect.y);
 		}
 	}
 }

@@ -158,6 +158,14 @@ public class GuiElement
 		children.remove(element);
 	}
 
+	public void update()
+	{
+		for(GuiElement element: children)
+		{
+			element.update();
+		}
+	}
+
 	public void draw()
 	{
 		drawBackground();
@@ -372,6 +380,12 @@ public class GuiElement
 	public GuiElement setClickable(boolean clickable)
 	{
 		this.clickable = clickable;
+		return this;
+	}
+
+	public GuiElement setBackground(Texture background)
+	{
+		this.background = background;
 		return this;
 	}
 

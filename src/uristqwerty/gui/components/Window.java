@@ -42,7 +42,7 @@ public class Window extends GuiElement
 	@Override
 	public void render(Texture texture, int x, int y, int width, int height)
 	{
-		texture.renderRect(renderer, x, y, width, height, 0, 0);
+		texture.renderRect(renderer, x + bounds.x(), y + bounds.y(), width, height, 0, 0);
 	}
 
 	public void updateMouse(int x, int y)

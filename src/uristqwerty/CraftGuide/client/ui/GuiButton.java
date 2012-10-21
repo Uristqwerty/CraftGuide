@@ -6,9 +6,8 @@ import java.util.List;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.TexturedRect;
 import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui.texture.TextureClip;
 
 
 public class GuiButton extends GuiElement
@@ -20,10 +19,10 @@ public class GuiButton extends GuiElement
 		DOWN,
 		DOWN_OVER,
 	}
-	
+
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
-	ButtonTemplate template = new ButtonTemplate();
-	
+	private ButtonTemplate template;// = new ButtonTemplate();
+
 	private ButtonState currentState = ButtonState.UP;
 
 	private static FloatingItemText toolTip = new FloatingItemText("");
@@ -34,18 +33,18 @@ public class GuiButton extends GuiElement
 	{
 		this(x, y, width, height, texture, u, v, width, 0);
 	}
-	
+
 	public GuiButton(int x, int y, int width, int height, Texture texture, int u, int v, int dx, int dy)
 	{
 		super(x, y, width, height);
-		
+
+		template = new ButtonTemplate();
+
 		int yOffset = 0;
 		int xOffset = 0;
 		for(ButtonState state: ButtonState.values())
 		{
-			Renderable image = new TexturedRect(0, 0, width, height, texture, u + xOffset, v + yOffset);
-			
-			template.setStateImage(state, image);
+			template.setStateImage(state, new TextureClip(texture, u + xOffset, v + yOffset, width, height));
 			xOffset += dx;
 			yOffset += dy;
 		}
@@ -55,18 +54,18 @@ public class GuiButton extends GuiElement
 	{
 		super(x, y, width, height);
 	}
-	
+
 	public GuiButton(int x, int y, int width, int height, ButtonTemplate template)
 	{
 		super(x, y, width, height);
-		
+
 		this.template = template;
 	}
-	
+
 	public GuiButton(int x, int y, int width, int height, ButtonTemplate template, String text)
 	{
 		this(x, y, width, height, template);
-		
+
 		addElement(
 			new GuiCentredText(0, 0, width, height, text)
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
@@ -75,17 +74,16 @@ public class GuiButton extends GuiElement
 	@Override
 	public void draw()
 	{
-		render(template.getStateImage(currentState, bounds.width(), bounds.height()));
-		
 		if(isOver() && !toolTipText.isEmpty())
 		{
 			toolTip.setText(toolTipText);
 			render(toolTipRender);
 		}
-		
+
+		setBackground(template.getStateImage(currentState));
 		super.draw();
 	}
-	
+
 	@Override
 	public void mouseMoved(int x, int y)
 	{
@@ -112,13 +110,13 @@ public class GuiButton extends GuiElement
 		{
 			sendButtonEvent(IButtonListener.Event.RELEASE);
 		}
-		
+
 		updateState(containsPoint(x, y), false);
 	}
-	
+
 	private void updateState(boolean over, boolean held)
 	{
-		currentState = 
+		currentState =
 			held?
 				over?
 					ButtonState.DOWN_OVER
@@ -130,24 +128,24 @@ public class GuiButton extends GuiElement
 				:
 					ButtonState.UP;
 	}
-	
+
 	protected boolean isHeld()
 	{
 		return currentState == ButtonState.DOWN || currentState == ButtonState.DOWN_OVER;
 	}
-	
+
 	protected boolean isOver()
 	{
 		return currentState == ButtonState.UP_OVER || currentState == ButtonState.DOWN_OVER;
 	}
-	
+
 	public GuiButton addButtonListener(IButtonListener listener)
 	{
 		buttonListeners.add(listener);
-		
+
 		return this;
 	}
-	
+
 	private void sendButtonEvent(IButtonListener.Event eventType)
 	{
 		for(IButtonListener listener: buttonListeners)
@@ -155,11 +153,11 @@ public class GuiButton extends GuiElement
 			listener.onButtonEvent(this, eventType);
 		}
 	}
-	
+
 	public GuiButton setToolTip(String text)
 	{
 		toolTipText = text;
-		
+
 		return this;
 	}
 }

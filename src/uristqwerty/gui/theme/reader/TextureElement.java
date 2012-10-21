@@ -3,6 +3,7 @@ package uristqwerty.gui.theme.reader;
 import org.xml.sax.Attributes;
 
 import uristqwerty.gui.Rect;
+import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.Theme;
@@ -13,7 +14,7 @@ public class TextureElement implements ElementHandler
 	private String id;
 
 	private Texture texture = null;
-	
+
 	@Override
 	public void startElement(Theme theme, String name, Attributes attributes)
 	{
@@ -22,10 +23,14 @@ public class TextureElement implements ElementHandler
 			if(attributes.getLocalName(i).equalsIgnoreCase("type"))
 			{
 				type = attributes.getValue(i);
-				
+
 				if(type.equalsIgnoreCase("clip"))
 				{
 					texture = new TextureClip();
+				}
+				else if(type.equalsIgnoreCase("subtexture"))
+				{
+					texture = new SubTexture();
 				}
 			}
 			else if(attributes.getLocalName(i).equalsIgnoreCase("id"))
@@ -64,21 +69,31 @@ public class TextureElement implements ElementHandler
 		{
 			RectTemplate rectTemplate = (RectTemplate)handler;
 			Rect rect = new Rect(rectTemplate.x, rectTemplate.y, rectTemplate.width, rectTemplate.height);
-			
+
 			if(texture instanceof TextureClip)
 			{
 				TextureClip clip = (TextureClip)texture;
 				clip.rect = rect;
 			}
+			else if(texture instanceof SubTexture)
+			{
+				SubTexture subtexture = (SubTexture)texture;
+				subtexture.rect = rect;
+			}
 		}
 		else if(name.equalsIgnoreCase("source"))
 		{
 			TextureSourceElement source = (TextureSourceElement)handler;
-			
+
 			if(texture instanceof TextureClip)
 			{
 				TextureClip clip = (TextureClip)texture;
 				clip.source = source.source;
+			}
+			else if(texture instanceof SubTexture)
+			{
+				SubTexture subtexture = (SubTexture)texture;
+				subtexture.source = source.source;
 			}
 		}
 	}

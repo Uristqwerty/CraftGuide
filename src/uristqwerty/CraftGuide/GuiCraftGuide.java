@@ -11,7 +11,6 @@ import uristqwerty.CraftGuide.client.ui.ButtonTemplate;
 import uristqwerty.CraftGuide.client.ui.CraftTypeDisplay;
 import uristqwerty.CraftGuide.client.ui.CraftingDisplay;
 import uristqwerty.CraftGuide.client.ui.FilterSelectGrid;
-import uristqwerty.CraftGuide.client.ui.GuiBorderedRect;
 import uristqwerty.CraftGuide.client.ui.GuiButton;
 import uristqwerty.CraftGuide.client.ui.GuiResizeHandle;
 import uristqwerty.CraftGuide.client.ui.GuiScrollBar;
@@ -26,6 +25,7 @@ import uristqwerty.gui.components.GuiElement.AnchorPoint;
 import uristqwerty.gui.components.Image;
 import uristqwerty.gui.components.Window;
 import uristqwerty.gui.minecraft.Gui;
+import uristqwerty.gui.texture.BorderedTexture;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
 
@@ -37,6 +37,32 @@ public class GuiCraftGuide extends Gui
 	private Window guiOverlay;
 
 	private static GuiCraftGuide instance;
+
+	private Texture paneBackground = new BorderedTexture(
+			new Texture[]{
+					DynamicTexture.instance("pane_topleft"),
+					DynamicTexture.instance("pane_top"),
+					DynamicTexture.instance("pane_topright"),
+					DynamicTexture.instance("pane_left"),
+					DynamicTexture.instance("pane_center"),
+					DynamicTexture.instance("pane_right"),
+					DynamicTexture.instance("pane_bottomleft"),
+					DynamicTexture.instance("pane_bottom"),
+					DynamicTexture.instance("pane_bottomright"),
+			}, 2);
+
+	private Texture windowBackground = new BorderedTexture(
+			new Texture[]{
+					DynamicTexture.instance("window_topleft"),
+					DynamicTexture.instance("window_top"),
+					DynamicTexture.instance("window_topright"),
+					DynamicTexture.instance("window_left"),
+					DynamicTexture.instance("window_center"),
+					DynamicTexture.instance("window_right"),
+					DynamicTexture.instance("window_bottomleft"),
+					DynamicTexture.instance("window_bottom"),
+					DynamicTexture.instance("window_bottomright"),
+			}, 4);
 
 	public static GuiCraftGuide getInstance()
 	{
@@ -53,7 +79,7 @@ public class GuiCraftGuide extends Gui
 		recipeCache.filter(Util.instance.getCommonFilter(item.copy()));
 	}
 
-	private static final int initialWindowWidth = 256;
+	private static final int initialWindowWidth = 248;
 	private static final int initialWindowHeight = 198;
 
 	public GuiCraftGuide()
@@ -62,8 +88,15 @@ public class GuiCraftGuide extends Gui
 
 		Texture texture = DynamicTexture.instance("base_image");//Image.getImage("/gui/CraftGuide.png");
 
-		ButtonTemplate buttonTemplate = new ButtonTemplate(texture, 48, 204, 50, 13, 0, 13);
+		ButtonTemplate buttonTemplate = new ButtonTemplate(
+				new Texture[]{
+						new BorderedTexture(texture, 156, 1, 0, 32, 2),
+						new BorderedTexture(texture, 192, 1, 0, 32, 2),
+						new BorderedTexture(texture, 156, 1, 0, 32, 2),
+						new BorderedTexture(texture, 192, 37, 0, 32, 2),
+				});
 
+		guiWindow.background = windowBackground;
 
 		guiWindow.addElement(
 			new GuiResizeHandle(
@@ -73,23 +106,17 @@ public class GuiCraftGuide extends Gui
 		);
 
 		guiWindow.addElement(
-			new GuiBorderedRect(
-				0, 0, initialWindowWidth, initialWindowHeight,
-				texture, 1, 1, 4, 64
-			)
-			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
-		);
-
-		guiWindow.addElement(
 			new GuiButton(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, texture, 0, 191)
 				.anchor(AnchorPoint.BOTTOM_RIGHT)
 			);
 
 		guiWindow.addElement(
-			new GuiBorderedRect(
+				new GuiElement(5, 5, 58, 86)
+					.setBackground(paneBackground)
+			/*new GuiBorderedRect(
 				5, 5, 58, 86,
 				texture, 78, 1, 2, 32
-			)
+			)*/
 		);
 
 		guiWindow.addElement(
@@ -110,13 +137,13 @@ public class GuiCraftGuide extends Gui
 
 		guiOverlay = new Window(0, 0, 0, 0, renderer);
 
-		guiOverlay.addElement(
+		/*guiOverlay.addElement(
 			new GuiBorderedRect(
 				0, 0, 0, 0,
 				texture, 78, 1, 2, 32
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
-		);
+		);*/
 	}
 
 	private GuiElement generateRecipeTab(Texture texture, ButtonTemplate buttonTemplate)
@@ -125,15 +152,12 @@ public class GuiCraftGuide extends Gui
 				.setClickable(false);
 
 		recipeTab.addElement(
-			new GuiBorderedRect(
-				237, 5, 14, 188,
-				texture, 78, 1, 2, 32
-			)
-			.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
-		);
+				new GuiElement(initialWindowWidth - 19, 5, 14, initialWindowHeight - 10)
+					.setBackground(paneBackground)
+					.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT));
 
 		GuiButton clearButton =
-			(GuiButton) new GuiButton(8, 180, 50, 13, buttonTemplate, "Clear")
+			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 50, 13, buttonTemplate, "Clear")
 				.anchor(AnchorPoint.BOTTOM_LEFT);
 
 		recipeTab.addElement(clearButton);
@@ -159,19 +183,15 @@ public class GuiCraftGuide extends Gui
 			.setClickable(false);
 
 		recipeArea.addElement(
-			new GuiBorderedRect(
-				67, 17, 168, 176,
-				texture, 78, 1, 2, 32
-			)
-			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+				new GuiElement(67, 17, initialWindowWidth - 88, 176)
+				.setBackground(paneBackground)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 
 		itemListArea.addElement(
-			new GuiBorderedRect(
-				67, 17, 168, 160,
-				texture, 78, 1, 2, 32
-			)
-			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+				new GuiElement(67, 17, initialWindowWidth - 88, 160)
+				.setBackground(paneBackground)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 
 		GuiButton backButton =
@@ -195,7 +215,7 @@ public class GuiCraftGuide extends Gui
 		recipeTab.addElement(recipeDisplay);
 
 		GuiScrollBar filterSelectScrollBar =
-			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186,
+			(GuiScrollBar) new GuiScrollBar(initialWindowWidth - 18, 6, 12, 186,
 				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
 				.addButton(new GuiButton(0,   0, 12, 11, texture, 0, 234), -10, true)
@@ -213,12 +233,12 @@ public class GuiCraftGuide extends Gui
 		itemListArea.addElement(filterSelectScrollBar);
 
 		FilterSelectGrid filterGrid =
-			(FilterSelectGrid) new FilterSelectGrid(68, 18, 166, 158,
+			(FilterSelectGrid) new FilterSelectGrid(68, 18, initialWindowWidth - 90, 158,
 				filterSelectScrollBar, texture,
 				recipeCache, backButton, recipeDisplay)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
 
-		itemListArea.addElement(new RowCount(233, 6, filterGrid).anchor(AnchorPoint.TOP_RIGHT));
+		itemListArea.addElement(new RowCount(initialWindowWidth - 23, 6, filterGrid).anchor(AnchorPoint.TOP_RIGHT));
 		itemListArea.addElement(filterGrid);
 
 		itemListArea.addElement(
@@ -226,7 +246,8 @@ public class GuiCraftGuide extends Gui
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		itemListArea.addElement(
-			new GuiBorderedRect(106, 179, 93, 15, texture, 78, 1, 2, 32)
+				new GuiElement(106, 179, initialWindowWidth - 163, 15)
+				.setBackground(paneBackground)
 				.anchor(AnchorPoint.BOTTOM_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 
@@ -254,12 +275,12 @@ public class GuiCraftGuide extends Gui
 		}
 
 		itemListArea.addElement(
-			new GuiButton(202, 180, 32, 13, buttonTemplate, "Clear")
+			new GuiButton(initialWindowWidth - 54, 180, 32, 13, buttonTemplate, "Clear")
 				.addButtonListener(new ClearButtonListener(searchInput))
 				.anchor(AnchorPoint.BOTTOM_RIGHT));
 
 		GuiScrollBar scrollBar =
-			(GuiScrollBar) new GuiScrollBar(238, 6, 12, 186,
+			(GuiScrollBar) new GuiScrollBar(initialWindowWidth - 18, 6, 12, 186,
 				(GuiSlider) new GuiSlider(0, 21, 12, 144, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
 				.addButton(new GuiButton(0,   0, 12, 11, texture, 0, 234), -10, true)
@@ -276,8 +297,8 @@ public class GuiCraftGuide extends Gui
 
 		recipeArea.addElement(scrollBar);
 
-		craftingDisplay = new CraftingDisplay(68, 18, 166, 174, scrollBar, recipeCache);
-		recipeArea.addElement(new RowCount(233, 6, craftingDisplay).anchor(AnchorPoint.TOP_RIGHT));
+		craftingDisplay = new CraftingDisplay(68, 18, initialWindowWidth - 90, 174, scrollBar, recipeCache);
+		recipeArea.addElement(new RowCount(initialWindowWidth - 23, 6, craftingDisplay).anchor(AnchorPoint.TOP_RIGHT));
 		FilterClearCallback clearCallback = new FilterClearCallback();
 		clearButton.addButtonListener(clearCallback);
 		clearCallback.display = craftingDisplay;
@@ -295,23 +316,19 @@ public class GuiCraftGuide extends Gui
 				.setClickable(false);
 
 		typeTab.addElement(
-			new GuiBorderedRect(
-				67, 5, 168, 188,
-				texture, 78, 1, 2, 32
-			)
-			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+				new GuiElement(67, 5, initialWindowWidth - 88, 188)
+					.setBackground(paneBackground)
+					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
 
 		typeTab.addElement(
-			new GuiBorderedRect(
-				237, 5, 14, 188,
-				texture, 78, 1, 2, 32
-			)
-			.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
+				new GuiElement(initialWindowWidth - 19, 5, 14, 188)
+					.setBackground(paneBackground)
+					.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
 		);
 
 		GuiScrollBar scrollBar =
-			new GuiScrollBar(238, 6, 12, 186,
+			new GuiScrollBar(initialWindowWidth - 18, 6, 12, 186,
 				(GuiSlider) new GuiSlider(0, 10, 12, 166, 12, 15, texture, 0, 199)
 					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
 				.addButton(new GuiButton(0, 0, 12, 10, texture, 0, 214), -1, true)
@@ -325,7 +342,7 @@ public class GuiCraftGuide extends Gui
 
 		typeTab.addElement(
 			new CraftTypeDisplay(
-				68, 6, 166, 186, scrollBar, texture, recipeCache
+				68, 6, initialWindowWidth - 90, 186, scrollBar, texture, recipeCache
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 		);
