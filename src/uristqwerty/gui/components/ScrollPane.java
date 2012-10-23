@@ -2,7 +2,7 @@ package uristqwerty.gui.components;
 
 public class ScrollPane extends GuiElement
 {
-	private ScrollBar scrollbar;
+	//private ScrollBar scrollbar;
 	
 	public ScrollPane(int x, int y, int width, int height)
 	{

@@ -21,7 +21,7 @@ public class GuiButton extends GuiElement
 	}
 
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
-	private ButtonTemplate template;// = new ButtonTemplate();
+	private ButtonTemplate template;
 
 	private ButtonState currentState = ButtonState.UP;
 

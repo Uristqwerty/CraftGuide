@@ -11,6 +11,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -37,6 +38,8 @@ public class CraftGuide
 	public static boolean alwaysShowID = false;
 	public static boolean textSearchRequiresShift = false;
 	public static boolean enableKeybind = true;
+	public static boolean newerBackgroundStyle = false;
+	public static boolean hideMundanePotionRecipes = true;
 
 	private int itemCraftGuideID = 23361;
 
@@ -45,6 +48,26 @@ public class CraftGuide
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
+
+		if(Loader.isModLoaded("Forge"))
+		{
+			try
+			{
+				RecipeGeneratorImplementation.forgeExt = (RecipeGeneratorForgeExtension)Class.forName("uristqwerty.CraftGuide.ForgeStuff").newInstance();
+			}
+			catch(InstantiationException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(ClassNotFoundException e)
+			{
+				CraftGuideLog.log(e);
+			}
+		}
 
 		side.preInit();
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
@@ -80,7 +103,7 @@ public class CraftGuide
 			e1.printStackTrace();
 		}
 
-		if(ModLoader.isModLoaded("mod_RedPowerCore"))
+		if(Loader.isModLoaded("mod_RedPowerCore"))
 		{
 			try
 			{
@@ -124,6 +147,8 @@ public class CraftGuide
 		config.setProperty("alwaysShowID", Boolean.toString(false));
 		config.setProperty("textSearchRequiresShift", Boolean.toString(false));
 		config.setProperty("enableKeybind", Boolean.toString(true));
+		config.setProperty("newerBackgroundStyle", Boolean.toString(false));
+		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
 	}
 
 	/**
@@ -202,6 +227,8 @@ public class CraftGuide
 		alwaysShowID = Boolean.valueOf(config.getProperty("alwaysShowID"));
 		textSearchRequiresShift = Boolean.valueOf(config.getProperty("textSearchRequiresShift"));
 		enableKeybind = Boolean.valueOf(config.getProperty("enableKeybind"));
+		newerBackgroundStyle = Boolean.valueOf(config.getProperty("newerBackgroundStyle"));
+		hideMundanePotionRecipes = Boolean.valueOf(config.getProperty("hideMundanePotionRecipes"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{

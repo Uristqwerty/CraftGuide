@@ -169,7 +169,11 @@ public class GuiElement
 	public void draw()
 	{
 		drawBackground();
+		drawChildren();
+	}
 
+	public void drawChildren()
+	{
 		for(GuiElement element: children)
 		{
 			element.draw();
@@ -243,7 +247,6 @@ public class GuiElement
 		int oldHeight = bounds.height();
 
 		bounds.setSize(width, height);
-
 		onResize(oldWidth, oldHeight);
 
 		for(GuiElement element: children)

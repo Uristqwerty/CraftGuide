@@ -41,6 +41,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		RecipeCache recipeCache, GuiButton backButton, GuiTabbedDisplay display)
 	{
 		super(x, y, width, height, scrollBar, 18, 18);
+		flexibleSize = true;
 
 		this.backButton = backButton;
 		this.display = display;
@@ -179,7 +180,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 
 				try
 				{
-					for(String line: (List<String>)stack.getItemNameandInformation())
+					for(String line: ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack))
 					{
 						if(line != null && line.toLowerCase().contains(text.toLowerCase()))
 						{

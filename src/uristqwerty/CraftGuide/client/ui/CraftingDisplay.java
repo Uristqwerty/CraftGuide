@@ -23,6 +23,7 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	public CraftingDisplay(int x, int y, int width, int height, GuiScrollBar scrollBar, RecipeCache recipeCache)
 	{
 		super(x, y, width, height, scrollBar, 58, 79);
+		flexibleSize = true;
 
 		this.recipeCache = recipeCache;
 		recipeCache.addListener(this);

@@ -2,10 +2,15 @@ package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import net.minecraft.src.Block;
+import net.minecraft.src.IRecipe;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.ShapedRecipes;
+import net.minecraft.src.ShapelessRecipes;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
@@ -18,23 +23,22 @@ import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.texture.TextureClip;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.ShapedRecipes;
-import net.minecraft.src.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-
 public class RecipeGeneratorImplementation implements RecipeGenerator
 {
+	public static interface RecipeGeneratorForgeExtension
+	{
+		boolean matchesType(IRecipe recipe);
+		Object[] getCraftingRecipe(RecipeGeneratorImplementation recipeGeneratorImplementation, IRecipe recipe, boolean allowSmallGrid);
+	}
+
 	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private Texture defaultBackground = new BlankTexture();
 	private Texture defaultBackgroundSelected;
 	private static ItemStack workbench = new ItemStack(Block.workbench);
-	
+
+	public static RecipeGeneratorForgeExtension forgeExt;
+
 	public RecipeGeneratorImplementation()
 	{
 		Texture source = DynamicTexture.instance("base_image");
@@ -71,7 +75,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		{
 			craftingType = workbench;
 		}
-		
+
 		return new DefaultRecipeTemplate(
 				slots,
 				craftingType,
@@ -82,7 +86,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 						Image.fromJar(backgroundSelectedTexture),
 						backgroundSelectedX, backgroundSelectedY, 79, 58));
 	}
-	
+
 	@Override
 	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType)
 	{
@@ -90,7 +94,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		{
 			craftingType = workbench;
 		}
-		
+
 		return new DefaultRecipeTemplate(slots, craftingType, defaultBackground, defaultBackgroundSelected);
 	}
 
@@ -104,13 +108,13 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	public void addRecipe(CraftGuideRecipe recipe, ItemStack craftingType)
 	{
 		List<CraftGuideRecipe> recipeList = recipes.get(craftingType);
-		
+
 		if(recipeList == null)
 		{
 			recipeList = new LinkedList<CraftGuideRecipe>();
 			recipes.put(craftingType, recipeList);
 		}
-		
+
 		recipeList.add(recipe);
 	}
 
@@ -118,7 +122,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	{
 		return recipes;
 	}
-	
+
 	public void clearRecipes()
 	{
 		recipes.clear();
@@ -153,7 +157,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				int width = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeWidth");
 				int height = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeHeight");
 				Object[] items = (Object[])getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d", "recipeItems");
-				
+
 				if(allowSmallGrid && width < 3 && height < 3)
 				{
 					return getSmallShapedRecipe(width, height, items, ((ShapedRecipes)recipe).getRecipeOutput());
@@ -168,25 +172,9 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				List items = (List)getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
-			else if(recipe instanceof ShapedOreRecipe)
+			else if(forgeExt != null && forgeExt.matchesType(recipe))
 			{
-				int width = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "width");
-				int height = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "height");
-				Object[] items = (Object[])ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "input");
-
-				if(allowSmallGrid && width < 3 && height < 3)
-				{
-					return getSmallShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
-				}
-				else
-				{
-					return getCraftingShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
-				}
-			}
-			else if(recipe instanceof ShapelessOreRecipe)
-			{
-				List items = (List)ModLoader.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
-				return getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
+				return forgeExt.getCraftingRecipe(this, recipe, allowSmallGrid);
 			}
 		}
 		catch(Exception e)
@@ -195,7 +183,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			CraftGuideLog.log("Exception while trying to parse an ItemStack[10] from an IRecipe:");
 			CraftGuideLog.log(e);
 		}
-		
+
 		return null;
 	}
 
@@ -212,7 +200,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			{
 				field = objectClass.getDeclaredField(name);
 			}
-			
+
 			field.setAccessible(true);
 			return field.get(object);
 		}
@@ -223,10 +211,10 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		}
 	}
 
-	private Object[] getSmallShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)
+	Object[] getSmallShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)
 	{
 		Object[] output = new Object[5];
-		
+
 		for(int y = 0; y < height; y++)
 		{
 			for(int x = 0; x < width; x++)
@@ -234,28 +222,28 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				output[y * 2 + x] = items[y * width + x];
 			}
 		}
-		
+
 		output[4] = recipeOutput;
 		return output;
 	}
 
-	private Object[] getCraftingShapelessRecipe(List items, ItemStack recipeOutput)
+	Object[] getCraftingShapelessRecipe(List items, ItemStack recipeOutput)
 	{
 		Object[] output = new Object[10];
-		
+
 		for(int i = 0; i < items.size(); i++)
 		{
 			output[i] = items.get(i);
 		}
-		
+
 		output[9] = recipeOutput;
 		return output;
 	}
 
-	private Object[] getCraftingShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)
+	Object[] getCraftingShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)
 	{
 		Object[] output = new Object[10];
-		
+
 		for(int y = 0; y < height; y++)
 		{
 			for(int x = 0; x < width; x++)
@@ -263,7 +251,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				output[y * 3 + x] = items[y * width + x];
 			}
 		}
-		
+
 		output[9] = recipeOutput;
 		return output;
 	}

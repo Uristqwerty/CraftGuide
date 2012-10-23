@@ -1,8 +1,0 @@
-<theme>
-	<metadata>
-		<id>inverted</id>
-		<name>Base Theme (inverted)</name>
-		<description>This theme replaces the source image with one that has inverted colors, as a test of both the theme selection and inheritance systems.</description>
-		<dependency>theme_base</dependency></metadata>
-	<image id="base_image">
-		<source type="file">inverted.png</source></image></theme>

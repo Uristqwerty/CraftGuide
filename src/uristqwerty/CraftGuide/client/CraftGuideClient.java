@@ -51,7 +51,7 @@ public class CraftGuideClient implements CraftGuideSide
 
 		if(dir == null)
 		{
-			return "theme_base";
+			return "base_texpack";
 		}
 
 		File file = new File(dir, "currentTheme.txt");
@@ -72,7 +72,7 @@ public class CraftGuideClient implements CraftGuideSide
 				try
 				{
 					FileWriter writer = new FileWriter(file);
-					writer.write("theme_base");
+					writer.write("base_texpack");
 					writer.close();
 				}
 				catch(IOException e)
@@ -96,7 +96,7 @@ public class CraftGuideClient implements CraftGuideSide
 			}
 		}
 
-		return "theme_base";
+		return "base_texpack";
 	}
 
 	@Override

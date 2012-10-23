@@ -49,11 +49,11 @@ public abstract class UtilImplementationCommon extends Util
 
 		try
 		{
-			List list = stack.getItemNameandInformation();
+			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
 
 			if(stack.getItemDamage() == -1 && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
 			{
-				list = GuiRenderer.fixedItemStack(stack).getItemNameandInformation();
+				list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(GuiRenderer.fixedItemStack(stack));
 			}
 
 			List<String> text = new ArrayList<String>(list.size());

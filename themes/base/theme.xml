@@ -4,9 +4,10 @@
 		<name>Base Theme</name>
 		<description>This theme defines the standard set of images and textures used by CraftGuide</description></metadata>
 	<image id="base_image">
-		<source type="file">base.png</source>
-		<source type="file-jar">/gui/CraftGuide.png</source></image>
-	<texture type="clip" id="stack-any">
+		<source type="file">base.png</source><source type="file-jar">/gui/CraftGuide.png</source>
+		</image>
+	<image id="recipe_backgrounds"><source type="file-jar">/gui/CraftGuideRecipe.png</source></image>
+	<image id="brew_recipe_background"><source type="file-jar">/gui/BrewGuide.png</source></image><texture type="clip" id="stack-any">
 		<source>base_image</source>
 		<rect x="238" y="238" width="18" height="18"></rect></texture>
 	<texture type="clip" id="stack-background">

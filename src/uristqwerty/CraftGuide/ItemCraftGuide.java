@@ -21,9 +21,11 @@ public class ItemCraftGuide extends Item
 		CraftGuide.side.openGUI(player);
         return itemstack;
     }
+	
+	
 
 	@Override
-	public int getColorFromDamage(int i, int j)
+	public int func_82790_a(ItemStack stack, int i)
 	{
 		return 0x9999ff;
 	}

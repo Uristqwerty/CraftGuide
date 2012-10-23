@@ -415,4 +415,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 				((color >>  0) & 0xff) / 255.0,
 				((color >> 24) & 0xff) / 255.0);
 	}
+	
+	public List<String> getItemNameandInformation(ItemStack stack)
+	{
+		return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+	}
 }

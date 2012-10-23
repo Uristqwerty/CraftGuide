@@ -1,0 +1,8 @@
+<theme>
+	<metadata>
+		<name>Texturepack support</name>
+		<id>base_texpack</id>
+		<description>Causes base_image to load from the jar, for better compatibility with texture packs.</description>
+		<dependency>theme_base</dependency></metadata>
+	<image id="base_image">
+		<source type="file-jar">/gui/CraftGuide.png</source></image></theme>

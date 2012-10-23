@@ -8,6 +8,7 @@ import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Util;
+import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 
 public class StringItemFilter implements ItemFilter
 {
@@ -24,7 +25,7 @@ public class StringItemFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			List list = ((ItemStack)item).getItemNameandInformation();
+			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation((ItemStack)item);
 			
 			for(Object o: list)
 			{

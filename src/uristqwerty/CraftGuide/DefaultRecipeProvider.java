@@ -11,6 +11,8 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.gui.texture.DynamicTexture;
+import uristqwerty.gui.texture.TextureClip;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CraftingManager;
@@ -18,7 +20,7 @@ import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+//import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -35,7 +37,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 	
-	private final Slot[] craftingSlots = new ItemSlot[]{
+	private final Slot[] craftingSlotsOwnBackground = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(21,  3, 16, 16).drawOwnBackground(),
 		new ItemSlot(39,  3, 16, 16).drawOwnBackground(),
@@ -48,7 +50,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
-	private final Slot[] smallCraftingSlots = new ItemSlot[]{
+	private final Slot[] smallCraftingSlotsOwnBackground = new ItemSlot[]{
 		new ItemSlot(12, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(30, 12, 16, 16).drawOwnBackground(),
 		new ItemSlot(12, 30, 16, 16).drawOwnBackground(),
@@ -56,24 +58,93 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 	};
 	
+	private final Slot[] craftingSlots = new ItemSlot[]{
+		new ItemSlot( 3,  3, 16, 16),
+		new ItemSlot(21,  3, 16, 16),
+		new ItemSlot(39,  3, 16, 16),
+		new ItemSlot( 3, 21, 16, 16),
+		new ItemSlot(21, 21, 16, 16),
+		new ItemSlot(39, 21, 16, 16),
+		new ItemSlot( 3, 39, 16, 16),
+		new ItemSlot(21, 39, 16, 16),
+		new ItemSlot(39, 39, 16, 16),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
+	};
+	
+	private final Slot[] smallCraftingSlots = new ItemSlot[]{
+		new ItemSlot(12, 12, 16, 16),
+		new ItemSlot(30, 12, 16, 16),
+		new ItemSlot(12, 30, 16, 16),
+		new ItemSlot(30, 30, 16, 16),
+		new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
+	};
+	
 	private final Slot[] furnaceSlots = new ItemSlot[]{
 		new ItemSlot(13, 21, 16, 16),
 		new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
+	
+	private static ItemStack workbench = new ItemStack(Block.workbench);
 
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
-		RecipeTemplate craftingTemplate = generator.createRecipeTemplate(craftingSlots, null);
-		RecipeTemplate smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlots, null);
+		RecipeTemplate craftingTemplate;
+		RecipeTemplate smallCraftingTemplate;
 		
+		if(CraftGuide.newerBackgroundStyle)
+		{
+			craftingTemplate = generator.createRecipeTemplate(craftingSlotsOwnBackground, null);
+			smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlotsOwnBackground, null);
+		}
+		else
+		{
+			craftingTemplate = new DefaultRecipeTemplate(
+					craftingSlots, workbench,
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							1, 1, 79, 58),
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							82, 1, 79, 58));
+			
+			smallCraftingTemplate = new DefaultRecipeTemplate(
+					smallCraftingSlots, workbench,
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							1, 61, 79, 58),
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							82, 61, 79, 58));
+		}
+		/*
 		RecipeTemplate shapelessTemplate = generator.createRecipeTemplate(
 			shapelessCraftingSlots, null,
 			"/gui/CraftGuideRecipe.png",  1, 121, 82, 121);
 		
 		RecipeTemplate furnaceTemplate = generator.createRecipeTemplate(
 			furnaceSlots, new ItemStack(Block.stoneOvenActive),
-			"/gui/CraftGuideRecipe.png",  1, 181, 82, 181);
+			"/gui/CraftGuideRecipe.png",  1, 181, 82, 181);*/
+		
+		RecipeTemplate shapelessTemplate = new DefaultRecipeTemplate(
+					shapelessCraftingSlots,
+					workbench,
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							1, 121, 79, 58),
+					new TextureClip(
+							DynamicTexture.instance("recipe_backgrounds"),
+							82, 121, 79, 58));
+		
+		RecipeTemplate furnaceTemplate = new DefaultRecipeTemplate(
+				furnaceSlots,
+				new ItemStack(Block.stoneOvenActive),
+				new TextureClip(
+						DynamicTexture.instance("recipe_backgrounds"),
+						1, 181, 79, 58),
+				new TextureClip(
+						DynamicTexture.instance("recipe_backgrounds"),
+						82, 181, 79, 58));
 		
 		addCraftingRecipes(craftingTemplate, smallCraftingTemplate, shapelessTemplate, generator);
 		addFurnaceRecipes(furnaceTemplate, generator);
@@ -135,7 +206,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 				{
 					generator.addRecipe(templateSmall, items);
 				}
-				else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe)
+				else if(recipe instanceof ShapelessRecipes /*|| recipe instanceof ShapelessOreRecipe*/)
 				{
 					generator.addRecipe(templateShapeless, items);
 				}

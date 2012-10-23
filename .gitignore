@@ -1,4 +1,5 @@
 bin/*
 out/*
+.settings/*
 build-zip.bat
 CraftGuideResources.zip

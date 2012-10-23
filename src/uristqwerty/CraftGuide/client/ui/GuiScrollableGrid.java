@@ -6,11 +6,16 @@ import uristqwerty.gui.components.GuiElement;
 
 public class GuiScrollableGrid extends GuiElement
 {
-	private GridRect display;
 	protected GuiScrollBar scrollBar;
 	protected int rowHeight;
+
+	private GridRect display;
 	private int rows = 0, columns = 1, cells = 0;
 	private int columnWidth = 1;
+	private int reducedWidth = 0;
+
+	public int borderSize = 1;
+	public boolean flexibleSize = false;
 
 	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight, int columnWidth)
 	{
@@ -28,8 +33,32 @@ public class GuiScrollableGrid extends GuiElement
 	@Override
 	public void draw()
 	{
+		if(flexibleSize)
+		{
+			int width = columnWidth * ((bounds.width() + reducedWidth) / columnWidth);
+
+			if(width != bounds.width())
+			{
+				int xOff = (reducedWidth / 2) &~1;
+				reducedWidth = bounds.width() + reducedWidth - width;
+
+				setPosition(bounds.x() - xOff + ((reducedWidth / 2) &~1), bounds.y());
+				setSize(width, bounds.height());
+			}
+		}
+
+		drawBackground();
 		render(display);
-		super.draw();
+		drawChildren();
+	}
+
+	@Override
+	public void drawBackground()
+	{
+		if(background != null)
+		{
+			render(background, -borderSize, -borderSize, bounds.width() + borderSize * 2, bounds.height() + borderSize * 2);
+		}
 	}
 
 	@Override
@@ -56,12 +85,25 @@ public class GuiScrollableGrid extends GuiElement
 	@Override
 	public void onResize(int oldWidth, int oldHeight)
 	{
-		display.setSize(bounds.width(), bounds.height());
 		scrollBar.setPageSize(bounds.height() / rowHeight);
+		display.setSize(bounds.width(), bounds.height());
+
+
+		if(flexibleSize)
+		{
+			int width = columnWidth * ((bounds.width() + reducedWidth) / columnWidth);
+
+			if(width != bounds.width())
+			{
+				int xOff = reducedWidth / 2;
+				reducedWidth = bounds.width() + reducedWidth - width;
+
+				setPosition(bounds.x() - xOff + reducedWidth / 2, bounds.y());
+				setSize(width, bounds.height());
+			}
+		}
 
 		recalculateColumns();
-
-		super.onResize(oldWidth, oldHeight);
 	}
 
 	public void recalculateColumns()

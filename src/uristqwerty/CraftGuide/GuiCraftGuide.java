@@ -28,6 +28,7 @@ import uristqwerty.gui.minecraft.Gui;
 import uristqwerty.gui.texture.BorderedTexture;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui.texture.TextureClip;
 
 public class GuiCraftGuide extends Gui
 {
@@ -102,35 +103,34 @@ public class GuiCraftGuide extends Gui
 			new GuiResizeHandle(
 				initialWindowWidth - 8, initialWindowHeight - 8, 8, 8,
 				guiWindow
-			)
-		);
+			));
 
 		guiWindow.addElement(
 			new GuiButton(initialWindowWidth - 8, initialWindowHeight - 8, 8, 8, texture, 0, 191)
-				.anchor(AnchorPoint.BOTTOM_RIGHT)
-			);
+				.anchor(AnchorPoint.BOTTOM_RIGHT));
 
 		guiWindow.addElement(
 				new GuiElement(5, 5, 58, 86)
-					.setBackground(paneBackground)
-			/*new GuiBorderedRect(
-				5, 5, 58, 86,
-				texture, 78, 1, 2, 32
-			)*/
-		);
+					.setBackground(paneBackground));
 
 		guiWindow.addElement(
 			new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(
 					generateRecipeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
-					new GuiButton(6, 6, 28, 28, texture, 1, 76)
-						.setToolTip("Recipe list"))
+					(GuiButton)new GuiButton(6, 6, 28, 28, buttonTemplate)
+						.setToolTip("Recipe list")
+						.addElement(new GuiElement(0, 0, 28,28)
+							.setBackground(new TextureClip(texture, 1, 76, 28,28))
+							.setClickable(false)))
 				.addTab(
 					generateTypeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
-					new GuiButton(34, 6, 28, 28, texture, 1, 104)
-						.setToolTip("Show/Hide recipes by crafting type"))
+					(GuiButton)new GuiButton(34, 6, 28, 28, buttonTemplate)
+						.setToolTip("Show/Hide recipes by crafting type")
+						.addElement(new GuiElement(0, 0, 28,28)
+							.setBackground(new TextureClip(texture, 29, 76, 28,28))
+							.setClickable(false)))
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.setClickable(false));
 
@@ -182,18 +182,6 @@ public class GuiCraftGuide extends Gui
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 			.setClickable(false);
 
-		recipeArea.addElement(
-				new GuiElement(67, 17, initialWindowWidth - 88, 176)
-				.setBackground(paneBackground)
-				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
-		);
-
-		itemListArea.addElement(
-				new GuiElement(67, 17, initialWindowWidth - 88, 160)
-				.setBackground(paneBackground)
-				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
-		);
-
 		GuiButton backButton =
 			(GuiButton) new GuiButton(8, 166, 50, 13, buttonTemplate, "Back")
 				.anchor(AnchorPoint.BOTTOM_LEFT);
@@ -236,7 +224,8 @@ public class GuiCraftGuide extends Gui
 			(FilterSelectGrid) new FilterSelectGrid(68, 18, initialWindowWidth - 90, 158,
 				filterSelectScrollBar, texture,
 				recipeCache, backButton, recipeDisplay)
-					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
+					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+					.setBackground(paneBackground);
 
 		itemListArea.addElement(new RowCount(initialWindowWidth - 23, 6, filterGrid).anchor(AnchorPoint.TOP_RIGHT));
 		itemListArea.addElement(filterGrid);
@@ -304,6 +293,7 @@ public class GuiCraftGuide extends Gui
 		clearCallback.display = craftingDisplay;
 
 		craftingDisplay.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
+		craftingDisplay.setBackground(paneBackground);
 		recipeArea.addElement(craftingDisplay);
 
 		return recipeTab;
@@ -314,12 +304,6 @@ public class GuiCraftGuide extends Gui
 		GuiElement typeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.setClickable(false);
-
-		typeTab.addElement(
-				new GuiElement(67, 5, initialWindowWidth - 88, 188)
-					.setBackground(paneBackground)
-					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
-		);
 
 		typeTab.addElement(
 				new GuiElement(initialWindowWidth - 19, 5, 14, 188)
@@ -345,6 +329,7 @@ public class GuiCraftGuide extends Gui
 				68, 6, initialWindowWidth - 90, 186, scrollBar, texture, recipeCache
 			)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+			.setBackground(paneBackground)
 		);
 
 		return typeTab;

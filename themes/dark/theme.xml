@@ -1,0 +1,12 @@
+<theme>
+	<metadata>
+		<id>dark</id>
+		<name>Base Theme (dark)</name>
+		<description>This is a dark version of the base theme, inspired by inverted, but tweaked to look good.</description>
+		<dependency>theme_base</dependency></metadata>
+	<image id="base_image">
+		<source type="file">dark.png</source></image>
+	<image id="recipe_backgrounds">
+		<source type="file">dark_craft.png</source></image>
+	<image id="brew_recipe_background">
+		<source type="file">dark_brew.png</source></image></theme>

@@ -21,6 +21,8 @@ public class Window extends GuiElement
 	private boolean mousePressed;
 	private Map<Layer, GuiElement> layers = new EnumMap<Layer, GuiElement>(Layer.class);
 
+	private int lastMouseX, lastMouseY;
+
 	public Window(int x, int y, int width, int height, GuiRenderer renderer)
 	{
 		super(x, y, width, height);
@@ -47,7 +49,12 @@ public class Window extends GuiElement
 
 	public void updateMouse(int x, int y)
 	{
-		mouseMoved(x, y);
+		if(x != lastMouseX || y != lastMouseY)
+		{
+			mouseMoved(x, y);
+			lastMouseX = x;
+			lastMouseY = y;
+		}
 	}
 
 	public void updateMouseState(int x, int y, boolean buttonState)
