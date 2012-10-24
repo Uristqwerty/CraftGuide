@@ -11,6 +11,7 @@ import java.util.Map;
 import net.minecraft.src.ModLoader;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
+import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.theme.reader.ThemeReader;
 
 public class ThemeManager
@@ -25,6 +26,7 @@ public class ThemeManager
 	public void reload()
 	{
 		File themeDir = CraftGuideClient.themeDirectory();
+		Image.unloadFileTextures();
 
 		if(themeDir == null || !themeDir.isDirectory())
 		{

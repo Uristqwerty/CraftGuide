@@ -108,6 +108,15 @@ public class CraftGuideClient implements CraftGuideSide
 	@Override
 	public void openGUI(EntityPlayer player)
 	{
+		ThemeManager.instance.reload();
+
+		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(readThemeChoice());
+
+		if(ThemeManager.currentTheme == null)
+		{
+			ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
+		}
+
     	ModLoader.openGUI(player, GuiCraftGuide.getInstance());
 	}
 

@@ -9,7 +9,6 @@ import net.minecraft.src.GuiContainer;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.Slot;
 
 import org.lwjgl.input.Keyboard;
@@ -17,7 +16,7 @@ import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
-
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -63,11 +62,11 @@ public class CraftGuideKeyHandler extends KeyHandler
 	{
 		if(kb == keyBindings[0] && CraftGuide.enableKeybind)
 		{
-			GuiScreen screen = ModLoader.getMinecraftInstance().currentScreen;
-			Minecraft mc = ModLoader.getMinecraftInstance();
+			Minecraft mc = FMLClientHandler.instance().getClient();
+			GuiScreen screen = mc.currentScreen;
 			if(screen == null)
 			{
-				mc.displayGuiScreen(GuiCraftGuide.getInstance());
+				CraftGuide.side.openGUI(mc.thePlayer);
 			}
 			else if(screen instanceof GuiContainer)
 			{
@@ -119,8 +118,9 @@ public class CraftGuideKeyHandler extends KeyHandler
 
 	        	if(item != null)
 	        	{
+	    			Minecraft mc = FMLClientHandler.instance().getClient();
 	        		GuiCraftGuide.getInstance().setFilterItem(item);
-	        		ModLoader.getMinecraftInstance().displayGuiScreen(GuiCraftGuide.getInstance());
+					CraftGuide.side.openGUI(mc.thePlayer);
 	        	}
 
 	        	break;

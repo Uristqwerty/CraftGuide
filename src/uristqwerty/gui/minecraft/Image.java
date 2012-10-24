@@ -11,9 +11,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.src.ModLoader;
+
+import org.lwjgl.opengl.GL11;
 
 import uristqwerty.gui.rendering.RendererBase;
 import uristqwerty.gui.texture.Texture;
@@ -21,34 +21,51 @@ import uristqwerty.gui.texture.Texture;
 public class Image implements Texture
 {
 	private int texID;
-	private static Map<String, Image> cache = new HashMap<String, Image>();
-	
+	private static Map<String, Image> jarCache = new HashMap<String, Image>();
+	private static Map<String, Image> fileCache = new HashMap<String, Image>();
+
 	public static Image fromJar(String filename)
 	{
-		Image image = cache.get(filename);
-		
+		Image image = jarCache.get(filename);
+
 		if(image == null)
 		{
 			image = new Image(ModLoader.getMinecraftInstance().renderEngine.getTexture(filename));
-			cache.put(filename, image);
+			jarCache.put(filename, image);
 		}
-		
+
 		return image;
 	}
-	
+
 	public static Image fromFile(File directory, String filename)
 	{
-		Image image = cache.get(filename);
-		
+		String key;
+		try
+		{
+			key = new File(directory, filename).getCanonicalPath();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+
+		Image image = fileCache.get(key);
+
 		if(image == null)
 		{
-			image = new Image(LoadImageFile(directory, filename));
-			cache.put(filename, image);
+			image = new Image(-1);
+			fileCache.put(key, image);
 		}
-		
+
+		if(image.texID == -1)
+		{
+			image.texID = LoadImageFile(directory, filename);
+		}
+
 		return image;
 	}
-	
+
 	private static int LoadImageFile(File directory, String filename)
 	{
 		try
@@ -58,25 +75,25 @@ public class Image implements Texture
 
 			InputStream input = new FileInputStream(new File(directory, filename));
 			BufferedImage image = ImageIO.read(input);
-			
+
 			while(width < image.getWidth())
 			{
 				width *= 2;
 			}
-			
+
 			while(height < image.getHeight())
 			{
 				height *= 2;
 			}
-			
+
 			ByteBuffer pixels = ByteBuffer.allocateDirect(width * height * 4);
-			
+
 			for(int y = 0; y < height; y++)
 			{
 				for(int x = 0; x < width; x++)
 				{
 					int pixel = (y * width + x) * 4;
-					
+
 					if(x < image.getWidth() && y < image.getHeight())
 					{
 						int rgb = image.getRGB(x, y);
@@ -94,7 +111,7 @@ public class Image implements Texture
 					}
 				}
 			}
-			
+
 			int texID = GL11.glGenTextures();
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
@@ -114,16 +131,33 @@ public class Image implements Texture
 	{
 		texID = textureID;
 	}
-	
+
 	@Override
 	public void renderRect(RendererBase renderer, int x, int y, int width, int height, int textureX, int textureY)
 	{
-		double u = (textureX % 256) / 256.0;
-		double v = (textureY % 256) / 256.0;
-		double u2 = ((textureX % 256) + width) / 256.0;
-		double v2 = ((textureY % 256) + height) / 256.0;
-		
-		renderer.setTextureID(texID);
-		renderer.drawTexturedRect(x, y, width, height, u, v, u2, v2);
+		if(texID >= 0)
+		{
+			double u = (textureX % 256) / 256.0;
+			double v = (textureY % 256) / 256.0;
+			double u2 = ((textureX % 256) + width) / 256.0;
+			double v2 = ((textureY % 256) + height) / 256.0;
+
+			renderer.setTextureID(texID);
+			renderer.drawTexturedRect(x, y, width, height, u, v, u2, v2);
+		}
+	}
+
+	/**
+	 * Unload the images associated with each Image loaded from a file.
+	 * The Image objects are left behind, but given the texID of -1, so
+	 * that they will be reloaded when next requested.
+	 */
+	public static void unloadFileTextures()
+	{
+		for(Image image: fileCache.values())
+		{
+			GL11.glDeleteTextures(image.texID);
+			image.texID = -1;
+		}
 	}
 }
