@@ -2,74 +2,243 @@
 	<metadata>
 		<id>theme_base</id>
 		<name>Base Theme</name>
-		<description>This theme defines the standard set of images and textures used by CraftGuide</description></metadata>
+		<description>This theme defines the standard set of images and
+			textures used by CraftGuide</description>
+	</metadata>
 	<image id="base_image">
-		<source type="file">base.png</source><source type="file-jar">/gui/CraftGuide.png</source>
-		</image>
-	<image id="recipe_backgrounds"><source type="file-jar">/gui/CraftGuideRecipe.png</source></image>
-	<image id="brew_recipe_background"><source type="file-jar">/gui/BrewGuide.png</source></image><texture type="clip" id="stack-any">
-		<source>base_image</source>
-		<rect x="238" y="238" width="18" height="18"></rect></texture>
+		<source type="file">base.png</source>
+		<source type="file-jar">/gui/CraftGuide.png</source>
+	</image>
+	<image id="recipe_backgrounds">
+		<source type="file-jar">/gui/CraftGuideRecipe.png</source>
+	</image>
+	<image id="brew_recipe_background">
+		<source type="file-jar">/gui/BrewGuide.png</source>
+	</image>
+	<texture type="clip" id="stack-any">
+		<source sourceid="base_image"></source>
+		<rect x="238" y="238" width="18" height="18"></rect>
+	</texture>
 	<texture type="clip" id="stack-background">
-		<source>base_image</source>
-		<rect x="238" y="219" width="18" height="18"></rect></texture>
-    <texture type="clip" id="stack-oredict">
-        <source>base_image</source>
-        <rect x="238" y="181" width="18" height="18"></rect></texture>
-    <texture type="clip" id="text-filter">
-        <source>base_image</source>
-        <rect x="239" y="163" width="16" height="16"></rect></texture>
-    <texture type="clip" id="window_topleft">
-    	<source>base_image</source>
-    	<rect x="1" y="1" width="4" height="4"></rect></texture>
-    <texture type="subtexture" id="window_top">
-        <source>base_image</source>
-        <rect x="5" y="1" width="64" height="4"></rect></texture>
-    <texture type="clip" id="window_topright">
-        <source>base_image</source>
-        <rect x="69" y="1" width="4" height="4"></rect></texture>
-    <texture type="subtexture" id="window_left">
-        <source>base_image</source>
-        <rect x="1" y="5" width="4" height="64"></rect></texture>
-    <texture type="subtexture" id="window_center">
-        <source>base_image</source>
-        <rect x="5" y="5" width="64" height="64"></rect></texture>
-    <texture type="subtexture" id="window_right">
-        <source>base_image</source>
-        <rect x="69" y="5" width="4" height="64"></rect></texture>
-    <texture type="clip" id="window_bottomleft">
-        <source>base_image</source>
-        <rect x="1" y="69" width="4" height="4"></rect></texture>
-    <texture type="subtexture" id="window_bottom">
-        <source>base_image</source>
-        <rect x="5" y="69" width="64" height="4"></rect></texture>
-    <texture type="clip" id="window_bottomright">
-        <source>base_image</source>
-        <rect x="69" y="69" width="4" height="4"></rect></texture>
-    <texture type="clip" id="pane_topleft">
-        <source>base_image</source>
-        <rect x="78" y="1" width="2" height="2"></rect></texture>
-    <texture type="subtexture" id="pane_top">
-        <source>base_image</source>
-        <rect x="81" y="1" width="32" height="2"></rect></texture>
-    <texture type="clip" id="pane_topright">
-        <source>base_image</source>
-        <rect x="114" y="1" width="2" height="2"></rect></texture>
-    <texture type="subtexture" id="pane_left">
-        <source>base_image</source>
-        <rect x="78" y="4" width="2" height="32"></rect></texture>
-    <texture type="subtexture" id="pane_center">
-        <source>base_image</source>
-        <rect x="81" y="4" width="32" height="32"></rect></texture>
-    <texture type="subtexture" id="pane_right">
-        <source>base_image</source>
-        <rect x="114" y="4" width="2" height="32"></rect></texture>
-    <texture type="clip" id="pane_bottomleft">
-        <source>base_image</source>
-        <rect x="78" y="37" width="2" height="2"></rect></texture>
-    <texture type="subtexture" id="pane_bottom">
-        <source>base_image</source>
-        <rect x="81" y="37" width="32" height="2"></rect></texture>
-    <texture type="clip" id="pane_bottomright">
-        <source>base_image</source>
-        <rect x="114" y="37" width="2" height="2"></rect></texture></theme>
+		<source sourceid="base_image"></source>
+		<rect x="238" y="219" width="18" height="18"></rect>
+	</texture>
+	<texture type="clip" id="stack-oredict">
+		<source sourceid="base_image"></source>
+		<rect x="238" y="181" width="18" height="18"></rect>
+	</texture>
+	<texture type="clip" id="text-filter">
+		<source sourceid="base_image"></source>
+		<rect x="239" y="163" width="16" height="16"></rect>
+	</texture>
+	<texture type="borderedtexture" id="window">
+		<textures>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="1" y="1" width="4" height="4"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="5" y="1" width="64" height="4"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="69" y="1" width="4" height="4"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="1" y="5" width="4" height="64"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="5" y="5" width="64" height="64"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="69" y="5" width="4" height="64"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="1" y="69" width="4" height="4"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="5" y="69" width="64" height="4"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="69" y="69" width="4" height="4"></rect>
+			</texture>
+		</textures>
+		<borderwidth>4</borderwidth>
+		<borderheight>4</borderheight>
+	</texture>
+	<texture type="borderedtexture" id="pane">
+		<textures>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="78" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="81" y="1" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="114" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="78" y="4" width="2" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="81" y="4" width="32" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="114" y="4" width="2" height="32"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="78" y="37" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="81" y="37" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="114" y="37" width="2" height="2"></rect>
+			</texture>
+		</textures>
+		<borderwidth>2</borderwidth>
+		<borderheight>2</borderheight>
+	</texture>
+	<texture type="borderedtexture" id="button_up">
+		<textures>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="156" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="158" y="1" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="190" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="156" y="3" width="2" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="158" y="3" width="32" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="190" y="3" width="2" height="32"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="156" y="35" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="158" y="35" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="190" y="35" width="2" height="2"></rect>
+			</texture>
+		</textures>
+		<borderwidth>2</borderwidth>
+		<borderheight>2</borderheight>
+	</texture>
+	<texture type="borderedtexture" id="button_over">
+		<textures>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="1" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="1" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="3" width="2" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="3" width="32" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="3" width="2" height="32"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="35" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="35" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="35" width="2" height="2"></rect>
+			</texture>
+		</textures>
+		<borderwidth>2</borderwidth>
+		<borderheight>2</borderheight>
+	</texture>
+	<texture type="borderedtexture" id="button_down">
+		<textures>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="37" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="37" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="37" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="39" width="2" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="39" width="32" height="32"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="39" width="2" height="32"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="192" y="71" width="2" height="2"></rect>
+			</texture>
+			<texture type="subtexture">
+				<source sourceid="base_image"></source>
+				<rect x="194" y="71" width="32" height="2"></rect>
+			</texture>
+			<texture type="clip">
+				<source sourceid="base_image"></source>
+				<rect x="226" y="71" width="2" height="2"></rect>
+			</texture>
+		</textures>
+		<borderwidth>2</borderwidth>
+		<borderheight>2</borderheight>
+	</texture>
+</theme>

@@ -25,7 +25,6 @@ import uristqwerty.gui.components.GuiElement.AnchorPoint;
 import uristqwerty.gui.components.Image;
 import uristqwerty.gui.components.Window;
 import uristqwerty.gui.minecraft.Gui;
-import uristqwerty.gui.texture.BorderedTexture;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.texture.TextureClip;
@@ -39,31 +38,8 @@ public class GuiCraftGuide extends Gui
 
 	private static GuiCraftGuide instance;
 
-	private Texture paneBackground = new BorderedTexture(
-			new Texture[]{
-					DynamicTexture.instance("pane_topleft"),
-					DynamicTexture.instance("pane_top"),
-					DynamicTexture.instance("pane_topright"),
-					DynamicTexture.instance("pane_left"),
-					DynamicTexture.instance("pane_center"),
-					DynamicTexture.instance("pane_right"),
-					DynamicTexture.instance("pane_bottomleft"),
-					DynamicTexture.instance("pane_bottom"),
-					DynamicTexture.instance("pane_bottomright"),
-			}, 2);
-
-	private Texture windowBackground = new BorderedTexture(
-			new Texture[]{
-					DynamicTexture.instance("window_topleft"),
-					DynamicTexture.instance("window_top"),
-					DynamicTexture.instance("window_topright"),
-					DynamicTexture.instance("window_left"),
-					DynamicTexture.instance("window_center"),
-					DynamicTexture.instance("window_right"),
-					DynamicTexture.instance("window_bottomleft"),
-					DynamicTexture.instance("window_bottom"),
-					DynamicTexture.instance("window_bottomright"),
-			}, 4);
+	private Texture paneBackground = DynamicTexture.instance("pane");
+	private Texture windowBackground = DynamicTexture.instance("window");
 
 	public static GuiCraftGuide getInstance()
 	{
@@ -87,14 +63,14 @@ public class GuiCraftGuide extends Gui
 	{
 		super(initialWindowWidth, initialWindowHeight);
 
-		Texture texture = DynamicTexture.instance("base_image");//Image.getImage("/gui/CraftGuide.png");
+		Texture texture = DynamicTexture.instance("base_image");
 
 		ButtonTemplate buttonTemplate = new ButtonTemplate(
 				new Texture[]{
-						new BorderedTexture(texture, 156, 1, 0, 32, 2),
-						new BorderedTexture(texture, 192, 1, 0, 32, 2),
-						new BorderedTexture(texture, 156, 1, 0, 32, 2),
-						new BorderedTexture(texture, 192, 37, 0, 32, 2),
+						DynamicTexture.instance("button_up"),
+						DynamicTexture.instance("button_over"),
+						DynamicTexture.instance("button_up"),
+						DynamicTexture.instance("button_down"),
 				});
 
 		guiWindow.background = windowBackground;

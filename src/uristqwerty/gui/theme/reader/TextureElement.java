@@ -5,9 +5,6 @@ import java.lang.reflect.Field;
 import org.xml.sax.Attributes;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
-import uristqwerty.gui.Color;
-import uristqwerty.gui.Rect;
-import uristqwerty.gui.editor.TextureMeta.ListSize;
 import uristqwerty.gui.editor.TextureMeta.TextureParameter;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
@@ -72,36 +69,12 @@ public class TextureElement implements ValueTemplate
 			{
 				if(field.getName().equalsIgnoreCase(name))
 				{
-					if(field.isAnnotationPresent(TextureParameter.class))
+					ValueTemplate template = ValueType.getTemplate(field);
+
+					if(template != null)
 					{
-						if(field.getType().equals(Texture.class))
-						{
-							return new TextureSourceElement();
-						}
-						else if(field.getType().equals(Rect.class))
-						{
-							return new RectTemplate();
-						}
-						else if(field.getType().equals(Color.class))
-						{
-							return new ColorTemplate();
-						}
-						else if(field.getType().equals(Texture[].class))
-						{
-							ListSize size = field.getAnnotation(ListSize.class);
-
-							if(size == null)
-							{
-								return new ListTemplate(Texture.class);
-							}
-							else
-							{
-								return new ListTemplate(Texture.class, size.value());
-							}
-						}
+						return template;
 					}
-
-					break;
 				}
 			}
 		}
@@ -122,20 +95,15 @@ public class TextureElement implements ValueTemplate
 					{
 						try
 						{
-							if(field.getType().equals(Texture.class) && handler instanceof TextureSourceElement)
+							if(handler instanceof ValueTemplate)
 							{
-								TextureSourceElement source = (TextureSourceElement)handler;
-								field.set(texture, source.source);
-							}
-							else if(field.getType().equals(Rect.class) && handler instanceof RectTemplate)
-							{
-								RectTemplate rectTemplate = (RectTemplate)handler;
-								field.set(texture, new Rect(rectTemplate.x, rectTemplate.y, rectTemplate.width, rectTemplate.height));
-							}
-							else if(field.getType().equals(Color.class) && handler instanceof ColorTemplate)
-							{
-								ColorTemplate colorTemplate = (ColorTemplate)handler;
-								field.set(texture, new Color(colorTemplate.red, colorTemplate.green, colorTemplate.blue, colorTemplate.alpha));
+								ValueTemplate template = (ValueTemplate)handler;
+
+								if(field.getType().isAssignableFrom(template.valueType()) ||
+										(field.getType().equals(int.class) && template.valueType().equals(Integer.class)))
+								{
+									field.set(texture, template.getValue());
+								}
 							}
 						}
 						catch(IllegalArgumentException e)

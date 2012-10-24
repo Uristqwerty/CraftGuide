@@ -18,6 +18,10 @@ public class BorderedTexture implements Texture
 	@TextureParameter
 	public int borderHeight;
 
+	public BorderedTexture()
+	{
+	}
+
 	public BorderedTexture(Texture[] textures, int borderWidth)
 	{
 		this(textures, borderWidth, borderWidth);

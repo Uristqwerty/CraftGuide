@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import uristqwerty.gui.Color;
 import uristqwerty.gui.Rect;
 import uristqwerty.gui.editor.TextureMeta.ListSize;
+import uristqwerty.gui.texture.Texture;
 
 public class ValueType
 {
@@ -29,10 +30,19 @@ public class ValueType
 		{
 			return new RectTemplate();
 		}
+		else if(type.equals(Texture.class))
+		{
+			return new TextureElement();
+		}
+		else if(type.equals(int.class) || type.equals(Integer.class))
+		{
+			return new IntegerElement();
+		}
 		else if(type.isArray())
 		{
 			return new ListTemplate(type);
 		}
+
 		return null;
 	}
 }
