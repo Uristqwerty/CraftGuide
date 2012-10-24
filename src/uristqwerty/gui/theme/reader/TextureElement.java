@@ -5,13 +5,16 @@ import java.lang.reflect.Field;
 import org.xml.sax.Attributes;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.gui.Color;
 import uristqwerty.gui.Rect;
+import uristqwerty.gui.editor.TextureMeta.ListSize;
 import uristqwerty.gui.editor.TextureMeta.TextureParameter;
+import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.theme.Theme;
 import uristqwerty.gui.theme.ThemeManager;
 
-public class TextureElement implements ElementHandler
+public class TextureElement implements ValueTemplate
 {
 	private String type;
 	private String id;
@@ -48,6 +51,10 @@ public class TextureElement implements ElementHandler
 			{
 				id = attributes.getValue(i);
 			}
+			else if(attributes.getLocalName(i).equalsIgnoreCase("sourceid"))
+			{
+				texture = DynamicTexture.instance(attributes.getValue(i));
+			}
 		}
 	}
 
@@ -74,6 +81,23 @@ public class TextureElement implements ElementHandler
 						else if(field.getType().equals(Rect.class))
 						{
 							return new RectTemplate();
+						}
+						else if(field.getType().equals(Color.class))
+						{
+							return new ColorTemplate();
+						}
+						else if(field.getType().equals(Texture[].class))
+						{
+							ListSize size = field.getAnnotation(ListSize.class);
+
+							if(size == null)
+							{
+								return new ListTemplate(Texture.class);
+							}
+							else
+							{
+								return new ListTemplate(Texture.class, size.value());
+							}
 						}
 					}
 
@@ -108,6 +132,11 @@ public class TextureElement implements ElementHandler
 								RectTemplate rectTemplate = (RectTemplate)handler;
 								field.set(texture, new Rect(rectTemplate.x, rectTemplate.y, rectTemplate.width, rectTemplate.height));
 							}
+							else if(field.getType().equals(Color.class) && handler instanceof ColorTemplate)
+							{
+								ColorTemplate colorTemplate = (ColorTemplate)handler;
+								field.set(texture, new Color(colorTemplate.red, colorTemplate.green, colorTemplate.blue, colorTemplate.alpha));
+							}
 						}
 						catch(IllegalArgumentException e)
 						{
@@ -128,6 +157,21 @@ public class TextureElement implements ElementHandler
 	@Override
 	public void endElement(Theme theme, String name)
 	{
-		theme.addTexture(id, texture);
+		if(id != null)
+		{
+			theme.addTexture(id, texture);
+		}
+	}
+
+	@Override
+	public Class valueType()
+	{
+		return Texture.class;
+	}
+
+	@Override
+	public Object getValue()
+	{
+		return texture;
 	}
 }

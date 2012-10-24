@@ -10,10 +10,17 @@ import java.lang.annotation.Target;
 public @interface TextureMeta
 {
 	public String name();
-	
+
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.FIELD})
 	public @interface TextureParameter
 	{
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
+	public @interface ListSize
+	{
+		public int value();
 	}
 }

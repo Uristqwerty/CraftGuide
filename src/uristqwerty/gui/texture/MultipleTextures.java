@@ -1,11 +1,15 @@
 package uristqwerty.gui.texture;
 
+import uristqwerty.gui.editor.TextureMeta;
+import uristqwerty.gui.editor.TextureMeta.TextureParameter;
 import uristqwerty.gui.rendering.RendererBase;
 
+@TextureMeta(name = "multipletextures")
 public class MultipleTextures implements Texture
 {
-	private final Texture[] textures;
-	
+	@TextureParameter
+	public Texture[] textures;
+
 	public MultipleTextures(Texture[] textures)
 	{
 		this.textures = textures;

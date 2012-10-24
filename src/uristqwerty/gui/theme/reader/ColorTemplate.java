@@ -2,33 +2,33 @@ package uristqwerty.gui.theme.reader;
 
 import org.xml.sax.Attributes;
 
-import uristqwerty.gui.Rect;
+import uristqwerty.gui.Color;
 import uristqwerty.gui.theme.Theme;
 
-public class RectTemplate implements ValueTemplate
+public class ColorTemplate implements ValueTemplate
 {
-	public int x, y, width, height;
+	public int red = 255, green = 255, blue = 255, alpha = 255;
 
 	@Override
 	public void startElement(Theme theme, String name, Attributes attributes)
 	{
 		for(int i = 0; i < attributes.getLength(); i++)
 		{
-			if(attributes.getLocalName(i).equalsIgnoreCase("x"))
+			if(attributes.getLocalName(i).equalsIgnoreCase("red"))
 			{
-				x = num(attributes.getValue(i));
+				red = num(attributes.getValue(i));
 			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("y"))
+			else if(attributes.getLocalName(i).equalsIgnoreCase("green"))
 			{
-				y = num(attributes.getValue(i));
+				green = num(attributes.getValue(i));
 			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("width"))
+			else if(attributes.getLocalName(i).equalsIgnoreCase("blue"))
 			{
-				width = num(attributes.getValue(i));
+				blue = num(attributes.getValue(i));
 			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("height"))
+			else if(attributes.getLocalName(i).equalsIgnoreCase("alpha"))
 			{
-				height = num(attributes.getValue(i));
+				alpha = num(attributes.getValue(i));
 			}
 		}
 	}
@@ -69,12 +69,12 @@ public class RectTemplate implements ValueTemplate
 	@Override
 	public Class valueType()
 	{
-		return Rect.class;
+		return Color.class;
 	}
 
 	@Override
 	public Object getValue()
 	{
-		return new Rect(x, y, width, height);
+		return new Color(red, green, blue, alpha);
 	}
 }

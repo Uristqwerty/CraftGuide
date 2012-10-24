@@ -1,11 +1,22 @@
 package uristqwerty.gui.texture;
 
+import uristqwerty.gui.editor.TextureMeta;
+import uristqwerty.gui.editor.TextureMeta.ListSize;
+import uristqwerty.gui.editor.TextureMeta.TextureParameter;
 import uristqwerty.gui.rendering.RendererBase;
 
+@TextureMeta(name = "borderedtexture")
 public class BorderedTexture implements Texture
 {
-	private final Texture[] textures = new Texture[9];
-	private final int borderWidth, borderHeight;
+	@ListSize(9)
+	@TextureParameter
+	public Texture[] textures = new Texture[9];
+
+	@TextureParameter
+	public int borderWidth;
+
+	@TextureParameter
+	public int borderHeight;
 
 	public BorderedTexture(Texture[] textures, int borderWidth)
 	{

@@ -18,6 +18,10 @@ import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui.texture.BlankTexture;
+import uristqwerty.gui.texture.BorderedTexture;
+import uristqwerty.gui.texture.MultipleTextures;
+import uristqwerty.gui.texture.SolidColorTexture;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.ThemeManager;
@@ -38,6 +42,10 @@ public class CraftGuideClient implements CraftGuideSide
 		Util.instance = new UtilImplementationClient();
 		extractResources();
 
+		ThemeManager.addTextureType(SolidColorTexture.class);
+		ThemeManager.addTextureType(MultipleTextures.class);
+		ThemeManager.addTextureType(BorderedTexture.class);
+		ThemeManager.addTextureType(BlankTexture.class);
 		ThemeManager.addTextureType(TextureClip.class);
 		ThemeManager.addTextureType(SubTexture.class);
 	}
