@@ -22,23 +22,23 @@ public class ThemeReader implements ContentHandler
 			"name", new MetadataProperty("name"),
 			"description", new MetadataProperty("description"),
 			"dependency", DependencyElement.class);
-	
+
 	private static ElementHandler themeElement = new GenericHandler(
 			"metadata", metadataElement,
 			"image", ImageElement.class,
 			"texture", TextureElement.class);
-	
+
 	private static ElementHandler rootElement = new GenericHandler(
 			"theme", themeElement);
-	
+
 	private LinkedList<ElementHandler> handlerStack = new LinkedList<ElementHandler>();
-	
+
 	private Theme theme;
-	
+
 	public Theme read(InputStream source, File themeDir)
 	{
 		theme = new Theme(themeDir);
-		
+
 		try
 		{
 			XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -53,7 +53,7 @@ public class ThemeReader implements ContentHandler
 		{
 			e.printStackTrace();
 		}
-		
+
 		return theme;
 	}
 

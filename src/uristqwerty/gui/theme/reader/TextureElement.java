@@ -1,12 +1,15 @@
 package uristqwerty.gui.theme.reader;
 
+import java.lang.reflect.Field;
+
 import org.xml.sax.Attributes;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui.Rect;
-import uristqwerty.gui.texture.SubTexture;
+import uristqwerty.gui.editor.TextureMeta.TextureParameter;
 import uristqwerty.gui.texture.Texture;
-import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.Theme;
+import uristqwerty.gui.theme.ThemeManager;
 
 public class TextureElement implements ElementHandler
 {
@@ -23,14 +26,22 @@ public class TextureElement implements ElementHandler
 			if(attributes.getLocalName(i).equalsIgnoreCase("type"))
 			{
 				type = attributes.getValue(i);
+				Class<? extends Texture> textureClass = ThemeManager.textureTypes.get(type.toLowerCase());
 
-				if(type.equalsIgnoreCase("clip"))
+				if(textureClass != null)
 				{
-					texture = new TextureClip();
-				}
-				else if(type.equalsIgnoreCase("subtexture"))
-				{
-					texture = new SubTexture();
+					try
+					{
+						texture = textureClass.newInstance();
+					}
+					catch(InstantiationException e)
+					{
+						CraftGuideLog.log(e);
+					}
+					catch(IllegalAccessException e)
+					{
+						CraftGuideLog.log(e);
+					}
 				}
 			}
 			else if(attributes.getLocalName(i).equalsIgnoreCase("id"))
@@ -48,52 +59,68 @@ public class TextureElement implements ElementHandler
 	@Override
 	public ElementHandler getSubElement(String name, Attributes attributes)
 	{
-		if(name.equalsIgnoreCase("rect"))
+		if(texture != null)
 		{
-			return new RectTemplate();
+			for(Field field: texture.getClass().getFields())
+			{
+				if(field.getName().equalsIgnoreCase(name))
+				{
+					if(field.isAnnotationPresent(TextureParameter.class))
+					{
+						if(field.getType().equals(Texture.class))
+						{
+							return new TextureSourceElement();
+						}
+						else if(field.getType().equals(Rect.class))
+						{
+							return new RectTemplate();
+						}
+					}
+
+					break;
+				}
+			}
 		}
-		else if(name.equalsIgnoreCase("source"))
-		{
-			return new TextureSourceElement();
-		}
-		else
-		{
-			return NullElement.instance;
-		}
+
+		return NullElement.instance;
 	}
 
 	@Override
 	public void endSubElement(Theme theme, ElementHandler handler, String name)
 	{
-		if(name.equalsIgnoreCase("rect"))
+		if(texture != null)
 		{
-			RectTemplate rectTemplate = (RectTemplate)handler;
-			Rect rect = new Rect(rectTemplate.x, rectTemplate.y, rectTemplate.width, rectTemplate.height);
+			for(Field field: texture.getClass().getFields())
+			{
+				if(field.getName().equalsIgnoreCase(name))
+				{
+					if(field.isAnnotationPresent(TextureParameter.class))
+					{
+						try
+						{
+							if(field.getType().equals(Texture.class) && handler instanceof TextureSourceElement)
+							{
+								TextureSourceElement source = (TextureSourceElement)handler;
+								field.set(texture, source.source);
+							}
+							else if(field.getType().equals(Rect.class) && handler instanceof RectTemplate)
+							{
+								RectTemplate rectTemplate = (RectTemplate)handler;
+								field.set(texture, new Rect(rectTemplate.x, rectTemplate.y, rectTemplate.width, rectTemplate.height));
+							}
+						}
+						catch(IllegalArgumentException e)
+						{
+							CraftGuideLog.log(e);
+						}
+						catch(IllegalAccessException e)
+						{
+							CraftGuideLog.log(e);
+						}
+					}
 
-			if(texture instanceof TextureClip)
-			{
-				TextureClip clip = (TextureClip)texture;
-				clip.rect = rect;
-			}
-			else if(texture instanceof SubTexture)
-			{
-				SubTexture subtexture = (SubTexture)texture;
-				subtexture.rect = rect;
-			}
-		}
-		else if(name.equalsIgnoreCase("source"))
-		{
-			TextureSourceElement source = (TextureSourceElement)handler;
-
-			if(texture instanceof TextureClip)
-			{
-				TextureClip clip = (TextureClip)texture;
-				clip.source = source.source;
-			}
-			else if(texture instanceof SubTexture)
-			{
-				SubTexture subtexture = (SubTexture)texture;
-				subtexture.source = source.source;
+					break;
+				}
 			}
 		}
 	}

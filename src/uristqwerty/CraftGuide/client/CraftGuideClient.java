@@ -18,6 +18,8 @@ import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui.texture.SubTexture;
+import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.ThemeManager;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
@@ -35,14 +37,9 @@ public class CraftGuideClient implements CraftGuideSide
 		RendererBase.instance = new GuiRenderer();
 		Util.instance = new UtilImplementationClient();
 		extractResources();
-		ThemeManager.instance.reload();
 
-		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(readThemeChoice());
-
-		if(ThemeManager.currentTheme == null)
-		{
-			ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
-		}
+		ThemeManager.addTextureType(TextureClip.class);
+		ThemeManager.addTextureType(SubTexture.class);
 	}
 
 	private String readThemeChoice()

@@ -1,18 +1,25 @@
 package uristqwerty.gui.theme;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.src.ModLoader;
+import net.minecraft.src.ITexturePack;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
+import uristqwerty.gui.editor.TextureMeta;
 import uristqwerty.gui.minecraft.Image;
+import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.theme.reader.ThemeReader;
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class ThemeManager
 {
@@ -22,6 +29,7 @@ public class ThemeManager
 
 	public static ThemeManager instance = new ThemeManager();
 	public static Theme currentTheme;
+	public static Map<String, Class<? extends Texture>> textureTypes = new HashMap<String, Class<? extends Texture>>();
 
 	public void reload()
 	{
@@ -46,6 +54,10 @@ public class ThemeManager
 				CraftGuideLog.log("  Trying to load directory: " + file.getName());
 				theme = loadDirectory(file);
 			}
+			else if(file.getName().toLowerCase().endsWith(".txt"))
+			{
+				continue;
+			}
 			else
 			{
 				CraftGuideLog.log("  Trying to load file: " + file.getName());
@@ -60,6 +72,48 @@ public class ThemeManager
 			else
 			{
 				CraftGuideLog.log("    Failed to load " + file.getName());
+			}
+		}
+
+		ITexturePack pack = FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack();
+		InputStream packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
+
+		if(packThemes != null)
+		{
+			CraftGuideLog.log("Loading themes from texture pack...");
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes));
+			String line;
+			try
+			{
+				while((line = reader.readLine()) != null)
+				{
+					CraftGuideLog.log("  Trying to load file from texture pack: " + line);
+					Theme theme = loadStream(pack.getResourceAsStream(line));
+
+					if(theme != null)
+					{
+						CraftGuideLog.log("    Loaded " + line);
+						themes.put(theme.id, theme);
+					}
+					else
+					{
+						CraftGuideLog.log("    Failed to load " + line);
+					}
+				}
+			}
+			catch(IOException e)
+			{
+				CraftGuideLog.log(e);
+			}
+
+			try
+			{
+				reader.close();
+			}
+			catch(IOException e)
+			{
+				CraftGuideLog.log(e);
 			}
 		}
 
@@ -213,7 +267,7 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file-jar"))
 		{
 			debug("            Searching classpath for '" + source + "'");
-			if(ModLoader.getMinecraftInstance().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
+			if(FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
 			{
 				debug("              Found.");
 				return true;
@@ -288,6 +342,7 @@ public class ThemeManager
 					catch(FileNotFoundException e)
 					{
 						e.printStackTrace();
+						CraftGuideLog.log(e);
 					}
 				}
 
@@ -296,6 +351,19 @@ public class ThemeManager
 		}
 
 		return null;
+	}
+
+	private Theme loadStream(InputStream stream)
+	{
+		Theme theme = xmlReader.read(stream, null);
+
+		if(theme != null)
+		{
+			theme.fileSource = null;
+			theme.fileSourceType = Theme.SourceType.STREAM;
+		}
+
+		return theme;
 	}
 
 	private Theme loadFile(File file)
@@ -354,5 +422,15 @@ public class ThemeManager
 		combined.dependencies.add(theme.id);
 		combined.images.putAll(theme.images);
 		combined.textures.putAll(theme.textures);
+	}
+
+	public static void addTextureType(Class<? extends Texture> textureClass)
+	{
+		TextureMeta meta = textureClass.getAnnotation(TextureMeta.class);
+
+		if(meta != null)
+		{
+			textureTypes.put(meta.name().toLowerCase(), textureClass);
+		}
 	}
 }

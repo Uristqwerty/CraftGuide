@@ -17,10 +17,11 @@ public class Theme
 	{
 		DIRECTORY,
 		GENERATED,
+		STREAM,
 	}
 
 	private static Texture errorTexture = new SolidColorTexture(255, 0, 255, 255);
-	
+
 	public String id;
 	public String name;
 	public String description;
@@ -30,9 +31,9 @@ public class Theme
 	public String loadError = null;
 	public List<String> dependencies = new ArrayList<String>();
 	public Map<String, Texture> textures = new HashMap<String, Texture>();
-	
+
 	private static Object[] errorImage = {"builtin", "error", null};
-	
+
 	public Theme(File location)
 	{
 		fileSource = location;
@@ -72,37 +73,37 @@ public class Theme
 	public void addImage(String id, List<String> sources)
 	{
 		List<Object[]> converted = new ArrayList<Object[]>(sources.size());
-		
+
 		for(String source: sources)
 		{
 			Object[] o = new Object[]{source.substring(0, source.indexOf(':')), source.substring(source.indexOf(':') + 1), fileSource};
 			converted.add(o);
 		}
-		
+
 		images.put(id, converted);
 	}
-	
+
 	public void addDependency(String dependency)
 	{
 		dependencies.add(dependency);
 	}
-	
+
 	public void generateTextures()
 	{
-		for(String imageID: images.keySet())	
+		for(String imageID: images.keySet())
 		{
 			Texture texture = null;
-			
+
 			for(Object[] imageFormat: images.get(imageID))
 			{
 				texture = loadImage(imageFormat);
-				
+
 				if(texture != null)
 				{
 					break;
 				}
 			}
-			
+
 			if(texture == null)
 			{
 				texture = loadImage(errorImage);
@@ -110,7 +111,7 @@ public class Theme
 
 			textures.put(imageID, texture);
 		}
-		
+
 		for(String id: textures.keySet())
 		{
 			DynamicTexture.instance(id, textures.get(id));
@@ -121,7 +122,7 @@ public class Theme
 	{
 		String sourceType = (String)imageFormat[0];
 		String source = (String)imageFormat[1];
-		
+
 		if(sourceType.equalsIgnoreCase("builtin"))
 		{
 			if(source.equalsIgnoreCase("error"))
@@ -133,11 +134,11 @@ public class Theme
 		{
 			return Image.fromJar(source);
 		}
-		else if(sourceType.equalsIgnoreCase("file"))
+		else if(sourceType.equalsIgnoreCase("file") && imageFormat[2] != null)
 		{
 			return Image.fromFile((File)imageFormat[2], source);
 		}
-		
+
 		return null;
 	}
 
