@@ -74,8 +74,8 @@ public class CraftGuideKeyHandler extends KeyHandler
 				{
 					int x = Mouse.getX() * screen.width / mc.displayWidth;
 					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
-					int left = (Integer)getPrivateValue(GuiContainer.class, screen, "m");
-					int top = (Integer)getPrivateValue(GuiContainer.class, screen, "n");
+					int left = (Integer)getPrivateValue(GuiContainer.class, screen, "m", "guiLeft");
+					int top = (Integer)getPrivateValue(GuiContainer.class, screen, "n", "guiTop");
 					openRecipe((GuiContainer)screen, x - left, y - top);
 				}
 				catch(IllegalArgumentException e)
@@ -86,23 +86,32 @@ public class CraftGuideKeyHandler extends KeyHandler
 				{
 					e.printStackTrace();
 				}
-				catch(NoSuchFieldException e)
-				{
-					e.printStackTrace();
-				}
-				catch(IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
 			}
 		}
 	}
 
-	private Object getPrivateValue(Class<GuiContainer> classToAccess, Object object, String string) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	private <T> Object getPrivateValue(Class<? extends T> objectClass, T object, String obfuscatedName, String name)
 	{
-        Field f = classToAccess.getDeclaredField(string);
-        f.setAccessible(true);
-        return f.get(object);
+		try
+		{
+			Field field;
+			try
+			{
+				field = objectClass.getDeclaredField(obfuscatedName);
+			}
+			catch(NoSuchFieldException e)
+			{
+				field = objectClass.getDeclaredField(name);
+			}
+
+			field.setAccessible(true);
+			return field.get(object);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void openRecipe(GuiContainer screen, int x, int y)

@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Minecraft"/>
-	<classpathentry kind="lib" path="/Minecraft/jars/bin/lwjgl.jar"/>
+	<classpathentry kind="lib" path="/Minecraft/jars/bin/lwjgl.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Documents and Settings/Michael/Desktop/lwjgl/2.8.4/lwjgl-docs-2.8.4/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

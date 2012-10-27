@@ -187,7 +187,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		return null;
 	}
 
-	private <T> Object getPrivateValue(Class<? super T> objectClass, T object, String obfuscatedName, String name)
+	private <T> Object getPrivateValue(Class<? extends T> objectClass, T object, String obfuscatedName, String name)
 	{
 		try
 		{
