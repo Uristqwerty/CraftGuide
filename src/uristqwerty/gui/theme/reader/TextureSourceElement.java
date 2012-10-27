@@ -10,7 +10,7 @@ public class TextureSourceElement implements ElementHandler
 {
 	public boolean recursive = false;
 	public Texture source;
-	
+
 	@Override
 	public void startElement(Theme theme, String name, Attributes attributes)
 	{
@@ -30,7 +30,6 @@ public class TextureSourceElement implements ElementHandler
 	@Override
 	public ElementHandler getSubElement(String name, Attributes attributes)
 	{
-		// TODO Auto-generated method stub
 		return NullElement.instance;
 	}
 

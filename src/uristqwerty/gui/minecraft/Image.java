@@ -22,9 +22,15 @@ public class Image implements Texture
 	private int texID;
 	private static Map<String, Image> jarCache = new HashMap<String, Image>();
 	private static Map<String, Image> fileCache = new HashMap<String, Image>();
+	private static Image err = new Image(-1);
 
 	public static Image fromJar(String filename)
 	{
+		if(filename == null || filename.trim().isEmpty())
+		{
+			return err;
+		}
+
 		Image image = jarCache.get(filename);
 
 		if(image == null)

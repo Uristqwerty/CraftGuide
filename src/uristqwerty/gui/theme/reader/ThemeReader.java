@@ -1,7 +1,6 @@
 package uristqwerty.gui.theme.reader;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 
@@ -13,6 +12,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui.theme.Theme;
 
 public class ThemeReader implements ContentHandler
@@ -38,6 +38,7 @@ public class ThemeReader implements ContentHandler
 	public Theme read(InputStream source, File themeDir)
 	{
 		theme = new Theme(themeDir);
+		handlerStack.add(rootElement);
 
 		try
 		{
@@ -45,41 +46,49 @@ public class ThemeReader implements ContentHandler
 			reader.setContentHandler(this);
 			reader.parse(new InputSource(source));
 		}
-		catch(SAXException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
+			CraftGuideLog.log(e);
+			return null;
 		}
 
+		handlerStack.clear();
 		return theme;
 	}
 
 	@Override
 	public void startDocument() throws SAXException
 	{
-		handlerStack.add(rootElement);
 	}
 
 	@Override
 	public void endDocument() throws SAXException
 	{
-		handlerStack.clear();
 	}
 
 	@Override
 	public void characters(char[] chars, int start, int length) throws SAXException
 	{
-		handlerStack.peek().characters(theme, chars, start, length);
+		if(handlerStack.peek() != null)
+		{
+			handlerStack.peek().characters(theme, chars, start, length);
+		}
 	}
 
 	@Override
 	public void startElement(String uri, String name, String qName, Attributes attributes) throws SAXException
 	{
-		handlerStack.push(handlerStack.peek().getSubElement(name, attributes));
-		handlerStack.peek().startElement(theme, name, attributes);
+		if(handlerStack.peek() == null)
+		{
+			System.out.println("CraftGuide: Error loading theme file. Stack is null at element '" + name + "'");
+		}
+		else
+		{
+			ElementHandler h = handlerStack.peek().getSubElement(name, attributes);
+			handlerStack.push(h != null? h : NullElement.instance);
+			handlerStack.peek().startElement(theme, name, attributes);
+		}
 	}
 
 	@Override
@@ -87,7 +96,11 @@ public class ThemeReader implements ContentHandler
 	{
 		ElementHandler handler = handlerStack.pop();
 		handler.endElement(theme, name);
-		handlerStack.peek().endSubElement(theme, handler, name);
+
+		if(handlerStack.peek() != null)
+		{
+			handlerStack.peek().endSubElement(theme, handler, name);
+		}
 	}
 
 	@Override
