@@ -3,7 +3,9 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.CraftGuideRecipeExtra1;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.Renderer;
@@ -12,18 +14,17 @@ import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui.rendering.Renderable;
-import net.minecraft.src.ItemStack;
 
-public class Recipe implements CraftGuideRecipe
+public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 {
 	protected Slot[] slots;
 	protected Renderable[] selection;
 	protected Object[] recipe;
 	private Renderable background;
 	private Renderable backgroundSelected;
-	
-	private int width = 79, height = 58; 
-	
+
+	private int width = 79, height = 58;
+
 	public Recipe(Slot[] slots, Object[] items, Renderable background, Renderable backgroundSelected)
 	{
 		this.slots = slots;
@@ -32,21 +33,21 @@ public class Recipe implements CraftGuideRecipe
 		{
 			this.recipe[i] = items[i];
 		}
-		
+
 		this.background = background;
 		this.backgroundSelected = backgroundSelected;
-		
+
 		for(int i = 0; i < slots.length; i++)
 		{
 			if(this.recipe[i] != null && slots[i] instanceof ItemSlot && !((ItemSlot)slots[i]).drawQuantity && displayStack(i) != null && displayStack(i).stackSize > 1)
 			{
 				ItemStack old = displayStack(i);
-			
+
 				this.recipe[i] = new ItemStack(old.itemID, 1, old.getItemDamage());
 			}
 		}
 	}
-	
+
 	private ItemStack displayStack(int index)
 	{
 		if(recipe[index] == null)
@@ -73,7 +74,7 @@ public class Recipe implements CraftGuideRecipe
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void draw(Renderer renderer, int x, int y, boolean mouseOverRecipe, int mouseX, int mouseY)
 	{
@@ -85,7 +86,7 @@ public class Recipe implements CraftGuideRecipe
 		{
 			background.render((GuiRenderer)renderer, x, y);
 		}
-		
+
 		for(int i = 0; i < slots.length; i++)
 		{
 			if(mouseOverRecipe)
@@ -99,7 +100,7 @@ public class Recipe implements CraftGuideRecipe
 			}
 		}
 	}
-	
+
 	public int getSlotIndexUnderMouse(int x, int y)
 	{
 		for(int i = 0; i < slots.length; i++)
@@ -109,30 +110,47 @@ public class Recipe implements CraftGuideRecipe
 				return i;
 			}
 		}
-		
-		return -1;
-	}
 
-	@Override
-	public boolean containsItem(ItemFilter filter)
-	{
-		for(int i = 0; i < slots.length; i++)
-		{
-			if(slots[i].matches(filter, recipe, i, SlotType.ANY_SLOT))
-			{
-				return true;
-			}
-		}
-		
-		return false;
+		return -1;
 	}
 
 	@Override
 	public boolean containsItem(ItemStack stack)
 	{
 		ItemFilter filter = Util.instance.getCommonFilter(stack);
-		
+
 		return containsItem(filter);
+	}
+
+	@Override
+	public boolean containsItem(ItemFilter filter)
+	{
+		return containsItem(filter, SlotType.ANY_SLOT);
+	}
+
+	@Override
+	public boolean containsItem(ItemStack stack, SlotType type)
+	{
+		ItemFilter filter = Util.instance.getCommonFilter(stack);
+
+		return containsItem(filter, type);
+	}
+
+	@Override
+	public boolean containsItem(ItemFilter filter, SlotType type)
+	{
+		if(filter != null)
+		{
+			for(int i = 0; i < slots.length; i++)
+			{
+				if(slots[i].matches(filter, recipe, i, type))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -140,7 +158,7 @@ public class Recipe implements CraftGuideRecipe
 	{
 		return recipe;
 	}
-	
+
 	@Override
 	public int width()
 	{
@@ -157,7 +175,7 @@ public class Recipe implements CraftGuideRecipe
 	{
 		this.width = width;
 		this.height = height;
-		
+
 		return this;
 	}
 
@@ -165,7 +183,7 @@ public class Recipe implements CraftGuideRecipe
 	public List<String> getItemText(int x, int y)
 	{
 		int slot = getSlotIndexUnderMouse(x, y);
-		
+
 		if(slot == -1 || slots[slot] == null)
 		{
 			return null;
@@ -180,7 +198,7 @@ public class Recipe implements CraftGuideRecipe
 	public ItemFilter getRecipeClickedResult(int x, int y)
 	{
 		int slot = getSlotIndexUnderMouse(x, y);
-		
+
 		if(slot == -1 || slots[slot] == null)
 		{
 			return null;

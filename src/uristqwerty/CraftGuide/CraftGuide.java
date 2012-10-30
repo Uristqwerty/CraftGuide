@@ -21,7 +21,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "CraftGuide_forge", name = "CraftGuide", version = "1.5.2")
+@Mod(modid = "craftguide", name = "CraftGuide", version = "1.5.2")
 public class CraftGuide
 {
 	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.CraftGuideClient",
@@ -269,5 +269,29 @@ public class CraftGuide
 		}
 
 		return dir;
+	}
+
+	public static String getTranslation(String string)
+	{
+		if(string.equals("filter_type.input"))
+		{
+			return "Input";
+		}
+		else if(string.equals("filter_type.output"))
+		{
+			return "Output";
+		}
+		else if(string.equals("filter_type.machine"))
+		{
+			return "Machine";
+		}
+		else if(string.equals("filter"))
+		{
+			return "Filter";
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

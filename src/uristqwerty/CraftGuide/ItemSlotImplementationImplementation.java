@@ -3,12 +3,11 @@ package uristqwerty.CraftGuide;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
-
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.ItemSlotImplementation;
-import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
 
@@ -27,12 +26,12 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		overlayForge = Util.instance.getTexture("ItemStack-OreDict");
 		background = Util.instance.getTexture("ItemStack-Background");
 	}
-	
+
 	@Override
 	public List<String> getTooltip(ItemSlot itemSlot, Object data)
 	{
 		ItemStack stack = item(data);
-		
+
 		if(stack == null)
 		{
 			return null;
@@ -49,34 +48,34 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		int x = recipeX + itemSlot.x;
 		int y = recipeY + itemSlot.y;
 		ItemStack stack = item(data);
-		
+
 		if(itemSlot.drawBackground)
 		{
 			renderer.renderRect(x - 1, y - 1, 18, 18, background);
 		}
-		
+
 		if(stack != null)
 		{
-			
+
 			renderer.renderItemStack(x, y, stack);
-			
+
 			if(isMouseOver)
 			{
 				renderer.renderRect(x, y, 16, 16, 0xff, 0xff, 0xff, 0x80);
 			}
-			
+
 			if(stack.getItemDamage() == -1)
 			{
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 			}
-			
+
 			if(data instanceof List)
 			{
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
 			}
 		}
 	}
-	
+
 	private static ItemStack item(Object data)
 	{
 		if(data == null)
@@ -105,8 +104,12 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		{
 			return false;
 		}
-		
-		if(data == null || data instanceof ItemStack)
+
+		if(search == null)
+		{
+			return false;
+		}
+		else if(data == null || data instanceof ItemStack)
 		{
 			return search.matches(data);
 		}
@@ -120,7 +123,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 				}
 			}
 		}
-		
+
 		return false;
 	}
 

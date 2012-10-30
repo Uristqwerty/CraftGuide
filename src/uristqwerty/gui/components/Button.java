@@ -18,23 +18,23 @@ public class Button extends GuiElement
 		MOUSEOVER,
 		DOWN_MOUSEOUT,
 	}
-	
+
 	@GuiElementProperty(name = "states")
 	@EnumMapProperty(keyType = ButtonState.class, valueType = Texture.class)
 	public EnumMap<ButtonState, Texture> stateBackgrounds = new EnumMap<ButtonState, Texture>(ButtonState.class);
-	
+
 	private ButtonState currentState;
-	
+
 	public Button(int x, int y, int width, int height)
 	{
 		this(new Rect(x, y, width, height));
 	}
-	
+
 	public Button(int x, int y, int width, int height, String template)
 	{
 		this(new Rect(x, y, width, height), template);
 	}
-	
+
 	public Button(Rect rect)
 	{
 		this(rect, "button-default");
@@ -44,7 +44,7 @@ public class Button extends GuiElement
 	{
 		super(rect, template);
 	}
-	
+
 	@Override
 	public void mouseMoved(int x, int y)
 	{
@@ -70,22 +70,22 @@ public class Button extends GuiElement
 				currentState = ButtonState.DOWN_MOUSEOUT;
 			}
 		}
-		
+
 		super.mouseMoved(x, y);
 	}
-	
+
 	@Override
 	public void mouseReleased(int x, int y)
 	{
 		currentState = ButtonState.UP;
 		super.mouseReleased(x, y);
 	}
-	
+
 	@Override
 	public void drawBackground()
 	{
 		super.drawBackground();
-		
+
 		Texture texture = stateBackgrounds.get(currentState);
 		if(texture != null)
 		{

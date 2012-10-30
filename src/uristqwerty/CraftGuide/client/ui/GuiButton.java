@@ -12,7 +12,7 @@ import uristqwerty.gui.texture.TextureClip;
 
 public class GuiButton extends GuiElement
 {
-	protected enum ButtonState
+	public enum ButtonState
 	{
 		UP,
 		UP_OVER,
@@ -23,7 +23,7 @@ public class GuiButton extends GuiElement
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
 	private ButtonTemplate template;
 
-	private ButtonState currentState = ButtonState.UP;
+	protected ButtonState currentState = ButtonState.UP;
 
 	private static FloatingItemText toolTip = new FloatingItemText("");
 	private static Overlay toolTipRender = new Overlay(toolTip);
@@ -99,6 +99,7 @@ public class GuiButton extends GuiElement
 			{
 				sendButtonEvent(IButtonListener.Event.PRESS);
 			}
+
 			updateState(true, true);
 		}
 	}
@@ -114,7 +115,7 @@ public class GuiButton extends GuiElement
 		updateState(containsPoint(x, y), false);
 	}
 
-	private void updateState(boolean over, boolean held)
+	protected void updateState(boolean over, boolean held)
 	{
 		currentState =
 			held?
@@ -146,7 +147,7 @@ public class GuiButton extends GuiElement
 		return this;
 	}
 
-	private void sendButtonEvent(IButtonListener.Event eventType)
+	protected void sendButtonEvent(IButtonListener.Event eventType)
 	{
 		for(IButtonListener listener: buttonListeners)
 		{

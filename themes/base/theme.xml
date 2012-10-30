@@ -240,5 +240,14 @@
 		</textures>
 		<borderwidth>2</borderwidth>
 		<borderheight>2</borderheight>
-	</texture>
+		</texture>
+	<texture type="clip" id="toggle_off">
+		<source sourceid="base_image"></source>
+		<rect x="48" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_off_over">
+		<source sourceid="base_image"></source>
+		<rect x="61" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_on_over">
+		<source sourceid="base_image"></source>
+		<rect x="74" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_on">
+		<source sourceid="base_image"></source>
+		<rect x="87" y="191" width="13" height="13"></rect></texture>
 </theme>

@@ -15,9 +15,11 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.CraftGuide.OldAPITranslator;
 import uristqwerty.CraftGuide.api.BasicRecipeFilter;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.api.CraftGuideRecipeExtra1;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.RecipeFilter;
 import uristqwerty.CraftGuide.api.RecipeProvider;
+import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
 
 public class RecipeCache
@@ -306,6 +308,10 @@ public class RecipeCache
 	{
 		filterItem = filter;
 
+		boolean input = GuiCraftGuide.filterSlotTypes.get(SlotType.INPUT_SLOT);
+		boolean output = GuiCraftGuide.filterSlotTypes.get(SlotType.OUTPUT_SLOT);
+		boolean machine = GuiCraftGuide.filterSlotTypes.get(SlotType.MACHINE_SLOT);
+
 		if(filter == null)
 		{
 			filteredResults = typeResults;
@@ -316,7 +322,18 @@ public class RecipeCache
 
 			for(CraftGuideRecipe recipe: typeResults)
 			{
-				if(recipe.containsItem(filter))
+				if(recipe instanceof CraftGuideRecipeExtra1)
+				{
+					CraftGuideRecipeExtra1 e = (CraftGuideRecipeExtra1)recipe;
+
+					if((input && e.containsItem(filter, SlotType.INPUT_SLOT))
+					|| (output && e.containsItem(filter, SlotType.OUTPUT_SLOT))
+					|| (machine && e.containsItem(filter, SlotType.MACHINE_SLOT)))
+					{
+						filteredResults.add(recipe);
+					}
+				}
+				else if(recipe.containsItem(filter))
 				{
 					filteredResults.add(recipe);
 				}

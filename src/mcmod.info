@@ -1,6 +1,6 @@
 [
 {
-  "modid": "CraftGuide_forge",
+  "modid": "craftguide",
   "name": "CraftGuide",
   "description": "A recipe viewer, WITH A SCROLL BAR!",
   "version": "1.5.2",

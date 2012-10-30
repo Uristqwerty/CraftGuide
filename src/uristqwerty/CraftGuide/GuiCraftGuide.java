@@ -1,10 +1,14 @@
 package uristqwerty.CraftGuide;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.FilterDisplay;
 import uristqwerty.CraftGuide.client.ui.ButtonTemplate;
@@ -12,6 +16,7 @@ import uristqwerty.CraftGuide.client.ui.CraftTypeDisplay;
 import uristqwerty.CraftGuide.client.ui.CraftingDisplay;
 import uristqwerty.CraftGuide.client.ui.FilterSelectGrid;
 import uristqwerty.CraftGuide.client.ui.GuiButton;
+import uristqwerty.CraftGuide.client.ui.GuiButton.ButtonState;
 import uristqwerty.CraftGuide.client.ui.GuiResizeHandle;
 import uristqwerty.CraftGuide.client.ui.GuiScrollBar;
 import uristqwerty.CraftGuide.client.ui.GuiSlider;
@@ -20,6 +25,7 @@ import uristqwerty.CraftGuide.client.ui.GuiText;
 import uristqwerty.CraftGuide.client.ui.GuiTextInput;
 import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
+import uristqwerty.CraftGuide.client.ui.ToggleButton;
 import uristqwerty.gui.components.GuiElement;
 import uristqwerty.gui.components.GuiElement.AnchorPoint;
 import uristqwerty.gui.components.Image;
@@ -40,6 +46,15 @@ public class GuiCraftGuide extends Gui
 
 	private Texture paneBackground = DynamicTexture.instance("pane");
 	private Texture windowBackground = DynamicTexture.instance("window");
+
+	public static Map<SlotType, Boolean> filterSlotTypes = new EnumMap<SlotType, Boolean>(SlotType.class);
+
+	static
+	{
+		filterSlotTypes.put(SlotType.INPUT_SLOT, true);
+		filterSlotTypes.put(SlotType.OUTPUT_SLOT, true);
+		filterSlotTypes.put(SlotType.MACHINE_SLOT, false);
+	}
 
 	public static GuiCraftGuide getInstance()
 	{
@@ -127,10 +142,44 @@ public class GuiCraftGuide extends Gui
 		GuiElement recipeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 				.setClickable(false);
 
+		ButtonTemplate toggleTemplate = new ButtonTemplate(
+				new Texture[]{
+						DynamicTexture.instance("toggle_off"),
+						DynamicTexture.instance("toggle_off_over"),
+						DynamicTexture.instance("toggle_on"),
+						DynamicTexture.instance("toggle_on_over"),
+				});
+
 		recipeTab.addElement(
 				new GuiElement(initialWindowWidth - 19, 5, 14, initialWindowHeight - 10)
 					.setBackground(paneBackground)
 					.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT));
+
+
+		recipeTab.addElement(
+				new ToggleButton(8, 100, 13, 13, toggleTemplate)
+					.setState(filterSlotTypes.get(SlotType.INPUT_SLOT)? ButtonState.DOWN : ButtonState.UP)
+					.addButtonListener(new FilterToggle(SlotType.INPUT_SLOT))
+					.anchor(AnchorPoint.BOTTOM_LEFT)
+					.addElement(
+							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.input"), 0xff000000)));
+
+
+		recipeTab.addElement(
+				new ToggleButton(8, 115, 13, 13, toggleTemplate)
+					.setState(filterSlotTypes.get(SlotType.OUTPUT_SLOT)? ButtonState.DOWN : ButtonState.UP)
+					.addButtonListener(new FilterToggle(SlotType.OUTPUT_SLOT))
+					.anchor(AnchorPoint.BOTTOM_LEFT)
+					.addElement(
+							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.output"), 0xff000000)));
+
+		recipeTab.addElement(
+				new ToggleButton(8, 130, 13, 13, toggleTemplate)
+					.setState(filterSlotTypes.get(SlotType.MACHINE_SLOT)? ButtonState.DOWN : ButtonState.UP)
+					.addButtonListener(new FilterToggle(SlotType.MACHINE_SLOT))
+					.anchor(AnchorPoint.BOTTOM_LEFT)
+					.addElement(
+							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.machine"), 0xff000000)));
 
 		GuiButton clearButton =
 			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 50, 13, buttonTemplate, "Clear")
@@ -139,7 +188,7 @@ public class GuiCraftGuide extends Gui
 		recipeTab.addElement(clearButton);
 
 		recipeTab.addElement(
-			new GuiText(9, 151, "Filter", 0xff000000)
+			new GuiText(9, 151, CraftGuide.getTranslation("filter"), 0xff000000)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		recipeTab.addElement(
@@ -335,7 +384,7 @@ public class GuiCraftGuide extends Gui
 
 	private class FilterClearCallback implements IButtonListener
 	{
-		private CraftingDisplay display;
+		CraftingDisplay display;
 
 		@Override
 		public void onButtonEvent(GuiButton button, Event eventType)
@@ -344,6 +393,30 @@ public class GuiCraftGuide extends Gui
 			{
 				display.setFilter(null);
 			}
+		}
+	}
+
+	private class FilterToggle implements IButtonListener
+	{
+		private final SlotType type;
+
+		public FilterToggle(SlotType type)
+		{
+			this.type = type;
+		}
+
+		@Override public void onButtonEvent(GuiButton button, Event eventType)
+		{
+			if(eventType == Event.PRESS)
+			{
+				GuiCraftGuide.filterSlotTypes.put(type, true);
+			}
+			else if(eventType == Event.RELEASE)
+			{
+				GuiCraftGuide.filterSlotTypes.put(type, false);
+			}
+
+			recipeCache.filter(recipeCache.getFilter());
 		}
 	}
 
