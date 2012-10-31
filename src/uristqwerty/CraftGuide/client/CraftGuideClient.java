@@ -12,7 +12,7 @@ import java.util.zip.ZipInputStream;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ModLoader;
-import uristqwerty.CraftGuide.CraftGuide;
+import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
@@ -25,14 +25,12 @@ import uristqwerty.gui.texture.SolidColorTexture;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.ThemeManager;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class CraftGuideClient implements CraftGuideSide
 {
 	@Override
 	public void initKeybind()
 	{
-		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
 	}
 
 	@Override
@@ -128,7 +126,7 @@ public class CraftGuideClient implements CraftGuideSide
 
 	public static File themeDirectory()
 	{
-		File configDir = CraftGuide.configDirectory();
+		File configDir = mod_CraftGuide.configDirectory();
 
 		if(configDir == null)
 		{
@@ -156,7 +154,7 @@ public class CraftGuideClient implements CraftGuideSide
 
 		try
 		{
-			InputStream stream = CraftGuide.class.getResourceAsStream("CraftGuideResources.zip");
+			InputStream stream = CraftGuideSide.class.getResourceAsStream("CraftGuideResources.zip");
 
 			if(stream != null)
 			{

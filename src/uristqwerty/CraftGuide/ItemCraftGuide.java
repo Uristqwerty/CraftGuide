@@ -4,6 +4,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
+import net.minecraft.src.mod_CraftGuide;
 
 public class ItemCraftGuide extends Item
 {
@@ -18,7 +19,7 @@ public class ItemCraftGuide extends Item
 	@Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
-		CraftGuide.side.openGUI(player);
+		mod_CraftGuide.side.openGUI(player);
         return itemstack;
     }
 	

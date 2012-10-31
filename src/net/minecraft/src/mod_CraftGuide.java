@@ -1,32 +1,39 @@
-package uristqwerty.CraftGuide;
+package net.minecraft.src;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Properties;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.BaseMod;
 import net.minecraft.src.Block;
+import net.minecraft.src.Container;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.GuiScreen;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.KeyBinding;
 import net.minecraft.src.ModLoader;
-import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
-import uristqwerty.CraftGuide.api.ItemSlot;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.src.Slot;
 
-@Mod(modid = "craftguide", name = "CraftGuide", version = "1.5.2")
-public class CraftGuide
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.CraftGuideSide;
+import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.ItemCraftGuide;
+import uristqwerty.CraftGuide.ItemSlotImplementationImplementation;
+import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.client.CraftGuideClient;
+
+public class mod_CraftGuide extends BaseMod
 {
-	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.CraftGuideClient",
-				serverSide = "uristqwerty.CraftGuide.server.CraftGuideServer")
-	public static CraftGuideSide side;
+	public static CraftGuideSide side = new CraftGuideClient();
 
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
@@ -43,31 +50,12 @@ public class CraftGuide
 
 	private int itemCraftGuideID = 23361;
 
+	private KeyBinding keyBinding;
 
-	@PreInit
-	public void preInit(FMLPreInitializationEvent event)
+
+	public void preInit()
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
-
-		if(Loader.isModLoaded("Forge"))
-		{
-			try
-			{
-				RecipeGeneratorImplementation.forgeExt = (RecipeGeneratorForgeExtension)Class.forName("uristqwerty.CraftGuide.ForgeStuff").newInstance();
-			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(ClassNotFoundException e)
-			{
-				CraftGuideLog.log(e);
-			}
-		}
 
 		side.preInit();
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
@@ -80,8 +68,7 @@ public class CraftGuide
 		}
 	}
 
-	@Init
-	public void init(FMLInitializationEvent event)
+	public void init()
 	{
 		addItems();
 
@@ -101,28 +88,6 @@ public class CraftGuide
 		catch(ClassNotFoundException e1)
 		{
 			e1.printStackTrace();
-		}
-
-		if(Loader.isModLoaded("mod_RedPowerCore"))
-		{
-			try
-			{
-				System.out.println("Trying to load RP2Recipes...");
-				Class.forName("RP2Recipes").newInstance();
-				System.out.println("   Success!");
-			}
-			catch(ClassNotFoundException e)
-			{
-				System.out.println("   Failure! ClassNotFoundException");
-			}
-			catch(InstantiationException e)
-			{
-				System.out.println("   Failure! InstantiationException");
-			}
-			catch(IllegalAccessException e)
-			{
-				System.out.println("   Failure! IllegalAccessException");
-			}
 		}
 	}
 
@@ -164,7 +129,7 @@ public class CraftGuide
 	 */
 	private void loadProperties()
 	{
-		File oldConfigDir = Loader.instance().getConfigDir();
+		File oldConfigDir = new File(Minecraft.getMinecraftDir(), "config");
 		File oldConfigFile = new File(oldConfigDir, "CraftGuide.cfg");
 		File newConfigDir = configDirectory();
 		File newConfigFile = newConfigDir == null? null : new File(newConfigDir, "CraftGuide.cfg");
@@ -261,7 +226,7 @@ public class CraftGuide
 
 	public static File configDirectory()
 	{
-		File dir = new File(Loader.instance().getConfigDir(), "CraftGuide");
+		File dir = new File(new File(Minecraft.getMinecraftDir(), "config"), "CraftGuide");
 
 		if(!dir.exists() && !dir.mkdirs())
 		{
@@ -292,6 +257,102 @@ public class CraftGuide
 		else
 		{
 			return null;
+		}
+	}
+
+	@Override
+	public String getVersion()
+	{
+		return "1.6.2-modloader";
+	}
+
+	@Override
+	public void load()
+	{
+		preInit();
+		init();
+
+		keyBinding = new KeyBinding("Open CraftGuide", Keyboard.KEY_G);
+		ModLoader.registerKey(this, keyBinding, true);
+	}
+
+	@Override
+	public void keyboardEvent(KeyBinding kb)
+	{
+		if(kb == keyBinding && enableKeybind)
+		{
+			Minecraft mc = ModLoader.getMinecraftInstance();
+			GuiScreen screen = mc.currentScreen;
+			if(screen == null)
+			{
+				side.openGUI(mc.thePlayer);
+			}
+			else if(screen instanceof GuiContainer)
+			{
+				try
+				{
+					int x = Mouse.getX() * screen.width / mc.displayWidth;
+					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
+					int left = (Integer)getPrivateValue(GuiContainer.class, screen, "m", "guiLeft");
+					int top = (Integer)getPrivateValue(GuiContainer.class, screen, "n", "guiTop");
+					openRecipe((GuiContainer)screen, x - left, y - top);
+				}
+				catch(IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch(SecurityException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private <T> Object getPrivateValue(Class<? extends T> objectClass, T object, String obfuscatedName, String name)
+	{
+		try
+		{
+			Field field;
+			try
+			{
+				field = objectClass.getDeclaredField(obfuscatedName);
+			}
+			catch(NoSuchFieldException e)
+			{
+				field = objectClass.getDeclaredField(name);
+			}
+
+			field.setAccessible(true);
+			return field.get(object);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void openRecipe(GuiContainer screen, int x, int y)
+	{
+		Container container = screen.inventorySlots;
+
+		for(int i = 0; i < container.inventorySlots.size(); i++)
+		{
+			Slot slot = (Slot)container.inventorySlots.get(i);
+	        if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
+	        {
+	        	ItemStack item = slot.getStack();
+
+	        	if(item != null)
+	        	{
+	    			Minecraft mc = ModLoader.getMinecraftInstance();
+	        		GuiCraftGuide.getInstance().setFilterItem(item);
+					side.openGUI(mc.thePlayer);
+	        	}
+
+	        	break;
+	        }
 		}
 	}
 }

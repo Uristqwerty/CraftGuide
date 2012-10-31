@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.mod_CraftGuide;
 
 import org.lwjgl.input.Keyboard;
 
-import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.api.NamedTexture;
@@ -208,7 +208,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void onSubmit(GuiTextInput input)
 	{
-		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || CraftGuide.textSearchRequiresShift == false)
+		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || mod_CraftGuide.textSearchRequiresShift == false)
 		{
 			recipeCache.filter(Util.instance.getCommonFilter(input.getText()));
 			display.openTab(backButton);

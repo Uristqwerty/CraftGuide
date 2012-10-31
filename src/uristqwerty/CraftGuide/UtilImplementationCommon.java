@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
@@ -67,7 +68,7 @@ public abstract class UtilImplementationCommon extends Util
 					{
 						text.add("\u00a7" + Integer.toHexString(stack.getRarity().rarityColor) + (String)o);
 
-						if(CraftGuide.alwaysShowID)
+						if(mod_CraftGuide.alwaysShowID)
 						{
 							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + stack.getItemDamage());
 						}
@@ -96,7 +97,7 @@ public abstract class UtilImplementationCommon extends Util
 	@Override
 	public void reloadRecipes()
 	{
-		CraftGuide.side.reloadRecipes();
+		mod_CraftGuide.side.reloadRecipes();
 	}
 
 	@Override

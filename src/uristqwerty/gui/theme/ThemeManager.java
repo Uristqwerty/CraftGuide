@@ -7,19 +7,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.src.ITexturePack;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.RenderEngine;
+import net.minecraft.src.TexturePackList;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui.editor.TextureMeta;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.theme.reader.ThemeReader;
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class ThemeManager
 {
@@ -75,7 +78,7 @@ public class ThemeManager
 			}
 		}
 
-		ITexturePack pack = FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack();
+		ITexturePack pack = getSelectedTexturePack();
 		InputStream packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
 
 		if(packThemes != null)
@@ -243,6 +246,29 @@ public class ThemeManager
 		themeList = validatedThemes;
 	}
 
+	public static ITexturePack getSelectedTexturePack()
+	{
+		RenderEngine engine = ModLoader.getMinecraftInstance().renderEngine;
+		try {
+			Field f = engine.getClass().getDeclaredField("k");
+			f.setAccessible(true);
+			return ((TexturePackList)f.get(engine)).getSelectedTexturePack();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private boolean validImage(Theme theme, Object[] imageSource, Map<String, Theme> validatedThemes)
 	{
 		debug("          Checking if image exists and is valid...");
@@ -267,7 +293,7 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file-jar"))
 		{
 			debug("            Searching classpath for '" + source + "'");
-			if(FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
+			if(getSelectedTexturePack().getResourceAsStream(source) != null)
 			{
 				debug("              Found.");
 				return true;

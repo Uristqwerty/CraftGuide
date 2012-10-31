@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.mod_CraftGuide;
 
 import org.lwjgl.input.Keyboard;
 
@@ -162,7 +163,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.INPUT_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.input"), 0xff000000)));
+							new GuiText(15, 3, mod_CraftGuide.getTranslation("filter_type.input"), 0xff000000)));
 
 
 		recipeTab.addElement(
@@ -171,7 +172,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.OUTPUT_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.output"), 0xff000000)));
+							new GuiText(15, 3, mod_CraftGuide.getTranslation("filter_type.output"), 0xff000000)));
 
 		recipeTab.addElement(
 				new ToggleButton(8, 130, 13, 13, toggleTemplate)
@@ -179,7 +180,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.MACHINE_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.machine"), 0xff000000)));
+							new GuiText(15, 3, mod_CraftGuide.getTranslation("filter_type.machine"), 0xff000000)));
 
 		GuiButton clearButton =
 			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 50, 13, buttonTemplate, "Clear")
@@ -188,7 +189,7 @@ public class GuiCraftGuide extends Gui
 		recipeTab.addElement(clearButton);
 
 		recipeTab.addElement(
-			new GuiText(9, 151, CraftGuide.getTranslation("filter"), 0xff000000)
+			new GuiText(9, 151, mod_CraftGuide.getTranslation("filter"), 0xff000000)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		recipeTab.addElement(
@@ -469,13 +470,13 @@ public class GuiCraftGuide extends Gui
 	@Override
 	public int mouseWheelRate()
 	{
-		return CraftGuide.mouseWheelScrollRate;
+		return mod_CraftGuide.mouseWheelScrollRate;
 	}
 
 	@Override
 	public boolean doesGuiPauseGame()
 	{
-		return CraftGuide.pauseWhileOpen;
+		return mod_CraftGuide.pauseWhileOpen;
 	}
 
 	public void reloadRecipes()

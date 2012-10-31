@@ -11,11 +11,12 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.src.ModLoader;
+
 import org.lwjgl.opengl.GL11;
 
 import uristqwerty.gui.rendering.RendererBase;
 import uristqwerty.gui.texture.Texture;
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class Image implements Texture
 {
@@ -35,7 +36,7 @@ public class Image implements Texture
 
 		if(image == null)
 		{
-			image = new Image(FMLClientHandler.instance().getClient().renderEngine.getTexture(filename));
+			image = new Image(ModLoader.getMinecraftInstance().renderEngine.getTexture(filename));
 			jarCache.put(filename, image);
 		}
 

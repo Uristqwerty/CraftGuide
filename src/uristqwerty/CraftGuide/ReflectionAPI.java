@@ -3,6 +3,8 @@ package uristqwerty.CraftGuide;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.src.mod_CraftGuide;
+
 public class ReflectionAPI
 {
 	public static List<Object> APIObjects = new LinkedList<Object>();
@@ -14,6 +16,6 @@ public class ReflectionAPI
 
 	public static void reloadRecipes()
 	{
-		CraftGuide.side.reloadRecipes();
+		mod_CraftGuide.side.reloadRecipes();
 	}
 }

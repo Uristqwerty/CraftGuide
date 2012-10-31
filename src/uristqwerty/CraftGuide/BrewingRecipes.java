@@ -9,6 +9,7 @@ import java.util.Set;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.PotionHelper;
+import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
@@ -45,7 +46,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 						DynamicTexture.instance("brew_recipe_background"),
 						82, 1, 79, 58));
 
-		if(CraftGuide.hideMundanePotionRecipes)
+		if(mod_CraftGuide.hideMundanePotionRecipes)
 		{
 			Iterator<ItemStack[]> iterator = recipes.iterator();
 

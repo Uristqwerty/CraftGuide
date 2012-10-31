@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.client.ui;
 
-import uristqwerty.CraftGuide.CraftGuide;
+import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.gui.components.GuiElement;
 
 
@@ -91,13 +91,13 @@ public class GuiResizeHandle extends GuiElement
 			int xDif = targetX - absoluteX();
 			int yDif = targetY - absoluteY();
 
-			if(CraftGuide.resizeRate > 0)
+			if(mod_CraftGuide.resizeRate > 0)
 			{
 				int xDir = (int)Math.signum(xDif);
 				int yDir = (int)Math.signum(yDif);
 
-				xDif = Math.min(Math.abs(xDif), CraftGuide.resizeRate) * xDir;
-				yDif = Math.min(Math.abs(yDif), CraftGuide.resizeRate) * yDir;
+				xDif = Math.min(Math.abs(xDif), mod_CraftGuide.resizeRate) * xDir;
+				yDif = Math.min(Math.abs(yDif), mod_CraftGuide.resizeRate) * yDir;
 			}
 
 			if(xDif != 0 || yDif != 0)

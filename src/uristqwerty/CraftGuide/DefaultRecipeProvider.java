@@ -20,6 +20,7 @@ import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
+import net.minecraft.src.mod_CraftGuide;
 //import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider
@@ -92,7 +93,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		RecipeTemplate craftingTemplate;
 		RecipeTemplate smallCraftingTemplate;
 		
-		if(CraftGuide.newerBackgroundStyle)
+		if(mod_CraftGuide.newerBackgroundStyle)
 		{
 			craftingTemplate = generator.createRecipeTemplate(craftingSlotsOwnBackground, null);
 			smallCraftingTemplate = generator.createRecipeTemplate(smallCraftingSlotsOwnBackground, null);
