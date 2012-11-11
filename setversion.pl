@@ -35,25 +35,27 @@ if($override ne "")
 
 print "Version string: $versionstring\n";
 close $versionfile;
-
-open(my $infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/CraftGuide.java");
-open(my $outfile, ">", "src/minecraft/uristqwerty/CraftGuide/CraftGuide.java");
-
-while(<$infile>)
+my $infile;
+my $outfile;
+if(open($infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/CraftGuide.java"))
 {
-    if($_ =~ /\@Mod\(modid = "(.+)", name = "(.+)", version = ".+"\)/)
+    open($outfile, ">", "src/minecraft/uristqwerty/CraftGuide/CraftGuide.java");
+
+    while(<$infile>)
     {
-        print $outfile "\@Mod(modid = \"$1\", name = \"$2\", version = \"$versionstring\")\n";
+        if($_ =~ /\@Mod\(modid = "(.+)", name = "(.+)", version = ".+"\)/)
+        {
+            print $outfile "\@Mod(modid = \"$1\", name = \"$2\", version = \"$versionstring\")\n";
+        }
+        else
+        {
+            print $outfile "$_";
+        }
     }
-    else
-    {
-        print $outfile "$_";
-    }
+
+    close($infile);
+    close($outfile);
 }
-
-close($infile);
-close($outfile);
-
 open($infile, "<", "eclipse/CraftGuide/src/mcmod.info");
 open($outfile, ">", "eclipse/CraftGuide/out/mcmod.info");
 
@@ -85,6 +87,6 @@ if($override eq "")
 
 open(my $buildzip, ">", "eclipse/CraftGuide/build-zip.bat");
 print $buildzip "cd zip\\build\n";
-print $buildzip "DEL ..\\CraftGuide-$versionstring.zip\n";
+print $buildzip "if exist ..\\CraftGuide-$versionstring.zip del ..\\CraftGuide-$versionstring.zip\n";
 print $buildzip "7z a ..\\CraftGuide-$versionstring.zip \"*\"\n";
 close($buildzip);
