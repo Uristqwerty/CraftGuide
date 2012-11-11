@@ -74,7 +74,7 @@ public class ThemeManager
 			}
 		}
 
-		ITexturePack pack = CraftGuideClient.getMinecraft().renderEngine.texturePack.getSelectedTexturePack();
+		ITexturePack pack = CraftGuideClient.getTexturePack();
 		InputStream packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
 
 		if(packThemes != null)
@@ -266,7 +266,7 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file-jar"))
 		{
 			debug("            Searching classpath for '" + source + "'");
-			if(CraftGuideClient.getMinecraft().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
+			if(CraftGuideClient.getTexturePack().getResourceAsStream(source) != null)
 			{
 				debug("              Found.");
 				return true;

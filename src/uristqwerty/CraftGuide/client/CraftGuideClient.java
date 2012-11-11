@@ -11,6 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.ITexturePack;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.CraftGuideSide;
@@ -192,6 +193,13 @@ public abstract class CraftGuideClient implements CraftGuideSide
 			return ((CraftGuideClient)CraftGuide.side).getMinecraftInstance();
 		}
 
+		return null;
+	}
+
+	public abstract ITexturePack getSelectedTexturePack();
+
+	public static ITexturePack getTexturePack()
+	{
 		return null;
 	}
 }
