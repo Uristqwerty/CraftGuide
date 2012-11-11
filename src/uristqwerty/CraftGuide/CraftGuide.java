@@ -10,23 +10,13 @@ import java.util.Properties;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 import uristqwerty.CraftGuide.api.ItemSlot;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "craftguide", name = "CraftGuide", version = "1.5.2")
 public class CraftGuide
 {
-	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.CraftGuideClient",
-				serverSide = "uristqwerty.CraftGuide.server.CraftGuideServer")
 	public static CraftGuideSide side;
+	public static CraftGuideLoaderSide loaderSide;
 
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
@@ -43,13 +33,11 @@ public class CraftGuide
 
 	private int itemCraftGuideID = 23361;
 
-
-	@PreInit
-	public void preInit(FMLPreInitializationEvent event)
+	public void preInit()
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
-		if(Loader.isModLoaded("Forge"))
+		if(loaderSide.isModLoaded("Forge"))
 		{
 			try
 			{
@@ -80,8 +68,7 @@ public class CraftGuide
 		}
 	}
 
-	@Init
-	public void init(FMLInitializationEvent event)
+	public void init()
 	{
 		addItems();
 
@@ -103,25 +90,28 @@ public class CraftGuide
 			e1.printStackTrace();
 		}
 
-		if(Loader.isModLoaded("mod_RedPowerCore"))
+		if(loaderSide.isModLoaded("mod_RedPowerCore"))
 		{
 			try
 			{
-				System.out.println("Trying to load RP2Recipes...");
+				CraftGuideLog.log("Trying to load RP2Recipes...", true);
 				Class.forName("RP2Recipes").newInstance();
-				System.out.println("   Success!");
+				CraftGuideLog.log("   Success!", true);
 			}
 			catch(ClassNotFoundException e)
 			{
-				System.out.println("   Failure! ClassNotFoundException");
+				CraftGuideLog.log("   Failure! ClassNotFoundException", true);
+				CraftGuideLog.log(e);
 			}
 			catch(InstantiationException e)
 			{
-				System.out.println("   Failure! InstantiationException");
+				CraftGuideLog.log("   Failure! InstantiationException", true);
+				CraftGuideLog.log(e);
 			}
 			catch(IllegalAccessException e)
 			{
-				System.out.println("   Failure! IllegalAccessException");
+				CraftGuideLog.log("   Failure! IllegalAccessException", true);
+				CraftGuideLog.log(e);
 			}
 		}
 	}
@@ -129,9 +119,9 @@ public class CraftGuide
 	private void addItems()
 	{
 		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
-		ModLoader.addName(itemCraftGuide, "Crafting Guide");
+		loaderSide.addName(itemCraftGuide, "Crafting Guide");
 
-		ModLoader.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
+		loaderSide.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
 				"bcb", "pbp", Character.valueOf('c'), Block.workbench,
 				Character.valueOf('p'), Item.paper, Character.valueOf('b'),
 				Item.book});
@@ -164,7 +154,7 @@ public class CraftGuide
 	 */
 	private void loadProperties()
 	{
-		File oldConfigDir = Loader.instance().getConfigDir();
+		File oldConfigDir = loaderSide.getConfigDir();
 		File oldConfigFile = new File(oldConfigDir, "CraftGuide.cfg");
 		File newConfigDir = configDirectory();
 		File newConfigFile = newConfigDir == null? null : new File(newConfigDir, "CraftGuide.cfg");
@@ -261,7 +251,7 @@ public class CraftGuide
 
 	public static File configDirectory()
 	{
-		File dir = new File(Loader.instance().getConfigDir(), "CraftGuide");
+		File dir = new File(loaderSide.getConfigDir(), "CraftGuide");
 
 		if(!dir.exists() && !dir.mkdirs())
 		{

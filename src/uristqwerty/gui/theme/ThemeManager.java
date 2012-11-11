@@ -19,7 +19,6 @@ import uristqwerty.gui.editor.TextureMeta;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.Texture;
 import uristqwerty.gui.theme.reader.ThemeReader;
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class ThemeManager
 {
@@ -75,7 +74,7 @@ public class ThemeManager
 			}
 		}
 
-		ITexturePack pack = FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack();
+		ITexturePack pack = CraftGuideClient.getMinecraft().renderEngine.texturePack.getSelectedTexturePack();
 		InputStream packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
 
 		if(packThemes != null)
@@ -267,7 +266,7 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file-jar"))
 		{
 			debug("            Searching classpath for '" + source + "'");
-			if(FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
+			if(CraftGuideClient.getMinecraft().renderEngine.texturePack.getSelectedTexturePack().getResourceAsStream(source) != null)
 			{
 				debug("              Found.");
 				return true;
@@ -375,7 +374,7 @@ public class ThemeManager
 	{
 		if(debugOutput)
 		{
-			System.out.println(text);
+			CraftGuideLog.log(text, true);
 		}
 	}
 

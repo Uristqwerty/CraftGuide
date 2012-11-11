@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui.MutableRect;
 import uristqwerty.gui.Rect;
 import uristqwerty.gui.editor.GuiElementMeta.GuiElementProperty;
@@ -93,7 +94,7 @@ public class GuiElement
 			{
 				try
 				{
-					System.out.println("Annotated property '" + property.name() + "', field '" + field.getName() + "', currentValue '" + field.get(this) + "'");
+					CraftGuideLog.log("Annotated property '" + property.name() + "', field '" + field.getName() + "', currentValue '" + field.get(this) + "'", true);
 				}
 				catch(IllegalArgumentException e)
 				{

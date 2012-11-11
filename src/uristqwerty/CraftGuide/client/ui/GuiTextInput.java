@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.FontRenderer;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui.components.GuiElement;
 import uristqwerty.gui.minecraft.Text;
 
@@ -96,7 +96,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 
 	private int xToCharIndex(String text, int x)
 	{
-		FontRenderer fr = ModLoader.getMinecraftInstance().fontRenderer;
+		FontRenderer fr = CraftGuideClient.getMinecraft().fontRenderer;
 		int i = 0;
 
 		while(i < text.length() && fr.getStringWidth(text.substring(0, i + 1)) < x)

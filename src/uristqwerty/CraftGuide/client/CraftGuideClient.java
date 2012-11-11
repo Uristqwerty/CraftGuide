@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ModLoader;
+import net.minecraft.client.Minecraft;
 import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.CraftGuideSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
@@ -25,16 +25,9 @@ import uristqwerty.gui.texture.SolidColorTexture;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.TextureClip;
 import uristqwerty.gui.theme.ThemeManager;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
-public class CraftGuideClient implements CraftGuideSide
+public abstract class CraftGuideClient implements CraftGuideSide
 {
-	@Override
-	public void initKeybind()
-	{
-		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
-	}
-
 	@Override
 	public void preInit()
 	{
@@ -120,12 +113,6 @@ public class CraftGuideClient implements CraftGuideSide
 		GuiCraftGuide.getInstance().reloadRecipes();
 	}
 
-	@Override
-	public void openGUI(EntityPlayer player)
-	{
-    	ModLoader.openGUI(player, GuiCraftGuide.getInstance());
-	}
-
 	public static File themeDirectory()
 	{
 		File configDir = CraftGuide.configDirectory();
@@ -173,7 +160,7 @@ public class CraftGuideClient implements CraftGuideSide
 					}
 					else
 					{
-						System.out.println("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'");
+						CraftGuideLog.log("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'", true);
 						destination.getParentFile().mkdirs();
 						destination.createNewFile();
 						FileOutputStream output = new FileOutputStream(destination);
@@ -194,5 +181,17 @@ public class CraftGuideClient implements CraftGuideSide
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public abstract Minecraft getMinecraftInstance();
+
+	public static Minecraft getMinecraft()
+	{
+		if(CraftGuide.side instanceof CraftGuideClient)
+		{
+			return ((CraftGuideClient)CraftGuide.side).getMinecraftInstance();
+		}
+
+		return null;
 	}
 }

@@ -15,7 +15,6 @@ public class CraftGuideServer implements CraftGuideSide
 	public void preInit()
 	{
 		Util.instance = new UtilImplementationServer();
-		// TODO Auto-generated method stub
 	}
 
 	@Override

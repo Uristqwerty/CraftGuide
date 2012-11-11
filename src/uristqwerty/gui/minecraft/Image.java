@@ -13,9 +13,9 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
 
+import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui.rendering.RendererBase;
 import uristqwerty.gui.texture.Texture;
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class Image implements Texture
 {
@@ -35,7 +35,7 @@ public class Image implements Texture
 
 		if(image == null)
 		{
-			image = new Image(FMLClientHandler.instance().getClient().renderEngine.getTexture(filename));
+			image = new Image(CraftGuideClient.getMinecraft().renderEngine.getTexture(filename));
 			jarCache.put(filename, image);
 		}
 

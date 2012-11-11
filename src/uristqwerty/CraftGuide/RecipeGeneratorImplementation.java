@@ -1,6 +1,5 @@
 package uristqwerty.CraftGuide;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	public static interface RecipeGeneratorForgeExtension
 	{
 		boolean matchesType(IRecipe recipe);
+		boolean isShapelessRecipe(IRecipe recipe);
 		Object[] getCraftingRecipe(RecipeGeneratorImplementation recipeGeneratorImplementation, IRecipe recipe, boolean allowSmallGrid);
 	}
 
@@ -154,9 +154,9 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		{
 			if(recipe instanceof ShapedRecipes)
 			{
-				int width = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeWidth");
-				int height = (Integer)getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeHeight");
-				Object[] items = (Object[])getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d", "recipeItems");
+				int width = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeWidth");
+				int height = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeHeight");
+				Object[] items = (Object[])CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d", "recipeItems");
 
 				if(allowSmallGrid && width < 3 && height < 3)
 				{
@@ -169,7 +169,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
-				List items = (List)getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems");
+				List items = (List)CommonUtilities.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
 			else if(forgeExt != null && forgeExt.matchesType(recipe))
@@ -185,30 +185,6 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		}
 
 		return null;
-	}
-
-	private <T> Object getPrivateValue(Class<? extends T> objectClass, T object, String obfuscatedName, String name)
-	{
-		try
-		{
-			Field field;
-			try
-			{
-				field = objectClass.getDeclaredField(obfuscatedName);
-			}
-			catch(NoSuchFieldException e)
-			{
-				field = objectClass.getDeclaredField(name);
-			}
-
-			field.setAccessible(true);
-			return field.get(object);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 	}
 
 	Object[] getSmallShapedRecipe(int width, int height, Object[] items, ItemStack recipeOutput)

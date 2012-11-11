@@ -81,7 +81,7 @@ public class ThemeReader implements ContentHandler
 	{
 		if(handlerStack.peek() == null)
 		{
-			System.out.println("CraftGuide: Error loading theme file. Stack is null at element '" + name + "'");
+			CraftGuideLog.log("CraftGuide: Error loading theme file. Stack is null at element '" + name + "'", true);
 		}
 		else
 		{

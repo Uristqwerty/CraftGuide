@@ -3,7 +3,6 @@ package uristqwerty.CraftGuide;
 import java.util.List;
 
 import net.minecraft.src.IRecipe;
-import net.minecraft.src.ModLoader;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
@@ -17,31 +16,54 @@ public class ForgeStuff implements RecipeGeneratorForgeExtension
 	}
 
 	@Override
+	public boolean isShapelessRecipe(IRecipe recipe)
+	{
+		return recipe instanceof ShapedOreRecipe;
+	}
+
+	@Override
 	public Object[] getCraftingRecipe(RecipeGeneratorImplementation gen, IRecipe recipe, boolean allowSmallGrid)
 	{
-		if(recipe instanceof ShapedOreRecipe)
+		try
 		{
-			int width = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "width");
-			int height = (Integer)ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "height");
-			Object[] items = (Object[])ModLoader.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "input");
+			if(recipe instanceof ShapedOreRecipe)
+			{
+				int width = (Integer)CommonUtilities.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "width");
+				int height = (Integer)CommonUtilities.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "height");
+				Object[] items = (Object[])CommonUtilities.getPrivateValue(ShapedOreRecipe.class, (ShapedOreRecipe)recipe, "input");
 
-			if(allowSmallGrid && width < 3 && height < 3)
-			{
-				return gen.getSmallShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				if(allowSmallGrid && width < 3 && height < 3)
+				{
+					return gen.getSmallShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				}
+				else
+				{
+					return gen.getCraftingShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				}
 			}
-			else
+			else if(recipe instanceof ShapelessOreRecipe)
 			{
-				return gen.getCraftingShapedRecipe(width, height, items, ((ShapedOreRecipe)recipe).getRecipeOutput());
+				List items = (List)CommonUtilities.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
+				return gen.getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
 			}
 		}
-		else if(recipe instanceof ShapelessOreRecipe)
+		catch(SecurityException e)
 		{
-			List items = (List)ModLoader.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
-			return gen.getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
+			CraftGuideLog.log(e);
 		}
-		else
+		catch(NoSuchFieldException e)
 		{
-			return null;
+			CraftGuideLog.log(e);
 		}
+		catch(IllegalArgumentException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e);
+		}
+
+		return null;
 	}
 }
