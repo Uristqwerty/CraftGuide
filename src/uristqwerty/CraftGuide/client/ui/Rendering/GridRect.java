@@ -9,7 +9,7 @@ public class GridRect implements Renderable
 {
 	private int x, y, width, height;
 	private GuiScrollableGrid gridElement;
-	
+
 	public GridRect(int x, int y, int width, int height, GuiScrollableGrid displayElement)
 	{
 		this.x = x;
@@ -23,8 +23,15 @@ public class GridRect implements Renderable
 	public void render(GuiRenderer renderer, int xOffset, int yOffset)
 	{
 		renderer.setClippingRegion(x + xOffset, y + yOffset, width, height);
-		gridElement.renderGridRows(renderer, x + xOffset, y + yOffset);
-		renderer.clearClippingRegion();
+
+		try
+		{
+			gridElement.renderGridRows(renderer, x + xOffset, y + yOffset);
+		}
+		finally
+		{
+			renderer.clearClippingRegion();
+		}
 	}
 
 	@Override

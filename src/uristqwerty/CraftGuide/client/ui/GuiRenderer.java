@@ -220,7 +220,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
                 {
         			itemStack = fixedItemStack(itemStack);
 
-        			itemRenderer.renderItemIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+        			itemRenderer.func_82406_b(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 
         			if(renderOverlay)
         			{
@@ -418,6 +418,28 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public List<String> getItemNameandInformation(ItemStack stack)
 	{
-		return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+		if(stack.getItem() != null)
+		{
+			try
+			{
+				return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+			}
+			catch(Exception e)
+			{
+				try
+				{
+					stack = fixedItemStack(stack);
+					return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+				}
+				catch(Exception e2)
+				{
+					CraftGuideLog.log(e2);
+				}
+			}
+		}
+
+		List<String> list = new ArrayList<String>();
+		list.add("Err: Item #" + stack.itemID + ", damage " + stack.getItemDamage());
+		return list;
 	}
 }
