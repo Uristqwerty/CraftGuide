@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ITexturePack;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
@@ -24,5 +25,11 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	public void openGUI(EntityPlayer player)
 	{
 		FMLClientHandler.instance().displayGuiScreen(player, GuiCraftGuide.getInstance());
+	}
+
+	@Override
+	public ITexturePack getSelectedTexturePack()
+	{
+		return getMinecraftInstance().renderEngine.texturePack.getSelectedTexturePack();
 	}
 }

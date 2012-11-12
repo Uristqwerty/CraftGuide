@@ -22,12 +22,35 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 	public void initKeybind()
 	{
 		keyBinding = new KeyBinding("Open CraftGuide", Keyboard.KEY_G);
+		ModLoader.registerKey(this, keyBinding, false);
 	}
 
 	@Override
 	public boolean isModLoaded(String name)
 	{
+		if(name.equals("BTW"))
+		{
+			return isClassLoaded("mod_FCBetterThanWolves");
+		}
+		else if(name.equals("Forge"))
+		{
+			return isClassLoaded("net.minecraftforge.oredict.ShapedOreRecipe");
+		}
+
 		return false;
+	}
+
+	private boolean isClassLoaded(String classname)
+	{
+		try
+		{
+			Class c = Class.forName(classname);
+			return c != null;
+		}
+		catch(ClassNotFoundException e)
+		{
+			return false;
+		}
 	}
 
 	@Override

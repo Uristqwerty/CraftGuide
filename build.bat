@@ -18,10 +18,21 @@ if not exist zip\build mkdir zip\build
 
 xcopy "eclipse\CraftGuide\images\gui" "zip\build\gui" /S /I /Y
 xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
-xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build" /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build\uristqwerty\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\gui" "zip\build\uristqwerty\gui" /S /I /Y
 xcopy "eclipse\CraftGuide\out\mcmod.info" "zip\build\" /Y
 xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build\uristqwerty\CraftGuide" /Y
 
+xcopy "zip\build" "zip\build-modloader" /S /I /Y
+xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build-modloader" /Y
+
+del "zip\build\uristqwerty\CraftGuide\client\CraftGuideClient_ModLoader.class"
+
+del "zip\build-modloader\uristqwerty\CraftGuide\CraftGuide_FML.class"
+del "zip\build-modloader\uristqwerty\CraftGuide\client\CraftGuideClient_FML.class"
+del "zip\build-modloader\uristqwerty\CraftGuide\client\CraftGuideKeyHandler.class"
+del "zip\build-modloader\mcmod.info"
+
+
 call eclipse\CraftGuide\build-zip.bat
+call eclipse\CraftGuide\build-zip-modloader.bat

@@ -85,8 +85,22 @@ if($override eq "")
     close $versionfile;
 }
 
-open(my $buildzip, ">", "eclipse/CraftGuide/build-zip.bat");
-print $buildzip "cd zip\\build\n";
-print $buildzip "if exist ..\\CraftGuide-$versionstring.zip del ..\\CraftGuide-$versionstring.zip\n";
-print $buildzip "7z a ..\\CraftGuide-$versionstring.zip \"*\"\n";
-close($buildzip);
+my $buildzip;
+
+if(open($buildzip, ">", "eclipse/CraftGuide/build-zip.bat"))
+{
+    print $buildzip "cd zip\\build\n";
+    print $buildzip "if exist ..\\CraftGuide-$versionstring.zip del ..\\CraftGuide-$versionstring.zip\n";
+    print $buildzip "7z a ..\\CraftGuide-$versionstring.zip \"*\"\n";
+    print $buildzip "cd ..\\..\n";
+    close($buildzip);
+}
+
+if(open($buildzip, ">", "eclipse/CraftGuide/build-zip-modloader.bat"))
+{
+    print $buildzip "cd zip\\build-modloader\n";
+    print $buildzip "if exist ..\\CraftGuide-$versionstring-modloader.zip del ..\\CraftGuide-$versionstring-modloader.zip\n";
+    print $buildzip "7z a ..\\CraftGuide-$versionstring-modloader.zip \"*\"\n";
+    print $buildzip "cd ..\\..\n";
+    close($buildzip);
+}

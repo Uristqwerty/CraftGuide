@@ -77,17 +77,37 @@ public class CraftGuide
 			Class.forName("uristqwerty.CraftGuide.DefaultRecipeProvider").newInstance();
 			Class.forName("uristqwerty.CraftGuide.BrewingRecipes").newInstance();
 		}
-		catch(InstantiationException e1)
+		catch(InstantiationException e)
 		{
-			e1.printStackTrace();
+			CraftGuideLog.log(e);
 		}
-		catch(IllegalAccessException e1)
+		catch(IllegalAccessException e)
 		{
-			e1.printStackTrace();
+			CraftGuideLog.log(e);
 		}
-		catch(ClassNotFoundException e1)
+		catch(ClassNotFoundException e)
 		{
-			e1.printStackTrace();
+			CraftGuideLog.log(e);
+		}
+
+		if(loaderSide.isModLoaded("BTW"))
+		{
+			try
+			{
+				Class.forName("uristqwerty.CraftGuide.BTWRecipes").newInstance();
+			}
+			catch(InstantiationException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(ClassNotFoundException e)
+			{
+				CraftGuideLog.log(e);
+			}
 		}
 
 		if(loaderSide.isModLoaded("mod_RedPowerCore"))

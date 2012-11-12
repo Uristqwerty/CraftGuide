@@ -200,6 +200,11 @@ public abstract class CraftGuideClient implements CraftGuideSide
 
 	public static ITexturePack getTexturePack()
 	{
+		if(CraftGuide.side instanceof CraftGuideClient)
+		{
+			return ((CraftGuideClient)CraftGuide.side).getSelectedTexturePack();
+		}
+
 		return null;
 	}
 }

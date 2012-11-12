@@ -292,6 +292,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 		generator.addRecipe(template, recipe);
 	}
+
 	private void addKilnRecipes(RecipeGenerator generator, ItemStack kiln) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
 	{
 		Slot[] recipeSlots = new Slot[] {
