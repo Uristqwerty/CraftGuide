@@ -2,4 +2,5 @@ bin/*
 out/*
 .settings/*
 build-zip.bat
+build-zip-modloader.bat
 CraftGuideResources.zip
