@@ -18,12 +18,14 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 {
 	private NamedTexture overlayAny;
 	private NamedTexture overlayForge;
+	private NamedTexture overlayForgeSingle;
 	private NamedTexture background;
 
 	public ItemSlotImplementationImplementation()
 	{
 		overlayAny = Util.instance.getTexture("ItemStack-Any");
 		overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+		overlayForgeSingle = Util.instance.getTexture("ItemStack-OreDict-Single");
 		background = Util.instance.getTexture("ItemStack-Background");
 	}
 
@@ -38,7 +40,14 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		}
 		else
 		{
-			return Util.instance.getItemStackText(stack);
+			List<String> list = Util.instance.getItemStackText(stack);
+
+			if(data instanceof List && ((List)data).size() > 1)
+			{
+				list.add((((List)data).size() - 1) + " other type" + (((List)data).size() > 2? "s" : "") + " of item accepted");
+			}
+
+			return list;
 		}
 	}
 
@@ -71,7 +80,14 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 			if(data instanceof List)
 			{
-				renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+				if(((List)data).size() > 1)
+				{
+					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+				}
+				else
+				{
+					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForgeSingle);
+				}
 			}
 		}
 	}

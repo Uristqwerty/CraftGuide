@@ -39,7 +39,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		minecraft = mc;
 		this.gui = gui;
-    	setColor(0xFFFFFFFF);
+    	resetValues();
 	}
 
 	public void endFrame()
@@ -50,6 +50,8 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 
 		overlays.clear();
+
+		GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
 	}
 
 	public void setColor(int colour, int alpha)
@@ -203,7 +205,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
         try
         {
-			itemRenderer.func_82406_b(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+			itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 
 			if(renderOverlay)
 			{
@@ -220,7 +222,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
                 {
         			itemStack = fixedItemStack(itemStack);
 
-        			itemRenderer.func_82406_b(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+        			itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 
         			if(renderOverlay)
         			{
@@ -409,7 +411,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	private void glColor1i(int color)
 	{
-		GL11.glColor4d(
+	    setGlColor(
 				((color >> 16) & 0xff) / 255.0,
 				((color >>  8) & 0xff) / 255.0,
 				((color >>  0) & 0xff) / 255.0,
@@ -422,14 +424,14 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		{
 			try
 			{
-				return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+				return stack.getTooltip(minecraft.thePlayer, minecraft.gameSettings.advancedItemTooltips);
 			}
 			catch(Exception e)
 			{
 				try
 				{
 					stack = fixedItemStack(stack);
-					return stack.func_82840_a(minecraft.thePlayer, minecraft.gameSettings.field_82882_x);
+					return stack.getTooltip(minecraft.thePlayer, minecraft.gameSettings.advancedItemTooltips);
 				}
 				catch(Exception e2)
 				{

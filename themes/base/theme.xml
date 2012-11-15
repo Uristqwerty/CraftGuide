@@ -250,4 +250,7 @@
 		<rect x="74" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_on">
 		<source sourceid="base_image"></source>
 		<rect x="87" y="191" width="13" height="13"></rect></texture>
+	<texture type="coloredtexture" id="stack-oredict-single">
+		<source sourceid="stack-oredict"></source>
+		<color red="255" green="255" blue="255" alpha="63"></color></texture>
 </theme>

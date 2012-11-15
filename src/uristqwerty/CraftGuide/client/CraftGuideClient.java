@@ -25,6 +25,7 @@ import uristqwerty.gui.texture.MultipleTextures;
 import uristqwerty.gui.texture.SolidColorTexture;
 import uristqwerty.gui.texture.SubTexture;
 import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui.texture.TintedTexture;
 import uristqwerty.gui.theme.ThemeManager;
 
 public abstract class CraftGuideClient implements CraftGuideSide
@@ -39,6 +40,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 		ThemeManager.addTextureType(SolidColorTexture.class);
 		ThemeManager.addTextureType(MultipleTextures.class);
 		ThemeManager.addTextureType(BorderedTexture.class);
+		ThemeManager.addTextureType(TintedTexture.class);
 		ThemeManager.addTextureType(BlankTexture.class);
 		ThemeManager.addTextureType(TextureClip.class);
 		ThemeManager.addTextureType(SubTexture.class);

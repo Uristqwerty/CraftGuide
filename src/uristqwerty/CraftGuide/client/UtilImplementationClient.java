@@ -10,6 +10,7 @@ public class UtilImplementationClient extends UtilImplementationCommon
 	private NamedTextureObject textFilter = new NamedTextureObject(DynamicTexture.instance("text-filter"));
 	private NamedTextureObject itemStackAny = new NamedTextureObject(DynamicTexture.instance("stack-any"));
 	private NamedTextureObject itemStackOreDict = new NamedTextureObject(DynamicTexture.instance("stack-oredict"));
+	private NamedTextureObject itemStackOreDictSingle = new NamedTextureObject(DynamicTexture.instance("stack-oredict-single"));
 	private NamedTextureObject itemStackBackground = new NamedTextureObject(DynamicTexture.instance("stack-background"));
 
 	@Override
@@ -22,6 +23,10 @@ public class UtilImplementationClient extends UtilImplementationCommon
 		else if("ItemStack-OreDict".equalsIgnoreCase(identifier))
 		{
 			return itemStackOreDict;
+		}
+		else if("ItemStack-OreDict-Single".equalsIgnoreCase(identifier))
+		{
+			return itemStackOreDictSingle;
 		}
 		else if("ItemStack-Background".equalsIgnoreCase(identifier))
 		{
