@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide;
 
+import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -12,6 +13,7 @@ public class ItemCraftGuide extends Item
 		super(i);
 		setIconCoord(11, 3);
 		setItemName("CraftGuideItem");
+		setCreativeTab(CreativeTabs.tabMisc);
 	}
 
 	@Override

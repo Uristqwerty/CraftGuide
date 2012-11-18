@@ -1,6 +1,5 @@
 package uristqwerty.CraftGuide.client;
 
-import java.lang.reflect.Field;
 import java.util.EnumSet;
 
 import net.minecraft.client.Minecraft;
@@ -14,7 +13,9 @@ import net.minecraft.src.Slot;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
@@ -64,6 +65,7 @@ public class CraftGuideKeyHandler extends KeyHandler
 		{
 			Minecraft mc = FMLClientHandler.instance().getClient();
 			GuiScreen screen = mc.currentScreen;
+
 			if(screen == null)
 			{
 				CraftGuide.side.openGUI(mc.thePlayer);
@@ -74,43 +76,27 @@ public class CraftGuideKeyHandler extends KeyHandler
 				{
 					int x = Mouse.getX() * screen.width / mc.displayWidth;
 					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
-					int left = (Integer)getPrivateValue(GuiContainer.class, screen, "m", "guiLeft");
-					int top = (Integer)getPrivateValue(GuiContainer.class, screen, "n", "guiTop");
+					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "n", "guiLeft");
+					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "o", "guiTop");
 					openRecipe((GuiContainer)screen, x - left, y - top);
 				}
 				catch(IllegalArgumentException e)
 				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
 				}
 				catch(SecurityException e)
 				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+				}
+				catch(NoSuchFieldException e)
+				{
+					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+				}
+				catch(IllegalAccessException e)
+				{
+					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
 				}
 			}
-		}
-	}
-
-	private <T> Object getPrivateValue(Class<? extends T> objectClass, T object, String obfuscatedName, String name)
-	{
-		try
-		{
-			Field field;
-			try
-			{
-				field = objectClass.getDeclaredField(obfuscatedName);
-			}
-			catch(NoSuchFieldException e)
-			{
-				field = objectClass.getDeclaredField(name);
-			}
-
-			field.setAccessible(true);
-			return field.get(object);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e);
 		}
 	}
 

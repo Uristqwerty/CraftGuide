@@ -1,0 +1,21 @@
+Base:
+	FML on FML
+	ModLoader on FML
+	ModLaoder on ModLoader
+
+For each base combination:
+	Craft item
+	Drop item
+	Open with item
+	Open with key
+	Open with key from container (item under mouse)
+	Fail to open with key from container (no item under mouse)
+	Change keybind
+	Open with key using non-default keybind
+	Review log
+	Restart game, then open with non-default keybind
+	Test filters (item, text [, oredict])
+	Resizes, buttons work, can reposition text cursor with mouse and arrows
+	Exit with inventory key or escape
+	Exit with non-default inventory key
+	Review log
