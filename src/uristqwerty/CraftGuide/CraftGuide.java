@@ -74,8 +74,8 @@ public class CraftGuide
 
 		try
 		{
-			Class.forName("uristqwerty.CraftGuide.DefaultRecipeProvider").newInstance();
-			Class.forName("uristqwerty.CraftGuide.BrewingRecipes").newInstance();
+			Class.forName("uristqwerty.CraftGuide.recipes.DefaultRecipeProvider").newInstance();
+			Class.forName("uristqwerty.CraftGuide.recipes.BrewingRecipes").newInstance();
 		}
 		catch(InstantiationException e)
 		{
@@ -90,25 +90,7 @@ public class CraftGuide
 			CraftGuideLog.log(e);
 		}
 
-		if(loaderSide.isModLoaded("BTW"))
-		{
-			try
-			{
-				Class.forName("uristqwerty.CraftGuide.BTWRecipes").newInstance();
-			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(ClassNotFoundException e)
-			{
-				CraftGuideLog.log(e);
-			}
-		}
+		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
 
 		if(loaderSide.isModLoaded("mod_RedPowerCore"))
 		{
@@ -131,6 +113,29 @@ public class CraftGuide
 			catch(IllegalAccessException e)
 			{
 				CraftGuideLog.log("   Failure! IllegalAccessException", true);
+				CraftGuideLog.log(e);
+			}
+		}
+	}
+
+	private void loadModRecipes(String modID, String recipeClass)
+	{
+		if(loaderSide.isModLoaded(modID))
+		{
+			try
+			{
+				Class.forName(recipeClass).newInstance();
+			}
+			catch(InstantiationException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(ClassNotFoundException e)
+			{
 				CraftGuideLog.log(e);
 			}
 		}

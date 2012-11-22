@@ -3,6 +3,7 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.src.EnumRarity;
 import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
@@ -65,7 +66,22 @@ public abstract class UtilImplementationCommon extends Util
 				{
 					if(first)
 					{
-						text.add("\u00a7" + Integer.toHexString(stack.getRarity().rarityColor) + (String)o);
+						EnumRarity rarity= null;
+
+						try
+						{
+							rarity = stack.getRarity();
+						}
+						catch(NullPointerException e)
+						{
+						}
+
+						if(rarity == null)
+						{
+							rarity = EnumRarity.common;
+						}
+
+						text.add("\u00a7" + Integer.toHexString(rarity.rarityColor) + (String)o);
 
 						if(CraftGuide.alwaysShowID)
 						{

@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -10,6 +10,10 @@ import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
+import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;

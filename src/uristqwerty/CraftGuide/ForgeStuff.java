@@ -18,7 +18,7 @@ public class ForgeStuff implements RecipeGeneratorForgeExtension
 	@Override
 	public boolean isShapelessRecipe(IRecipe recipe)
 	{
-		return recipe instanceof ShapedOreRecipe;
+		return recipe instanceof ShapelessOreRecipe;
 	}
 
 	@Override

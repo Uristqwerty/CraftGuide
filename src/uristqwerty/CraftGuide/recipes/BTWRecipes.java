@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

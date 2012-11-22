@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.recipes;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +9,8 @@ import java.util.Set;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.PotionHelper;
+import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
