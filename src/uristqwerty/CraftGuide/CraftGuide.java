@@ -91,6 +91,7 @@ public class CraftGuide
 		}
 
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
+		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
 
 		if(loaderSide.isModLoaded("mod_RedPowerCore"))
 		{

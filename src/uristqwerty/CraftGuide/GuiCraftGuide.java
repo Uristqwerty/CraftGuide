@@ -365,6 +365,7 @@ public class GuiCraftGuide extends Gui
 	{
 		try
 		{
+			uristqwerty.gui.minecraft.Image.initJarTextures();
 			((UtilImplementationCommon)Util.instance).partialTicks = f;
 			guiWindow.centerOn(width / 2, height / 2);
 			filter.setFilter(recipeCache.getFilter());

@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private Texture defaultBackground = new BlankTexture();
 	private Texture defaultBackgroundSelected;
-	private static ItemStack workbench = new ItemStack(Block.workbench);
+	public static ItemStack workbench = new ItemStack(Block.workbench);
 
 	public static RecipeGeneratorForgeExtension forgeExt;
 
@@ -111,7 +112,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 
 		if(recipeList == null)
 		{
-			recipeList = new LinkedList<CraftGuideRecipe>();
+			recipeList = new ArrayList<CraftGuideRecipe>();
 			recipes.put(craftingType, recipeList);
 		}
 

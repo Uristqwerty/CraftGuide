@@ -86,8 +86,6 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
 	};
 
-	private static ItemStack workbench = new ItemStack(Block.workbench);
-
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
@@ -102,7 +100,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		else
 		{
 			craftingTemplate = new DefaultRecipeTemplate(
-					craftingSlots, workbench,
+					craftingSlots, RecipeGeneratorImplementation.workbench,
 					new TextureClip(
 							DynamicTexture.instance("recipe_backgrounds"),
 							1, 1, 79, 58),
@@ -111,7 +109,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 							82, 1, 79, 58));
 
 			smallCraftingTemplate = new DefaultRecipeTemplate(
-					smallCraftingSlots, workbench,
+					smallCraftingSlots, RecipeGeneratorImplementation.workbench,
 					new TextureClip(
 							DynamicTexture.instance("recipe_backgrounds"),
 							1, 61, 79, 58),
@@ -122,7 +120,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 		RecipeTemplate shapelessTemplate = new DefaultRecipeTemplate(
 					shapelessCraftingSlots,
-					workbench,
+					RecipeGeneratorImplementation.workbench,
 					new TextureClip(
 							DynamicTexture.instance("recipe_backgrounds"),
 							1, 121, 79, 58),

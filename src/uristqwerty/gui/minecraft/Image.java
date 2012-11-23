@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +24,25 @@ public class Image implements Texture
 	private static Map<String, Image> jarCache = new HashMap<String, Image>();
 	private static Map<String, Image> fileCache = new HashMap<String, Image>();
 	private static Image err = new Image(-1);
+	private static boolean needsInit = true;
+
+	public static void initJarTextures()
+	{
+		if(needsInit)
+		{
+			for(Entry<String, Image> entry: jarCache.entrySet())
+			{
+				Image image = entry.getValue();
+
+				if(image.texID == -1)
+				{
+					image.texID = CraftGuideClient.getMinecraft().renderEngine.getTexture(entry.getKey());
+				}
+			}
+
+			needsInit = false;
+		}
+	}
 
 	public static Image fromJar(String filename)
 	{
@@ -35,8 +55,9 @@ public class Image implements Texture
 
 		if(image == null)
 		{
-			image = new Image(CraftGuideClient.getMinecraft().renderEngine.getTexture(filename));
+			image = new Image(-1);
 			jarCache.put(filename, image);
+			needsInit = true;
 		}
 
 		return image;

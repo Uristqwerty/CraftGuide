@@ -91,7 +91,7 @@ public class MultipleItemFilter implements ItemFilter
 				text.add("\u00a77Other items:");
 				for(int i = 1; i < comparison.size(); i++)
 				{
-					text.add("\u00a77  " + comparison.get(i).getItemName());
+					text.add("\u00a77  " + CommonUtilities.itemName(comparison.get(i)));
 				}
 			}
 

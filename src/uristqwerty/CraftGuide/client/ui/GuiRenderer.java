@@ -133,6 +133,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 
 		int xMax = gui.width - textWidth - 4;
+		int yMax = gui.height - textHeight - 4;
 
 		if(x > xMax)
 		{
@@ -142,6 +143,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		if(x < 3)
 		{
 			x = 3;
+		}
+
+		if(y > yMax)
+		{
+			y = yMax;
 		}
 
 		if(y < 4)
