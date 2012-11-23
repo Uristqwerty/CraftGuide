@@ -92,6 +92,7 @@ public class CraftGuide
 
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
 		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
+		loadModRecipes("GregTech_Addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
 
 		if(loaderSide.isModLoaded("mod_RedPowerCore"))
 		{

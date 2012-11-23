@@ -17,6 +17,9 @@ public class GuiScrollableGrid extends GuiElement
 	public int borderSize = 1;
 	public boolean flexibleSize = false;
 
+	private int lastMouseX, lastMouseY;
+	private float lastScroll;
+
 	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight, int columnWidth)
 	{
 		super(x, y, width, height);
@@ -33,6 +36,12 @@ public class GuiScrollableGrid extends GuiElement
 	@Override
 	public void draw()
 	{
+		if(lastScroll != scrollBar.getValue())
+		{
+			lastScroll = scrollBar.getValue();
+			mouseMoved(lastMouseX, lastMouseY);
+		}
+
 		if(flexibleSize)
 		{
 			int width = columnWidth * ((bounds.width() + reducedWidth) / columnWidth);
@@ -66,6 +75,10 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - bounds.y();
 		int row = scrollY / rowHeight;
+
+		lastMouseX = x;
+		lastMouseY = y;
+		lastScroll = scrollBar.getValue();
 
 		mouseMovedRow(row, x - bounds.x(), scrollY % rowHeight, containsPoint(x, y));
 

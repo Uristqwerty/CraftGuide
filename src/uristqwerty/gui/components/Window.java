@@ -22,6 +22,9 @@ public class Window extends GuiElement
 	private Map<Layer, GuiElement> layers = new EnumMap<Layer, GuiElement>(Layer.class);
 
 	private int lastMouseX, lastMouseY;
+	private int centerX, centerY;
+	private int maxWidth, maxHeight;
+	private boolean centred = false;
 
 	public Window(int x, int y, int width, int height, GuiRenderer renderer)
 	{
@@ -32,6 +35,9 @@ public class Window extends GuiElement
 
 	public void centerOn(int centerX, int centerY)
 	{
+		centred = true;
+		this.centerX = centerX;
+		this.centerY = centerY;
 		setPosition(centerX - (bounds.width() / 2), centerY - (bounds.height() / 2));
 	}
 
@@ -113,6 +119,9 @@ public class Window extends GuiElement
 
 	public void setMaxSize(int width, int height)
 	{
+		maxWidth = width;
+		maxHeight = height;
+
 		if(bounds.width() > width || bounds.height() > height)
 		{
 			setSize(Math.min(bounds.width(), width), Math.min(bounds.height(), height));
@@ -143,8 +152,26 @@ public class Window extends GuiElement
 		return this;
 	}
 
+	@Override
+	public GuiElement setSize(int width, int height)
+	{
+		super.setSize(Math.min(width, maxWidth), Math.min(height, maxHeight));
+
+		if(isCentred())
+		{
+			setPosition(centerX - bounds.width() / 2, centerY - bounds.height() / 2);
+		}
+
+		return this;
+	}
+
 	private void addElement(GuiElement element, Layer layer)
 	{
 		getLayer(layer).addElement(element);
+	}
+
+	public boolean isCentred()
+	{
+		return centred;
 	}
 }

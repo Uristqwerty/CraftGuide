@@ -1,8 +1,11 @@
 package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.src.ItemStack;
+import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 public class CommonUtilities
@@ -48,5 +51,93 @@ public class CommonUtilities
 		}
 
 		return item.getDisplayName() + idText;
+	}
+
+	public static List<String> itemNames(ItemStack item)
+	{
+		ArrayList<String> list = new ArrayList<String>();
+
+		if(item.getItemDamage() == -1 && item.getHasSubtypes())
+		{
+			ArrayList<ItemStack> subItems = new ArrayList();
+			item.getItem().getSubItems(item.itemID, null, subItems);
+
+			for(ItemStack stack: subItems)
+			{
+				list.add(itemName(stack));
+			}
+		}
+		else
+		{
+			list.add(itemName(item));
+		}
+
+		return list;
+	}
+
+	public static int countItemNames(ItemStack item)
+	{
+		if(item.getItemDamage() == -1 && item.getHasSubtypes())
+		{
+			ArrayList temp = new ArrayList();
+			item.getItem().getSubItems(item.itemID, null, temp);
+
+			return temp.size();
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
+	public static int countItemNames(Object item)
+	{
+		if(item instanceof ItemStack)
+		{
+			return countItemNames((ItemStack)item);
+		}
+		else if(item instanceof List)
+		{
+			int count = 0;
+			for(Object o: (List)item)
+			{
+				count += countItemNames(o);
+			}
+
+			return count;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public static List<String> getExtendedItemStackText(Object item)
+	{
+		List<String> text = getItemStackText(item);
+
+		if(item instanceof List && ((List)item).size() > 1)
+		{
+			int count = CommonUtilities.countItemNames(item);
+			text.add((count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
+		}
+
+		return text;
+	}
+
+	private static List<String> getItemStackText(Object item)
+	{
+		if(item instanceof List)
+		{
+			return getItemStackText(((List)item).get(0));
+		}
+		else if(item instanceof ItemStack)
+		{
+			return Util.instance.getItemStackText((ItemStack)item);
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

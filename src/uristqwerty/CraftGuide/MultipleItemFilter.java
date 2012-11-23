@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
@@ -10,9 +11,11 @@ import uristqwerty.CraftGuide.api.Util;
 
 public class MultipleItemFilter implements ItemFilter
 {
-	public List<ItemStack> comparison;
-	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
-	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+	public final List<ItemStack> comparison;
+	private static final NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
+	private static final NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+	private static final NamedTexture overlayForgeSingle = Util.instance.getTexture("ItemStack-OreDict-Single");
+	private List<String> tooltip = null;
 
 	public MultipleItemFilter(List stack)
 	{
@@ -75,32 +78,81 @@ public class MultipleItemFilter implements ItemFilter
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 			}
 
-			renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+			if(comparison.size() == 1)
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayForgeSingle);
+			}
+			else
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+			}
 		}
 	}
 
 	@Override
 	public List<String> getTooltip()
 	{
-		if(comparison.size() > 0)
+		if(tooltip == null)
 		{
-			List<String> text = Util.instance.getItemStackText(comparison.get(0));
-
-			if(comparison.size() > 1)
+			if(comparison.size() > 0)
 			{
-				text.add("\u00a77Other items:");
-				for(int i = 1; i < comparison.size(); i++)
-				{
-					text.add("\u00a77  " + CommonUtilities.itemName(comparison.get(i)));
-				}
-			}
+				ItemStack primaryItem = comparison.get(0);
 
-			return text;
+				List<String> text;
+
+				if(primaryItem.getItemDamage() == -1)
+				{
+					if(primaryItem.getHasSubtypes())
+					{
+						ArrayList<ItemStack> list = new ArrayList();
+						primaryItem.getItem().getSubItems(primaryItem.itemID, null, list);
+						text = Util.instance.getItemStackText(list.get(0));
+					}
+					else
+					{
+						ItemStack alteredStack = primaryItem.copy();
+						alteredStack.setItemDamage(0);
+						text = Util.instance.getItemStackText(alteredStack);
+					}
+				}
+				else
+				{
+					text = Util.instance.getItemStackText(primaryItem);
+				}
+
+				if(comparison.size() > 1)
+				{
+					text.add("\u00a77Other items:");
+
+					if(primaryItem.getItemDamage() == -1 && primaryItem.getHasSubtypes())
+					{
+						ArrayList<ItemStack> list = new ArrayList();
+						primaryItem.getItem().getSubItems(primaryItem.itemID, null, list);
+
+						for(int i = 1; i < list.size(); i++)
+						{
+							text.add("\u00a77  " + CommonUtilities.itemName(list.get(i)));
+						}
+					}
+
+					for(int i = 1; i < comparison.size(); i++)
+					{
+						for(String name: CommonUtilities.itemNames(comparison.get(i)))
+						{
+							text.add("\u00a77  " + name);
+						}
+					}
+				}
+
+				tooltip = text;
+			}
+			else
+			{
+				return null;
+			}
 		}
-		else
-		{
-			return null;
-		}
+
+		return tooltip;
 	}
 
 	public boolean areItemsEqual(ItemStack first, ItemStack second)

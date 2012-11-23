@@ -1,5 +1,8 @@
 package uristqwerty.CraftGuide.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import uristqwerty.CraftGuide.UtilImplementationCommon;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.client.ui.NamedTextureObject;
@@ -12,6 +15,8 @@ public class UtilImplementationClient extends UtilImplementationCommon
 	private NamedTextureObject itemStackOreDict = new NamedTextureObject(DynamicTexture.instance("stack-oredict"));
 	private NamedTextureObject itemStackOreDictSingle = new NamedTextureObject(DynamicTexture.instance("stack-oredict-single"));
 	private NamedTextureObject itemStackBackground = new NamedTextureObject(DynamicTexture.instance("stack-background"));
+
+	private Map<String, NamedTextureObject> textureLookup = new HashMap<String, NamedTextureObject>();
 
 	@Override
 	public NamedTexture getTexture(String identifier)
@@ -37,6 +42,11 @@ public class UtilImplementationClient extends UtilImplementationCommon
 			return textFilter;
 		}
 
-		return null;
+		if(!textureLookup.containsKey(identifier))
+		{
+			textureLookup.put(identifier, new NamedTextureObject(DynamicTexture.instance(identifier)));
+		}
+
+		return textureLookup.get(identifier);
 	}
 }

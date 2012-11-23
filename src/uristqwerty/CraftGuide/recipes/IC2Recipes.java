@@ -13,6 +13,7 @@ import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
+import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
@@ -217,7 +218,8 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		Slot[] recipeSlots = new Slot[]{
 				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
 				new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ExtraSlot(31, 21, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
+				new ExtraSlot(31, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
+				new EUSlot(31, 12).setConstantPacketSize(2).setConstantEUValue(-800),
 		};
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
@@ -229,7 +231,8 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 					new Object[]{
 						((Entry)recipe).getKey(),
 						((Entry)recipe).getValue(),
-						machine
+						machine,
+						null,
 					});
 		}
 	}

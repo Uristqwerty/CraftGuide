@@ -7,6 +7,7 @@ import net.minecraft.src.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
@@ -85,7 +86,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			if(cell < itemResults.size())
 			{
 				overItem = true;
-				itemName.setText(Util.instance.getItemStackText(displayItem(cell)));
+				itemName.setText(CommonUtilities.getExtendedItemStackText(itemResults.get(cell)));
 			}
 			else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
 			{

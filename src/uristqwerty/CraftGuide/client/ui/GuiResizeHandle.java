@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui.components.Window;
 
 
 public class GuiResizeHandle extends GuiElement
@@ -110,6 +111,12 @@ public class GuiResizeHandle extends GuiElement
 				if(corner == AnchorPoint.TOP_LEFT || corner == AnchorPoint.BOTTOM_LEFT)
 				{
 					xDif = -xDif;
+				}
+
+				if(target instanceof Window && ((Window)target).isCentred())
+				{
+					xDif *= 2;
+					yDif *= 2;
 				}
 
 				target.setSize(

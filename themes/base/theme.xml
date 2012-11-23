@@ -253,4 +253,7 @@
 	<texture type="coloredtexture" id="stack-oredict-single">
 		<source sourceid="stack-oredict"></source>
 		<color red="255" green="255" blue="255" alpha="63"></color></texture>
+	<texture type="clip" id="EU-icon">
+		<source sourceid="base_image"></source>
+		<rect x="239" y="144" width="16" height="16"></rect></texture>
 </theme>

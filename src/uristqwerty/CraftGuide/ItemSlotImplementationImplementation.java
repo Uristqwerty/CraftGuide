@@ -21,6 +21,9 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 	private NamedTexture overlayForgeSingle;
 	private NamedTexture background;
 
+	private List<String> lastTooltip = null;
+	private Object lastToolitpObject = null;
+
 	public ItemSlotImplementationImplementation()
 	{
 		overlayAny = Util.instance.getTexture("ItemStack-Any");
@@ -32,6 +35,11 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 	@Override
 	public List<String> getTooltip(ItemSlot itemSlot, Object data)
 	{
+		if(data == lastToolitpObject)
+		{
+			return lastTooltip;
+		}
+
 		ItemStack stack = item(data);
 
 		if(stack == null)
@@ -40,13 +48,10 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		}
 		else
 		{
-			List<String> list = Util.instance.getItemStackText(stack);
+			List<String> list = CommonUtilities.getExtendedItemStackText(data);
 
-			if(data instanceof List && ((List)data).size() > 1)
-			{
-				list.add((((List)data).size() - 1) + " other type" + (((List)data).size() > 2? "s" : "") + " of item accepted");
-			}
-
+			lastToolitpObject = data;
+			lastTooltip = list;
 			return list;
 		}
 	}

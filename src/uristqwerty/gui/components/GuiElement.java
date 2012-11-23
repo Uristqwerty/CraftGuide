@@ -244,15 +244,18 @@ public class GuiElement
 
 	public GuiElement setSize(int width, int height)
 	{
-		int oldWidth = bounds.width();
-		int oldHeight = bounds.height();
-
-		bounds.setSize(width, height);
-		onResize(oldWidth, oldHeight);
-
-		for(GuiElement element: children)
+		if(width != bounds.width() || height != bounds.height())
 		{
-			element.onParentResize(oldWidth, oldHeight, width, height);
+			int oldWidth = bounds.width();
+			int oldHeight = bounds.height();
+
+			bounds.setSize(width, height);
+			onResize(oldWidth, oldHeight);
+
+			for(GuiElement element: children)
+			{
+				element.onParentResize(oldWidth, oldHeight, width, height);
+			}
 		}
 
 		return this;
