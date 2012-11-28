@@ -12,6 +12,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -21,6 +23,8 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.gui.texture.DynamicTexture;
+import uristqwerty.gui.texture.TextureClip;
 
 public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -83,6 +87,11 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
 
+		Class shapelessRecipe = Class.forName("ic2.common.AdvShapelessRecipe");
+		Method canShowShapeless = advancedRecipe.getMethod("canShow", shapelessRecipe);
+		Field shapelessInput = shapelessRecipe.getField("input");
+		Field shapelessOutput = shapelessRecipe.getField("output");
+
 		List recipes = CraftingManager.getInstance().getRecipeList();
 
 		RecipeTemplate template = generator.createRecipeTemplate(
@@ -98,6 +107,27 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 						new ItemSlot(39, 39, 16, 16).drawOwnBackground(),
 						new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
 				}, null);
+
+		RecipeTemplate shapelessTemplate = new DefaultRecipeTemplate(
+				new Slot[]{
+						new ItemSlot( 3,  3, 16, 16),
+						new ItemSlot(21,  3, 16, 16),
+						new ItemSlot(39,  3, 16, 16),
+						new ItemSlot( 3, 21, 16, 16),
+						new ItemSlot(21, 21, 16, 16),
+						new ItemSlot(39, 21, 16, 16),
+						new ItemSlot( 3, 39, 16, 16),
+						new ItemSlot(21, 39, 16, 16),
+						new ItemSlot(39, 39, 16, 16),
+						new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
+				},
+				RecipeGeneratorImplementation.workbench,
+				new TextureClip(
+						DynamicTexture.instance("recipe_backgrounds"),
+						1, 121, 79, 58),
+				new TextureClip(
+						DynamicTexture.instance("recipe_backgrounds"),
+						82, 121, 79, 58));
 
 		RecipeTemplate smallTemplate = generator.createRecipeTemplate(
 				new Slot[]{
@@ -124,6 +154,13 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 				{
 					addLargeRecipe(generator, template, input, output, width);
 				}
+			}
+			else if(shapelessRecipe.isInstance(recipe) && (Boolean)canShowShapeless.invoke(null, recipe))
+			{
+				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
+				Object[] input = (Object[])shapelessInput.get(recipe);
+
+				addShapelessRecipe(generator, shapelessTemplate, input, output);
 			}
 		}
 	}
@@ -161,6 +198,20 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 		recipeContents[4] = output;
 
+		generator.addRecipe(template, recipeContents);
+	}
+
+	private void addShapelessRecipe(RecipeGenerator generator, RecipeTemplate template,
+			Object[] input, ItemStack output)
+	{
+		Object[] recipeContents = new Object[10];
+
+		for(int i = 0; i < Math.min(input.length, 9); i++)
+		{
+			recipeContents[i] = resolve(input[i]);
+		}
+
+		recipeContents[9] = output;
 		generator.addRecipe(template, recipeContents);
 	}
 

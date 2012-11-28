@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;
@@ -31,23 +32,23 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 1),
 					(ArrayList)recipeClass.getField("sFusionRecipes").get(null),
-					2, 1, -1, true);
+					2, 1, -1, true, "\u00a77  First reaction cost: %1$d EU");
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 11),
 					(ArrayList)recipeClass.getField("sCentrifugeRecipes").get(null),
-					2, 4, 5, false);
+					2, 4, 5, false, null);
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 25),
 					(ArrayList)recipeClass.getField("sElectrolyzerRecipes").get(null),
-					2, 4, -1, false);
+					2, 4, -1, false, null);
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 28),
 					(ArrayList)recipeClass.getField("sGrinderRecipes").get(null),
-					2, 4, -1, false);
+					2, 4, -1, false, null);
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 29),
 					(ArrayList)recipeClass.getField("sBlastRecipes").get(null),
-					2, 2, -1, false);
+					2, 2, -1, false, "\u00a77  Required temperature: %1$d");
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -72,7 +73,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	}
 
 	private void generateRecipes(RecipeGenerator generator, ItemStack machine, ArrayList recipes,
-			int numInputs, int numOutputs, int constantEUt, boolean generated) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
+			int numInputs, int numOutputs, int constantEUt, boolean generated, final String extraFormat) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
 	{
 		Slot[] recipeSlots = new Slot[numInputs + numOutputs + 2];
 
@@ -120,13 +121,32 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 
 		recipeSlots[numInputs + numOutputs + 0] = new ExtraSlot(numOutputs <= 2? 31 : 22, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-		recipeSlots[numInputs + numOutputs + 1] = new EUSlot(numOutputs <= 2? 31 : 22, 12);
+
+		if(extraFormat == null)
+		{
+			recipeSlots[numInputs + numOutputs + 1] = new EUSlot(numOutputs <= 2? 31 : 22, 12);
+		}
+		else
+		{
+			recipeSlots[numInputs + numOutputs + 1] =
+				new EUSlot(numOutputs <= 2? 31 : 22, 12)
+				{
+					@Override
+					public List<String> getTooltip(int x, int y, Object[] data, int dataIndex)
+					{
+						List<String> lines = super.getTooltip(x, y, data, dataIndex);
+						lines.add(String.format(extraFormat, (((Object[])data[dataIndex])[2])));
+						return lines;
+					}
+				};
+		}
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
 
 		Class recipeClass = Class.forName("gregtechmod.common.GT_Recipe");
 		Field eutField = recipeClass.getField("mEUt");
 		Field durationField = recipeClass.getField("mDuration");
+		Field extraField = recipeClass.getField("mStartEU");
 
 		for(Object recipe: recipes)
 		{
@@ -159,8 +179,18 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			int duration = durationField.getInt(recipe);
 
 			recipeContents[numInputs + numOutputs + 0] = machine;
-			recipeContents[numInputs + numOutputs + 1] = new Object[]{
+
+			if(extraFormat == null)
+			{
+				recipeContents[numInputs + numOutputs + 1] = new Object[]{
 					duration * eut * (generated? 1 : -1), eut};
+			}
+			else
+			{
+				int extraData = extraField.getInt(recipe);
+				recipeContents[numInputs + numOutputs + 1] = new Object[]{
+						duration * eut * (generated? 1 : -1), eut, extraData};
+			}
 
 			generator.addRecipe(template, recipeContents);
 		}
