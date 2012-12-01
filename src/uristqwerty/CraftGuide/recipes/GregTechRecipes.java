@@ -49,6 +49,20 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 29),
 					(ArrayList)recipeClass.getField("sBlastRecipes").get(null),
 					2, 2, -1, false, "\u00a77  Required temperature: %1$d");
+
+			try
+			{
+				generateRecipes(
+						generator, new ItemStack(machine, 1, 31),
+						(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
+						2, 2, -1, false, null);
+			}
+			catch(NoSuchFieldException e)
+			{
+				/* Older Gregtech versions don't have implosion recipes.
+				 * TODO: Remove this catch after a Minecraft update.
+				 */
+			}
 		}
 		catch(ClassNotFoundException e)
 		{
