@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.CraftingManager;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IRecipe;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
 import uristqwerty.CraftGuide.CraftGuide;
@@ -149,10 +151,36 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		for(Object o: furnaceRecipes.keySet())
 		{
 			int blockID = (Integer)o;
-			ItemStack in = new ItemStack(blockID, 1, -1);
-			ItemStack out = (ItemStack)furnaceRecipes.get(o);
+			Item item = Item.itemsList[blockID];
 
-			generator.addRecipe(template, new ItemStack[]{in, out});
+			if(item != null)
+			{
+				ItemStack output = (ItemStack)furnaceRecipes.get(o);
+				if(item.getHasSubtypes())
+				{
+					List<ItemStack> items = new ArrayList<ItemStack>();
+					item.getSubItems(blockID, null, items);
+
+					for(ItemStack subItem: items)
+					{
+						generator.addRecipe(
+								template,
+								new Object[]{
+										subItem,
+										output
+								});
+					}
+				}
+				else
+				{
+					generator.addRecipe(
+							template,
+							new Object[]{
+									new ItemStack(blockID, 1, 0),
+									output
+							});
+				}
+			}
 		}
 
 

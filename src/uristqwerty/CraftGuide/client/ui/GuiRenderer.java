@@ -252,6 +252,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
             			CraftGuideLog.log(e2);
             		}
                 }
+                catch(Throwable t)
+                {
+                	CraftGuideLog.log(t);
+                	throw new RuntimeException(t);
+                }
         	}
         	else
         	{
@@ -270,14 +275,21 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         catch(LinkageError e)
         {
         }
-
-        itemRenderer.zLevel = 0.0F;
-        GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glPopMatrix();
+        catch(Throwable t)
+        {
+        	CraftGuideLog.log(t);
+        	throw new RuntimeException(t);
+        }
+        finally
+        {
+            itemRenderer.zLevel = 0.0F;
+            GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderHelper.disableStandardItemLighting();
+    		GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glPopMatrix();
+        }
 
         if(error)
         {
