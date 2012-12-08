@@ -76,6 +76,7 @@ public class CraftGuide
 		{
 			Class.forName("uristqwerty.CraftGuide.recipes.DefaultRecipeProvider").newInstance();
 			Class.forName("uristqwerty.CraftGuide.recipes.BrewingRecipes").newInstance();
+			Class.forName("uristqwerty.CraftGuide.recipes.FuelInfo").newInstance();
 		}
 		catch(InstantiationException e)
 		{

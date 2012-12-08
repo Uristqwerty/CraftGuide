@@ -66,7 +66,7 @@ public abstract class UtilImplementationCommon extends Util
 				{
 					if(first)
 					{
-						EnumRarity rarity= null;
+						EnumRarity rarity = null;
 
 						try
 						{

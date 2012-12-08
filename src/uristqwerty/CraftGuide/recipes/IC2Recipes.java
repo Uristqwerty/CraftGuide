@@ -27,8 +27,13 @@ import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.TextureClip;
 
-public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
+public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider, FuelInfoSource
 {
+	public IC2Recipes()
+	{
+		FuelInfo.addSource(this);
+	}
+
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
@@ -328,5 +333,87 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 			generator.addRecipe(template, recipeContents);
 		}
+	}
+
+	@Override
+	public Slot getSlot(int x, int y)
+	{
+		return new EUSlot(x, y);
+	}
+
+	@Override
+	public boolean hasInfo(ItemStack stack)
+	{
+		try
+		{
+			return ((Integer)Class.forName("ic2.common.TileEntityIronFurnace").getMethod("getFuelValueFor", ItemStack.class).invoke(null, stack)) > 0;
+		}
+		catch(IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchMethodException e)
+		{
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	@Override
+	public Object getData(ItemStack stack)
+	{
+		try
+		{
+			int generation = (Integer)Class.forName("ic2.common.IC2").getField("energyGeneratorBase").get(null);
+			int fuel = (Integer)Class.forName("ic2.common.TileEntityIronFurnace").getMethod("getFuelValueFor", ItemStack.class).invoke(null, stack);
+			return new Object[]{(fuel / 4) * generation, generation};
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchMethodException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
