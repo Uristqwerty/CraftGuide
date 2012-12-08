@@ -56,10 +56,14 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 						generator, new ItemStack(machine, 1, 31),
 						(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
 						2, 2, -1, false, null);
+				generateRecipes(
+						generator, new ItemStack(machine, 1, 32),
+						(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
+						2, 3, -1, false, null);
 			}
 			catch(NoSuchFieldException e)
 			{
-				/* Older Gregtech versions don't have implosion recipes.
+				/* Older Gregtech versions may not have implosion or sawmill recipes.
 				 * TODO: Remove this catch after a Minecraft update.
 				 */
 			}

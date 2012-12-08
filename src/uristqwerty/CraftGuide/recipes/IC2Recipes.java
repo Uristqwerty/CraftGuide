@@ -14,6 +14,7 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
+import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -48,6 +49,10 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 			addMachineRecipes(generator,
 					(ItemStack)itemClass.getField("extractor").get(null),
 					(List)Class.forName("ic2.common.TileEntityExtractor").getField("recipes").get(null));
+
+			addScrapboxOutput(generator,
+					(ItemStack)itemClass.getField("scrapBox").get(null),
+					(List)Class.forName("ic2.common.ItemScrapbox").getField("dropList").get(null));
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -285,6 +290,43 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 						machine,
 						null,
 					});
+		}
+	}
+
+	private void addScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, List output) throws ClassNotFoundException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	{
+		Slot[] recipeSlots = new Slot[]{
+				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
+				new ChanceSlot(44, 21, 16, 16, true).setFormatString(" (%1$.3f%% chance)").setRatio(100000).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+		};
+
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
+
+		Class dropClass = Class.forName("ic2.common.ItemScrapbox$Drop");
+		Field stackField = dropClass.getDeclaredField("itemStack");
+		Field chanceField = dropClass.getDeclaredField("upperChanceBound");
+		stackField.setAccessible(true);
+		chanceField.setAccessible(true);
+
+		float previous = 0;
+		float last = chanceField.getFloat(output.get(output.size() - 1));
+
+		for(int i = 0; i < output.size(); i++)
+		{
+			Object drop = output.get(i);
+			float chance = chanceField.getFloat(drop);
+			float displayed = (chance - previous) / last;
+			previous = chance;
+
+			Object[] recipeContents = new Object[]{
+					scrapbox,
+					new Object[]{
+							stackField.get(drop),
+							(int)(displayed * 100000),
+					},
+			};
+
+			generator.addRecipe(template, recipeContents);
 		}
 	}
 }
