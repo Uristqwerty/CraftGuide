@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.src.ItemStack;
+import uristqwerty.CraftGuide.api.StackInfo;
+import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 
@@ -116,10 +118,23 @@ public class CommonUtilities
 	{
 		List<String> text = getItemStackText(item);
 
+		if(item instanceof ItemStack || (item instanceof List && ((List)item).get(0) instanceof ItemStack))
+		{
+			for(StackInfoSource infoSource: StackInfo.sources)
+			{
+				String info = infoSource.getInfo(item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0));
+
+				if(info != null)
+				{
+					text.add(info);
+				}
+			}
+		}
+
 		if(item instanceof List && ((List)item).size() > 1)
 		{
 			int count = CommonUtilities.countItemNames(item);
-			text.add((count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
+			text.add("\u00a77" + (count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
 		}
 
 		return text;

@@ -12,6 +12,7 @@ import net.minecraft.src.IRecipe;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
+import net.minecraft.src.TileEntityFurnace;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
@@ -23,11 +24,18 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.api.StackInfo;
+import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.gui.texture.DynamicTexture;
 import uristqwerty.gui.texture.TextureClip;
 
-public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider
+public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider, StackInfoSource
 {
+	public DefaultRecipeProvider()
+	{
+		StackInfo.addSource(this);
+	}
+
 	private final Slot[] shapelessCraftingSlots = new ItemSlot[]{
 		new ItemSlot( 3,  3, 16, 16),
 		new ItemSlot(21,  3, 16, 16),
@@ -260,5 +268,20 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		return recipe instanceof ShapelessRecipes ||
 			(RecipeGeneratorImplementation.forgeExt != null
 					&& RecipeGeneratorImplementation.forgeExt.isShapelessRecipe(recipe));
+	}
+
+	@Override
+	public String getInfo(ItemStack itemStack)
+	{
+		int fuel = TileEntityFurnace.getItemBurnTime(itemStack);
+
+		if(fuel > 0)
+		{
+			return String.format("\u00a77Can fuel %1$.3f furnace operations", fuel / 200.0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

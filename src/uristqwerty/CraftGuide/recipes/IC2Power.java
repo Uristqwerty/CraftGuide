@@ -1,0 +1,90 @@
+package uristqwerty.CraftGuide.recipes;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.api.StackInfoSource;
+
+public class IC2Power implements StackInfoSource
+{
+	private static boolean init = false;
+	private static int suBatteryID;
+	private static Class electricItem;
+	private static Method getMaxCharge;
+
+	@Override
+	public String getInfo(ItemStack itemStack)
+	{
+		if(!init)
+		{
+			init();
+		}
+
+		if(itemStack.itemID == suBatteryID)
+		{
+			return "\u00a77Powers IC2 machines for 1000 EU";
+		}
+		else if(itemStack.itemID == Item.redstone.shiftedIndex)
+		{
+			return "\u00a77Powers IC2 machines for 500 EU";
+		}
+		else if(electricItem.isInstance(itemStack.getItem()))
+		{
+			try
+			{
+				return "\u00a77Can store " + getMaxCharge.invoke(itemStack.getItem()) + " EU";
+			}
+			catch(IllegalArgumentException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(InvocationTargetException e)
+			{
+				CraftGuideLog.log(e);
+			}
+		}
+
+		return null;
+	}
+
+	private void init()
+	{
+		try
+		{
+			suBatteryID = ((ItemStack)Class.forName("ic2.common.Ic2Items").getField("suBattery").get(null)).itemID;
+			electricItem = Class.forName("ic2.api.IElectricItem");
+			getMaxCharge = electricItem.getMethod("getMaxCharge");
+		}
+		catch(IllegalArgumentException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(SecurityException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(ClassNotFoundException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e);
+		}
+	}
+}

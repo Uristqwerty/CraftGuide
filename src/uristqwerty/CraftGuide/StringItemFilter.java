@@ -8,25 +8,24 @@ import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Util;
-import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 
 public class StringItemFilter implements ItemFilter
 {
 	private String comparison;
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
-	
+
 	public StringItemFilter(String string)
 	{
 		comparison = string.toLowerCase();
 	}
-	
+
 	@Override
 	public boolean matches(Object item)
 	{
 		if(item instanceof ItemStack)
 		{
-			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation((ItemStack)item);
-			
+			List list = CommonUtilities.getExtendedItemStackText(item);
+
 			for(Object o: list)
 			{
 				if(o instanceof String)
@@ -37,7 +36,7 @@ public class StringItemFilter implements ItemFilter
 					}
 				}
 			}
-			
+
 			return false;
 		}
 		else if(item instanceof String)
@@ -53,7 +52,7 @@ public class StringItemFilter implements ItemFilter
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
 		else
