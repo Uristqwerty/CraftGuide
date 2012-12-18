@@ -9,6 +9,7 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapedRecipes;
 import net.minecraft.src.ShapelessRecipes;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ExtraSlot;
 import uristqwerty.CraftGuide.api.ItemSlot;
@@ -21,62 +22,103 @@ import uristqwerty.CraftGuide.api.SlotType;
 public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
 	private ItemStack crucible;
-	private ItemStack soulDust;
 	private ItemStack hibachi;
 	private ItemStack bellows;
-	private ItemStack sawDust;
+	private ItemStack soulUrn;
 	private ItemStack urn;
 	private Class unfiredPotteryClass;
 	private Class endStoneClass;
 	private Block aestheticOpaque;
+	private Item soap;
+	private Item potash;
+	private Item sawDust;
+	private Item soulDust;
+	private Item hellfireDust;
+	private Item groundNetherrack;
+	private Item concentratedHellfire;
+
+	private Object[][][] extraMillstoneRecipes;
+	private Object[][][] extraCauldronRecipes;
+	private Object[][][] extraStokedCauldronRecipes;
+	private Object[][][] extraCrucibleRecipes;
+	private Object[][][] extraStokedCrucibleRecipes;
 
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
 		try
 		{
-			aestheticOpaque = (Block)Class.forName("mod_FCBetterThanWolves").getField("fcAestheticOpaque").get(null);
-			crucible = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcCrucible").get(null));
-			bellows = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcBellows").get(null));
-			hibachi = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcBBQ").get(null));
-			soulDust = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcSoulDust").get(null));
-			sawDust = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcSawDust").get(null));
-			urn = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcUrn").get(null));
+			Class btw = Class.forName("mod_FCBetterThanWolves");
+			aestheticOpaque = (Block)btw.getField("fcAestheticOpaque").get(null);
+			crucible = new ItemStack((Block)btw.getField("fcCrucible").get(null));
+			bellows = new ItemStack((Block)btw.getField("fcBellows").get(null));
+			hibachi = new ItemStack((Block)btw.getField("fcBBQ").get(null));
+			soulUrn = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcSoulUrn").get(null));
+			urn = new ItemStack((Item)btw.getField("fcUrn").get(null));
 			unfiredPotteryClass = Class.forName("FCBlockUnfiredPottery");
 			endStoneClass = Class.forName("FCBlockEndStone");
 
+			soap = (Item)btw.getField("fcSoap").get(null);
+			potash = (Item)btw.getField("fcPotash").get(null);
+			sawDust = (Item)btw.getField("fcSawDust").get(null);
+			soulDust = (Item)btw.getField("fcSoulDust").get(null);
+			hellfireDust = (Item)btw.getField("fcHellfireDust").get(null);
+			groundNetherrack = (Item)btw.getField("fcGroundNetherrack").get(null);
+			concentratedHellfire = (Item)btw.getField("fcConcentratedHellfire").get(null);
+
+			/* Setting these to null isn't really needed here, but it means that no
+			 *  extra work is necessary in the future if/when the config settings can
+			 *  be changed in-game. Would also work if BWR is automatically detected
+			 *  on server join, so that if you switch between BWR and non-BWR servers
+			 *  the recipe list can automatically change to be correct for whichever
+			 *  you are currently in. */
+			extraMillstoneRecipes = null;
+			extraCauldronRecipes = null;
+			extraStokedCauldronRecipes = null;
+			extraCrucibleRecipes = null;
+			extraStokedCrucibleRecipes = null;
+
+			if(CraftGuide.insertBetterWithRenewablesRecipes)
+			{
+				addBWRExtraRecipes(btw);
+			}
+
 			Object millstoneRecipes = Class.forName("FCCraftingManagerMillStone").getMethod("getInstance").invoke(null);
-			ItemStack millstone = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcMillStone").get(null));
-			addBulkRecipes(generator, millstoneRecipes, millstone, false);
+			ItemStack millstone = new ItemStack((Block)btw.getField("fcMillStone").get(null));
+			addBulkRecipes(generator, millstoneRecipes, millstone, false, extraMillstoneRecipes);
 
 			Object cauldronRecipes = Class.forName("FCCraftingManagerCauldron").getMethod("getInstance").invoke(null);
-			ItemStack cauldron = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcCauldron").get(null));
-			addBulkRecipes(generator, cauldronRecipes, cauldron, false);
+			ItemStack cauldron = new ItemStack((Block)btw.getField("fcCauldron").get(null));
+			addBulkRecipes(generator, cauldronRecipes, cauldron, false, extraCauldronRecipes);
 
 			Object cauldronStokedRecipes = Class.forName("FCCraftingManagerCauldronStoked").getMethod("getInstance").invoke(null);
-			addBulkRecipes(generator, cauldronStokedRecipes, cauldron, true);
+			addBulkRecipes(generator, cauldronStokedRecipes, cauldron, true, extraStokedCauldronRecipes);
 
 			Object crucibleRecipes = Class.forName("FCCraftingManagerCrucible").getMethod("getInstance").invoke(null);
-			addBulkRecipes(generator, crucibleRecipes, crucible, false);
+			addBulkRecipes(generator, crucibleRecipes, crucible, false, extraCrucibleRecipes);
 
 			Object crucibleStokedRecipes = Class.forName("FCCraftingManagerCrucibleStoked").getMethod("getInstance").invoke(null);
-			addBulkRecipes(generator, crucibleStokedRecipes, crucible, true);
+			addBulkRecipes(generator, crucibleStokedRecipes, crucible, true, extraStokedCrucibleRecipes);
 
 			Object anvilRecipes = Class.forName("FCCraftingManagerAnvil").getMethod("getInstance").invoke(null);
-			ItemStack anvil = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcAnvil").get(null));
+			ItemStack anvil = new ItemStack((Block)btw.getField("fcAnvil").get(null));
 			addAnvilRecipes(generator, anvilRecipes, anvil);
 
-			ItemStack turntable = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcTurntable").get(null));
+			ItemStack turntable = new ItemStack((Block)btw.getField("fcTurntable").get(null));
 			addTurntableRecipes(generator, turntable);
 
-			ItemStack kiln = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcKiln").get(null));
+			ItemStack kiln = new ItemStack((Block)btw.getField("fcKiln").get(null));
 			addKilnRecipes(generator, kiln);
 
-			ItemStack hopper = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcHopper").get(null));
+			ItemStack hopper = new ItemStack((Block)btw.getField("fcHopper").get(null));
 			addHopperRecipes(generator, hopper);
 
-			ItemStack saw = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcSaw").get(null));
+			ItemStack saw = new ItemStack((Block)btw.getField("fcSaw").get(null));
 			addSawRecipes(generator, saw);
+
+			if(CraftGuide.insertBetterWithRenewablesRecipes)
+			{
+			}
 		}
 		catch(IllegalArgumentException e)
 		{
@@ -108,7 +150,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 		}
 	}
 
-	private void addBulkRecipes(RecipeGenerator generator, Object manager, ItemStack block, boolean stoked) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException
+	private void addBulkRecipes(RecipeGenerator generator, Object manager, ItemStack block, boolean stoked, Object[][][] extraRecipes) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException
 	{
 		Field recipes = Class.forName("FCCraftingManagerBulk").getDeclaredField("m_recipes");
 		recipes.setAccessible(true);
@@ -123,6 +165,15 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 			inSize = Math.max(inSize, input.size());
 			outSize = Math.max(outSize, output.size());
+		}
+
+		if(extraRecipes != null)
+		{
+			for(Object[][] recipe: extraRecipes)
+			{
+				inSize = Math.max(inSize, recipe[0].length);
+				outSize = Math.max(outSize, recipe[1].length);
+			}
 		}
 
 		int inColumns = (inSize + 2) / 3;
@@ -181,6 +232,34 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			}
 
 			generator.addRecipe(template, recipeContents);
+		}
+
+		if(extraRecipes != null)
+		{
+			for(Object[][] recipe: extraRecipes)
+			{
+				Object[] recipeContents = new Object[inColumns * 3 + outColumns * 3 + (stoked? 3 : 1)];
+
+				for(int i = 0; i < Math.min(inColumns * 3, recipe[0].length); i++)
+				{
+					recipeContents[i] = recipe[0][i];
+				}
+
+				for(int i = 0; i < Math.min(outColumns * 3, recipe[1].length); i++)
+				{
+					recipeContents[inColumns * 3 + i] = recipe[1][i];
+				}
+
+				recipeContents[inColumns * 3 + outColumns * 3] = block;
+
+				if(stoked)
+				{
+					recipeContents[inColumns * 3 + outColumns * 3 + 1] = hibachi;
+					recipeContents[inColumns * 3 + outColumns * 3 + 2] = bellows;
+				}
+
+				generator.addRecipe(template, recipeContents);
+			}
 		}
 	}
 
@@ -377,19 +456,15 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			};
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, hopper);
-		ItemStack groundNetherrack = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcGroundNetherrack").get(null), 8);
-		ItemStack hellfireDust = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcHellfireDust").get(null), 8);
-		ItemStack soulUrn = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcSoulUrn").get(null));
+		ItemStack groundNetherrackStack = new ItemStack(groundNetherrack, 8);
+		ItemStack hellfireDustStack = new ItemStack(hellfireDust, 8);
 		ItemStack wicker = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcWicker").get(null));
 		ItemStack slowsand = new ItemStack(Block.slowSand);
-		ItemStack soulDustStack = soulDust.copy();
-		ItemStack sawDustStack = sawDust.copy();
-
-		soulDustStack.stackSize = 8;
-		sawDustStack.stackSize = 8;
+		ItemStack soulDustStack = new ItemStack(soulDust, 8);
+		ItemStack sawDustStack = new ItemStack(sawDust, 8);
 
 		addHopperRecipe(generator, template, hopper, wicker, new ItemStack(Block.gravel), null, new ItemStack(Block.sand), new ItemStack(Item.flint));
-		addHopperRecipe(generator, template, hopper, slowsand, groundNetherrack, urn, hellfireDust, soulUrn);
+		addHopperRecipe(generator, template, hopper, slowsand, groundNetherrackStack, urn, hellfireDustStack, soulUrn);
 		addHopperRecipe(generator, template, hopper, slowsand, soulDustStack, urn, sawDustStack, soulUrn);
 	}
 
@@ -415,10 +490,8 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 		ItemStack bloodWood = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcBloodWood").get(null));
 		ItemStack gears = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcGear").get(null));
-		ItemStack soulDustStack = soulDust.copy();
-		ItemStack sawDustStack = sawDust.copy();
-		soulDustStack.stackSize = 2;
-		sawDustStack.stackSize = 2;
+		ItemStack soulDustStack = new ItemStack(soulDust, 2);
+		ItemStack sawDustStack = new ItemStack(sawDust, 2);
 		gears.stackSize = 2;
 
 		Block aestheticNonOpaque = (Block)Class.forName("mod_FCBetterThanWolves").getField("fcAestheticNonOpaque").get(null);
@@ -493,5 +566,137 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 		field.setAccessible(true);
 		return field.get(object);
+	}
+
+	private void addBWRExtraRecipes(Class btw) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
+	{
+		ItemStack dungBlock = new ItemStack(aestheticOpaque, 1, 1);
+		Item dung = (Item)btw.getField("fcDung").get(null);
+		Item scouredLeather = (Item)btw.getField("fcScouredLeather").get(null);
+		Item tannedLeather = (Item)btw.getField("fcTannedLeather").get(null);
+
+		extraMillstoneRecipes = new Object[][][]{
+				addGoldGrindingRecipe(Item.plateGold, 8),
+				addGoldGrindingRecipe(Item.legsGold, 7),
+				addGoldGrindingRecipe(Item.helmetGold, 5),
+				addGoldGrindingRecipe(Item.bootsGold, 4),
+				addGoldGrindingRecipe(Item.axeGold, 3),
+				addGoldGrindingRecipe(Item.pickaxeGold, 3),
+				addGoldGrindingRecipe(Item.swordGold, 2),
+				addGoldGrindingRecipe(Item.hoeGold, 2),
+				addGoldGrindingRecipe(Item.shovelGold, 1),
+
+				{{new ItemStack(concentratedHellfire, 9, -1), new ItemStack(Item.ingotGold, 3, -1)}, {new ItemStack(Item.redstone, 63)}},
+				{{new ItemStack(concentratedHellfire, 1, -1), new ItemStack(Item.goldNugget, 3, -1)}, {new ItemStack(Item.redstone, 7)}},
+				{{new ItemStack(groundNetherrack), new ItemStack(sawDust)}, {new ItemStack(hellfireDust), new ItemStack(soulDust)}},
+				{{new ItemStack(groundNetherrack)}, {new ItemStack(hellfireDust)}},
+		};
+
+		extraStokedCauldronRecipes = new Object[][][]{
+				addDiamondRecoveryRecipe(Item.plateDiamond, 8),
+				addDiamondRecoveryRecipe(Item.legsDiamond, 7),
+				addDiamondRecoveryRecipe(Item.helmetDiamond, 5),
+				addDiamondRecoveryRecipe(Item.bootsDiamond, 4),
+				addDiamondRecoveryRecipe(Item.axeDiamond, 3),
+				addDiamondRecoveryRecipe(Item.pickaxeDiamond, 3),
+				addDiamondRecoveryRecipe(Item.swordDiamond, 2),
+				addDiamondRecoveryRecipe(Item.hoeDiamond, 2),
+				addDiamondRecoveryRecipe(Item.shovelDiamond, 1),
+
+				addLapisRecoveryRecipeA(11, 0, 0, 1),
+				addLapisRecoveryRecipeB(11, 0, 0, 1),
+				addLapisRecoveryRecipeA(3, 0, 0, 2),
+				addLapisRecoveryRecipeB(3, 0, 0, 2),
+				addLapisRecoveryRecipeA(9, 13, 13, 2),
+				addLapisRecoveryRecipeB(9, 13, 13, 2),
+				addLapisRecoveryRecipeA(10, 14, 14, 2),
+				addLapisRecoveryRecipeB(10, 14, 14, 2),
+				addLapisRecoveryRecipeA(2, 6, 14, 4),
+				addLapisRecoveryRecipeB(2, 6, 14, 4),
+
+				{{new ItemStack(Block.sapling, 1, 0)}, {new ItemStack(Block.deadBush)}},
+		};
+
+		extraCauldronRecipes = new Object[][][]{
+				{{new ItemStack(Block.cobblestone), new ItemStack(Item.netherStalkSeeds), new ItemStack(soulDust)}, {new ItemStack(Block.netherrack), new ItemStack(sawDust)}},
+				{{new ItemStack(Block.cobblestone, 8), new ItemStack(Item.netherStalkSeeds, 8), soulUrn}, {new ItemStack(Block.netherrack, 8)}},
+				{{new ItemStack(dung, 9)}, {dungBlock}},
+				{{new ItemStack(scouredLeather, 1, -1), dungBlock}, {new ItemStack(tannedLeather, 1, 0), new ItemStack(dung, 8, 0)}},
+				{{new ItemStack(Item.silk, 3, -1), new ItemStack(Item.slimeBall, 1, -1)}, {new ItemStack(Block.web)}},
+		};
+	}
+
+	private Object[][] addGoldGrindingRecipe(Item item, int number)
+	{
+		return new Object[][]{{new ItemStack(item)}, {new ItemStack(Item.goldNugget, number * 3)}};
+	}
+
+	private Object[][] addDiamondRecoveryRecipe(Item item, int number)
+	{
+		return new Object[][]{
+			{new ItemStack(item), new ItemStack(potash, number * 8), new ItemStack(concentratedHellfire, number * 1)},
+			{new ItemStack(Item.diamond, number)}};
+	}
+
+	private Object[][] addLapisRecoveryRecipeA(int inColor, int outColor1, int outColor2, int quantity)
+	{
+		if(outColor1 == outColor2)
+		{
+			return new Object[][]{
+					{
+						new ItemStack(Block.cloth, quantity * 8, inColor),
+						new ItemStack(soap, quantity * 2, -1),
+						new ItemStack(Item.clay, 1, -1)
+					},
+					{
+						new ItemStack(Item.dyePowder, 1, 4),
+						new ItemStack(Block.cloth, quantity * 8, outColor1),
+					}
+			};
+		}
+		else
+		{
+			return new Object[][]{
+					{
+						new ItemStack(Block.cloth, quantity * 8, inColor),
+						new ItemStack(soap, quantity * 2, -1),
+						new ItemStack(Item.clay, 1, -1)
+					},
+					{
+						new ItemStack(Item.dyePowder, 1, 4),
+						new ItemStack(Block.cloth, quantity * 4, outColor1),
+						new ItemStack(Block.cloth, quantity * 4, outColor2),
+					}
+			};
+		}
+	}
+
+	private Object[][] addLapisRecoveryRecipeB(int inColor, int outColor1, int outColor2, int quantity)
+	{
+		if(outColor1 == outColor2)
+		{
+			return new Object[][]{
+					{
+						new ItemStack(Block.cloth, quantity * 8, inColor),
+						new ItemStack(soap, quantity * 2, -1),
+					},
+					{
+						new ItemStack(Block.cloth, quantity * 8, outColor1),
+					}
+			};
+		}
+		else
+		{
+			return new Object[][]{
+					{
+						new ItemStack(Block.cloth, quantity * 8, inColor),
+						new ItemStack(soap, quantity * 2, -1),
+					},
+					{
+						new ItemStack(Block.cloth, quantity * 4, outColor1),
+						new ItemStack(Block.cloth, quantity * 4, outColor2),
+					}
+			};
+		}
 	}
 }

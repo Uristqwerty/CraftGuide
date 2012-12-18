@@ -163,7 +163,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 					}
 					else
 					{
-						CraftGuideLog.log("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'", true);
+						CraftGuideLog.log("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'", false);
 						destination.getParentFile().mkdirs();
 						destination.createNewFile();
 						FileOutputStream output = new FileOutputStream(destination);

@@ -108,8 +108,8 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 	{
 		if(type != itemSlot.slotType && (
 				type != SlotType.ANY_SLOT ||
-				type == SlotType.DISPLAY_SLOT ||
-				type == SlotType.HIDDEN_SLOT))
+				itemSlot.slotType == SlotType.DISPLAY_SLOT ||
+				itemSlot.slotType == SlotType.HIDDEN_SLOT))
 		{
 			return false;
 		}

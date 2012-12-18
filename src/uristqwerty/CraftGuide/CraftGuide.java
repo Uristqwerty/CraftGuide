@@ -30,6 +30,7 @@ public class CraftGuide
 	public static boolean enableKeybind = true;
 	public static boolean newerBackgroundStyle = false;
 	public static boolean hideMundanePotionRecipes = true;
+	public static boolean insertBetterWithRenewablesRecipes = false;
 
 	private int itemCraftGuideID = 23361;
 
@@ -166,6 +167,7 @@ public class CraftGuide
 		config.setProperty("enableKeybind", Boolean.toString(true));
 		config.setProperty("newerBackgroundStyle", Boolean.toString(false));
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
+		config.setProperty("insertBetterWithRenewablesRecipes", Boolean.toString(false));
 	}
 
 	/**
@@ -246,6 +248,7 @@ public class CraftGuide
 		enableKeybind = Boolean.valueOf(config.getProperty("enableKeybind"));
 		newerBackgroundStyle = Boolean.valueOf(config.getProperty("newerBackgroundStyle"));
 		hideMundanePotionRecipes = Boolean.valueOf(config.getProperty("hideMundanePotionRecipes"));
+		insertBetterWithRenewablesRecipes = Boolean.valueOf(config.getProperty("insertBetterWithRenewablesRecipes"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{
