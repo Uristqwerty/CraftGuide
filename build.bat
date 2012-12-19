@@ -26,11 +26,10 @@ xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build\uristqwerty\CraftG
 xcopy "zip\build" "zip\build-modloader" /S /I /Y
 xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build-modloader" /Y
 
-del "zip\build\uristqwerty\CraftGuide\client\CraftGuideClient_ModLoader.class"
+del "zip\build\uristqwerty\CraftGuide\client\modloader\CraftGuideClient_ModLoader.class"
 
 del "zip\build-modloader\uristqwerty\CraftGuide\CraftGuide_FML.class"
-del "zip\build-modloader\uristqwerty\CraftGuide\client\CraftGuideClient_FML.class"
-del "zip\build-modloader\uristqwerty\CraftGuide\client\CraftGuideKeyHandler.class"
+rmdir /S /Q "zip\build-modloader\uristqwerty\CraftGuide\client\fml"
 del "zip\build-modloader\mcmod.info"
 
 

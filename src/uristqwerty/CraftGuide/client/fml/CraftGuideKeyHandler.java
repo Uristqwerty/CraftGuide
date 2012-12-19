@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.client;
+package uristqwerty.CraftGuide.client.fml;
 
 import java.util.EnumSet;
 

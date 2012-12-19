@@ -209,4 +209,10 @@ public abstract class CraftGuideClient implements CraftGuideSide
 
 		return null;
 	}
+
+	@Override
+	public void initNetworkChannels()
+	{
+		CraftGuide.loaderSide.initClientNetworkChannels();
+	}
 }

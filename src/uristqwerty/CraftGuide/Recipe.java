@@ -18,7 +18,6 @@ import uristqwerty.gui.rendering.Renderable;
 public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 {
 	protected Slot[] slots;
-	protected Renderable[] selection;
 	protected Object[] recipe;
 	private Renderable background;
 	private Renderable backgroundSelected;

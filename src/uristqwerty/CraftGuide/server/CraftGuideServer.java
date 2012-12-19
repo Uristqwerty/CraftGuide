@@ -26,4 +26,9 @@ public class CraftGuideServer implements CraftGuideSide
 	public void openGUI(EntityPlayer player)
 	{
 	}
+
+	@Override
+	public void initNetworkChannels()
+	{
+	}
 }

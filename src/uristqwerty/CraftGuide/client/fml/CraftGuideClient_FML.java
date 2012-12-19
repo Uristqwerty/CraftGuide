@@ -1,9 +1,10 @@
-package uristqwerty.CraftGuide.client;
+package uristqwerty.CraftGuide.client.fml;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ITexturePack;
 import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.client.CraftGuideClient;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 

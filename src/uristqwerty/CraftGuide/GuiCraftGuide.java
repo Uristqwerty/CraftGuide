@@ -510,6 +510,11 @@ public class GuiCraftGuide extends Gui
 	public void initGui()
 	{
 		super.initGui();
-        Keyboard.enableRepeatEvents(true);
+		Keyboard.enableRepeatEvents(true);
+
+		if(CraftGuide.needsRecipeRefresh)
+		{
+			reloadRecipes();
+		}
 	}
 }

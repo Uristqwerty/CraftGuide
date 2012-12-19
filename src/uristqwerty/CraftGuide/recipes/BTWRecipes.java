@@ -78,7 +78,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			extraCrucibleRecipes = null;
 			extraStokedCrucibleRecipes = null;
 
-			if(CraftGuide.insertBetterWithRenewablesRecipes)
+			if(CraftGuide.insertBetterWithRenewablesRecipes || CraftGuide.betterWithRenewablesDetected)
 			{
 				addBWRExtraRecipes(btw);
 			}
@@ -115,10 +115,6 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 			ItemStack saw = new ItemStack((Block)btw.getField("fcSaw").get(null));
 			addSawRecipes(generator, saw);
-
-			if(CraftGuide.insertBetterWithRenewablesRecipes)
-			{
-			}
 		}
 		catch(IllegalArgumentException e)
 		{

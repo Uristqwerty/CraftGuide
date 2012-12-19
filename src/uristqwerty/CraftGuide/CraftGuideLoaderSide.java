@@ -13,4 +13,5 @@ public interface CraftGuideLoaderSide
 	public void addName(Item item, String name);
 	public void logConsole(String text);
 	public void logConsole(String text, Throwable e);
+	public void initClientNetworkChannels();
 }

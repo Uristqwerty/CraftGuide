@@ -42,6 +42,8 @@ public class RecipeCache
 
 	public void reset()
 	{
+		CraftGuide.needsRecipeRefresh = false;
+
 		CraftGuideLog.log("(re)loading recipe list...");
 		Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
 

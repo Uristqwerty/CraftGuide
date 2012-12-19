@@ -32,6 +32,9 @@ public class CraftGuide
 	public static boolean hideMundanePotionRecipes = true;
 	public static boolean insertBetterWithRenewablesRecipes = false;
 
+	public static boolean betterWithRenewablesDetected = false;
+	public static boolean needsRecipeRefresh = false;
+
 	private int itemCraftGuideID = 23361;
 
 	public void preInit()
@@ -95,30 +98,7 @@ public class CraftGuide
 		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
 		loadModRecipes("GregTech_Addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
 
-		if(loaderSide.isModLoaded("mod_RedPowerCore"))
-		{
-			try
-			{
-				CraftGuideLog.log("Trying to load RP2Recipes...", true);
-				Class.forName("RP2Recipes").newInstance();
-				CraftGuideLog.log("   Success!", true);
-			}
-			catch(ClassNotFoundException e)
-			{
-				CraftGuideLog.log("   Failure! ClassNotFoundException", true);
-				CraftGuideLog.log(e);
-			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log("   Failure! InstantiationException", true);
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log("   Failure! IllegalAccessException", true);
-				CraftGuideLog.log(e);
-			}
-		}
+		side.initNetworkChannels();
 	}
 
 	private void loadModRecipes(String modID, String recipeClass)

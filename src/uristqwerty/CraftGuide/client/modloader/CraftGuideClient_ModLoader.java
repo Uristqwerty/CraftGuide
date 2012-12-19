@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.client;
+package uristqwerty.CraftGuide.client.modloader;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
@@ -11,6 +11,7 @@ import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 
 public class CraftGuideClient_ModLoader extends CraftGuideClient

@@ -8,4 +8,5 @@ public interface CraftGuideSide
 	public void preInit();
 	public void reloadRecipes();
 	public void openGUI(EntityPlayer player);
+	public void initNetworkChannels();
 }

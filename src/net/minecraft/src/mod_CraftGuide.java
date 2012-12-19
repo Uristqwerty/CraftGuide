@@ -12,7 +12,7 @@ import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLoaderSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
-import uristqwerty.CraftGuide.client.CraftGuideClient_ModLoader;
+import uristqwerty.CraftGuide.client.modloader.CraftGuideClient_ModLoader;
 
 public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 {
@@ -161,6 +161,36 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 
 	        	break;
 	        }
+		}
+	}
+
+	@Override
+	public void initClientNetworkChannels()
+	{
+		ModLoader.registerPacketChannel(this, "BWR|VC");
+		ModLoader.registerPacketChannel(this, "craftguide");
+	}
+
+	@Override
+	public void clientCustomPayload(NetClientHandler handler, Packet250CustomPayload packet)
+	{
+		if(packet.channel.equals("BWR|VC"))
+		{
+			CraftGuide.betterWithRenewablesDetected = true;
+			CraftGuide.needsRecipeRefresh = true;
+		}
+		else if(packet.channel.equals("craftguide"))
+		{
+		}
+	}
+
+	@Override
+	public void clientDisconnect(NetClientHandler handler)
+	{
+		if(CraftGuide.betterWithRenewablesDetected)
+		{
+			CraftGuide.betterWithRenewablesDetected = false;
+			CraftGuide.needsRecipeRefresh = true;
 		}
 	}
 }

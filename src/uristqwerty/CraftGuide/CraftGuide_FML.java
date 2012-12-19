@@ -79,4 +79,11 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 	{
 		logger.log(Level.WARNING, text, e);
 	}
+
+	@Override
+	public void initClientNetworkChannels()
+	{
+		// TODO Auto-generated method stub
+
+	}
 }
