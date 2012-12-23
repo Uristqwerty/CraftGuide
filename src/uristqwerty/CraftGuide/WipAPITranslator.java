@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ExtraSlot;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.ICraftGuideRecipe;
 import uristqwerty.CraftGuide.WIP_API_DoNotUse.IRecipeGenerator;

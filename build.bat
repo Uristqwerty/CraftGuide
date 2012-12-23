@@ -10,7 +10,8 @@ call build-resources.bat
 cd ..\..
 
 rmdir /S /Q "src\minecraft\net\minecraft\src\CraftGuide"
-rmdir /S /Q "src\minecraft\uristqwerty"
+rmdir /S /Q "src\minecraft\uristqwerty\gui"
+rmdir /S /Q "src\minecraft\uristqwerty\CraftGuide"
 rmdir /S /Q zip\build
 del src\minecraft\net\minecraft\src\mod_CraftGuide.java
 

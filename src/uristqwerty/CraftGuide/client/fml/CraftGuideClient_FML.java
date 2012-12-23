@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide.client.fml;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ITexturePack;
+import net.minecraft.client.texturepacks.ITexturePack;
+import net.minecraft.entity.player.EntityPlayer;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import cpw.mods.fml.client.FMLClientHandler;

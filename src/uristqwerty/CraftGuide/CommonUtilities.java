@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.CraftGuide.api.Util;
@@ -96,7 +96,7 @@ public class CommonUtilities
 	{
 		if(item instanceof ItemStack)
 		{
-			return countItemNames((ItemStack)item);
+			return countItemNames(item);
 		}
 		else if(item instanceof List)
 		{

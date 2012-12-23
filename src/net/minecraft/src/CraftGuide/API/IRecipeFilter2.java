@@ -3,7 +3,7 @@ package net.minecraft.src.CraftGuide.API;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * A more advanced version of {@link IRecipeFilter} which is passed every
@@ -13,7 +13,7 @@ import net.minecraft.src.ItemStack;
  * <br><br>
  * It should also be possible to move recipes between crafting types, or re-order
  * the recipes within a single crafting type.
- * 
+ *
  * @see IRecipeFilter
  */
 public interface IRecipeFilter2

@@ -3,7 +3,7 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.CraftGuideRecipeExtra1;
 import uristqwerty.CraftGuide.api.ItemFilter;

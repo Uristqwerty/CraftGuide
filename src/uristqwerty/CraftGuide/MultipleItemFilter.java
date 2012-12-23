@@ -3,7 +3,7 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Renderer;
@@ -32,7 +32,7 @@ public class MultipleItemFilter implements ItemFilter
 
 		if(stack instanceof ItemStack)
 		{
-			return matches((ItemStack)stack);
+			return matches(stack);
 		}
 		else if(stack instanceof List)
 		{

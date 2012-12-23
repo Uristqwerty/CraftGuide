@@ -1,22 +1,22 @@
 package uristqwerty.CraftGuide;
 
+import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.gui.rendering.Renderable;
 import uristqwerty.gui.rendering.TexturedRect;
 import uristqwerty.gui.texture.Texture;
-import net.minecraft.src.ItemStack;
 
 public class DefaultRecipeTemplate implements RecipeTemplate
 {
 	private Slot[] slots;
 	private Texture backgroundTexture, backgroundSelectedTexture;
 	private Renderable background, backgroundSelected;
-	private int width = 79, height = 58; 
-	
+	private int width = 79, height = 58;
+
 	private ItemStack craftingType;
-	
+
 	public DefaultRecipeTemplate(Slot[] slots, ItemStack craftingType, Texture background, Texture backgroundSelected)
 	{
 		this.slots = slots;
@@ -38,10 +38,10 @@ public class DefaultRecipeTemplate implements RecipeTemplate
 	{
 		this.width = width;
 		this.height = height;
-		
+
 		background = new TexturedRect(0, 0, width, height, backgroundTexture, 0, 0);
 		backgroundSelected = new TexturedRect(0, 0, width, height, backgroundSelectedTexture, 0, 0);
-		
+
 		return this;
 	}
 

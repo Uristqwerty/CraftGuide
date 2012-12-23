@@ -1,9 +1,9 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
- * Provides useful methods to render common things, in 
+ * Provides useful methods to render common things, in
  * {@link ISlot#draw} and {@link ICraftGuideRecipe#draw}.
  */
 public interface IRenderer
@@ -15,7 +15,7 @@ public interface IRenderer
 	 * @param stack
 	 */
 	public void renderItemStack(int x, int y, ItemStack stack);
-	
+
 
 	/**
 	 * Draws a solid color rectangle
@@ -27,7 +27,7 @@ public interface IRenderer
 	 * in the form 0xaarrggbb
 	 */
 	public void renderRect(int x, int y, int width, int height, int color_argb);
-	
+
 
 	/**
 	 * Draws a solid color rectangle
@@ -40,7 +40,7 @@ public interface IRenderer
 	 * @param alpha
 	 */
 	public void renderRect(int x, int y, int width, int height, int color_rgb, int alpha);
-	
+
 	/**
 	 * Draws a solid color rectangle
 	 * @param x
@@ -53,7 +53,7 @@ public interface IRenderer
 	 * @param alpha
 	 */
 	public void renderRect(int x, int y, int width, int height, int red, int green, int blue, int alpha);
-	
+
 	/**
 	 * Draws a rectangle, textured with a NamedTexture obtained from
 	 * {@link Util#getTexture}.
@@ -64,7 +64,7 @@ public interface IRenderer
 	 * @param texture
 	 */
 	public void renderRect(int x, int y, int width, int height, NamedTexture texture);
-	
+
 	/**
 	 * Draws a rectangle, containing a vertical gradient
 	 * <br>
@@ -77,7 +77,7 @@ public interface IRenderer
 	 * @param bottomColor_argb
 	 */
 	public void renderVerticalGradient(int x, int y, int width, int height, int topColor_argb, int bottomColor_argb);
-	
+
 	/**
 	 * Draws a rectangle, containing a horizontal gradient.
 	 * <br>

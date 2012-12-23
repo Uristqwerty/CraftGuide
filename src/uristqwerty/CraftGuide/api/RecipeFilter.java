@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * More advanced than {@link BasicRecipeFilter}, this

@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * Contains a number of methods that implement common functionality
@@ -18,13 +18,13 @@ public abstract class Util
 	 * It is set during CraftGuide's {@literal @PreInit}.
 	 */
 	public static Util instance;
-	
+
 	/**
 	 * Causes CraftGuide to clear its list of recipes, and reload them with
 	 * exactly the same process that was originally used to build the list.
 	 */
 	public abstract void reloadRecipes();
-	
+
 	/**
 	 * Converts the passed ItemStack's name and information into a List
 	 * of Strings for display, similar to how GuiContainer does it.
@@ -39,13 +39,13 @@ public abstract class Util
 	 * @return
 	 */
 	public abstract List<String> getItemStackText(ItemStack stack);
-	
+
 	/**
 	 * Gets a standard {@link ItemFilter} for any of the common types:
 	 * <li>ItemStack
 	 * <li>List of ItemStacks
 	 * <li>String
-	 * 
+	 *
 	 * @param item
 	 * @return
 	 */
@@ -59,15 +59,15 @@ public abstract class Util
 	 * definitions from external text files, to allow for a far more
 	 * advanced ability to re-skin the entire GUI than is normally
 	 * possible from just swapping a texture file.
-	 * 
+	 *
 	 * @param identifier
 	 * @return
 	 */
 	public abstract NamedTexture getTexture(String identifier);
-	
+
 	/**
 	 * Returns the number of partial ticks for this frame. I don't know
-	 * quite what they do, but it's the third parameter to 
+	 * quite what they do, but it's the third parameter to
 	 * {@link net.minecraft.src.GuiScreen#drawScreen}, so I'm assuming
 	 * that at least something needs it. Rather than pass it as an
 	 * extra argument to every drawing method, it is stored at the

@@ -1,6 +1,6 @@
 package net.minecraft.src.CraftGuide.API;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 
 /**

@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * An instance of a single recipe to be displayed by CraftGuide.
@@ -27,7 +27,7 @@ public interface CraftGuideRecipe
 	 * @return
 	 */
 	public boolean containsItem(ItemStack filter);
-	
+
 	/**
 	 * Checks whether this recipe contains an item that matches the
 	 * supplied ItemFilter. Implementations of RecipeFilter may either
@@ -37,7 +37,7 @@ public interface CraftGuideRecipe
 	 * @return
 	 */
 	public boolean containsItem(ItemFilter filter);
-	
+
 	/**
 	 * When a mouse click occurs within the rectangle occupied by this recipe,
 	 * this method is used to determine if the current ItemFilter should be
@@ -49,7 +49,7 @@ public interface CraftGuideRecipe
 	 * @return a new ItemFilter, or null to keep the current one
 	 */
 	public ItemFilter getRecipeClickedResult(int x, int y);
-	
+
 	/**
 	 * Draws this recipe at the specified screen coordinates. If isMouseOver
 	 * is true, mouseX and moyseY are the coordinates of the user's curosr,
@@ -64,7 +64,7 @@ public interface CraftGuideRecipe
 	 * @param mouseY
 	 */
 	public void draw(Renderer renderer, int x, int y, boolean isMouseOver, int mouseX, int mouseY);
-	
+
 	/**
 	 * Called to get the text to display when the user moves their cursor
 	 * over this recipe. Generally, and in the default recipe implementation,
@@ -75,25 +75,25 @@ public interface CraftGuideRecipe
 	 * @return a List of Strings, or null
 	 */
 	public List<String> getItemText(int mouseX, int mouseY);
-	
+
 	/**
 	 * Gets an array of Objects, representing the contents of this recipe.
 	 * <br><br>
 	 * Currently used by craftGuide to create a list of every type of item
 	 * that is used (CraftGuide does not have any logic for finding items
-	 * on its own). Some recipe filters may use this, although 
+	 * on its own). Some recipe filters may use this, although
 	 * {@link containsItem} is preferred wherever possible.
 	 * @return
 	 */
 	public Object[] getItems();
-	
+
 	/**
 	 * Gets the width of this recipe; used to determine grid spacing and
 	 * if the cursor is currently positioned over this recipe
 	 * @return
 	 */
 	public int width();
-	
+
 	/**
 	 * Gets the height of this recipe; used to determine grid spacing and
 	 * if the cursor is currently positioned over this recipe

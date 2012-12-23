@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.InvocationTargetException;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
 public class IC2GeneratorFuel implements StackInfoSource

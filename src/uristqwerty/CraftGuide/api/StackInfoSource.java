@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.api;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 public interface StackInfoSource
 {

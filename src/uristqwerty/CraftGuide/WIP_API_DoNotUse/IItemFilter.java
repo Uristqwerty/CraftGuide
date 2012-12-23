@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 public interface IItemFilter
 {

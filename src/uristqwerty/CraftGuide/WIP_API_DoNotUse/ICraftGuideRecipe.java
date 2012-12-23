@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * Contains a number of methods that allow instances of {@link IRecipeFilter} and

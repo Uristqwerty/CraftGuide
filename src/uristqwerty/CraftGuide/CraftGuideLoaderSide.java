@@ -2,8 +2,8 @@ package uristqwerty.CraftGuide;
 
 import java.io.File;
 
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public interface CraftGuideLoaderSide
 {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 public class CraftType implements Comparable<CraftType>
 {
@@ -12,14 +12,14 @@ public class CraftType implements Comparable<CraftType>
 	private static Map<ArrayList, CraftType> arrayListCache = new HashMap<ArrayList, CraftType>();
 	private int item, damage;
 	private Object stack;
-	
+
 	private CraftType(int itemID, int itemDamage)
 	{
 		item = itemID;
 		damage = itemDamage;
 		stack = new ItemStack(item, 1, damage);
 	}
-	
+
 	private CraftType(ArrayList<ItemStack> items)
 	{
 		ItemStack itemStack = items.get(0);
@@ -27,7 +27,7 @@ public class CraftType implements Comparable<CraftType>
 		damage = itemStack.getItemDamage();
 		stack = items;
 	}
-	
+
 	public static CraftType getInstance(Object stack)
 	{
 		if(stack instanceof ItemStack)
@@ -43,7 +43,7 @@ public class CraftType implements Comparable<CraftType>
 			return null;
 		}
 	}
-	
+
 	private static CraftType getInstance(ArrayList stack)
 	{
 		CraftType type = arrayListCache.get(stack);
@@ -53,28 +53,28 @@ public class CraftType implements Comparable<CraftType>
 			type = new CraftType(stack);
 			arrayListCache.put(stack, type);
 		}
-		
+
 		return type;
 	}
 
 	private static CraftType getInstance(ItemStack stack)
 	{
 		Map<Integer, CraftType> map = cache.get(stack.itemID);
-		
+
 		if(map == null)
 		{
 			map = new HashMap<Integer, CraftType>();
 			cache.put(stack.itemID, map);
 		}
-		
+
 		CraftType type = map.get(stack.getItemDamage());
-		
+
 		if(type == null)
 		{
 			type = new CraftType(stack.itemID, stack.getItemDamage());
 			map.put(stack.getItemDamage(), type);
 		}
-		
+
 		return type;
 	}
 
@@ -84,7 +84,7 @@ public class CraftType implements Comparable<CraftType>
 		{
 			return false;
 		}
-		
+
 		return cache.get(stack.itemID).containsKey(stack.getItemDamage());
 	}
 
@@ -103,7 +103,7 @@ public class CraftType implements Comparable<CraftType>
 		{
 			return (this.stack instanceof ArrayList)? -1 : 1;
 		}
-		
+
 		return 0;
 	}
 
@@ -127,7 +127,7 @@ public class CraftType implements Comparable<CraftType>
 				return false;
 			}
 		}
-		
+
 		return super.equals(obj);
 	}
 

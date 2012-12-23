@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
 import java.util.List;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * Contains a number of methods that implement common functionality
@@ -18,7 +18,7 @@ public abstract class Util
 	 * It is set during CraftGuide's {@literal @PreInit}.
 	 */
 	public static Util instance;
-	
+
 	/**
 	 * Converts the passed ItemStack's name and information into a List
 	 * of Strings for display, similar to how GuiContainer does it.
@@ -33,13 +33,13 @@ public abstract class Util
 	 * @return
 	 */
 	public abstract List<String> getItemStackText(ItemStack stack);
-	
+
 	/**
 	 * Gets a standard {@link IItemFilter} for any of the common types:
 	 * <li>ItemStack
 	 * <li>List of ItemStacks
 	 * <li>String
-	 * 
+	 *
 	 * @param item
 	 * @return
 	 */
@@ -53,7 +53,7 @@ public abstract class Util
 	 * definitions from external text files, to allow for a far more
 	 * advanced ability to re-skin the entire GUI than is normally
 	 * possible from just swapping a texture file.
-	 * 
+	 *
 	 * @param identifier
 	 * @return
 	 */

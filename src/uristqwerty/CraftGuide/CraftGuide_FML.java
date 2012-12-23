@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -22,7 +22,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 {
 	private static Logger logger = Logger.getLogger("CraftGuide");
 
-	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.CraftGuideClient_FML",
+	@SidedProxy(clientSide = "uristqwerty.CraftGuide.client.fml.CraftGuideClient_FML",
 				serverSide = "uristqwerty.CraftGuide.server.CraftGuideServer")
 	public static CraftGuideSide side;
 

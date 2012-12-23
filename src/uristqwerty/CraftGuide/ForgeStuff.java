@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide;
 
 import java.util.List;
 
-import net.minecraft.src.IRecipe;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;

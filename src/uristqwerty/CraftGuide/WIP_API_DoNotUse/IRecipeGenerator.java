@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 
 /**
  * This interface contains methods that can be used to provide CraftGuide with
@@ -26,19 +27,19 @@ public interface IRecipeGenerator
 	 * @return
 	 */
 	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType);
-	
+
 	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
 	public IRecipeTemplate createRecipeTemplate(ISlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
 
 	@Deprecated
 	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
-	
+
 	@Deprecated
 	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, String backgroundSelectedTexture, int backgroundSelectedX, int backgroundSelectedY);
 
 	public void addRecipe(IRecipeTemplate template, Object[] crafting);
 	public void addRecipe(ICraftGuideRecipe recipe, ItemStack craftingType);
-	
+
 	/**
 	 * Sets whether a certain type of recipe is initially visible.
 	 * <br><br>
@@ -49,7 +50,7 @@ public interface IRecipeGenerator
 	 * @param visible whether it is initially visible or not
 	 */
 	public void setDefaultTypeVisibility(ItemStack type, boolean visible);
-	
+
 	/**
 	 * Takes an IRecipe, and returns an array representing a
 	 * 3x3 crafting grid, plus a single output, for that recipe's
@@ -64,8 +65,8 @@ public interface IRecipeGenerator
 	 * @return an Object[10], where the first nine elements form
 	 * the 3x3 input grid, and the last element is the recipe output.
 	 */
-	public Object[] getCraftingRecipe(net.minecraft.src.IRecipe recipe);
-	
+	public Object[] getCraftingRecipe(IRecipe recipe);
+
 	/**
 	 * Takes an IRecipe, and returns an array representing a
 	 * 3x3 or 2x2 crafting grid, plus a single output.
@@ -77,5 +78,5 @@ public interface IRecipeGenerator
 	 * 		the recipe fits in a 2x2 grid.
 	 * @return an Object[10] or an Object[5]
 	 */
-	public Object[] getCraftingRecipe(net.minecraft.src.IRecipe recipe, boolean allowSmallGrid);
+	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid);
 }

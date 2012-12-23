@@ -1,10 +1,7 @@
 package uristqwerty.CraftGuide.api;
 
-import uristqwerty.CraftGuide.api.CraftGuideRecipe;
-import uristqwerty.CraftGuide.api.RecipeTemplate;
-import uristqwerty.CraftGuide.api.Slot;
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 
 /**
  * This interface contains methods that can be used to provide CraftGuide with
@@ -30,7 +27,7 @@ public interface RecipeGenerator
 	 * @return
 	 */
 	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType);
-	
+
 	/**
 	 * Creates a {@link RecipeTemplate} for the provided ISlot[],
 	 * associated with the provided crafting type. The background is
@@ -45,7 +42,7 @@ public interface RecipeGenerator
 	 * @param backgroundSelectedY
 	 * @return
 	 */
-	
+
 	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
 	/**
 	 * Creates a {@link RecipeTemplate} for the provided ISlot[],
@@ -72,7 +69,7 @@ public interface RecipeGenerator
 	 * @param crafting
 	 */
 	public void addRecipe(RecipeTemplate template, Object[] crafting);
-	
+
 	/**
 	 * If you have your own recipe implementation, you can use this
 	 * method to add recipes without needing a RecipeTemplate.
@@ -80,7 +77,7 @@ public interface RecipeGenerator
 	 * @param craftingType
 	 */
 	public void addRecipe(CraftGuideRecipe recipe, ItemStack craftingType);
-	
+
 	/**
 	 * Sets whether a certain type of recipe is initially visible.
 	 * <br><br>
@@ -91,7 +88,7 @@ public interface RecipeGenerator
 	 * @param visible whether it is initially visible or not
 	 */
 	public void setDefaultTypeVisibility(ItemStack type, boolean visible);
-	
+
 	/**
 	 * Takes an IRecipe, and returns an array representing a
 	 * 3x3 crafting grid, plus a single output, for that recipe's
@@ -107,7 +104,7 @@ public interface RecipeGenerator
 	 * the 3x3 input grid, and the last element is the recipe output.
 	 */
 	public Object[] getCraftingRecipe(IRecipe recipe);
-	
+
 	/**
 	 * Takes an IRecipe, and returns an array representing a
 	 * 3x3 or 2x2 crafting grid, plus a single output.

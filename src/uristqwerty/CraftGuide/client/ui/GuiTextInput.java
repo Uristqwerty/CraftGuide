@@ -3,7 +3,7 @@ package uristqwerty.CraftGuide.client.ui;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.src.FontRenderer;
+import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.input.Keyboard;
 

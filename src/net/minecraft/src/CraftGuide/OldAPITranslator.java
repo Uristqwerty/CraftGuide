@@ -1,7 +1,7 @@
 package net.minecraft.src.CraftGuide;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.ItemStack;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 import net.minecraft.src.CraftGuide.API.IRecipeGenerator;
 import net.minecraft.src.CraftGuide.API.IRecipeProvider;
@@ -15,7 +15,7 @@ public class OldAPITranslator implements IRecipeGenerator
 {
 	private RecipeGeneratorImplementation actualGenerator;
 	private static ItemStack workbench = new ItemStack(Block.workbench);
-	
+
 	public OldAPITranslator(RecipeGeneratorImplementation generator)
 	{
 		actualGenerator = generator;
@@ -65,7 +65,7 @@ public class OldAPITranslator implements IRecipeGenerator
 				backgroundTexture, backgroundX, backgroundY,
 				backgroundTexture, backgroundSelectedX, backgroundSelectedY);
 	}
-	
+
 	@Override
 	public IRecipeTemplate createRecipeTemplate(ItemSlot[] slots,
 		String backgroundTexture, int backgroundX, int backgroundY,

@@ -1,11 +1,11 @@
 package uristqwerty.CraftGuide.client.modloader;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ITexturePack;
+import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.texturepacks.ITexturePack;
+import net.minecraft.client.texturepacks.TexturePackList;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.RenderEngine;
-import net.minecraft.src.TexturePackList;
 import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;

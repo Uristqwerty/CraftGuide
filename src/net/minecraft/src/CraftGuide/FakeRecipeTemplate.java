@@ -1,12 +1,12 @@
 package net.minecraft.src.CraftGuide;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.api.ExtraSlot;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.gui.texture.Texture;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.CraftGuide.API.IRecipeTemplateResizable;
 
 public class FakeRecipeTemplate implements IRecipeTemplateResizable
 {
@@ -24,27 +24,27 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 	{
 		ItemSlot[] slots = new ItemSlot[oldSlots.length];
 		boolean needMapping = false;
-		
+
 		for(int i = 0; i < slots.length; i++)
 		{
 			if(oldSlots[i].index != i)
 			{
 				needMapping = true;
 			}
-			
+
 			slots[i] = convertSlot(oldSlots[i]);
 		}
-		
+
 		if(needMapping)
 		{
 			slotMapping = new int[oldSlots.length];
-			
+
 			for(int i = 0; i < oldSlots.length; i++)
 			{
 				slotMapping[i] = oldSlots[i].index;
 			}
 		}
-		
+
 		return slots;
 	}
 
@@ -95,9 +95,9 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 		{
 			return items;
 		}
-		
+
 		Object[] result = new Object[slotMapping.length];
-		
+
 		for(int i = 0; i < slotMapping.length; i++)
 		{
 			if(slotMapping[i] != -1)
@@ -105,7 +105,7 @@ public class FakeRecipeTemplate implements IRecipeTemplateResizable
 				result[i] = items[slotMapping[i]];
 			}
 		}
-		
+
 		return result;
 	}
 }

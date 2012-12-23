@@ -3,6 +3,15 @@ package net.minecraft.src;
 import java.io.File;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet250CustomPayload;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -186,6 +195,16 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 
 	@Override
 	public void clientDisconnect(NetClientHandler handler)
+	{
+		if(CraftGuide.betterWithRenewablesDetected)
+		{
+			CraftGuide.betterWithRenewablesDetected = false;
+			CraftGuide.needsRecipeRefresh = true;
+		}
+	}
+
+	@Override
+	public void clientConnect(NetClientHandler handler)
 	{
 		if(CraftGuide.betterWithRenewablesDetected)
 		{

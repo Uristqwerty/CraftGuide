@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 

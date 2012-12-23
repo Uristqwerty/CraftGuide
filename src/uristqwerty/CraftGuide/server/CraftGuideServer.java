@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.server;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import uristqwerty.CraftGuide.CraftGuideSide;
 import uristqwerty.CraftGuide.api.Util;
 

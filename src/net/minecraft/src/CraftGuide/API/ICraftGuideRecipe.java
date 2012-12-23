@@ -1,6 +1,6 @@
 package net.minecraft.src.CraftGuide.API;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.item.ItemStack;
 
 /**
  * Contains a number of methods that allow instances of {@link IRecipeFilter} and
@@ -17,7 +17,7 @@ public interface ICraftGuideRecipe
 	 * When a recipe is rendered, the ItemSlots provided to the template are
 	 * used to determine the layout of the recipe's items.
 	 */
-	
+
 	public class ItemSlot
 	{
 		public int x, y, width, height, index;
@@ -27,7 +27,7 @@ public interface ICraftGuideRecipe
 		{
 			this(x, y, width, height, index, false);
 		}
-		
+
 		public ItemSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
 		{
 			this.x = x;
@@ -38,10 +38,10 @@ public interface ICraftGuideRecipe
 			this.drawQuantity = drawQuantity;
 		}
 	}
-	
+
 	public ItemStack getItem(int index);
 	public ItemSlot getSlotUnderMouse(int x, int y);
-	
+
 	public boolean containsItem(ItemStack filter);
 	public boolean containsItem(ItemStack filter, boolean exactMatch);
 	public ItemStack[] getItems();
