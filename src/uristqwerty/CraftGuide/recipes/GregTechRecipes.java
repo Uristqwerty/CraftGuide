@@ -27,7 +27,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Object instance = gregTechClass.getField("instance").get(null);
 			Block machine = ((Block[])gregTechClass.getField("mBlocks").get(instance))[1];
 
-			Class recipeClass = Class.forName("gregtechmod.common.GT_Recipe");
+			Class recipeClass = Class.forName("gregtechmod.api.GT_Recipe");
 
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 1),
@@ -49,24 +49,15 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 29),
 					(ArrayList)recipeClass.getField("sBlastRecipes").get(null),
 					2, 2, -1, false, "\u00a77  Required temperature: %1$d");
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 31),
+					(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
+					2, 2, -1, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 32),
+					(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
+					2, 3, -1, false, null);
 
-			try
-			{
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 31),
-						(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
-						2, 2, -1, false, null);
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 32),
-						(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
-						2, 3, -1, false, null);
-			}
-			catch(NoSuchFieldException e)
-			{
-				/* Older Gregtech versions may not have implosion or sawmill recipes.
-				 * TODO: Remove this catch after a Minecraft update.
-				 */
-			}
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -161,7 +152,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
 
-		Class recipeClass = Class.forName("gregtechmod.common.GT_Recipe");
+		Class recipeClass = Class.forName("gregtechmod.api.GT_Recipe");
 		Field eutField = recipeClass.getField("mEUt");
 		Field durationField = recipeClass.getField("mDuration");
 		Field extraField = recipeClass.getField("mStartEU");

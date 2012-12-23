@@ -58,7 +58,7 @@ public class IC2Power implements StackInfoSource
 	{
 		try
 		{
-			suBatteryID = ((ItemStack)Class.forName("ic2.common.Ic2Items").getField("suBattery").get(null)).itemID;
+			suBatteryID = ((ItemStack)Class.forName("ic2.core.Ic2Items").getField("suBattery").get(null)).itemID;
 			electricItem = Class.forName("ic2.api.IElectricItem");
 			getMaxCharge = electricItem.getMethod("getMaxCharge");
 		}

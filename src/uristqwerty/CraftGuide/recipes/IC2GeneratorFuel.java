@@ -12,11 +12,11 @@ public class IC2GeneratorFuel implements StackInfoSource
 	{
 		try
 		{
-			int fuel = (Integer)Class.forName("ic2.common.TileEntityIronFurnace").getMethod("getFuelValueFor", ItemStack.class).invoke(null, itemStack);
+			int fuel = (Integer)Class.forName("ic2.core.block.machine.tileentity.TileEntityIronFurnace").getMethod("getFuelValueFor", ItemStack.class).invoke(null, itemStack);
 
 			if(fuel > 0)
 			{
-				int generation = (Integer)Class.forName("ic2.common.IC2").getField("energyGeneratorBase").get(null);
+				int generation = (Integer)Class.forName("ic2.core.IC2").getField("energyGeneratorBase").get(null);
 
 				return "\u00a77" + ((fuel / 4) * generation) + " EU in an IndustrialCraft generator";
 			}

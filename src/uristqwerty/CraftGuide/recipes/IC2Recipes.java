@@ -41,25 +41,25 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 	{
 		try
 		{
-			Class itemClass = Class.forName("ic2.common.Ic2Items");
+			Class itemClass = Class.forName("ic2.core.Ic2Items");
 
 			addCraftingRecipes(generator);
 
 			addMachineRecipes(generator,
 					(ItemStack)itemClass.getField("macerator").get(null),
-					(List)Class.forName("ic2.common.TileEntityMacerator").getField("recipes").get(null));
+					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityMacerator").getField("recipes").get(null));
 
 			addMachineRecipes(generator,
 					(ItemStack)itemClass.getField("compressor").get(null),
-					(List)Class.forName("ic2.common.TileEntityCompressor").getField("recipes").get(null));
+					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityCompressor").getField("recipes").get(null));
 
 			addMachineRecipes(generator,
 					(ItemStack)itemClass.getField("extractor").get(null),
-					(List)Class.forName("ic2.common.TileEntityExtractor").getField("recipes").get(null));
+					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityExtractor").getField("recipes").get(null));
 
 			addScrapboxOutput(generator,
 					(ItemStack)itemClass.getField("scrapBox").get(null),
-					(List)Class.forName("ic2.common.ItemScrapbox").getField("dropList").get(null));
+					(List)Class.forName("ic2.core.item.ItemScrapbox").getField("dropList").get(null));
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -93,13 +93,13 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
 	{
-		Class advancedRecipe = Class.forName("ic2.common.AdvRecipe");
+		Class advancedRecipe = Class.forName("ic2.core.AdvRecipe");
 		Method canShow = advancedRecipe.getMethod("canShow", advancedRecipe);
 		Field outputField = advancedRecipe.getField("output");
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
 
-		Class shapelessRecipe = Class.forName("ic2.common.AdvShapelessRecipe");
+		Class shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
 		Method canShowShapeless = advancedRecipe.getMethod("canShow", shapelessRecipe);
 		Field shapelessInput = shapelessRecipe.getField("input");
 		Field shapelessOutput = shapelessRecipe.getField("output");
@@ -309,7 +309,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
 
-		Class dropClass = Class.forName("ic2.common.ItemScrapbox$Drop");
+		Class dropClass = Class.forName("ic2.core.item.ItemScrapbox$Drop");
 		Field stackField = dropClass.getDeclaredField("itemStack");
 		Field chanceField = dropClass.getDeclaredField("upperChanceBound");
 		stackField.setAccessible(true);
