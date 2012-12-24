@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * This interface contains methods that can be used to provide CraftGuide with
  * crafting recipes.
  * <br><br>
@@ -16,6 +18,7 @@ import net.minecraft.item.crafting.IRecipe;
  * corresponding to the ItemSlot[] provided when creating the template.
  */
 
+@Deprecated
 public interface IRecipeGenerator
 {
 	/**

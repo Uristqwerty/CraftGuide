@@ -3,6 +3,8 @@ package net.minecraft.src.CraftGuide.API;
 import net.minecraft.item.ItemStack;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * Contains a number of methods that allow instances of {@link IRecipeFilter} and
  * {@link IRecipeFilter2} to determine what items a recipe contains.
  * <br><br>
@@ -11,6 +13,7 @@ import net.minecraft.item.ItemStack;
  * really shouldn't be a part of this interface at all).
  */
 
+@Deprecated
 public interface ICraftGuideRecipe
 {
 	/**

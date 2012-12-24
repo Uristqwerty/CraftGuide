@@ -3,9 +3,12 @@ package uristqwerty.CraftGuide.WIP_API_DoNotUse;
 import net.minecraft.item.ItemStack;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * Provides useful methods to render common things, in
  * {@link ISlot#draw} and {@link ICraftGuideRecipe#draw}.
  */
+@Deprecated
 public interface IRenderer
 {
 	/**

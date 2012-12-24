@@ -11,6 +11,7 @@ import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.gui.minecraft.Image;
 import uristqwerty.gui.texture.TextureClip;
 
+@Deprecated
 public class OldAPITranslator implements IRecipeGenerator
 {
 	private RecipeGeneratorImplementation actualGenerator;

@@ -5,6 +5,11 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.SlotType;
 
+/**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ */
+
+@Deprecated
 public class ExtraSlot extends ItemSlot
 {
 	public Object displayed;

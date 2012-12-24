@@ -5,6 +5,7 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.CraftGuide;
 
+@Deprecated
 public class ReflectionAPI
 {
 	public static List<Object> APIObjects = new LinkedList<Object>();

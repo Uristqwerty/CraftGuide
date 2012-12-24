@@ -5,15 +5,19 @@ import java.util.List;
 import uristqwerty.CraftGuide.api.SlotType;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * When a recipe is rendered, the ItemSlots provided to the template are
  * used to determine the layout of the recipe's items.
  */
+
+@Deprecated
 public class ItemSlot implements ISlot
 {
 	public int x, y, width, height;
 	public boolean drawQuantity, drawBackground;
 	public SlotType slotType = SlotType.INPUT_SLOT;
-	
+
 	public static IItemSlotImplementation implementation;
 
 	@Deprecated
@@ -27,12 +31,12 @@ public class ItemSlot implements ISlot
 	{
 		this(x, y, width, height, drawQuantity);
 	}
-	
+
 	public ItemSlot(int x, int y, int width, int height)
 	{
 		this(x, y, width, height, false);
 	}
-	
+
 	public ItemSlot(int x, int y, int width, int height, boolean drawQuantity)
 	{
 		this.x = x;
@@ -71,18 +75,18 @@ public class ItemSlot implements ISlot
 	{
 		return implementation.getClickedFilter(x, y, data[dataIndex]);
 	}
-	
+
 	public ItemSlot drawOwnBackground(boolean draw)
 	{
 		drawBackground = draw;
 		return this;
 	}
-	
+
 	public ItemSlot drawOwnBackground()
 	{
 		return drawOwnBackground(true);
 	}
-	
+
 	/**
 	 * Sets the {@link SlotType} associated with this ItemSlot.
 	 * The SlotType is used for searches, both from in-game, and

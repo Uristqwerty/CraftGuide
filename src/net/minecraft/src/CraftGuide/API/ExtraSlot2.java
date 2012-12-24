@@ -2,6 +2,11 @@ package net.minecraft.src.CraftGuide.API;
 
 import net.minecraft.item.ItemStack;
 
+/**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ */
+
+@Deprecated
 public class ExtraSlot2 extends ExtraSlot
 {
 	public boolean showName = false, canClick = false, canFilter = false;

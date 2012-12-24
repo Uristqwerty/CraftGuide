@@ -5,11 +5,15 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * Contains a number of methods that implement common functionality
  * that would otherwise need to be implemented by everyone who uses
  * the API, or that relies on parts of CraftGuide not included in
  * the API.
  */
+
+@Deprecated
 public abstract class Util
 {
 	/**

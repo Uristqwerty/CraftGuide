@@ -6,6 +6,8 @@ import java.util.Map;
 import net.minecraft.item.ItemStack;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * A more advanced version of {@link IRecipeFilter} which is passed every
  * type of recipe at once. This allows for more advanced comparisons, such
  * as taking into consideration the type of recipe (smelting, brewing, something
@@ -16,6 +18,8 @@ import net.minecraft.item.ItemStack;
  *
  * @see IRecipeFilter
  */
+
+@Deprecated
 public interface IRecipeFilter2
 {
 	Map<ItemStack, List<ICraftGuideRecipe>> removeRecipes(Map<ItemStack, List<ICraftGuideRecipe>> allRecipes);

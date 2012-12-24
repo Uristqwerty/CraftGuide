@@ -8,6 +8,7 @@ import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.gui.texture.Texture;
 
+@Deprecated
 public class FakeRecipeTemplate implements IRecipeTemplateResizable
 {
 	private DefaultRecipeTemplate actualTemplate;

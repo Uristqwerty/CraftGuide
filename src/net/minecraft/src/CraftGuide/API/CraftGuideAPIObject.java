@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ *
  * Uses reflection to register itself with CraftGuide when created.
  * <br><br>
  * You do not need to use this class, it is provided only for convenience,
@@ -16,6 +18,7 @@ import java.lang.reflect.Method;
  * </ul>
  */
 
+@Deprecated
 public class CraftGuideAPIObject
 {
 	public CraftGuideAPIObject()
@@ -23,7 +26,7 @@ public class CraftGuideAPIObject
 		try
 		{
 			Class c= Class.forName("net.minecraft.src.CraftGuide.ReflectionAPI");
-			
+
 			Method m = c.getMethod("registerAPIObject", Object.class);
 			m.invoke(null, this);
 		}

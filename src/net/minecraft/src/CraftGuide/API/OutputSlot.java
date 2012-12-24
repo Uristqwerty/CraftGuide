@@ -2,6 +2,11 @@ package net.minecraft.src.CraftGuide.API;
 
 import net.minecraft.src.CraftGuide.API.ICraftGuideRecipe.ItemSlot;
 
+/**
+ * WARNING: This class will be removed for the Minecraft 1.5 update!<br><br>
+ */
+
+@Deprecated
 public class OutputSlot extends ItemSlot
 {
 	public OutputSlot(int x, int y, int width, int height, int index, boolean drawQuantity)
