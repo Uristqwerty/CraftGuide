@@ -32,7 +32,7 @@ public class MultipleItemFilter implements ItemFilter
 
 		if(stack instanceof ItemStack)
 		{
-			return matches(stack);
+			return matches((ItemStack)stack);
 		}
 		else if(stack instanceof List)
 		{

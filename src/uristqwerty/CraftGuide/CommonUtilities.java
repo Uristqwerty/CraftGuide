@@ -96,7 +96,7 @@ public class CommonUtilities
 	{
 		if(item instanceof ItemStack)
 		{
-			return countItemNames(item);
+			return countItemNames((ItemStack)item);
 		}
 		else if(item instanceof List)
 		{
