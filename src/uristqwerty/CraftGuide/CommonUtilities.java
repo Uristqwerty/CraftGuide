@@ -120,9 +120,11 @@ public class CommonUtilities
 
 		if(item instanceof ItemStack || (item instanceof List && ((List)item).get(0) instanceof ItemStack))
 		{
+			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0);
+
 			for(StackInfoSource infoSource: StackInfo.sources)
 			{
-				String info = infoSource.getInfo(item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0));
+				String info = infoSource.getInfo(stack);
 
 				if(info != null)
 				{
@@ -138,6 +140,19 @@ public class CommonUtilities
 		}
 
 		return text;
+	}
+
+	public static boolean searchExtendedItemStackText(Object item, String text)
+	{
+		for(String line: getExtendedItemStackText(item))
+		{
+			if(line != null && line.toLowerCase().contains(text))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static List<String> getItemStackText(Object item)

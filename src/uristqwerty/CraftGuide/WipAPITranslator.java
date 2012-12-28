@@ -28,6 +28,7 @@ import uristqwerty.gui.texture.TextureClip;
  * Load recipes from mods that interact with the WIP API, and convert them to the
  * current one.
  */
+@Deprecated
 public class WipAPITranslator implements IRecipeGenerator
 {
 	private Texture defaultBackground = new BlankTexture();

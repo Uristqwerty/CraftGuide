@@ -442,14 +442,14 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		{
 			try
 			{
-				return stack.getTooltip(minecraft.thePlayer, minecraft.gameSettings.advancedItemTooltips);
+				return getTooltip(stack);
 			}
 			catch(Exception e)
 			{
 				try
 				{
 					stack = fixedItemStack(stack);
-					return stack.getTooltip(minecraft.thePlayer, minecraft.gameSettings.advancedItemTooltips);
+					return getTooltip(stack);
 				}
 				catch(Exception e2)
 				{
@@ -460,6 +460,64 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		List<String> list = new ArrayList<String>();
 		list.add("Err: Item #" + stack.itemID + ", damage " + stack.getItemDamage());
+		return list;
+	}
+
+	/*
+	 * Profiling shows that the main cost of ItemStack.getTooltip is, when
+	 *  advanced tooltips is enabled, parsing the format strings.
+	 *
+	 * This wouldn't be worth avoiding, except for the fact that it may be
+	 *  called a lot during a text search, especially searching the item
+	 *  list (since it re-searches after each character).
+	 */
+	private List<String> getTooltip(ItemStack stack)
+	{
+		List<String> list = stack.getTooltip(minecraft.thePlayer, false);
+
+		if(minecraft.gameSettings.advancedItemTooltips)
+		{
+			String name = list.get(0);
+			StringBuilder builder = new StringBuilder();
+
+			if(name.length() > 0)
+			{
+				builder.append(name);
+				builder.append(" (#");
+			}
+
+			if(stack.itemID < 1000)
+			{
+				if(stack.itemID >= 100)
+				{
+					builder.append("0");
+				}
+				else if(stack.itemID >= 10)
+				{
+					builder.append("00");
+				}
+				else
+				{
+					builder.append("000");
+				}
+			}
+
+			builder.append(stack.itemID);
+
+			if(stack.getHasSubtypes())
+			{
+				builder.append("/");
+				builder.append(stack.getItemDamage());
+			}
+
+			if(name.length() > 0)
+			{
+				builder.append(")");
+			}
+
+			list.set(0, builder.toString());
+		}
+
 		return list;
 	}
 }

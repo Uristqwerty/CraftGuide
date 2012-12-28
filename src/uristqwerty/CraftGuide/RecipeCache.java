@@ -22,6 +22,7 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
 
+@SuppressWarnings("deprecation")
 public class RecipeCache
 {
 	private SortedSet<CraftType> craftingTypes = new TreeSet<CraftType>();

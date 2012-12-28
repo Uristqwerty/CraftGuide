@@ -1,6 +1,9 @@
 package uristqwerty.CraftGuide.recipes;
 
-import java.lang.reflect.InvocationTargetException;
+import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfoSource;
@@ -12,7 +15,15 @@ public class IC2GeneratorFuel implements StackInfoSource
 	{
 		try
 		{
-			int fuel = (Integer)Class.forName("ic2.core.block.machine.tileentity.TileEntityIronFurnace").getMethod("getFuelValueFor", ItemStack.class).invoke(null, itemStack);
+			int fuel;
+			if(itemStack.hasTagCompound())
+			{
+				fuel = TileEntityIronFurnace.getFuelValueFor(itemStack);
+			}
+			else
+			{
+				fuel = getCachedBurnTime(itemStack);
+			}
 
 			if(fuel > 0)
 			{
@@ -33,14 +44,6 @@ public class IC2GeneratorFuel implements StackInfoSource
 		{
 			e.printStackTrace();
 		}
-		catch(InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
-		catch(NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		}
 		catch(ClassNotFoundException e)
 		{
 			e.printStackTrace();
@@ -51,5 +54,22 @@ public class IC2GeneratorFuel implements StackInfoSource
 		}
 
 		return null;
+	}
+
+	private static Map<Long, Integer> burnCache = new HashMap();
+
+	private static int getCachedBurnTime(ItemStack stack)
+	{
+		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? stack.getItemDamage() : 0);
+
+		Integer value = burnCache.get(lookup);
+
+		if(value == null)
+		{
+			value = TileEntityIronFurnace.getFuelValueFor(stack);
+			burnCache.put(lookup, value);
+		}
+
+		return value;
 	}
 }

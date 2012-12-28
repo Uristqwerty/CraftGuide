@@ -175,22 +175,15 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		}
 		else
 		{
+			String search = text.toLowerCase();
+
 			for(Object item: items)
 			{
 				Object stack = ((CraftType)item).getStack();
 
-				try
+				if(CommonUtilities.searchExtendedItemStackText(stack, search))
 				{
-					for(String line: CommonUtilities.getExtendedItemStackText(stack))
-					{
-						if(line != null && line.toLowerCase().contains(text.toLowerCase()))
-						{
-							itemResults.add(stack);
-						}
-					}
-				}
-				catch (Exception e)
-				{
+					itemResults.add(stack);
 				}
 			}
 

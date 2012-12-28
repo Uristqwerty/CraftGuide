@@ -24,20 +24,7 @@ public class StringItemFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			List list = CommonUtilities.getExtendedItemStackText(item);
-
-			for(Object o: list)
-			{
-				if(o instanceof String)
-				{
-					if(((String)o).toLowerCase().contains(comparison))
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
+			return CommonUtilities.searchExtendedItemStackText(item, comparison);
 		}
 		else if(item instanceof String)
 		{

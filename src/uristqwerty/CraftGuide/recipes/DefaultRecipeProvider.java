@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -273,15 +274,60 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 	@Override
 	public String getInfo(ItemStack itemStack)
 	{
-		int fuel = TileEntityFurnace.getItemBurnTime(itemStack);
+		int fuel;
+		if(itemStack.hasTagCompound())
+		{
+			fuel = TileEntityFurnace.getItemBurnTime(itemStack);
+		}
+		else
+		{
+			fuel = getCachedBurnTime(itemStack);
+		}
 
 		if(fuel > 0)
 		{
-			return String.format("\u00a77Can fuel %1$.3f furnace operations", fuel / 200.0);
+			double value = fuel / 200.0;
+			int round = (int)value;
+			int dec = (int)((value - round) * 100);
+
+			StringBuilder builder = new StringBuilder("\u00a77Can fuel ");
+			builder.append(round);
+
+			if(dec > 0)
+			{
+				builder.append('.');
+
+				if(dec < 10)
+				{
+					builder.append('0');
+				}
+
+				builder.append(dec);
+			}
+
+			builder.append(" furnace operations");
+			return builder.toString();
 		}
 		else
 		{
 			return null;
 		}
+	}
+
+	private static Map<Long, Integer> burnCache = new HashMap();
+
+	private static int getCachedBurnTime(ItemStack stack)
+	{
+		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? stack.getItemDamage() : 0);
+
+		Integer value = burnCache.get(lookup);
+
+		if(value == null)
+		{
+			value = TileEntityFurnace.getItemBurnTime(stack);
+			burnCache.put(lookup, value);
+		}
+
+		return value;
 	}
 }

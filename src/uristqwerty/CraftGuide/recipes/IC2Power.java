@@ -21,6 +21,7 @@ public class IC2Power implements StackInfoSource
 		if(!init)
 		{
 			init();
+			init = true;
 		}
 
 		if(itemStack.itemID == suBatteryID)
