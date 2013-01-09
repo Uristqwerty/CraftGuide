@@ -1,6 +1,8 @@
 package uristqwerty.CraftGuide.server;
 
+import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import uristqwerty.CraftGuide.CraftGuideSide;
 import uristqwerty.CraftGuide.api.Util;
 
@@ -29,6 +31,11 @@ public class CraftGuideServer implements CraftGuideSide
 
 	@Override
 	public void initNetworkChannels()
+	{
+	}
+
+	@Override
+	public void handlePacket(NetClientHandler handler, Packet250CustomPayload packet)
 	{
 	}
 }

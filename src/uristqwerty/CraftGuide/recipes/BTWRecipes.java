@@ -18,6 +18,7 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.client.BWRData;
 
 public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -80,7 +81,18 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 			if(CraftGuide.insertBetterWithRenewablesRecipes || CraftGuide.betterWithRenewablesDetected)
 			{
-				addBWRExtraRecipes(btw);
+				if(BWRData.hasRecipes())
+				{
+					extraMillstoneRecipes = BWRData.getMillstoneRecipes();
+					extraCauldronRecipes = BWRData.getCauldronRecipes();
+					extraStokedCauldronRecipes = BWRData.getStokedCauldronRecipes();
+					extraCrucibleRecipes = BWRData.getCrucibleRecipes();
+					extraStokedCrucibleRecipes = BWRData.getStokedCrucibleRecipes();
+				}
+				else
+				{
+					addBWRExtraRecipes(btw);
+				}
 			}
 
 			Object millstoneRecipes = Class.forName("FCCraftingManagerMillStone").getMethod("getInstance").invoke(null);
@@ -167,8 +179,11 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 		{
 			for(Object[][] recipe: extraRecipes)
 			{
-				inSize = Math.max(inSize, recipe[0].length);
-				outSize = Math.max(outSize, recipe[1].length);
+				if(recipe != null)
+				{
+					inSize = Math.max(inSize, recipe[0].length);
+					outSize = Math.max(outSize, recipe[1].length);
+				}
 			}
 		}
 
@@ -234,27 +249,30 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 		{
 			for(Object[][] recipe: extraRecipes)
 			{
-				Object[] recipeContents = new Object[inColumns * 3 + outColumns * 3 + (stoked? 3 : 1)];
-
-				for(int i = 0; i < Math.min(inColumns * 3, recipe[0].length); i++)
+				if(recipe != null)
 				{
-					recipeContents[i] = recipe[0][i];
+					Object[] recipeContents = new Object[inColumns * 3 + outColumns * 3 + (stoked? 3 : 1)];
+
+					for(int i = 0; i < Math.min(inColumns * 3, recipe[0].length); i++)
+					{
+						recipeContents[i] = recipe[0][i];
+					}
+
+					for(int i = 0; i < Math.min(outColumns * 3, recipe[1].length); i++)
+					{
+						recipeContents[inColumns * 3 + i] = recipe[1][i];
+					}
+
+					recipeContents[inColumns * 3 + outColumns * 3] = block;
+
+					if(stoked)
+					{
+						recipeContents[inColumns * 3 + outColumns * 3 + 1] = hibachi;
+						recipeContents[inColumns * 3 + outColumns * 3 + 2] = bellows;
+					}
+
+					generator.addRecipe(template, recipeContents);
 				}
-
-				for(int i = 0; i < Math.min(outColumns * 3, recipe[1].length); i++)
-				{
-					recipeContents[inColumns * 3 + i] = recipe[1][i];
-				}
-
-				recipeContents[inColumns * 3 + outColumns * 3] = block;
-
-				if(stoked)
-				{
-					recipeContents[inColumns * 3 + outColumns * 3 + 1] = hibachi;
-					recipeContents[inColumns * 3 + outColumns * 3 + 2] = bellows;
-				}
-
-				generator.addRecipe(template, recipeContents);
 			}
 		}
 	}

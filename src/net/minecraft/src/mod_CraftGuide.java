@@ -20,6 +20,7 @@ import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLoaderSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.client.BWRData;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.CraftGuide.client.modloader.CraftGuideClient_ModLoader;
 
@@ -178,6 +179,8 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 	{
 		ModLoader.registerPacketChannel(this, "BWR|VC");
 		ModLoader.registerPacketChannel(this, "craftguide");
+		ModLoader.registerPacketChannel(this, "CftGde");
+		//ModLoader.registerPacketChannel(this, "CG");
 	}
 
 	@Override
@@ -188,8 +191,9 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 			CraftGuide.betterWithRenewablesDetected = true;
 			CraftGuide.needsRecipeRefresh = true;
 		}
-		else if(packet.channel.equals("craftguide"))
+		else if(packet.channel.equals("craftguide") || packet.channel.equals("CftGde"))
 		{
+			CraftGuide.side.handlePacket(handler, packet);
 		}
 	}
 
@@ -200,6 +204,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 		{
 			CraftGuide.betterWithRenewablesDetected = false;
 			CraftGuide.needsRecipeRefresh = true;
+			BWRData.hasRecipes = false;
 		}
 	}
 
@@ -210,6 +215,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 		{
 			CraftGuide.betterWithRenewablesDetected = false;
 			CraftGuide.needsRecipeRefresh = true;
+			BWRData.hasRecipes = false;
 		}
 	}
 }
