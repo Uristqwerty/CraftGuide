@@ -275,7 +275,12 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 	public String getInfo(ItemStack itemStack)
 	{
 		int fuel;
-		if(itemStack.hasTagCompound())
+
+		if(Item.itemsList[itemStack.itemID] == null)
+		{
+			fuel = 0;
+		}
+		else if(itemStack.hasTagCompound())
 		{
 			fuel = TileEntityFurnace.getItemBurnTime(itemStack);
 		}
