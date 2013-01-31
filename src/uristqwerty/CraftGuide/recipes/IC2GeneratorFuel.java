@@ -5,6 +5,7 @@ import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
@@ -16,7 +17,11 @@ public class IC2GeneratorFuel implements StackInfoSource
 		try
 		{
 			int fuel;
-			if(itemStack.hasTagCompound())
+			if(Item.itemsList[itemStack.itemID] == null)
+			{
+				fuel = 0;
+			}
+			else if(itemStack.hasTagCompound())
 			{
 				fuel = TileEntityIronFurnace.getFuelValueFor(itemStack);
 			}
