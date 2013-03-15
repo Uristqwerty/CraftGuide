@@ -12,6 +12,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.ChanceSlot;
@@ -236,7 +237,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 			if(itemString.startsWith("liquid$"))
 			{
 				int colon = itemString.indexOf(':');
-				int meta =-1;
+				int meta = CraftGuide.DAMAGE_WILDCARD;
 				int id;
 
 				if(colon == -1)
@@ -253,7 +254,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 				for(LiquidContainerData container: LiquidContainerRegistry.getRegisteredLiquidContainerData())
 				{
 					if(container.stillLiquid.itemID == id &&
-							(meta == -1 || container.stillLiquid.itemMeta == meta))
+							(meta == CraftGuide.DAMAGE_WILDCARD || container.stillLiquid.itemMeta == meta))
 					{
 						containers.add(container.filled);
 					}

@@ -28,7 +28,7 @@ public class IC2Power implements StackInfoSource
 		{
 			return "\u00a77Powers IC2 machines for 1000 EU";
 		}
-		else if(itemStack.itemID == Item.redstone.shiftedIndex)
+		else if(itemStack.itemID == Item.redstone.itemID)
 		{
 			return "\u00a77Powers IC2 machines for 500 EU";
 		}

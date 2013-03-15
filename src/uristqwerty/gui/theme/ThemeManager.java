@@ -75,7 +75,18 @@ public class ThemeManager
 		}
 
 		ITexturePack pack = CraftGuideClient.getTexturePack();
-		InputStream packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
+		InputStream packThemes = null;
+		try
+		{
+			if(pack.func_98138_b("/CraftGuideThemes.txt", true))
+			{
+				packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		if(packThemes != null)
 		{
@@ -266,13 +277,22 @@ public class ThemeManager
 		else if(type.equalsIgnoreCase("file-jar"))
 		{
 			debug("            Searching classpath for '" + source + "'");
-			if(CraftGuideClient.getTexturePack().getResourceAsStream(source) != null)
+			try
 			{
-				debug("              Found.");
-				return true;
+				if(CraftGuideClient.getTexturePack().getResourceAsStream(source) != null)
+				{
+					debug("              Found.");
+					return true;
+				}
+				else
+				{
+					debug("              Not found.");
+					return false;
+				}
 			}
-			else
+			catch(IOException e)
 			{
+				e.printStackTrace();
 				debug("              Not found.");
 				return false;
 			}

@@ -600,8 +600,8 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 				addGoldGrindingRecipe(Item.hoeGold, 2),
 				addGoldGrindingRecipe(Item.shovelGold, 1),
 
-				{{new ItemStack(concentratedHellfire, 9, -1), new ItemStack(Item.ingotGold, 3, -1)}, {new ItemStack(Item.redstone, 63)}},
-				{{new ItemStack(concentratedHellfire, 1, -1), new ItemStack(Item.goldNugget, 3, -1)}, {new ItemStack(Item.redstone, 7)}},
+				{{new ItemStack(concentratedHellfire, 9, CraftGuide.DAMAGE_WILDCARD), new ItemStack(Item.ingotGold, 3, CraftGuide.DAMAGE_WILDCARD)}, {new ItemStack(Item.redstone, 63)}},
+				{{new ItemStack(concentratedHellfire, 1, CraftGuide.DAMAGE_WILDCARD), new ItemStack(Item.goldNugget, 3, CraftGuide.DAMAGE_WILDCARD)}, {new ItemStack(Item.redstone, 7)}},
 				{{new ItemStack(groundNetherrack), new ItemStack(sawDust)}, {new ItemStack(hellfireDust), new ItemStack(soulDust)}},
 				{{new ItemStack(groundNetherrack)}, {new ItemStack(hellfireDust)}},
 		};
@@ -635,8 +635,8 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 				{{new ItemStack(Block.cobblestone), new ItemStack(Item.netherStalkSeeds), new ItemStack(soulDust)}, {new ItemStack(Block.netherrack), new ItemStack(sawDust)}},
 				{{new ItemStack(Block.cobblestone, 8), new ItemStack(Item.netherStalkSeeds, 8), soulUrn}, {new ItemStack(Block.netherrack, 8)}},
 				{{new ItemStack(dung, 9)}, {dungBlock}},
-				{{new ItemStack(scouredLeather, 1, -1), dungBlock}, {new ItemStack(tannedLeather, 1, 0), new ItemStack(dung, 8, 0)}},
-				{{new ItemStack(Item.silk, 3, -1), new ItemStack(Item.slimeBall, 1, -1)}, {new ItemStack(Block.web)}},
+				{{new ItemStack(scouredLeather, 1, CraftGuide.DAMAGE_WILDCARD), dungBlock}, {new ItemStack(tannedLeather, 1, 0), new ItemStack(dung, 8, 0)}},
+				{{new ItemStack(Item.silk, 3, CraftGuide.DAMAGE_WILDCARD), new ItemStack(Item.slimeBall, 1, CraftGuide.DAMAGE_WILDCARD)}, {new ItemStack(Block.web)}},
 		};
 	}
 
@@ -659,8 +659,8 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			return new Object[][]{
 					{
 						new ItemStack(Block.cloth, quantity * 8, inColor),
-						new ItemStack(soap, quantity * 2, -1),
-						new ItemStack(Item.clay, 1, -1)
+						new ItemStack(soap, quantity * 2, CraftGuide.DAMAGE_WILDCARD),
+						new ItemStack(Item.clay, 1, CraftGuide.DAMAGE_WILDCARD)
 					},
 					{
 						new ItemStack(Item.dyePowder, 1, 4),
@@ -673,8 +673,8 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			return new Object[][]{
 					{
 						new ItemStack(Block.cloth, quantity * 8, inColor),
-						new ItemStack(soap, quantity * 2, -1),
-						new ItemStack(Item.clay, 1, -1)
+						new ItemStack(soap, quantity * 2, CraftGuide.DAMAGE_WILDCARD),
+						new ItemStack(Item.clay, 1, CraftGuide.DAMAGE_WILDCARD)
 					},
 					{
 						new ItemStack(Item.dyePowder, 1, 4),
@@ -692,7 +692,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			return new Object[][]{
 					{
 						new ItemStack(Block.cloth, quantity * 8, inColor),
-						new ItemStack(soap, quantity * 2, -1),
+						new ItemStack(soap, quantity * 2, CraftGuide.DAMAGE_WILDCARD),
 					},
 					{
 						new ItemStack(Block.cloth, quantity * 8, outColor1),
@@ -704,7 +704,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			return new Object[][]{
 					{
 						new ItemStack(Block.cloth, quantity * 8, inColor),
-						new ItemStack(soap, quantity * 2, -1),
+						new ItemStack(soap, quantity * 2, CraftGuide.DAMAGE_WILDCARD),
 					},
 					{
 						new ItemStack(Block.cloth, quantity * 4, outColor1),

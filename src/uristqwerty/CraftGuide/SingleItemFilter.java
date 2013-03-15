@@ -48,7 +48,7 @@ public class SingleItemFilter implements ItemFilter
 	{
 		renderer.renderItemStack(x, y, comparison);
 
-		if(comparison.getItemDamage() == -1)
+		if(comparison.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
 		{
 			renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 		}
@@ -66,8 +66,8 @@ public class SingleItemFilter implements ItemFilter
 			&& second != null
 			&& first.itemID == second.itemID
 			&& (
-				first.getItemDamage() == -1 ||
-				second.getItemDamage() == -1 ||
+				first.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
+				second.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
 				first.getItemDamage() == second.getItemDamage()
 			);
 	}

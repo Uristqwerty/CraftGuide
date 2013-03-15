@@ -381,6 +381,9 @@ public class GuiCraftGuide extends Gui
 			CraftGuideLog.log(e);
 			throw e;
 		}
+
+
+    	CraftGuide.side.stopTessellating();
 	}
 
 	private class FilterClearCallback implements IButtonListener

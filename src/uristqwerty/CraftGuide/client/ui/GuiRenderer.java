@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
@@ -65,7 +66,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		if(textureID != -1 && minecraft != null)
 		{
-			minecraft.renderEngine.bindTexture(textureID);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+            minecraft.renderEngine.func_98185_a();
+			//minecraft.renderEngine.bindTexture(textureID);
 		}
 	}
 
@@ -196,6 +199,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
+    	if(itemStack == null)
+    	{
+    		return;
+    	}
+
 		boolean error = true;
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -211,6 +219,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
         try
         {
+        	if(itemStack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+        	{
+        		itemStack = fixedItemStack(itemStack);
+        	}
+
 			itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
 
 			if(renderOverlay)
@@ -222,66 +235,26 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         }
         catch(Exception e)
         {
-        	if(itemStack != null && itemStack.getItemDamage() == -1)
-        	{
-        		try
-                {
-        			itemStack = fixedItemStack(itemStack);
-
-        			itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-
-        			if(renderOverlay)
-        			{
-        				itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
-        			}
-
-        			error = false;
-                }
-                catch(Exception e2)
-                {
-            		if(!hasLogged(itemStack))
-            		{
-            			CraftGuideLog.log("Failed to render ItemStack {" + (
-            					itemStack == null? "null" : (
-            						"itemID = " + itemStack.itemID +
-            						", itemDamage = " + itemStack.getItemDamage() +
-            						", stackSize = " + itemStack.stackSize)) +
-            					"} (Further stack traces from this particular ItemStack instance will not be logged)");
-            			CraftGuideLog.log(e);
-            			CraftGuideLog.log("Additionally, while trying to render a copy with a data value of 0, rather than -1, the following stack trace occurred:");
-            			CraftGuideLog.log(e2);
-            		}
-                }
-                catch(Throwable t)
-                {
-                	CraftGuideLog.log(t);
-                	throw new RuntimeException(t);
-                }
-        	}
-        	else
-        	{
-        		if(!hasLogged(itemStack))
-        		{
-        			CraftGuideLog.log("Failed to render ItemStack {" + (
-        					itemStack == null? "null" : (
-        						"itemID = " + itemStack.itemID +
-        						", itemDamage = " + itemStack.getItemDamage() +
-        						", stackSize = " + itemStack.stackSize)) +
-        					"} (Further stack traces from this particular ItemStack instance will not be logged)");
-        			CraftGuideLog.log(e);
-        		}
-        	}
+    		if(!hasLogged(itemStack))
+    		{
+    			CraftGuideLog.log("Failed to render ItemStack {" + (
+    					itemStack == null? "null" : (
+    						"itemID = " + itemStack.itemID +
+    						", itemDamage = " + itemStack.getItemDamage() +
+    						", stackSize = " + itemStack.stackSize)) +
+    					"} (Further stack traces from this particular ItemStack instance will not be logged)");
+    			CraftGuideLog.log(e);
+    		}
         }
-        catch(LinkageError e)
+        catch(Error e)
         {
-        }
-        catch(Throwable t)
-        {
-        	CraftGuideLog.log(t);
-        	throw new RuntimeException(t);
+        	CraftGuideLog.log(e);
+        	throw e;
         }
         finally
         {
+        	CraftGuide.side.stopTessellating();
+
             itemRenderer.zLevel = 0.0F;
             GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -310,7 +283,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		if(stack == null)
 		{
-			stack = new ItemStack(itemStack.itemID, itemStack.stackSize, 0);
+			stack = itemStack.copy();
+			stack.setItemDamage(0);
+			itemStackFixes.put(itemStack, stack);
 		}
 
 		return stack;

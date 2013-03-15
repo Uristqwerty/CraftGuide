@@ -66,7 +66,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 				renderer.renderRect(x, y, 16, 16, 0xff, 0xff, 0xff, 0x80);
 			}
 
-			if(stack.getItemDamage() == -1)
+			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
 			{
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 			}

@@ -1,7 +1,10 @@
 package uristqwerty.CraftGuide.client.modloader;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.texturepacks.ITexturePack;
 import net.minecraft.client.texturepacks.TexturePackList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +19,7 @@ import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 public class CraftGuideClient_ModLoader extends CraftGuideClient
 {
+	private static Field isDrawing = null;
 
 	@Override
 	public void initKeybind()
@@ -42,7 +46,7 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 
 		try
 		{
-			TexturePackList texturePackList = (TexturePackList)CommonUtilities.getPrivateValue(RenderEngine.class, renderEngine, "k", "texturePack");
+			TexturePackList texturePackList = (TexturePackList)CommonUtilities.getPrivateValue(RenderEngine.class, renderEngine, "g", "texturePack", "field_78366_k");
 			return texturePackList.getSelectedTexturePack();
 		}
 		catch(SecurityException e)
@@ -63,5 +67,53 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 		}
 
 		return null;
+	}
+
+	@Override
+	public void stopTessellating()
+	{
+		if(isDrawing == null)
+		{
+			try
+			{
+				try
+				{
+					isDrawing = Tessellator.class.getField("z");
+				}
+				catch(NoSuchFieldException e)
+				{
+					try
+					{
+						isDrawing = Tessellator.class.getField("field_78415_z");
+					}
+					catch(NoSuchFieldException e2)
+					{
+						isDrawing = Tessellator.class.getField("isDrawing");
+					}
+				}
+
+				isDrawing.setAccessible(true);
+			}
+			catch(Exception e)
+			{
+				CraftGuideLog.log(e);
+			}
+		}
+
+		try
+		{
+			if(isDrawing != null && isDrawing.getBoolean(Tessellator.instance))
+			{
+				Tessellator.instance.draw();
+			}
+		}
+		catch(IllegalArgumentException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e);
+		}
 	}
 }

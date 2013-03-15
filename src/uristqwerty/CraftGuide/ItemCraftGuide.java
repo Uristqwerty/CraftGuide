@@ -11,8 +11,7 @@ public class ItemCraftGuide extends Item
 	public ItemCraftGuide(int i)
 	{
 		super(i);
-		setIconCoord(11, 3);
-		setItemName("CraftGuideItem");
+		setUnlocalizedName("craftguide_item");
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 

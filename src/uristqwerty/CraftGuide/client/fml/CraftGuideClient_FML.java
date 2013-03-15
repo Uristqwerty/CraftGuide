@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.client.fml;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.texturepacks.ITexturePack;
 import net.minecraft.entity.player.EntityPlayer;
 import uristqwerty.CraftGuide.GuiCraftGuide;
@@ -32,5 +33,14 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	public ITexturePack getSelectedTexturePack()
 	{
 		return getMinecraftInstance().renderEngine.texturePack.getSelectedTexturePack();
+	}
+
+	@Override
+	public void stopTessellating()
+	{
+		if(Tessellator.instance.isDrawing)
+		{
+			Tessellator.instance.draw();
+		}
 	}
 }

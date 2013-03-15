@@ -38,4 +38,9 @@ public class CraftGuideServer implements CraftGuideSide
 	public void handlePacket(NetClientHandler handler, Packet250CustomPayload packet)
 	{
 	}
+
+	@Override
+	public void stopTessellating()
+	{
+	}
 }

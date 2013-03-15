@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import uristqwerty.CraftGuide.CraftGuide;
 
 public class BWRRecipeEncoder
 {
@@ -126,7 +127,7 @@ public class BWRRecipeEncoder
 				itemCompound.setInteger("count", stack.stackSize);
 			}
 
-			if(stack.getItemDamage() != -1)
+			if(stack.getItemDamage() != CraftGuide.DAMAGE_WILDCARD)
 			{
 				itemCompound.setInteger("damage", stack.getItemDamage());
 			}

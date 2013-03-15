@@ -18,7 +18,7 @@ del src\minecraft\net\minecraft\src\mod_CraftGuide.java
 
 if not exist zip\build mkdir zip\build
 
-xcopy "eclipse\CraftGuide\images\gui" "zip\build\gui" /S /I /Y
+xcopy "eclipse\CraftGuide\images" "zip\build" /S /I /Y
 xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build\uristqwerty\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\gui" "zip\build\uristqwerty\gui" /S /I /Y

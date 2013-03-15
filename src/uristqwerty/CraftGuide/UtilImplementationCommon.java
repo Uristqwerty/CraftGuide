@@ -52,7 +52,7 @@ public abstract class UtilImplementationCommon extends Util
 		{
 			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
 
-			if(stack.getItemDamage() == -1 && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
+			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
 			{
 				list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(GuiRenderer.fixedItemStack(stack));
 			}

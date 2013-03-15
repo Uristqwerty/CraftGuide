@@ -12,7 +12,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.CraftGuide.OldAPITranslator;
 import uristqwerty.CraftGuide.api.BasicRecipeFilter;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.CraftGuideRecipeExtra1;
@@ -22,7 +21,6 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
 
-@SuppressWarnings("deprecation")
 public class RecipeCache
 {
 	private SortedSet<CraftType> craftingTypes = new TreeSet<CraftType>();
@@ -149,7 +147,7 @@ public class RecipeCache
 				continue;
 			}
 
-			if(((ItemStack)item.getStack()).getItemDamage() == -1)
+			if(((ItemStack)item.getStack()).getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
 			{
 				wild.put(item, 1);
 			}
@@ -194,8 +192,8 @@ public class RecipeCache
 					{
 						ItemStack stack2 = (ItemStack)item2.getStack();
 						if(stack.itemID == stack2.itemID && (
-								stack.getItemDamage() == -1 ||
-								stack2.getItemDamage() == -1 ||
+								stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
+								stack2.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
 								stack.getItemDamage() == stack2.getItemDamage()))
 						{
 							wild.put(item, 2);
@@ -234,9 +232,6 @@ public class RecipeCache
 				}
 			}
 		}
-
-		OldAPITranslator.generateRecipes(generator);
-		WipAPITranslator.generateRecipes(generator);
 
 		return generator.getRecipes();
 	}

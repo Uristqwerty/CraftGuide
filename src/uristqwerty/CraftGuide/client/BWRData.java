@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import uristqwerty.CraftGuide.CraftGuide;
 
 public class BWRData
 {
@@ -139,7 +140,7 @@ public class BWRData
 
 		int itemID = getInt(tagCompound, "id", 0);
 		int itemCount = getInt(tagCompound, "count", 1);
-		int itemDamage = getInt(tagCompound, "damage", -1);
+		int itemDamage = getInt(tagCompound, "damage", CraftGuide.DAMAGE_WILDCARD);
 
 		ItemStack stack = new ItemStack(itemID, itemCount, itemDamage);
 

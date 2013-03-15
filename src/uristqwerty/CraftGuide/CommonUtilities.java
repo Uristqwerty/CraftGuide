@@ -29,7 +29,32 @@ public class CommonUtilities
 		}
 		catch(NoSuchFieldException e)
 		{
+			CraftGuideLog.log(e);
 			field = objectClass.getDeclaredField(deobfuscatedName);
+		}
+
+		field.setAccessible(true);
+		return field.get(object);
+	}
+
+	public static <T> Object getPrivateValue(Class<T> objectClass, T object, String obfuscatedName, String deobfuscatedName, String semiobfuscatedName) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	{
+		Field field;
+
+		try
+		{
+			field = objectClass.getDeclaredField(obfuscatedName);
+		}
+		catch(NoSuchFieldException e)
+		{
+			try
+			{
+				field = objectClass.getDeclaredField(semiobfuscatedName);
+			}
+			catch(NoSuchFieldException e2)
+			{
+				field = objectClass.getDeclaredField(deobfuscatedName);
+			}
 		}
 
 		field.setAccessible(true);
@@ -59,7 +84,7 @@ public class CommonUtilities
 	{
 		ArrayList<String> list = new ArrayList<String>();
 
-		if(item.getItemDamage() == -1 && item.getHasSubtypes())
+		if(item.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList<ItemStack> subItems = new ArrayList();
 			item.getItem().getSubItems(item.itemID, null, subItems);
@@ -79,7 +104,7 @@ public class CommonUtilities
 
 	public static int countItemNames(ItemStack item)
 	{
-		if(item.getItemDamage() == -1 && item.getHasSubtypes())
+		if(item.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList temp = new ArrayList();
 			item.getItem().getSubItems(item.itemID, null, temp);

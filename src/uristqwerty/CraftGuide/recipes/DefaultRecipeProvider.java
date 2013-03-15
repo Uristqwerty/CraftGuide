@@ -141,7 +141,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 		RecipeTemplate furnaceTemplate = new DefaultRecipeTemplate(
 				furnaceSlots,
-				new ItemStack(Block.stoneOvenActive),
+				new ItemStack(Block.furnaceBurning),
 				new TextureClip(
 						DynamicTexture.instance("recipe_backgrounds"),
 						1, 181, 79, 58),

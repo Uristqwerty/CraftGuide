@@ -37,6 +37,8 @@ public class CraftGuide
 
 	private int itemCraftGuideID = 23361;
 
+	public static final int DAMAGE_WILDCARD = 32767;
+
 	public void preInit()
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
