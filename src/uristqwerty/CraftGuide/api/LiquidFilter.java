@@ -76,24 +76,26 @@ public class LiquidFilter implements ItemFilter
 		{
 			RenderEngine renderEngine = FMLClientHandler.instance().getClient().renderEngine;
 
+
+
 			if(Item.itemsList[liquid.itemID] != null)
 			{
 				Item item = Item.itemsList[liquid.itemID];
-				Icon icon = item.getIconFromDamage(liquid.itemMeta);
+				Icon icon = liquid.getRenderingIcon();
 
-                if (item.func_94901_k() == 0)
+                if (item.getSpriteNumber() == 0)
                 {
-                	renderEngine.func_98187_b("/terrain.png");
+                	renderEngine.bindTexture("/terrain.png");
                 }
                 else
                 {
-                	renderEngine.func_98187_b("/gui/items.png");
+                	renderEngine.bindTexture("/gui/items.png");
                 }
 
-                double u = icon.func_94214_a(3.0);
-                double u2 = icon.func_94214_a(13.0);
-                double v = icon.func_94207_b(1.0);
-                double v2 = icon.func_94207_b(15.0);
+                double u = icon.getInterpolatedU(3.0);
+                double u2 = icon.getInterpolatedU(13.0);
+                double v = icon.getInterpolatedV(1.0);
+                double v2 = icon.getInterpolatedV(15.0);
 
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
                 GL11.glColor4d(1.0, 1.0, 1.0, 1.0);

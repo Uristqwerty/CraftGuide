@@ -528,7 +528,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 			addSawRecipe(generator, template, saw, Block.woodSingleSlab, mouldingID, i, 2, null);
 		}
 
-		addSawRecipe(generator, template, saw, Block.stairCompactPlanks, sidingID, mouldingID, 0);
+		addSawRecipe(generator, template, saw, Block.stairsWoodOak, sidingID, mouldingID, 0);
 		addSawRecipe(generator, template, saw, Block.stairsWoodSpruce, sidingID, mouldingID, 1);
 		addSawRecipe(generator, template, saw, Block.stairsWoodBirch, sidingID, mouldingID, 2);
 		addSawRecipe(generator, template, saw, Block.stairsWoodJungle, sidingID, mouldingID, 3);
