@@ -217,6 +217,8 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         itemRenderer.zLevel = 100.0F;
 
+        int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+
         try
         {
         	if(itemStack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
