@@ -76,8 +76,8 @@ public class CraftGuideKeyHandler extends KeyHandler
 				{
 					int x = Mouse.getX() * screen.width / mc.displayWidth;
 					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
-					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "n", "guiLeft");
-					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "o", "guiTop");
+					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_74198_m", "n", "guiLeft");
+					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_74197_n", "o", "guiTop");
 					openRecipe((GuiContainer)screen, x - left, y - top);
 				}
 				catch(IllegalArgumentException e)

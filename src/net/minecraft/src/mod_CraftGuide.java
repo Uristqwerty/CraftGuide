@@ -127,8 +127,8 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 				{
 					int x = Mouse.getX() * screen.width / mc.displayWidth;
 					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
-					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "n", "guiLeft");
-					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "o", "guiTop");
+					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "n", "field_74198_m", "guiLeft");
+					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "o", "field_74197_n", "guiTop");
 					openRecipe((GuiContainer)screen, x - left, y - top);
 				}
 				catch(IllegalArgumentException e)

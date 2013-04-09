@@ -50,36 +50,44 @@ public class LiquidSlot implements Slot
 				Item item = Item.itemsList[liquid.itemID];
 				Icon icon = liquid.getRenderingIcon();
 
-                if (item.getSpriteNumber() == 0)
-                {
-                	renderEngine.bindTexture("/terrain.png");
-                }
-                else
-                {
-                	renderEngine.bindTexture("/gui/items.png");
-                }
+				if(icon == null)
+				{
+					icon = item.getIconFromDamage(liquid.itemMeta);
+				}
 
-                double u = icon.getInterpolatedU(3.0);
-                double u2 = icon.getInterpolatedU(13.0);
-                double v = icon.getInterpolatedV(1.0);
-                double v2 = icon.getInterpolatedV(15.0);
+				if(icon != null)
+				{
+	                if (item.getSpriteNumber() == 0)
+	                {
+	                	renderEngine.bindTexture("/terrain.png");
+	                }
+	                else
+	                {
+	                	renderEngine.bindTexture("/gui/items.png");
+	                }
 
-                GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+	                double u = icon.getInterpolatedU(3.0);
+	                double u2 = icon.getInterpolatedU(13.0);
+	                double v = icon.getInterpolatedV(1.0);
+	                double v2 = icon.getInterpolatedV(15.0);
 
-        		GL11.glBegin(GL11.GL_QUADS);
-        	        GL11.glTexCoord2d(u, v);
-        	        GL11.glVertex2i(x + 3, y + 1);
+	                GL11.glEnable(GL11.GL_TEXTURE_2D);
+	                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
 
-        	        GL11.glTexCoord2d(u, v2);
-        	        GL11.glVertex2i(x + 3, y + 15);
+	        		GL11.glBegin(GL11.GL_QUADS);
+	        	        GL11.glTexCoord2d(u, v);
+	        	        GL11.glVertex2i(x + 3, y + 1);
 
-        	        GL11.glTexCoord2d(u2, v2);
-        	        GL11.glVertex2i(x + 13, y + 15);
+	        	        GL11.glTexCoord2d(u, v2);
+	        	        GL11.glVertex2i(x + 3, y + 15);
 
-        	        GL11.glTexCoord2d(u2, v);
-        	        GL11.glVertex2i(x + 13, y + 1);
-        		GL11.glEnd();
+	        	        GL11.glTexCoord2d(u2, v2);
+	        	        GL11.glVertex2i(x + 13, y + 15);
+
+	        	        GL11.glTexCoord2d(u2, v);
+	        	        GL11.glVertex2i(x + 13, y + 1);
+	        		GL11.glEnd();
+				}
 			}
 		}
 
