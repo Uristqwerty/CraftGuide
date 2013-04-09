@@ -30,11 +30,11 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
 
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 1),
+					generator, new ItemStack(machine, 1, 80),
 					(ArrayList)recipeClass.getField("sFusionRecipes").get(null),
 					2, 1, -1, 0, true, "\u00a77  First reaction cost: %1$d EU");
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 11),
+					generator, new ItemStack(machine, 1, 62),
 					(ArrayList)recipeClass.getField("sCentrifugeRecipes").get(null),
 					2, 4, 5, 0, false, null);
 			generateRecipes(
@@ -89,6 +89,26 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 44),
 					(ArrayList)recipeClass.getField("sDistillationRecipes").get(null),
 					2, 4, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 55),
+					(ArrayList)recipeClass.getField("sWiremillRecipes").get(null),
+					1, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 56),
+					(ArrayList)recipeClass.getField("sAlloySmelterRecipes").get(null),
+					2, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 59),
+					(ArrayList)recipeClass.getField("sBenderRecipes").get(null),
+					1, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 60),
+					(ArrayList)recipeClass.getField("sAssemblerRecipes").get(null),
+					2, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 57),
+					(ArrayList)recipeClass.getField("sCannerRecipes").get(null),
+					2, 2, -1, 0, false, null);
 		}
 		catch(ClassNotFoundException e)
 		{
