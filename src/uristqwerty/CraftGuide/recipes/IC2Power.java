@@ -36,7 +36,7 @@ public class IC2Power implements StackInfoSource
 		{
 			try
 			{
-				return "\u00a77Can store " + getMaxCharge.invoke(itemStack.getItem()) + " EU";
+				return "\u00a77Can store " + getMaxCharge.invoke(itemStack.getItem(), itemStack) + " EU";
 			}
 			catch(IllegalArgumentException e)
 			{
@@ -61,7 +61,7 @@ public class IC2Power implements StackInfoSource
 		{
 			suBatteryID = ((ItemStack)Class.forName("ic2.core.Ic2Items").getField("suBattery").get(null)).itemID;
 			electricItem = Class.forName("ic2.api.IElectricItem");
-			getMaxCharge = electricItem.getMethod("getMaxCharge");
+			getMaxCharge = electricItem.getMethod("getMaxCharge", ItemStack.class);
 		}
 		catch(IllegalArgumentException e)
 		{

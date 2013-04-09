@@ -253,6 +253,16 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         }
         finally
         {
+            int finalMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+
+            // If something went wrong, and an exception was thrown after at least one matrix push,
+            //  fix it here, so that rendering errors do not affect later parts of the UI.
+            while(finalMatrixStackDepth > initialMatrixStackDepth)
+            {
+            	GL11.glPopMatrix();
+            	finalMatrixStackDepth--;
+            }
+
         	CraftGuide.side.stopTessellating();
 
             itemRenderer.zLevel = 0.0F;

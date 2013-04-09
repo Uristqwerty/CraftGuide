@@ -27,7 +27,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Object instance = gregTechClass.getField("instance").get(null);
 			Block machine = ((Block[])gregTechClass.getField("mBlocks").get(instance))[1];
 
-			Class recipeClass = Class.forName("gregtechmod.api.GT_Recipe");
+			Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
 
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 1),
@@ -73,30 +73,22 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 36),
 					(ArrayList)recipeClass.getField("sDenseLiquidFuels").get(null),
 					1, 1, 8, 1000, true, null);
-
-			try
-			{
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 38),
-						(ArrayList)recipeClass.getField("sVacuumRecipes").get(null),
-						1, 1, -1, 0, false, null);
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 41),
-						(ArrayList)recipeClass.getField("sChemicalRecipes").get(null),
-						2, 1, -1, 0, false, null);
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 42),
-						(ArrayList)recipeClass.getField("sMagicFuels").get(null),
-						1, 1, 24, 1000, true, null);
-				generateRecipes(
-						generator, new ItemStack(machine, 1, 44),
-						(ArrayList)recipeClass.getField("sDistillationRecipes").get(null),
-						2, 4, -1, 0, false, null);
-			}
-			catch(NoSuchFieldException e)
-			{
-				e.printStackTrace();
-			}
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 38),
+					(ArrayList)recipeClass.getField("sVacuumRecipes").get(null),
+					1, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 41),
+					(ArrayList)recipeClass.getField("sChemicalRecipes").get(null),
+					2, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 42),
+					(ArrayList)recipeClass.getField("sMagicFuels").get(null),
+					1, 1, 24, 1000, true, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 44),
+					(ArrayList)recipeClass.getField("sDistillationRecipes").get(null),
+					2, 4, -1, 0, false, null);
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -192,7 +184,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
 
-		Class recipeClass = Class.forName("gregtechmod.api.GT_Recipe");
+		Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
 		Field eutField = recipeClass.getField("mEUt");
 		Field durationField = recipeClass.getField("mDuration");
 		Field extraField = recipeClass.getField("mStartEU");
