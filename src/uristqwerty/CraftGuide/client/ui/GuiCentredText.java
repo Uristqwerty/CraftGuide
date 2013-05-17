@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.client.ui.Rendering.CentredText;
-import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement;
 
 public class GuiCentredText extends GuiElement
 {

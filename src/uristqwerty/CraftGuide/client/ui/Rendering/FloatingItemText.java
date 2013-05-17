@@ -6,8 +6,8 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
 
 
 public class FloatingItemText implements Renderable

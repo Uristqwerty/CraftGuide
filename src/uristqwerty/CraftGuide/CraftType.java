@@ -24,7 +24,7 @@ public class CraftType implements Comparable<CraftType>
 	{
 		ItemStack itemStack = items.get(0);
 		item = itemStack.itemID;
-		damage = itemStack.getItemDamage();
+		damage = CommonUtilities.getItemDamage(itemStack);
 		stack = items;
 	}
 
@@ -67,12 +67,12 @@ public class CraftType implements Comparable<CraftType>
 			cache.put(stack.itemID, map);
 		}
 
-		CraftType type = map.get(stack.getItemDamage());
+		CraftType type = map.get(CommonUtilities.getItemDamage(stack));
 
 		if(type == null)
 		{
-			type = new CraftType(stack.itemID, stack.getItemDamage());
-			map.put(stack.getItemDamage(), type);
+			type = new CraftType(stack.itemID, CommonUtilities.getItemDamage(stack));
+			map.put(CommonUtilities.getItemDamage(stack), type);
 		}
 
 		return type;
@@ -85,7 +85,7 @@ public class CraftType implements Comparable<CraftType>
 			return false;
 		}
 
-		return cache.get(stack.itemID).containsKey(stack.getItemDamage());
+		return cache.get(stack.itemID).containsKey(CommonUtilities.getItemDamage(stack));
 	}
 
 	@Override

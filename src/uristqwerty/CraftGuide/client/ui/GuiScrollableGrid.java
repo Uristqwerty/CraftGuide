@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.client.ui.Rendering.GridRect;
-import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement;
 
 public class GuiScrollableGrid extends GuiElement
 {

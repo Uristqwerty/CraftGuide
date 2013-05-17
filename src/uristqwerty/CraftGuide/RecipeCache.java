@@ -147,7 +147,7 @@ public class RecipeCache
 				continue;
 			}
 
-			if(((ItemStack)item.getStack()).getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+			if(CommonUtilities.getItemDamage(((ItemStack)item.getStack())) == CraftGuide.DAMAGE_WILDCARD)
 			{
 				wild.put(item, 1);
 			}
@@ -190,11 +190,7 @@ public class RecipeCache
 				{
 					if(item2.getStack() instanceof ItemStack)
 					{
-						ItemStack stack2 = (ItemStack)item2.getStack();
-						if(stack.itemID == stack2.itemID && (
-								stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-								stack2.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-								stack.getItemDamage() == stack2.getItemDamage()))
+						if(CommonUtilities.checkItemStackMatch(stack, (ItemStack)item2.getStack()))
 						{
 							wild.put(item, 2);
 							break;

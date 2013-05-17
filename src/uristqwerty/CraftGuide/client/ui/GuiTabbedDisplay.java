@@ -3,7 +3,7 @@ package uristqwerty.CraftGuide.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement;
 
 public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 {

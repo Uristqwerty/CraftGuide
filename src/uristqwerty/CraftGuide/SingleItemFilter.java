@@ -23,13 +23,13 @@ public class SingleItemFilter implements ItemFilter
 	{
 		if(stack instanceof ItemStack)
 		{
-			return areItemsEqual((ItemStack)stack, comparison);
+			return CommonUtilities.checkItemStackMatch((ItemStack)stack, comparison);
 		}
 		else if(stack instanceof List)
 		{
 			for(ItemStack item: (List<ItemStack>)stack)
 			{
-				if(areItemsEqual(item, comparison))
+				if(CommonUtilities.checkItemStackMatch(item, comparison))
 				{
 					return true;
 				}
@@ -48,7 +48,7 @@ public class SingleItemFilter implements ItemFilter
 	{
 		renderer.renderItemStack(x, y, comparison);
 
-		if(comparison.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+		if(CommonUtilities.getItemDamage(comparison) == CraftGuide.DAMAGE_WILDCARD)
 		{
 			renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 		}
@@ -58,17 +58,5 @@ public class SingleItemFilter implements ItemFilter
 	public List<String> getTooltip()
 	{
 		return Util.instance.getItemStackText(comparison);
-	}
-
-	public boolean areItemsEqual(ItemStack first, ItemStack second)
-	{
-		return first != null
-			&& second != null
-			&& first.itemID == second.itemID
-			&& (
-				first.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-				second.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-				first.getItemDamage() == second.getItemDamage()
-			);
 	}
 }

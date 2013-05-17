@@ -26,14 +26,14 @@ import uristqwerty.CraftGuide.client.ui.GuiTextInput;
 import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.components.GuiElement.AnchorPoint;
-import uristqwerty.gui.components.Image;
-import uristqwerty.gui.components.Window;
-import uristqwerty.gui.minecraft.Gui;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.Texture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.components.Image;
+import uristqwerty.gui_craftguide.components.Window;
+import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
+import uristqwerty.gui_craftguide.minecraft.Gui;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.Texture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class GuiCraftGuide extends Gui
 {
@@ -365,7 +365,7 @@ public class GuiCraftGuide extends Gui
 	{
 		try
 		{
-			uristqwerty.gui.minecraft.Image.initJarTextures();
+			uristqwerty.gui_craftguide.minecraft.Image.initJarTextures();
 			((UtilImplementationCommon)Util.instance).partialTicks = f;
 			guiWindow.centerOn(width / 2, height / 2);
 			filter.setFilter(recipeCache.getFilter());

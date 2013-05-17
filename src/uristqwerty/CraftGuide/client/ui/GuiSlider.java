@@ -3,8 +3,8 @@ package uristqwerty.CraftGuide.client.ui;
 import java.util.LinkedList;
 import java.util.List;
 
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 
 public class GuiSlider extends GuiButton

@@ -25,7 +25,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			Class gregTechClass = Class.forName("gregtechmod.GT_Mod");
 			Object instance = gregTechClass.getField("instance").get(null);
-			Block machine = ((Block[])gregTechClass.getField("mBlocks").get(instance))[1];
+			Block machine;
+
+			try
+			{
+				machine = ((Block[])gregTechClass.getField("mBlocks").get(instance))[1];
+			}
+			catch(NoSuchFieldException e)
+			{
+				Class gregTechAPI = Class.forName("gregtechmod.api.GregTech_API");
+				machine = ((Block[])gregTechAPI.getField("sBlockList").get(null))[1];
+			}
 
 			Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
 

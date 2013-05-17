@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.client.ui.GuiButton.ButtonState;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class ButtonTemplate
 {

@@ -5,9 +5,9 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.texture.Texture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.texture.Texture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 
 public class GuiButton extends GuiElement

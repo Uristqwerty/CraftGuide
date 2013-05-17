@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.client.ui.Rendering.RightAlignedText;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.minecraft.Text;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.minecraft.Text;
 
 public class GuiRightAlignedText extends GuiElement
 {

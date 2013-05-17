@@ -9,6 +9,7 @@ import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -18,8 +19,8 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -55,7 +56,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 			{
 				ItemStack[] recipe = iterator.next();
 
-				if(recipe[2] != null && recipe[2].getItemDamage() == 8192)
+				if(recipe[2] != null && CommonUtilities.getItemDamage(recipe[2]) == 8192)
 				{
 					iterator.remove();
 				}
@@ -90,9 +91,9 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 
 		for(Item ingredient: ingredients)
 		{
-			int result = PotionHelper.applyIngredient(potion.getItemDamage(), ingredient.getPotionEffect());
+			int result = PotionHelper.applyIngredient(CommonUtilities.getItemDamage(potion), ingredient.getPotionEffect());
 
-			if(result != 0 && result != potion.getItemDamage())
+			if(result != 0 && result != CommonUtilities.getItemDamage(potion))
 			{
 				ItemStack output = new ItemStack(Item.potion);
 				output.setItemDamage(result);

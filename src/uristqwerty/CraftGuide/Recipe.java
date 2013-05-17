@@ -13,7 +13,7 @@ import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
-import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.Renderable;
 
 public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 {
@@ -42,7 +42,7 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 			{
 				ItemStack old = displayStack(i);
 
-				this.recipe[i] = new ItemStack(old.itemID, 1, old.getItemDamage());
+				this.recipe[i] = new ItemStack(old.itemID, 1, CommonUtilities.getItemDamage(old));
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.client.ui;
 
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.minecraft.Text;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.minecraft.Text;
 
 public class GuiText extends GuiElement
 {

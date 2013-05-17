@@ -14,16 +14,17 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
-import uristqwerty.gui.minecraft.Gui;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.RendererBase;
-import uristqwerty.gui.rendering.TexturedRect;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.minecraft.Gui;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
+import uristqwerty.gui_craftguide.rendering.TexturedRect;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
@@ -221,7 +222,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
         try
         {
-        	if(itemStack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+        	if(CommonUtilities.getItemDamage(itemStack) == CraftGuide.DAMAGE_WILDCARD)
         	{
         		itemStack = fixedItemStack(itemStack);
         	}
@@ -242,7 +243,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
     			CraftGuideLog.log("Failed to render ItemStack {" + (
     					itemStack == null? "null" : (
     						"itemID = " + itemStack.itemID +
-    						", itemDamage = " + itemStack.getItemDamage() +
+    						", itemDamage = " + CommonUtilities.getItemDamage(itemStack) +
     						", stackSize = " + itemStack.stackSize)) +
     					"} (Further stack traces from this particular ItemStack instance will not be logged)");
     			CraftGuideLog.log(e);
@@ -446,7 +447,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 
 		List<String> list = new ArrayList<String>();
-		list.add("Err: Item #" + stack.itemID + ", damage " + stack.getItemDamage());
+		list.add("Err: Item #" + stack.itemID + ", damage " + CommonUtilities.getItemDamage(stack));
 		return list;
 	}
 
@@ -494,7 +495,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 			if(stack.getHasSubtypes())
 			{
 				builder.append("/");
-				builder.append(stack.getItemDamage());
+				builder.append(CommonUtilities.getItemDamage(stack));
 			}
 
 			if(name.length() > 0)

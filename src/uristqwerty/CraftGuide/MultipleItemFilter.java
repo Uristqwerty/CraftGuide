@@ -56,7 +56,7 @@ public class MultipleItemFilter implements ItemFilter
 	{
 		for(ItemStack compare: comparison)
 		{
-			if(areItemsEqual(stack, compare))
+			if(CommonUtilities.checkItemStackMatch(stack, compare))
 			{
 				return true;
 			}
@@ -73,7 +73,7 @@ public class MultipleItemFilter implements ItemFilter
 			ItemStack stack = comparison.get(0);
 			renderer.renderItemStack(x, y, stack);
 
-			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
 			{
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 			}
@@ -100,7 +100,7 @@ public class MultipleItemFilter implements ItemFilter
 
 				List<String> text;
 
-				if(primaryItem.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+				if(CommonUtilities.getItemDamage(primaryItem) == CraftGuide.DAMAGE_WILDCARD)
 				{
 					if(primaryItem.getHasSubtypes())
 					{
@@ -124,7 +124,7 @@ public class MultipleItemFilter implements ItemFilter
 				{
 					text.add("\u00a77Other items:");
 
-					if(primaryItem.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && primaryItem.getHasSubtypes())
+					if(CommonUtilities.getItemDamage(primaryItem) == CraftGuide.DAMAGE_WILDCARD && primaryItem.getHasSubtypes())
 					{
 						ArrayList<ItemStack> list = new ArrayList();
 						primaryItem.getItem().getSubItems(primaryItem.itemID, null, list);
@@ -153,17 +153,5 @@ public class MultipleItemFilter implements ItemFilter
 		}
 
 		return tooltip;
-	}
-
-	public boolean areItemsEqual(ItemStack first, ItemStack second)
-	{
-		return first != null
-			&& second != null
-			&& first.itemID == second.itemID
-			&& (
-				first.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-				second.getItemDamage() == CraftGuide.DAMAGE_WILDCARD ||
-				first.getItemDamage() == second.getItemDamage()
-			);
 	}
 }

@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.client.ui.Rendering;
 
-import uristqwerty.gui.minecraft.Text;
-import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui_craftguide.minecraft.Text;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
 
 public class CentredText extends Text
 {

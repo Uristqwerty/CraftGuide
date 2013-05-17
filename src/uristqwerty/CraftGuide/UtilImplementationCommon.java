@@ -24,7 +24,7 @@ public abstract class UtilImplementationCommon extends Util
 		{
 			return new SingleItemFilter((ItemStack)stack);
 		}
-		else if(stack instanceof List)
+		else if(stack instanceof List && ((List)stack).size() > 0)
 		{
 			return new MultipleItemFilter((List)stack);
 		}
@@ -52,7 +52,7 @@ public abstract class UtilImplementationCommon extends Util
 		{
 			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
 
-			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
 			{
 				list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(GuiRenderer.fixedItemStack(stack));
 			}
@@ -85,7 +85,7 @@ public abstract class UtilImplementationCommon extends Util
 
 						if(CraftGuide.alwaysShowID)
 						{
-							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + stack.getItemDamage());
+							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + CommonUtilities.getItemDamage(stack));
 						}
 
 						first = false;
@@ -104,7 +104,7 @@ public abstract class UtilImplementationCommon extends Util
 			CraftGuideLog.log(e);
 
 			List<String> text = new ArrayList<String>(1);
-			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(stack.getItemDamage()));
+			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
 			return text;
 		}
 	}

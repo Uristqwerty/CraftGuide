@@ -20,15 +20,15 @@ import uristqwerty.CraftGuide.CraftGuideSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
-import uristqwerty.gui.rendering.RendererBase;
-import uristqwerty.gui.texture.BlankTexture;
-import uristqwerty.gui.texture.BorderedTexture;
-import uristqwerty.gui.texture.MultipleTextures;
-import uristqwerty.gui.texture.SolidColorTexture;
-import uristqwerty.gui.texture.SubTexture;
-import uristqwerty.gui.texture.TextureClip;
-import uristqwerty.gui.texture.TintedTexture;
-import uristqwerty.gui.theme.ThemeManager;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
+import uristqwerty.gui_craftguide.texture.BlankTexture;
+import uristqwerty.gui_craftguide.texture.BorderedTexture;
+import uristqwerty.gui_craftguide.texture.MultipleTextures;
+import uristqwerty.gui_craftguide.texture.SolidColorTexture;
+import uristqwerty.gui_craftguide.texture.SubTexture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
+import uristqwerty.gui_craftguide.texture.TintedTexture;
+import uristqwerty.gui_craftguide.theme.ThemeManager;
 
 public abstract class CraftGuideClient implements CraftGuideSide
 {

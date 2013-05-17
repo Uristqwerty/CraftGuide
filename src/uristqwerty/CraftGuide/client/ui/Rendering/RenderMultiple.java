@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.client.ui.Rendering;
 
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
 
 public class RenderMultiple implements Renderable
 {

@@ -2,8 +2,8 @@ package uristqwerty.CraftGuide.client.ui.Rendering;
 
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.CraftGuide.client.ui.GuiScrollableGrid;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
 
 public class GridRect implements Renderable
 {

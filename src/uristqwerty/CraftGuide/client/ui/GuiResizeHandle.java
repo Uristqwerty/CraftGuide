@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.components.Window;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.components.Window;
 
 
 public class GuiResizeHandle extends GuiElement

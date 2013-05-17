@@ -8,8 +8,8 @@ import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.input.Keyboard;
 
 import uristqwerty.CraftGuide.client.CraftGuideClient;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.minecraft.Text;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.minecraft.Text;
 
 public class GuiTextInput extends GuiElement implements IButtonListener
 {

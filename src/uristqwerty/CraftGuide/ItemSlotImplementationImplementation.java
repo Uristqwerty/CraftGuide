@@ -36,7 +36,14 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 		if(stack == null)
 		{
-			return null;
+			if(data instanceof List && ((List)data).size() < 1)
+			{
+				return emptyOreDictEntryText((List)data);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else
 		{
@@ -58,7 +65,6 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 		if(stack != null)
 		{
-
 			renderer.renderItemStack(x, y, stack);
 
 			if(isMouseOver)
@@ -66,7 +72,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 				renderer.renderRect(x, y, 16, 16, 0xff, 0xff, 0xff, 0x80);
 			}
 
-			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
 			{
 				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
 			}
@@ -82,6 +88,10 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForgeSingle);
 				}
 			}
+		}
+		else if(data instanceof List && ((List)data).size() < 1)
+		{
+			renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
 		}
 	}
 
@@ -149,5 +159,17 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 	public ItemFilter getClickedFilter(int x, int y, Object object)
 	{
 		return Util.instance.getCommonFilter(object);
+	}
+
+	private List<String> emptyOreDictEntryText(List oreDictionaryList)
+	{
+		if(RecipeGeneratorImplementation.forgeExt != null)
+		{
+			return RecipeGeneratorImplementation.forgeExt.emptyOreDictEntryText(oreDictionaryList);
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

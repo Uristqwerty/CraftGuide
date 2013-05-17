@@ -15,13 +15,13 @@ import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
-import uristqwerty.gui.minecraft.Image;
-import uristqwerty.gui.texture.BlankTexture;
-import uristqwerty.gui.texture.BorderedTexture;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.SubTexture;
-import uristqwerty.gui.texture.Texture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.minecraft.Image;
+import uristqwerty.gui_craftguide.texture.BlankTexture;
+import uristqwerty.gui_craftguide.texture.BorderedTexture;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.SubTexture;
+import uristqwerty.gui_craftguide.texture.Texture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class RecipeGeneratorImplementation implements RecipeGenerator
 {
@@ -30,6 +30,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		boolean matchesType(IRecipe recipe);
 		boolean isShapelessRecipe(IRecipe recipe);
 		Object[] getCraftingRecipe(RecipeGeneratorImplementation recipeGeneratorImplementation, IRecipe recipe, boolean allowSmallGrid);
+		List<String> emptyOreDictEntryText(List oreDictionaryList);
 	}
 
 	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();

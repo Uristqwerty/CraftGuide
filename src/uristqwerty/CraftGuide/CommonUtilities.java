@@ -12,52 +12,43 @@ import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 public class CommonUtilities
 {
-	public static <T> Object getPrivateValue(Class<T> objectClass, T object, String obfuscatedName) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	public static Field getPrivateField(Class fromClass, String... names) throws NoSuchFieldException
 	{
-		Field field = objectClass.getDeclaredField(obfuscatedName);
-		field.setAccessible(true);
-		return field.get(object);
-	}
+		Field field = null;
 
-	public static <T> Object getPrivateValue(Class<T> objectClass, T object, String obfuscatedName, String deobfuscatedName) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-	{
-		Field field;
-
-		try
-		{
-			field = objectClass.getDeclaredField(obfuscatedName);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e);
-			field = objectClass.getDeclaredField(deobfuscatedName);
-		}
-
-		field.setAccessible(true);
-		return field.get(object);
-	}
-
-	public static <T> Object getPrivateValue(Class<T> objectClass, T object, String obfuscatedName, String deobfuscatedName, String semiobfuscatedName) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-	{
-		Field field;
-
-		try
-		{
-			field = objectClass.getDeclaredField(obfuscatedName);
-		}
-		catch(NoSuchFieldException e)
+		for(String name: names)
 		{
 			try
 			{
-				field = objectClass.getDeclaredField(semiobfuscatedName);
+				field = fromClass.getDeclaredField(name);
+				field.setAccessible(true);
+				return field;
 			}
-			catch(NoSuchFieldException e2)
+			catch(NoSuchFieldException e)
 			{
-				field = objectClass.getDeclaredField(deobfuscatedName);
 			}
 		}
 
-		field.setAccessible(true);
+		if(names.length == 1)
+		{
+			throw new NoSuchFieldException("Could not find a field named " + names[0]);
+		}
+		else
+		{
+			String nameStr = "[" + names[0];
+
+			for(int i = 1; i < names.length; i++)
+			{
+				nameStr += ", " + names[i];
+			}
+
+			throw new NoSuchFieldException("Could not find a field with any of the following names: " + nameStr + "]");
+		}
+	}
+
+	public static <T> Object getPrivateValue(Class<T> objectClass, T object, String... names) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	{
+		Field field = getPrivateField(objectClass, names);
 		return field.get(object);
 	}
 
@@ -69,7 +60,7 @@ public class CommonUtilities
 		{
 			if(item.getHasSubtypes())
 			{
-				idText = String.format(" (#%04d/%d)", item.itemID, item.getItemDamage());
+				idText = String.format(" (#%04d/%d)", item.itemID, getItemDamage(item));
 			}
 			else
 			{
@@ -84,7 +75,7 @@ public class CommonUtilities
 	{
 		ArrayList<String> list = new ArrayList<String>();
 
-		if(item.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
+		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList<ItemStack> subItems = new ArrayList();
 			item.getItem().getSubItems(item.itemID, null, subItems);
@@ -104,7 +95,7 @@ public class CommonUtilities
 
 	public static int countItemNames(ItemStack item)
 	{
-		if(item.getItemDamage() == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
+		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList temp = new ArrayList();
 			item.getItem().getSubItems(item.itemID, null, temp);
@@ -194,5 +185,62 @@ public class CommonUtilities
 		{
 			return null;
 		}
+	}
+
+	static Field itemDamageField = null;
+
+	static
+	{
+		try
+		{
+			itemDamageField = getPrivateField(ItemStack.class, "itemDamage", "field_77991_e", "e");
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static int getItemDamage(ItemStack stack)
+	{
+		if(stack.getItem() != null)
+		{
+			return stack.getItemDamage();
+		}
+		else
+		{
+			if(itemDamageField != null)
+			{
+				try
+				{
+					return itemDamageField.getInt(stack);
+				}
+				catch(IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch(IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+			return 0;
+		}
+	}
+
+	public static boolean checkItemStackMatch(ItemStack first, ItemStack second)
+	{
+		if(first == null || second == null)
+		{
+			return first == second;
+		}
+
+		return first.itemID == second.itemID
+			&& (
+				getItemDamage(first) == CraftGuide.DAMAGE_WILDCARD ||
+				getItemDamage(second) == CraftGuide.DAMAGE_WILDCARD ||
+				getItemDamage(first) == getItemDamage(second)
+			);
 	}
 }

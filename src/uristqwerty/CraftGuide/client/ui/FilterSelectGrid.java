@@ -15,9 +15,9 @@ import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.TexturedRect;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.TexturedRect;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheListener, ITextInputListener
 {
@@ -106,7 +106,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 
 			renderer.drawItemStack(stack, xOffset + 1, yOffset + 1);
 
-			if(stack.getItemDamage() == CraftGuide.DAMAGE_WILDCARD)
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
 			{
 				renderer.renderRect(xOffset, yOffset, 18, 18, overlayAny);
 			}

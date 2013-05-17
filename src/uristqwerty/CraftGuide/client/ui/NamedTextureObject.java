@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.api.NamedTexture;
-import uristqwerty.gui.rendering.RendererBase;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class NamedTextureObject implements NamedTexture, Texture
 {

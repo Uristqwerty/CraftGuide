@@ -8,7 +8,7 @@ import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
-import uristqwerty.gui.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.Renderable;
 
 public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {

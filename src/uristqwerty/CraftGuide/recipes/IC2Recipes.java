@@ -4,7 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
@@ -26,8 +28,8 @@ import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.StackInfo;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -46,21 +48,44 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 			addCraftingRecipes(generator);
 
-			addMachineRecipes(generator,
-					(ItemStack)itemClass.getField("macerator").get(null),
-					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityMacerator").getField("recipes").get(null));
+			try
+			{
+				Class recipes = Class.forName("ic2.api.recipe.Recipes");
+				Class recipeManager = Class.forName("ic2.api.recipe.IMachineRecipeManager");
+				Method getRecipes = recipeManager.getMethod("getRecipes");
 
-			addMachineRecipes(generator,
-					(ItemStack)itemClass.getField("compressor").get(null),
-					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityCompressor").getField("recipes").get(null));
+				addMachineRecipes(generator,
+						(ItemStack)itemClass.getField("macerator").get(null),
+						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("macerator").get(null))).entrySet());
 
-			addMachineRecipes(generator,
-					(ItemStack)itemClass.getField("extractor").get(null),
-					(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityExtractor").getField("recipes").get(null));
+				addMachineRecipes(generator,
+						(ItemStack)itemClass.getField("extractor").get(null),
+						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("extractor").get(null))).entrySet());
 
-			addScrapboxOutput(generator,
-					(ItemStack)itemClass.getField("scrapBox").get(null),
-					(List)Class.forName("ic2.core.item.ItemScrapbox").getField("dropList").get(null));
+				addMachineRecipes(generator,
+						(ItemStack)itemClass.getField("compressor").get(null),
+						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("compressor").get(null))).entrySet());
+
+				addNewScrapboxOutput(generator,
+						(ItemStack)itemClass.getField("scrapBox").get(null),
+						(Map<ItemStack, Float>)getRecipes.invoke(recipes.getField("scrapboxDrops").get(null)));
+			}
+			catch(ClassNotFoundException e)
+			{
+				generaterecipesOldAPI(generator, itemClass);
+			}
+			catch(NullPointerException e)
+			{
+				generaterecipesOldAPI(generator, itemClass);
+			}
+			catch(NoSuchMethodException e)
+			{
+				e.printStackTrace();
+			}
+			catch(InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -82,28 +107,41 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		{
 			e.printStackTrace();
 		}
-		catch(NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		}
-		catch(InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
-	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
+	private void generaterecipesOldAPI(RecipeGenerator generator, Class itemClass) throws SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException
 	{
+		addMachineRecipes(generator,
+				(ItemStack)itemClass.getField("macerator").get(null),
+				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityMacerator").getField("recipes").get(null));
+
+		addMachineRecipes(generator,
+				(ItemStack)itemClass.getField("compressor").get(null),
+				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityCompressor").getField("recipes").get(null));
+
+		addMachineRecipes(generator,
+				(ItemStack)itemClass.getField("extractor").get(null),
+				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityExtractor").getField("recipes").get(null));
+
+		addScrapboxOutput(generator,
+				(ItemStack)itemClass.getField("scrapBox").get(null),
+				(List)Class.forName("ic2.core.item.ItemScrapbox").getField("dropList").get(null));
+	}
+
+	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException
+	{
+		boolean hideSecretRecipes = Class.forName("ic2.core.IC2").getField("enableSecretRecipeHiding").getBoolean(null);
+
 		Class advancedRecipe = Class.forName("ic2.core.AdvRecipe");
-		Method canShow = advancedRecipe.getMethod("canShow", advancedRecipe);
 		Field outputField = advancedRecipe.getField("output");
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
+		Field hidden = advancedRecipe.getField("hidden");
 
 		Class shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
-		Method canShowShapeless = advancedRecipe.getMethod("canShow", shapelessRecipe);
 		Field shapelessInput = shapelessRecipe.getField("input");
 		Field shapelessOutput = shapelessRecipe.getField("output");
+		Field shapelessHidden = shapelessRecipe.getField("hidden");
 
 		List recipes = CraftingManager.getInstance().getRecipeList();
 
@@ -153,7 +191,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 		for(Object recipe: recipes)
 		{
-			if(advancedRecipe.isInstance(recipe) && (Boolean)canShow.invoke(null, recipe))
+			if(advancedRecipe.isInstance(recipe) && (!hideSecretRecipes || !hidden.getBoolean(recipe)))
 			{
 				ItemStack output = (ItemStack)outputField.get(recipe);
 				Object[] input = (Object[])inputField.get(recipe);
@@ -168,7 +206,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 					addLargeRecipe(generator, template, input, output, width);
 				}
 			}
-			else if(shapelessRecipe.isInstance(recipe) && (Boolean)canShowShapeless.invoke(null, recipe))
+			else if(shapelessRecipe.isInstance(recipe) && (!hideSecretRecipes || !shapelessHidden.getBoolean(recipe)))
 			{
 				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
 				Object[] input = (Object[])shapelessInput.get(recipe);
@@ -277,7 +315,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		}
 	}
 
-	private void addMachineRecipes(RecipeGenerator generator, ItemStack machine, List recipes)
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack machine, Collection recipes)
 	{
 		Slot[] recipeSlots = new Slot[]{
 				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
@@ -331,6 +369,29 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 					new Object[]{
 							stackField.get(drop),
 							(int)(displayed * 100000),
+					},
+			};
+
+			generator.addRecipe(template, recipeContents);
+		}
+	}
+
+	private void addNewScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, Map<ItemStack, Float> recipeMap)
+	{
+		Slot[] recipeSlots = new Slot[]{
+				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
+				new ChanceSlot(44, 21, 16, 16, true).setFormatString(" (%1$.3f%% chance)").setRatio(100000).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+		};
+
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
+
+		for(Entry<ItemStack, Float> entry: recipeMap.entrySet())
+		{
+			Object[] recipeContents = new Object[]{
+					scrapbox,
+					new Object[]{
+							entry.getKey(),
+							(int)(entry.getValue() * 100000),
 					},
 			};
 

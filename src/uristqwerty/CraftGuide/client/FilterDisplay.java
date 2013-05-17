@@ -6,9 +6,9 @@ import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
-import uristqwerty.gui.components.GuiElement;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.RendererBase;
+import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.RendererBase;
 
 public class FilterDisplay extends GuiElement implements Renderable
 {

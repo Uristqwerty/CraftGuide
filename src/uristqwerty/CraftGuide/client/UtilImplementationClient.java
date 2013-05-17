@@ -6,7 +6,7 @@ import java.util.Map;
 import uristqwerty.CraftGuide.UtilImplementationCommon;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.client.ui.NamedTextureObject;
-import uristqwerty.gui.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
 
 public class UtilImplementationClient extends UtilImplementationCommon
 {

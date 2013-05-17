@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
@@ -27,8 +28,8 @@ import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.CraftGuide.api.StackInfoSource;
-import uristqwerty.gui.texture.DynamicTexture;
-import uristqwerty.gui.texture.TextureClip;
+import uristqwerty.gui_craftguide.texture.DynamicTexture;
+import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider, StackInfoSource
 {
@@ -323,7 +324,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 	private static int getCachedBurnTime(ItemStack stack)
 	{
-		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? stack.getItemDamage() : 0);
+		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) : 0);
 
 		Integer value = burnCache.get(lookup);
 

@@ -4,9 +4,9 @@ import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.TexturedRect;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.TexturedRect;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class DefaultRecipeTemplate implements RecipeTemplate
 {

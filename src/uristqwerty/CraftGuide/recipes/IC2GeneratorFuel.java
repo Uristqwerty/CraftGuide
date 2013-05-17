@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
 public class IC2GeneratorFuel implements StackInfoSource
@@ -65,7 +66,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 
 	private static int getCachedBurnTime(ItemStack stack)
 	{
-		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? stack.getItemDamage() : 0);
+		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) : 0);
 
 		Integer value = burnCache.get(lookup);
 

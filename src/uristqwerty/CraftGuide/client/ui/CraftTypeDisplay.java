@@ -10,10 +10,10 @@ import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.client.ui.Rendering.ShadedRect;
-import uristqwerty.gui.rendering.Renderable;
-import uristqwerty.gui.rendering.TexturedRect;
-import uristqwerty.gui.texture.BorderedTexture;
-import uristqwerty.gui.texture.Texture;
+import uristqwerty.gui_craftguide.rendering.Renderable;
+import uristqwerty.gui_craftguide.rendering.TexturedRect;
+import uristqwerty.gui_craftguide.texture.BorderedTexture;
+import uristqwerty.gui_craftguide.texture.Texture;
 
 public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheListener
 {

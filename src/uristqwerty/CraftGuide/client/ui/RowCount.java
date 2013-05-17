@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.client.ui;
 
-import uristqwerty.gui.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement;
 
 public class RowCount extends GuiElement
 {
