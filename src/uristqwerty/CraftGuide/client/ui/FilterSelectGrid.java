@@ -235,4 +235,10 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 
 		return null;
 	}
+
+	@Override
+	protected int getMinCellHeight(int i)
+	{
+		return 18;
+	}
 }

@@ -1,10 +1,11 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.CraftGuide;
+import uristqwerty.CraftGuide.client.ui.GuiScrollBar.ScrollBarAlignmentCallback;
 import uristqwerty.CraftGuide.client.ui.Rendering.GridRect;
 import uristqwerty.gui_craftguide.components.GuiElement;
 
-public class GuiScrollableGrid extends GuiElement
+public abstract class GuiScrollableGrid extends GuiElement implements ScrollBarAlignmentCallback
 {
 	protected GuiScrollBar scrollBar;
 	protected int rowHeight;
@@ -28,7 +29,8 @@ public class GuiScrollableGrid extends GuiElement
 		this.scrollBar = scrollBar;
 		this.columnWidth = columnWidth;
 
-		scrollBar.setPageSize(height / rowHeight);
+		scrollBar.setAlignmentCallback(this);
+		scrollBar.setPageSize((height / rowHeight) * rowHeight);
 
 		recalculateColumns();
 	}
@@ -73,32 +75,77 @@ public class GuiScrollableGrid extends GuiElement
 	@Override
 	public void mouseMoved(int x, int y)
 	{
-		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - bounds.y();
-		int row = scrollY / rowHeight;
+		int gridY = y - bounds.y();
+		int scrollY = pixelsScrolledForY(gridY);
+		int row = rowAtY(gridY);
 
 		lastMouseX = x;
 		lastMouseY = y;
 		lastScroll = scrollBar.getValue();
 
-		mouseMovedRow(row, x - bounds.x(), scrollY % rowHeight, containsPoint(x, y));
+		mouseMovedRow(row, x - bounds.x(), scrollY - rowStartPixels(row), containsPoint(x, y));
 
-		super.mousePressed(x, y);
+		super.mouseMoved(x, y);
 	}
 
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		int scrollY = (int)(scrollBar.getValue() * rowHeight) + y - bounds.y();
-		int row = scrollY / rowHeight;
+		int gridY = y - bounds.y();
+		int row = rowAtY(gridY);
+		int rowPos = pixelsScrolledForY(gridY) - rowStartPixels(row);
 
-		rowClicked(row, x - bounds.x(), scrollY % rowHeight, containsPoint(x, y));
+		rowClicked(row, x - bounds.x(), rowPos, containsPoint(x, y));
 		super.mousePressed(x, y);
+	}
+
+	/**
+	 * @return Number of UI pixels between the top of the first
+	 *  row, and the start of the requested row.
+	 */
+	protected int rowStartPixels(int row)
+	{
+		return row * rowHeight;
+	}
+
+	/**
+	 * @return Number of UI pixels between the top of the first
+	 *  row, and .
+	 */
+	protected int pixelsScrolledForScreenY(int y)
+	{
+		return ((int)scrollBar.getValue()) + y - absoluteY();
+	}
+
+	protected int pixelsScrolledForY(int y)
+	{
+		return ((int)scrollBar.getValue()) + y;
+	}
+
+	protected int rowAtScreenY(int y)
+	{
+		return pixelsScrolledForScreenY(y) / rowHeight;
+	}
+
+	protected int rowAtGridY(int y)
+	{
+		return y / rowHeight;
+	}
+
+	protected int rowAtY(int y)
+	{
+		return pixelsScrolledForY(y) / rowHeight;
+	}
+
+	protected int getHeightForRow(int row)
+	{
+		return rowHeight;
 	}
 
 	@Override
 	public void onResize(int oldWidth, int oldHeight)
 	{
-		scrollBar.setPageSize(bounds.height() / rowHeight);
+		scrollBar.setPageSize((bounds.height() / rowHeight) * rowHeight);
 		display.setSize(bounds.width(), bounds.height());
 
 
@@ -117,6 +164,7 @@ public class GuiScrollableGrid extends GuiElement
 		}
 
 		recalculateColumns();
+		scrollBar.setPageSize(bounds.height());
 	}
 
 	public void recalculateColumns()
@@ -128,14 +176,32 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		rows = rowCount;
 
-		float end = rows - bounds.height() / (float)rowHeight;
+		recalculateRowHeight();
+		updateScrollbarScale();
+	}
+
+	public void updateScrollbarScale()
+	{
+		float end = rowStartPixels(rows - 1) + getHeightForRow(rows - 1) - bounds.height();
 
 		if(end < 0)
 		{
 			end = 0;
 		}
 
+		scrollBar.setRowSize(rowHeight);
 		scrollBar.setScale(0, end);
+	}
+
+	protected void recalculateRowHeight()
+	{
+		int maxHeight = 1;
+		for(int i = 0; i < getCells(); i++)
+		{
+			maxHeight = Math.max(maxHeight, getMinCellHeight(i));
+		}
+
+		setRowHeight(maxHeight);
 	}
 
 	public void setColumns()
@@ -152,44 +218,57 @@ public class GuiScrollableGrid extends GuiElement
 	public void setRowHeight(int newHeight)
 	{
 		rowHeight = newHeight;
-		setRows(rows);
-		scrollBar.setPageSize(bounds.height() / rowHeight);
+		updateScrollbarScale();
 	}
 
 	public void setColumns(int columns)
 	{
 		this.columns = columns;
-		setRows((cells + columns - 1) / columns);
+		setRows((getCells() + columns - 1) / columns);
+	}
+
+	protected int getColumns()
+	{
+		return columns;
 	}
 
 	public void setCells(int cells)
 	{
 		this.cells = cells;
-		setRows((cells + columns - 1) / columns);
+		setRows((cells + getColumns() - 1) / getColumns());
+	}
+
+	protected int getCells()
+	{
+		return cells;
 	}
 
 	public void renderGridRows(GuiRenderer renderer, int xOffset, int yOffset)
 	{
-		int scrollY = (int)(scrollBar.getValue() * rowHeight);
-		int y = yOffset - (scrollY % rowHeight);
-		int row = scrollY / rowHeight;
-		int max = yOffset + bounds.height();
+		int yMin = pixelsScrolledForScreenY(yOffset);
+		int row = rowAtScreenY(yOffset + 1);
 
-		while(y < max && row < rowCount())
+		while(row < rowCount())
 		{
-			renderGridRow(renderer, xOffset, y, row);
-			y += rowHeight;
+			int y = rowStartPixels(row) - yMin;
+
+			if(y >= bounds.height())
+			{
+				break;
+			}
+
+			renderGridRow(renderer, xOffset, y + yOffset, row);
 			row++;
 		}
 	}
 
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
-		for(int i = 0; i < columns; i++)
+		for(int i = 0; i < getColumns(); i++)
 		{
 			int columnX = columnOffset(i);
 
-			renderGridCell(renderer, xOffset + columnX, yOffset, row * columns + i);
+			renderGridCell(renderer, xOffset + columnX, yOffset, row * getColumns() + i);
 		}
 	}
 
@@ -201,7 +280,7 @@ public class GuiScrollableGrid extends GuiElement
 		}
 		else
 		{
-			return columns < 2? 0 : (int)((bounds.width() - columnWidth) * column / (float)(columns - 1));
+			return getColumns() < 2? 0 : (int)((bounds.width() - columnWidth) * column / (float)(getColumns() - 1));
 		}
 	}
 
@@ -209,11 +288,11 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		if(CraftGuide.gridPacking)
 		{
-			return Math.min(x / columnWidth, columns - 1);
+			return Math.min(x / columnWidth, getColumns() - 1);
 		}
 		else
 		{
-			return (x * columns) / bounds.width();
+			return (x * getColumns()) / bounds.width();
 		}
 	}
 
@@ -222,9 +301,9 @@ public class GuiScrollableGrid extends GuiElement
 		int column = columnAtX(x);
 		int columnX = columnOffset(column);
 
-		if(inBounds && x - columnX < columnWidth && row * columns + column < cells)
+		if(inBounds && x - columnX < columnWidth && row * getColumns() + column < getCells())
 		{
-			cellClicked(row * columns + column, x - columnX, y);
+			cellClicked(row * getColumns() + column, x - columnX, y);
 		}
 	}
 
@@ -232,21 +311,21 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		int column = columnAtX(x);
 
-		if(column >= 0 && row * columns + column < cells)
+		if(column >= 0 && row * getColumns() + column < getCells())
 		{
 			int columnX = columnOffset(column);
 
 			if(x >= columnX && x - columnX < columnWidth)
 			{
-				mouseMovedCell(row * columns + column, x - columnX, y, inBounds);
+				mouseMovedCell(row * getColumns() + column, x - columnX, y, inBounds);
 			}
 		}
 	}
 
 	public int cellAtCoords(int x, int y)
 	{
-		int row = ((int)(scrollBar.getValue() * rowHeight) + y) / rowHeight;
-		return columnAtX(x) + row * columns;
+		int row = rowAtY(y);
+		return columnAtX(x) + row * getColumns();
 	}
 
 	public int rowCount()
@@ -256,12 +335,29 @@ public class GuiScrollableGrid extends GuiElement
 
 	public int firstVisibleRow()
 	{
-		return (int)(scrollBar.getValue());
+		return rowAtScreenY(absoluteY());
 	}
 
 	public int lastVisibleRow()
 	{
-		return Math.min((int)(scrollBar.getValue() + (bounds.height() + rowHeight - 1) / (float)rowHeight), rows);
+		return rowAtScreenY(absoluteY() + bounds.height());
+	}
+
+	@Override
+	public float alignScrollBar(GuiScrollBar guiScrollBar, float oldValue, float newValue)
+	{
+		float alignedNewValue = rowStartPixels(rowAtGridY((int)newValue));
+
+		if(newValue > oldValue && alignedNewValue <= oldValue)
+		{
+			alignedNewValue = rowStartPixels(rowAtGridY((int)newValue) + 1);
+		}
+		else if(newValue < oldValue && alignedNewValue >= oldValue)
+		{
+			alignedNewValue = rowStartPixels(rowAtGridY((int)newValue) - 1);
+		}
+
+		return alignedNewValue;
 	}
 
 	public void mouseMovedCell(int cell, int x, int y, boolean inBounds)
@@ -290,4 +386,6 @@ public class GuiScrollableGrid extends GuiElement
 	{
 		/** Default implementation: Do nothing */
 	}
+
+	abstract protected int getMinCellHeight(int i);
 }

@@ -119,6 +119,10 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 57),
 					(ArrayList)recipeClass.getField("sCannerRecipes").get(null),
 					2, 2, -1, 0, false, null);
+			generateRecipes(
+					generator, new ItemStack(machine, 1, 37),
+					(ArrayList)recipeClass.getField("sPlasmaFuels").get(null),
+					1, 1, 2048, 1000, true, null);
 		}
 		catch(ClassNotFoundException e)
 		{

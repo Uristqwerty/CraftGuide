@@ -10,7 +10,7 @@ import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 
-public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheListener
+public class CraftingDisplay extends GuiVariableRowHeightGrid implements IRecipeCacheListener
 {
 	int mouseX;
 	int mouseY;
@@ -83,16 +83,15 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 	private void updateGridSize()
 	{
 		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
-		int maxWidth = 16, maxHeight = 16;
+		int maxWidth = 16;
 
 		for(CraftGuideRecipe recipe: recipes)
 		{
 			maxWidth = Math.max(maxWidth, recipe.width());
-			maxHeight = Math.max(maxHeight, recipe.height());
 		}
 
 		setColumnWidth(maxWidth);
-		setRowHeight(maxHeight);
+		recalculateRowHeight();
 	}
 
 	private void updateScrollbarSize()
@@ -165,9 +164,24 @@ public class CraftingDisplay extends GuiScrollableGrid implements IRecipeCacheLi
 
 		if(cell < recipes.size())
 		{
-			return recipes.get(cell).getRecipeClickedResult(x - columnOffset(columnAtX(x)), ((int)(scrollBar.getValue() * rowHeight) + y) % rowHeight);
+			return recipes.get(cell).getRecipeClickedResult(x - columnOffset(columnAtX(x)), ((int)scrollBar.getValue() + y) % rowHeight);
 		}
 
 		return null;
+	}
+
+	@Override
+	protected int getMinCellHeight(int cell)
+	{
+		List<CraftGuideRecipe> recipes = recipeCache.getRecipes();
+
+		if(cell < recipes.size())
+		{
+			return recipes.get(cell).height();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 }

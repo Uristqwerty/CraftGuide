@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.recipes;
 
-import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
+import ic2.api.info.Info;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 			}
 			else if(itemStack.hasTagCompound())
 			{
-				fuel = TileEntityIronFurnace.getFuelValueFor(itemStack);
+				fuel = Info.itemFuel.getFuelValue(itemStack, false);
 			}
 			else
 			{
@@ -72,7 +72,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 
 		if(value == null)
 		{
-			value = TileEntityIronFurnace.getFuelValueFor(stack);
+			value = Info.itemFuel.getFuelValue(stack, false);
 			burnCache.put(lookup, value);
 		}
 

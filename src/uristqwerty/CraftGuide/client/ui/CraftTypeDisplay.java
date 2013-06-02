@@ -262,4 +262,10 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		toolTipText = "";
 		super.mouseMoved(x, y);
 	}
+
+	@Override
+	protected int getMinCellHeight(int i)
+	{
+		return 32;
+	}
 }

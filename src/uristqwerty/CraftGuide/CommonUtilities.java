@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -138,13 +139,27 @@ public class CommonUtilities
 		{
 			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0);
 
-			for(StackInfoSource infoSource: StackInfo.sources)
+			Iterator<StackInfoSource> iterator = StackInfo.sources.iterator();
+			while(iterator.hasNext())
 			{
-				String info = infoSource.getInfo(stack);
-
-				if(info != null)
+				StackInfoSource infoSource = iterator.next();
+				try
 				{
-					text.add(info);
+					String info = infoSource.getInfo(stack);
+
+					if(info != null)
+					{
+						text.add(info);
+					}
+				}
+				catch(LinkageError e)
+				{
+					CraftGuideLog.log(e);
+					iterator.remove();
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
 				}
 			}
 		}

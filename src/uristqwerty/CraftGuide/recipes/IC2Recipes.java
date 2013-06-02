@@ -1,12 +1,12 @@
 package uristqwerty.CraftGuide.recipes;
 
+import ic2.api.item.Items;
+import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.Recipes;
+
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
@@ -37,6 +37,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 	{
 		StackInfo.addSource(new IC2GeneratorFuel());
 		StackInfo.addSource(new IC2Power());
+		StackInfo.addSource(new IC2Amplifiers());
 	}
 
 	@Override
@@ -44,48 +45,13 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 	{
 		try
 		{
-			Class itemClass = Class.forName("ic2.core.Ic2Items");
-
 			addCraftingRecipes(generator);
 
-			try
-			{
-				Class recipes = Class.forName("ic2.api.recipe.Recipes");
-				Class recipeManager = Class.forName("ic2.api.recipe.IMachineRecipeManager");
-				Method getRecipes = recipeManager.getMethod("getRecipes");
+			addMachineRecipes(generator, Items.getItem("macerator"), Recipes.macerator);
+			addMachineRecipes(generator, Items.getItem("extractor"), Recipes.extractor);
+			addMachineRecipes(generator, Items.getItem("compressor"), Recipes.compressor);
 
-				addMachineRecipes(generator,
-						(ItemStack)itemClass.getField("macerator").get(null),
-						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("macerator").get(null))).entrySet());
-
-				addMachineRecipes(generator,
-						(ItemStack)itemClass.getField("extractor").get(null),
-						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("extractor").get(null))).entrySet());
-
-				addMachineRecipes(generator,
-						(ItemStack)itemClass.getField("compressor").get(null),
-						((Map<ItemStack, ItemStack>)getRecipes.invoke(recipes.getField("compressor").get(null))).entrySet());
-
-				addNewScrapboxOutput(generator,
-						(ItemStack)itemClass.getField("scrapBox").get(null),
-						(Map<ItemStack, Float>)getRecipes.invoke(recipes.getField("scrapboxDrops").get(null)));
-			}
-			catch(ClassNotFoundException e)
-			{
-				generaterecipesOldAPI(generator, itemClass);
-			}
-			catch(NullPointerException e)
-			{
-				generaterecipesOldAPI(generator, itemClass);
-			}
-			catch(NoSuchMethodException e)
-			{
-				e.printStackTrace();
-			}
-			catch(InvocationTargetException e)
-			{
-				e.printStackTrace();
-			}
+			addScrapboxOutput(generator, Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -109,23 +75,51 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		}
 	}
 
-	private void generaterecipesOldAPI(RecipeGenerator generator, Class itemClass) throws SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack machine, IMachineRecipeManager<ItemStack> recipeManager)
 	{
-		addMachineRecipes(generator,
-				(ItemStack)itemClass.getField("macerator").get(null),
-				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityMacerator").getField("recipes").get(null));
+		Slot[] recipeSlots = new Slot[]{
+				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
+				new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+				new ExtraSlot(31, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
+				new EUSlot(31, 12).setConstantPacketSize(2).setConstantEUValue(-800),
+		};
 
-		addMachineRecipes(generator,
-				(ItemStack)itemClass.getField("compressor").get(null),
-				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityCompressor").getField("recipes").get(null));
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
 
-		addMachineRecipes(generator,
-				(ItemStack)itemClass.getField("extractor").get(null),
-				(List)Class.forName("ic2.core.block.machine.tileentity.TileEntityExtractor").getField("recipes").get(null));
+		for(Entry<ItemStack, ItemStack> recipe: recipeManager.getRecipes().entrySet())
+		{
+			generator.addRecipe(
+					template,
+					new Object[]{
+						recipe.getKey(),
+						recipe.getValue(),
+						machine,
+						null,
+					});
+		}
+	}
 
-		addScrapboxOutput(generator,
-				(ItemStack)itemClass.getField("scrapBox").get(null),
-				(List)Class.forName("ic2.core.item.ItemScrapbox").getField("dropList").get(null));
+	private void addScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, IMachineRecipeManager<Float> recipeManager)
+	{
+		Slot[] recipeSlots = new Slot[]{
+				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
+				new ChanceSlot(44, 21, 16, 16, true).setFormatString(" (%1$.3f%% chance)").setRatio(100000).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+		};
+
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
+
+		for(Entry<ItemStack, Float> entry: recipeManager.getRecipes().entrySet())
+		{
+			Object[] recipeContents = new Object[]{
+					scrapbox,
+					new Object[]{
+							entry.getKey(),
+							(int)(entry.getValue() * 100000),
+					},
+			};
+
+			generator.addRecipe(template, recipeContents);
+		}
 	}
 
 	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException
@@ -312,90 +306,6 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		else
 		{
 			return null;
-		}
-	}
-
-	private void addMachineRecipes(RecipeGenerator generator, ItemStack machine, Collection recipes)
-	{
-		Slot[] recipeSlots = new Slot[]{
-				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
-				new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ExtraSlot(31, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
-				new EUSlot(31, 12).setConstantPacketSize(2).setConstantEUValue(-800),
-		};
-
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
-
-		for(Object recipe: recipes)
-		{
-			generator.addRecipe(
-					template,
-					new Object[]{
-						((Entry)recipe).getKey(),
-						((Entry)recipe).getValue(),
-						machine,
-						null,
-					});
-		}
-	}
-
-	private void addScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, List output) throws ClassNotFoundException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-	{
-		Slot[] recipeSlots = new Slot[]{
-				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
-				new ChanceSlot(44, 21, 16, 16, true).setFormatString(" (%1$.3f%% chance)").setRatio(100000).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-		};
-
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
-
-		Class dropClass = Class.forName("ic2.core.item.ItemScrapbox$Drop");
-		Field stackField = dropClass.getDeclaredField("itemStack");
-		Field chanceField = dropClass.getDeclaredField("upperChanceBound");
-		stackField.setAccessible(true);
-		chanceField.setAccessible(true);
-
-		float previous = 0;
-		float last = chanceField.getFloat(output.get(output.size() - 1));
-
-		for(int i = 0; i < output.size(); i++)
-		{
-			Object drop = output.get(i);
-			float chance = chanceField.getFloat(drop);
-			float displayed = (chance - previous) / last;
-			previous = chance;
-
-			Object[] recipeContents = new Object[]{
-					scrapbox,
-					new Object[]{
-							stackField.get(drop),
-							(int)(displayed * 100000),
-					},
-			};
-
-			generator.addRecipe(template, recipeContents);
-		}
-	}
-
-	private void addNewScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, Map<ItemStack, Float> recipeMap)
-	{
-		Slot[] recipeSlots = new Slot[]{
-				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
-				new ChanceSlot(44, 21, 16, 16, true).setFormatString(" (%1$.3f%% chance)").setRatio(100000).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-		};
-
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
-
-		for(Entry<ItemStack, Float> entry: recipeMap.entrySet())
-		{
-			Object[] recipeContents = new Object[]{
-					scrapbox,
-					new Object[]{
-							entry.getKey(),
-							(int)(entry.getValue() * 100000),
-					},
-			};
-
-			generator.addRecipe(template, recipeContents);
 		}
 	}
 }

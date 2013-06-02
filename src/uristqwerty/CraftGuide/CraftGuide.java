@@ -99,6 +99,7 @@ public class CraftGuide
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
 		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
 		loadModRecipes("GregTech_Addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
+		loadModRecipes("extendedWorkbench", "uristqwerty.CraftGuide.recipes.ExtendedWorkbench");
 
 		side.initNetworkChannels();
 	}
@@ -111,17 +112,13 @@ public class CraftGuide
 			{
 				Class.forName(recipeClass).newInstance();
 			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-			}
 			catch(ClassNotFoundException e)
 			{
 				CraftGuideLog.log(e);
+			}
+			catch(Exception e)
+			{
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 	}
