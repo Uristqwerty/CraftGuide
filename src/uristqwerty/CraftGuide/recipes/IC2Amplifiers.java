@@ -20,7 +20,7 @@ public class IC2Amplifiers implements StackInfoSource
 
 		if(value != 0)
 		{
-			return "Massfab amplifier value: " + value;
+			return "\u00a77Massfab amplifier value: " + value;
 		}
 		else
 		{
