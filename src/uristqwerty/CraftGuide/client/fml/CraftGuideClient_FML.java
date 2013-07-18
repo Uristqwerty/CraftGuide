@@ -2,7 +2,6 @@ package uristqwerty.CraftGuide.client.fml;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.texturepacks.ITexturePack;
 import net.minecraft.entity.player.EntityPlayer;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;

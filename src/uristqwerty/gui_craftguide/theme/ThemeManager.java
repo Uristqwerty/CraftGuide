@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.texturepacks.ITexturePack;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.editor.TextureMeta;

@@ -66,7 +66,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 	@Override
 	public File getConfigDir()
 	{
-		return new File(Minecraft.getMinecraftDir(), "config");
+		return new File(Minecraft.getMinecraft().mcDataDir, "config");
 	}
 
 	@Override

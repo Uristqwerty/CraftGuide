@@ -3,10 +3,8 @@ package uristqwerty.CraftGuide.client.modloader;
 import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.texturepacks.ITexturePack;
-import net.minecraft.client.texturepacks.TexturePackList;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_CraftGuide;
@@ -36,17 +34,17 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 	@Override
 	public Minecraft getMinecraftInstance()
 	{
-		return ModLoader.getMinecraftInstance();
+		return Minecraft.getMinecraft();
 	}
 
 	@Override
 	public ITexturePack getSelectedTexturePack()
 	{
-		RenderEngine renderEngine = getMinecraftInstance().renderEngine;
+		TextureManager renderEngine = getMinecraftInstance().renderEngine;
 
 		try
 		{
-			TexturePackList texturePackList = (TexturePackList)CommonUtilities.getPrivateValue(RenderEngine.class, renderEngine, "g", "texturePack", "field_78366_k");
+			TexturePackList texturePackList = (TexturePackList)CommonUtilities.getPrivateValue(TextureManager.class, renderEngine, "g", "texturePack", "field_78366_k");
 			return texturePackList.getSelectedTexturePack();
 		}
 		catch(SecurityException e)

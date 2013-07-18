@@ -1,17 +1,18 @@
 package uristqwerty.CraftGuide.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.RenderEngine;
-import net.minecraft.item.Item;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
-import net.minecraftforge.liquids.LiquidContainerData;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class LiquidSlot implements Slot
 {
@@ -40,54 +41,40 @@ public class LiquidSlot implements Slot
 		int x = recipeX + this.x;
 		int y = recipeY + this.y;
 
-		if(data[dataIndex] instanceof LiquidStack)
+		if(data[dataIndex] instanceof FluidStack)
 		{
-			LiquidStack liquid = (LiquidStack)data[dataIndex];
-			RenderEngine renderEngine = FMLClientHandler.instance().getClient().renderEngine;
+			FluidStack liquid = (FluidStack)data[dataIndex];
 
-			if(Item.itemsList[liquid.itemID] != null)
+			TextureManager textureManager = Minecraft.getMinecraft().renderEngine;
+
+			Fluid fluid = liquid.getFluid();
+			Icon icon = fluid.getStillIcon();
+
+			if(icon != null)
 			{
-				Item item = Item.itemsList[liquid.itemID];
-				Icon icon = liquid.getRenderingIcon();
+				textureManager.func_110577_a(TextureMap.field_110575_b);
 
-				if(icon == null)
-				{
-					icon = item.getIconFromDamage(liquid.itemMeta);
-				}
+                double u = icon.getInterpolatedU(3.0);
+                double u2 = icon.getInterpolatedU(13.0);
+                double v = icon.getInterpolatedV(1.0);
+                double v2 = icon.getInterpolatedV(15.0);
 
-				if(icon != null)
-				{
-	                if (item.getSpriteNumber() == 0)
-	                {
-	                	renderEngine.bindTexture("/terrain.png");
-	                }
-	                else
-	                {
-	                	renderEngine.bindTexture("/gui/items.png");
-	                }
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
 
-	                double u = icon.getInterpolatedU(3.0);
-	                double u2 = icon.getInterpolatedU(13.0);
-	                double v = icon.getInterpolatedV(1.0);
-	                double v2 = icon.getInterpolatedV(15.0);
+        		GL11.glBegin(GL11.GL_QUADS);
+        	        GL11.glTexCoord2d(u, v);
+        	        GL11.glVertex2i(x + 3, y + 1);
 
-	                GL11.glEnable(GL11.GL_TEXTURE_2D);
-	                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+        	        GL11.glTexCoord2d(u, v2);
+        	        GL11.glVertex2i(x + 3, y + 15);
 
-	        		GL11.glBegin(GL11.GL_QUADS);
-	        	        GL11.glTexCoord2d(u, v);
-	        	        GL11.glVertex2i(x + 3, y + 1);
+        	        GL11.glTexCoord2d(u2, v2);
+        	        GL11.glVertex2i(x + 13, y + 15);
 
-	        	        GL11.glTexCoord2d(u, v2);
-	        	        GL11.glVertex2i(x + 3, y + 15);
-
-	        	        GL11.glTexCoord2d(u2, v2);
-	        	        GL11.glVertex2i(x + 13, y + 15);
-
-	        	        GL11.glTexCoord2d(u2, v);
-	        	        GL11.glVertex2i(x + 13, y + 1);
-	        		GL11.glEnd();
-				}
+        	        GL11.glTexCoord2d(u2, v);
+        	        GL11.glVertex2i(x + 13, y + 1);
+        		GL11.glEnd();
 			}
 		}
 
@@ -97,9 +84,9 @@ public class LiquidSlot implements Slot
 	@Override
 	public ItemFilter getClickedFilter(int x, int y, Object[] data, int dataIndex)
 	{
-		if(data[dataIndex] instanceof LiquidStack)
+		if(data[dataIndex] instanceof FluidStack)
 		{
-			return new LiquidFilter((LiquidStack)data[dataIndex]);
+			return new LiquidFilter((FluidStack)data[dataIndex]);
 		}
 		else
 		{
@@ -119,11 +106,11 @@ public class LiquidSlot implements Slot
 	{
 		List<String> tooltip = null;
 
-		if(data[dataIndex] instanceof LiquidStack)
+		if(data[dataIndex] instanceof FluidStack)
 		{
-			LiquidStack stack = (LiquidStack)data[dataIndex];
-			tooltip = Util.instance.getItemStackText(stack.asItemStack());
-			tooltip.set(0, tooltip.get(0) + " (" + stack.amount + " milliBuckets)");
+			tooltip = new ArrayList<String>(1);
+			FluidStack stack = (FluidStack)data[dataIndex];
+			tooltip.add(stack.getFluid().getLocalizedName() + " (" + stack.amount + " milliBuckets)");
 		}
 
 		return tooltip;
@@ -134,7 +121,7 @@ public class LiquidSlot implements Slot
 	@Override
 	public boolean matches(ItemFilter filter, Object[] data, int dataIndex, SlotType type)
 	{
-		if(!(data[dataIndex] instanceof LiquidStack) ||
+		if(!(data[dataIndex] instanceof FluidStack) ||
 				(type != slotType && (
 					type != SlotType.ANY_SLOT ||
 					slotType == SlotType.DISPLAY_SLOT ||
@@ -143,7 +130,7 @@ public class LiquidSlot implements Slot
 			return false;
 		}
 
-		LiquidStack stack = (LiquidStack)data[dataIndex];
+		FluidStack stack = (FluidStack)data[dataIndex];
 
 		if(filter.matches(stack))
 		{
@@ -151,15 +138,15 @@ public class LiquidSlot implements Slot
 		}
 		else
 		{
-			for(LiquidContainerData liquidData: LiquidContainerRegistry.getRegisteredLiquidContainerData())
+			for(FluidContainerData liquidData: FluidContainerRegistry.getRegisteredFluidContainerData())
 			{
-				if(stack.isLiquidEqual(liquidData.stillLiquid) && filter.matches(liquidData.filled))
+				if(stack.isFluidEqual(liquidData.fluid) && filter.matches(liquidData.filledContainer))
 				{
 					return true;
 				}
 			}
 
-			return filter.matches(stack.asItemStack());
+			return false;
 		}
 	}
 

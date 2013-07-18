@@ -11,8 +11,8 @@ import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraftforge.liquids.LiquidContainerData;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
@@ -283,12 +283,12 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 				}
 
 				ArrayList containers = new ArrayList();
-				for(LiquidContainerData container: LiquidContainerRegistry.getRegisteredLiquidContainerData())
+				for(FluidContainerData container: FluidContainerRegistry.getRegisteredFluidContainerData())
 				{
-					if(container.stillLiquid.itemID == id &&
-							(meta == CraftGuide.DAMAGE_WILDCARD || container.stillLiquid.itemMeta == meta))
+					if(container.filledContainer.itemID == id &&
+							(meta == CraftGuide.DAMAGE_WILDCARD || container.filledContainer.getItemDamage() == meta))
 					{
-						containers.add(container.filled);
+						containers.add(container.filledContainer);
 					}
 				}
 

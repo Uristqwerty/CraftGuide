@@ -65,11 +65,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	@Override
 	public void setTextureID(int textureID)
 	{
-		if(textureID != -1 && minecraft != null)
+		if(textureID != -1)
 		{
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-            minecraft.renderEngine.resetBoundTexture();
-			//minecraft.renderEngine.bindTexture(textureID);
 		}
 	}
 

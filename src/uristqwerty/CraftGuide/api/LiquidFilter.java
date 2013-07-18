@@ -3,25 +3,25 @@ package uristqwerty.CraftGuide.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.RenderEngine;
-import net.minecraft.item.Item;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class LiquidFilter implements ItemFilter
 {
 	private static NamedTexture containerTexture = null;
-	private LiquidStack liquid;
+	private FluidStack liquid;
 	private String liquidName;
 	private List<String> tooltip = new ArrayList<String>();
 
-	public LiquidFilter(LiquidStack liquid)
+	public LiquidFilter(FluidStack liquid)
 	{
 		if(containerTexture == null)
 		{
@@ -31,9 +31,9 @@ public class LiquidFilter implements ItemFilter
 		setLiquid(liquid);
 	}
 
-	public void setLiquid(LiquidStack liquid)
+	public void setLiquid(FluidStack liquid)
 	{
-		String name = liquid.asItemStack().getDisplayName();
+		String name = liquid.getFluid().getLocalizedName();
 		this.liquid = liquid;
 		liquidName = name.toLowerCase();
 		tooltip.clear();
@@ -45,11 +45,11 @@ public class LiquidFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			return liquid.isLiquidEqual((ItemStack)item) || LiquidContainerRegistry.containsLiquid((ItemStack)item, liquid);
+			return liquid.isFluidEqual((ItemStack)item) || FluidContainerRegistry.containsFluid((ItemStack)item, liquid);
 		}
-		else if(item instanceof LiquidStack)
+		else if(item instanceof FluidStack)
 		{
-			return liquid.isLiquidEqual((LiquidStack)item);
+			return liquid.isFluidEqual((FluidStack)item);
 		}
 		else if(item instanceof String)
 		{
@@ -74,51 +74,36 @@ public class LiquidFilter implements ItemFilter
 	{
 		if(liquid != null)
 		{
-			RenderEngine renderEngine = FMLClientHandler.instance().getClient().renderEngine;
+			TextureManager textureManager = Minecraft.getMinecraft().renderEngine;
 
-			if(Item.itemsList[liquid.itemID] != null)
+			Fluid fluid = liquid.getFluid();
+			Icon icon = fluid.getStillIcon();
+
+			if(icon != null)
 			{
-				Item item = Item.itemsList[liquid.itemID];
-				Icon icon = liquid.getRenderingIcon();
+				textureManager.func_110577_a(TextureMap.field_110575_b);
 
-				if(icon == null)
-				{
-					icon = item.getIconFromDamage(liquid.itemMeta);
-				}
+                double u = icon.getInterpolatedU(3.0);
+                double u2 = icon.getInterpolatedU(13.0);
+                double v = icon.getInterpolatedV(1.0);
+                double v2 = icon.getInterpolatedV(15.0);
 
-				if(icon != null)
-				{
-	                if (item.getSpriteNumber() == 0)
-	                {
-	                	renderEngine.bindTexture("/terrain.png");
-	                }
-	                else
-	                {
-	                	renderEngine.bindTexture("/gui/items.png");
-	                }
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
 
-	                double u = icon.getInterpolatedU(3.0);
-	                double u2 = icon.getInterpolatedU(13.0);
-	                double v = icon.getInterpolatedV(1.0);
-	                double v2 = icon.getInterpolatedV(15.0);
+        		GL11.glBegin(GL11.GL_QUADS);
+        	        GL11.glTexCoord2d(u, v);
+        	        GL11.glVertex2i(x + 3, y + 1);
 
-	                GL11.glEnable(GL11.GL_TEXTURE_2D);
-	                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+        	        GL11.glTexCoord2d(u, v2);
+        	        GL11.glVertex2i(x + 3, y + 15);
 
-	        		GL11.glBegin(GL11.GL_QUADS);
-	        	        GL11.glTexCoord2d(u, v);
-	        	        GL11.glVertex2i(x + 3, y + 1);
+        	        GL11.glTexCoord2d(u2, v2);
+        	        GL11.glVertex2i(x + 13, y + 15);
 
-	        	        GL11.glTexCoord2d(u, v2);
-	        	        GL11.glVertex2i(x + 3, y + 15);
-
-	        	        GL11.glTexCoord2d(u2, v2);
-	        	        GL11.glVertex2i(x + 13, y + 15);
-
-	        	        GL11.glTexCoord2d(u2, v);
-	        	        GL11.glVertex2i(x + 13, y + 1);
-	        		GL11.glEnd();
-				}
+        	        GL11.glTexCoord2d(u2, v);
+        	        GL11.glVertex2i(x + 13, y + 1);
+        		GL11.glEnd();
 			}
 		}
 
@@ -128,6 +113,6 @@ public class LiquidFilter implements ItemFilter
 	@Override
 	public List<String> getTooltip()
 	{
-		return tooltip ;
+		return tooltip;
 	}
 }
