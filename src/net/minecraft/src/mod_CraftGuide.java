@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +23,6 @@ import org.lwjgl.input.Mouse;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLoaderSide;
-import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.BWRData;
 import uristqwerty.CraftGuide.client.modloader.CraftGuideClient_ModLoader;
@@ -36,24 +36,64 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 	{
 		try
 		{
-			List resourcePacks = (List)CommonUtilities.getPrivateField(ModLoader.class, "resourcePacks").get(null);
-			File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+			Class loader = Class.forName("cpw.mods.fml.common.Loader");
+			insertResources_FML(loader);
+		}
+		catch(ClassNotFoundException e)
+		{
+			insertResources_ModLoader();
+		}
+	}
 
-			if(file.exists())
+	private void insertResources_ModLoader()
+	{
+		try
+		{
+			File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+			addResourcePack(file);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void insertResources_FML(Class loader)
+	{
+		try
+		{
+			List mods = (List)loader.getMethod("getModList").invoke(loader.getMethod("instance").invoke(null));
+			Class container = Class.forName("cpw.mods.fml.common.modloader.ModLoaderModContainer");
+			Method getModId = container.getMethod("getModId");
+
+			for(Object mod: mods)
 			{
-				if(file.isDirectory())
+				if(container.isAssignableFrom(mod.getClass()) && ((String)getModId.invoke(mod)).equalsIgnoreCase("mod_craftguide"))
 				{
-					resourcePacks.add(new FolderResourcePack(file));
-				}
-				else
-				{
-					resourcePacks.add(new FileResourcePack(file));
+					addResourcePack((File)container.getMethod("getSource").invoke(mod));
+					return;
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			CraftGuideLog.log(e, "Error while adding CraftGuide resources:", true);
+			e.printStackTrace();
+		}
+	}
+
+	private void addResourcePack(File file) throws IllegalAccessException, NoSuchFieldException
+	{
+		List resourcePacks = (List)CommonUtilities.getPrivateField(Minecraft.class, "aq", "field_110449_ao").get(Minecraft.getMinecraft());
+		if(file.exists())
+		{
+			if(file.isDirectory())
+			{
+				resourcePacks.add(new FolderResourcePack(file));
+			}
+			else
+			{
+				resourcePacks.add(new FileResourcePack(file));
+			}
 		}
 	}
 
