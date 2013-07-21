@@ -2,13 +2,10 @@ package uristqwerty.CraftGuide.client.modloader;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_CraftGuide;
-import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
@@ -29,42 +26,6 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 	public void openGUI(EntityPlayer player)
 	{
 		ModLoader.openGUI(player, GuiCraftGuide.getInstance());
-	}
-
-	@Override
-	public Minecraft getMinecraftInstance()
-	{
-		return Minecraft.getMinecraft();
-	}
-
-	@Override
-	public ITexturePack getSelectedTexturePack()
-	{
-		TextureManager renderEngine = getMinecraftInstance().renderEngine;
-
-		try
-		{
-			TexturePackList texturePackList = (TexturePackList)CommonUtilities.getPrivateValue(TextureManager.class, renderEngine, "g", "texturePack", "field_78366_k");
-			return texturePackList.getSelectedTexturePack();
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-
-		return null;
 	}
 
 	@Override

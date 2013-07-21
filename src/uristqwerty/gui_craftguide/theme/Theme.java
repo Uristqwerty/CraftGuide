@@ -130,7 +130,7 @@ public class Theme
 				return errorTexture;
 			}
 		}
-		else if(sourceType.equalsIgnoreCase("file-jar"))
+		else if(sourceType.equalsIgnoreCase("file-jar") || sourceType.equalsIgnoreCase("resource"))
 		{
 			return Image.fromJar(source);
 		}

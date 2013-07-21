@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.Resource;
+import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.util.ResourceLocation;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.editor.TextureMeta;
@@ -23,7 +27,7 @@ public class ThemeManager
 {
 	private ThemeReader xmlReader = new ThemeReader();
 	public Map<String, Theme> themeList;
-	public boolean debugOutput = false;
+	public static boolean debugOutput = true;
 
 	public static ThemeManager instance = new ThemeManager();
 	public static Theme currentTheme;
@@ -73,32 +77,20 @@ public class ThemeManager
 			}
 		}
 
-		ITexturePack pack = CraftGuideClient.getTexturePack();
-		InputStream packThemes = null;
 		try
 		{
-			if(pack.func_98138_b("/CraftGuideThemes.txt", true))
-			{
-				packThemes = pack.getResourceAsStream("/CraftGuideThemes.txt");
-			}
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		if(packThemes != null)
-		{
+			ResourceManager resourceManager = Minecraft.getMinecraft().func_110442_L();
+			Resource packThemes = resourceManager.func_110536_a(new ResourceLocation("craftguide", "themes.txt"));
 			CraftGuideLog.log("Loading themes from texture pack...");
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes.func_110527_b()));
 			String line;
-			try
+
+			while((line = reader.readLine()) != null)
 			{
-				while((line = reader.readLine()) != null)
+				CraftGuideLog.log("  Trying to load file from texture pack: " + line);
+				try
 				{
-					CraftGuideLog.log("  Trying to load file from texture pack: " + line);
-					Theme theme = loadStream(pack.getResourceAsStream(line));
+					Theme theme = loadStream(resourceManager.func_110536_a(new ResourceLocation("craftguide", line)).func_110527_b());
 
 					if(theme != null)
 					{
@@ -110,21 +102,20 @@ public class ThemeManager
 						CraftGuideLog.log("    Failed to load " + line);
 					}
 				}
-			}
-			catch(IOException e)
-			{
-				CraftGuideLog.log(e);
-			}
-
-			try
-			{
-				reader.close();
-			}
-			catch(IOException e)
-			{
-				CraftGuideLog.log(e);
+				catch(IOException e)
+				{
+					CraftGuideLog.log(e, "Exception while trying to load a theme from a texturepack:", false);
+				}
 			}
 		}
+		catch(FileNotFoundException e)
+		{
+		}
+		catch(IOException e)
+		{
+			CraftGuideLog.log(e, "Error while checking if any currently loaded resource pack defines a list of CraftGuide themes:", true);
+		}
+
 
 		Map<String, Theme> validatedThemes = new HashMap<String, Theme>();
 		List<String> processed = new ArrayList<String>();
@@ -273,12 +264,12 @@ public class ThemeManager
 			debug("            No parent theme defines image.");
 			return false;
 		}
-		else if(type.equalsIgnoreCase("file-jar"))
+		else if(type.equalsIgnoreCase("file-jar") || type.equalsIgnoreCase("resource"))
 		{
-			debug("            Searching classpath for '" + source + "'");
+			debug("            Searching resource packs, Minecraft.jar, and mod jars/zips/dirs for '" + source + "'");
 			try
 			{
-				if(CraftGuideClient.getTexturePack().getResourceAsStream(source) != null)
+				if(Minecraft.getMinecraft().func_110442_L().func_110536_a(new ResourceLocation(source)) != null)
 				{
 					debug("              Found.");
 					return true;
@@ -288,6 +279,11 @@ public class ThemeManager
 					debug("              Not found.");
 					return false;
 				}
+			}
+			catch(FileNotFoundException e)
+			{
+				debug("              Not found.");
+				return false;
 			}
 			catch(IOException e)
 			{

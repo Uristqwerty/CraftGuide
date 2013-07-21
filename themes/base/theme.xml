@@ -7,13 +7,13 @@
 	</metadata>
 	<image id="base_image">
 		<source type="file">base.png</source>
-		<source type="file-jar">/gui/CraftGuide.png</source>
+		<source type="resource">craftguide:textures/gui/CraftGuide.png</source>
 	</image>
 	<image id="recipe_backgrounds">
-		<source type="file-jar">/gui/CraftGuideRecipe.png</source>
+		<source type="resource">craftguide:textures/gui/CraftGuideRecipe.png</source>
 	</image>
 	<image id="brew_recipe_background">
-		<source type="file-jar">/gui/BrewGuide.png</source>
+		<source type="resource">craftguide:textures/gui/BrewGuide.png</source>
 	</image>
 	<texture type="clip" id="stack-any">
 		<source sourceid="base_image"></source>

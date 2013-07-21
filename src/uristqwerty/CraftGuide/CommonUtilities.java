@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.CraftGuide.api.Util;
-import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 public class CommonUtilities
 {
@@ -57,7 +57,7 @@ public class CommonUtilities
 	{
 		String idText = "";
 
-		if(((CraftGuideClient)CraftGuide.side).getMinecraftInstance().gameSettings.advancedItemTooltips)
+		if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
 		{
 			if(item.getHasSubtypes())
 			{

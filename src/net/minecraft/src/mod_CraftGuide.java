@@ -21,7 +21,6 @@ import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLoaderSide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.BWRData;
-import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.CraftGuide.client.modloader.CraftGuideClient_ModLoader;
 
 public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
@@ -115,7 +114,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 	{
 		if(kb == keyBinding && CraftGuide.enableKeybind)
 		{
-			Minecraft mc = CraftGuideClient.getMinecraft();
+			Minecraft mc = Minecraft.getMinecraft();
 			GuiScreen screen = mc.currentScreen;
 			if(screen == null)
 			{
@@ -158,19 +157,19 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 		for(int i = 0; i < container.inventorySlots.size(); i++)
 		{
 			Slot slot = (Slot)container.inventorySlots.get(i);
-	        if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
-	        {
-	        	ItemStack item = slot.getStack();
+			if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
+			{
+				ItemStack item = slot.getStack();
 
-	        	if(item != null)
-	        	{
-	    			Minecraft mc = CraftGuideClient.getMinecraft();
-	        		GuiCraftGuide.getInstance().setFilterItem(item);
+				if(item != null)
+				{
+					Minecraft mc = Minecraft.getMinecraft();
+					GuiCraftGuide.getInstance().setFilterItem(item);
 					CraftGuide.side.openGUI(mc.thePlayer);
-	        	}
+				}
 
-	        	break;
-	        }
+				break;
+			}
 		}
 	}
 

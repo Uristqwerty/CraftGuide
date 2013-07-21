@@ -1,5 +1,6 @@
 package uristqwerty.gui_craftguide.minecraft;
 
+import net.minecraft.client.Minecraft;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
@@ -42,11 +43,11 @@ public class Text implements Renderable
 
 	public int textWidth()
 	{
-		return CraftGuideClient.getMinecraft().fontRenderer.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
 	}
 
 	public static int textWidth(String text)
 	{
-		return CraftGuideClient.getMinecraft().fontRenderer.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
 	}
 }

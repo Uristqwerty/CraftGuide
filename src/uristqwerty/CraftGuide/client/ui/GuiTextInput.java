@@ -3,6 +3,7 @@ package uristqwerty.CraftGuide.client.ui;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.input.Keyboard;
@@ -96,7 +97,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 
 	private int xToCharIndex(String text, int x)
 	{
-		FontRenderer fr = CraftGuideClient.getMinecraft().fontRenderer;
+		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		int i = 0;
 
 		while(i < text.length() && fr.getStringWidth(text.substring(0, i + 1)) < x)

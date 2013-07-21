@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.gui_craftguide.theme.ThemeManager;
 
 public class CraftGuide
 {
@@ -147,6 +148,7 @@ public class CraftGuide
 		config.setProperty("newerBackgroundStyle", Boolean.toString(false));
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
 		config.setProperty("insertBetterWithRenewablesRecipes", Boolean.toString(false));
+		config.setProperty("logThemeDebugInfo", Boolean.toString(false));
 	}
 
 	/**
@@ -228,6 +230,7 @@ public class CraftGuide
 		newerBackgroundStyle = Boolean.valueOf(config.getProperty("newerBackgroundStyle"));
 		hideMundanePotionRecipes = Boolean.valueOf(config.getProperty("hideMundanePotionRecipes"));
 		insertBetterWithRenewablesRecipes = Boolean.valueOf(config.getProperty("insertBetterWithRenewablesRecipes"));
+		ThemeManager.debugOutput = Boolean.valueOf(config.getProperty("logThemeDebugInfo"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{

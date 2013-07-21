@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import uristqwerty.CraftGuide.CraftGuide;
@@ -185,30 +184,6 @@ public abstract class CraftGuideClient implements CraftGuideSide
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public abstract Minecraft getMinecraftInstance();
-
-	public static Minecraft getMinecraft()
-	{
-		if(CraftGuide.side instanceof CraftGuideClient)
-		{
-			return ((CraftGuideClient)CraftGuide.side).getMinecraftInstance();
-		}
-
-		return null;
-	}
-
-	public abstract ITexturePack getSelectedTexturePack();
-
-	public static ITexturePack getTexturePack()
-	{
-		if(CraftGuide.side instanceof CraftGuideClient)
-		{
-			return ((CraftGuideClient)CraftGuide.side).getSelectedTexturePack();
-		}
-
-		return null;
 	}
 
 	@Override

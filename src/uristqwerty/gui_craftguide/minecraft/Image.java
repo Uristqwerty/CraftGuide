@@ -12,16 +12,20 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.renderer.texture.TextureObject;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
-import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 import uristqwerty.gui_craftguide.texture.Texture;
 
 public class Image implements Texture
 {
 	private int texID;
-	private static Map<String, Image> jarCache = new HashMap<String, Image>();
+	private static Map<ResourceLocation, Image> jarCache = new HashMap<ResourceLocation, Image>();
 	private static Map<String, Image> fileCache = new HashMap<String, Image>();
 	private static Image err = new Image(-1);
 	private static boolean needsInit = true;
@@ -30,13 +34,22 @@ public class Image implements Texture
 	{
 		if(needsInit)
 		{
-			for(Entry<String, Image> entry: jarCache.entrySet())
+			for(Entry<ResourceLocation, Image> entry: jarCache.entrySet())
 			{
 				Image image = entry.getValue();
 
 				if(image.texID == -1)
 				{
-					image.texID = CraftGuideClient.getMinecraft().renderEngine.getTexture(entry.getKey());
+					ResourceLocation resourceLocation = entry.getKey();
+					TextureObject texture = Minecraft.getMinecraft().renderEngine.func_110581_b(resourceLocation);
+
+					if(texture == null)
+					{
+						texture = new SimpleTexture(resourceLocation);
+						Minecraft.getMinecraft().renderEngine.func_110579_a(resourceLocation, texture);
+					}
+
+					image.texID = texture.func_110552_b();
 				}
 			}
 
@@ -56,7 +69,7 @@ public class Image implements Texture
 		if(image == null)
 		{
 			image = new Image(-1);
-			jarCache.put(filename, image);
+			jarCache.put(new ResourceLocation(filename), image);
 			needsInit = true;
 		}
 
