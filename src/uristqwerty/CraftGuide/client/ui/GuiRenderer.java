@@ -29,7 +29,6 @@ import uristqwerty.gui_craftguide.texture.Texture;
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
     private RenderItem itemRenderer = new RenderItem();
-	private Minecraft minecraft;
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
 
@@ -37,9 +36,8 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	private Renderable itemError = new TexturedRect(-1, -1, 18, 18, DynamicTexture.instance("item_error"), 238, 200);
 
-	public void startFrame(Minecraft mc, Gui gui)
+	public void startFrame(Gui gui)
 	{
-		minecraft = mc;
 		this.gui = gui;
     	resetValues();
 	}
@@ -89,13 +87,13 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	@Override
 	public void drawText(String text, int x, int y)
 	{
-		minecraft.fontRenderer.drawString(text, x, y, currentColor());
+		Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, currentColor());
 	}
 
 	@Override
 	public void drawTextWithShadow(String text, int x, int y)
 	{
-		minecraft.fontRenderer.drawStringWithShadow(text, x, y, currentColor());
+		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, x, y, currentColor());
 	}
 
 	private int currentColor()
@@ -121,11 +119,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 			if(s.charAt(0) == '\u00a7')
 			{
-				w = minecraft.fontRenderer.getStringWidth(s.substring(2));
+				w = Minecraft.getMinecraft().fontRenderer.getStringWidth(s.substring(2));
 			}
 			else
 			{
-				w = minecraft.fontRenderer.getStringWidth(s);
+				w = Minecraft.getMinecraft().fontRenderer.getStringWidth(s);
 			}
 
 			if(w > textWidth)
@@ -225,11 +223,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         		itemStack = fixedItemStack(itemStack);
         	}
 
-			itemRenderer.renderItemAndEffectIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+			itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().func_110434_K(), itemStack, 0, 0);
 
 			if(renderOverlay)
 			{
-				itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, minecraft.renderEngine, itemStack, 0, 0);
+				itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().func_110434_K(), itemStack, 0, 0);
 			}
 
 			error = false;
@@ -311,12 +309,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		x *= minecraft.displayHeight / (float)gui.height;
-		y *= minecraft.displayWidth / (float)gui.width;
-		height *= minecraft.displayHeight / (float)gui.height;
-		width *= minecraft.displayWidth / (float)gui.width;
+		x *= Minecraft.getMinecraft().displayHeight / (float)gui.height;
+		y *= Minecraft.getMinecraft().displayWidth / (float)gui.width;
+		height *= Minecraft.getMinecraft().displayHeight / (float)gui.height;
+		width *= Minecraft.getMinecraft().displayWidth / (float)gui.width;
 
-		GL11.glScissor(x, minecraft.displayHeight - y - height, width, height);
+		GL11.glScissor(x, Minecraft.getMinecraft().displayHeight - y - height, width, height);
 	}
 
 	public void clearClippingRegion()
@@ -326,12 +324,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public int guiXFromMouseX(int x)
 	{
-        return (x * gui.width) / minecraft.displayWidth;
+        return (x * gui.width) / Minecraft.getMinecraft().displayWidth;
 	}
 
 	public int guiYFromMouseY(int y)
 	{
-        return gui.height - (y * gui.height) / minecraft.displayHeight - 1;
+        return gui.height - (y * gui.height) / Minecraft.getMinecraft().displayHeight - 1;
 	}
 
 	@Override
@@ -459,9 +457,9 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	 */
 	private List<String> getTooltip(ItemStack stack)
 	{
-		List<String> list = stack.getTooltip(minecraft.thePlayer, false);
+		List<String> list = stack.getTooltip(Minecraft.getMinecraft().thePlayer, false);
 
-		if(minecraft.gameSettings.advancedItemTooltips)
+		if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
 		{
 			String name = list.get(0);
 			StringBuilder builder = new StringBuilder();

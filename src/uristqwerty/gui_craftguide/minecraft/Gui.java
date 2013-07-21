@@ -35,7 +35,7 @@ public class Gui extends GuiScreen
 			drawDefaultBackground();
 		}
 
-		renderer.startFrame(mc, this);
+		renderer.startFrame(this);
 		guiWindow.draw();
 		renderer.endFrame();
 		firstFrame = false;

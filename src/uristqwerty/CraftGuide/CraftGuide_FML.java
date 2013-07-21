@@ -9,8 +9,7 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -28,7 +27,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 
 	private CraftGuide craftguide;
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		logger.setParent(FMLLog.getLogger());
@@ -38,7 +37,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		craftguide.preInit();
 	}
 
-	@Init
+	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
 		craftguide.init();

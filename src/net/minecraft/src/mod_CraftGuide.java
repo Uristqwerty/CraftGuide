@@ -1,11 +1,14 @@
 package net.minecraft.src;
 
 import java.io.File;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -19,6 +22,7 @@ import org.lwjgl.input.Mouse;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLoaderSide;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.BWRData;
 import uristqwerty.CraftGuide.client.modloader.CraftGuideClient_ModLoader;
@@ -27,6 +31,31 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 {
 	private CraftGuide craftguide;
 	private KeyBinding keyBinding;
+
+	public mod_CraftGuide()
+	{
+		try
+		{
+			List resourcePacks = (List)CommonUtilities.getPrivateField(ModLoader.class, "resourcePacks").get(null);
+			File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+
+			if(file.exists())
+			{
+				if(file.isDirectory())
+				{
+					resourcePacks.add(new FolderResourcePack(file));
+				}
+				else
+				{
+					resourcePacks.add(new FileResourcePack(file));
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			CraftGuideLog.log(e, "Error while adding CraftGuide resources:", true);
+		}
+	}
 
 	public void initKeybind()
 	{

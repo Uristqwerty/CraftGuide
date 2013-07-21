@@ -8,7 +8,6 @@ import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.input.Keyboard;
 
-import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.minecraft.Text;
 

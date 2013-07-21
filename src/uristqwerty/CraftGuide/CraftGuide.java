@@ -32,6 +32,7 @@ public class CraftGuide
 	public static boolean newerBackgroundStyle = false;
 	public static boolean hideMundanePotionRecipes = true;
 	public static boolean insertBetterWithRenewablesRecipes = false;
+	public static boolean enableItemRecipe;
 
 	public static boolean betterWithRenewablesDetected = false;
 	public static boolean needsRecipeRefresh = false;
@@ -44,41 +45,23 @@ public class CraftGuide
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
-		if(loaderSide.isModLoaded("Forge"))
-		{
-			try
-			{
-				RecipeGeneratorImplementation.forgeExt = (RecipeGeneratorForgeExtension)Class.forName("uristqwerty.CraftGuide.ForgeStuff").newInstance();
-			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(ClassNotFoundException e)
-			{
-				CraftGuideLog.log(e);
-			}
-		}
+		initForgeExtensions();
+		loadProperties();
 
 		side.preInit();
-		ItemSlot.implementation = new ItemSlotImplementationImplementation();
 
-		loadProperties();
+		ItemSlot.implementation = new ItemSlotImplementationImplementation();
 
 		if(enableKeybind)
 		{
 			side.initKeybind();
 		}
+
+		addItem();
 	}
 
 	public void init()
 	{
-		addItems();
-
 		try
 		{
 			Class.forName("uristqwerty.CraftGuide.recipes.DefaultRecipeProvider").newInstance();
@@ -124,15 +107,41 @@ public class CraftGuide
 		}
 	}
 
-	private void addItems()
+	private void initForgeExtensions()
+	{
+		if(loaderSide.isModLoaded("Forge"))
+		{
+			try
+			{
+				RecipeGeneratorImplementation.forgeExt = (RecipeGeneratorForgeExtension)Class.forName("uristqwerty.CraftGuide.ForgeStuff").newInstance();
+			}
+			catch(InstantiationException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+			}
+			catch(ClassNotFoundException e)
+			{
+				CraftGuideLog.log(e);
+			}
+		}
+	}
+
+	private void addItem()
 	{
 		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
 		loaderSide.addName(itemCraftGuide, "Crafting Guide");
 
-		loaderSide.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
-				"bcb", "pbp", Character.valueOf('c'), Block.workbench,
-				Character.valueOf('p'), Item.paper, Character.valueOf('b'),
-				Item.book});
+		if(enableItemRecipe)
+		{
+			loaderSide.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
+					"bcb", "pbp", Character.valueOf('c'), Block.workbench,
+					Character.valueOf('p'), Item.paper, Character.valueOf('b'),
+					Item.book});
+		}
 	}
 
 	private void setConfigDefaults()
@@ -145,6 +154,7 @@ public class CraftGuide
 		config.setProperty("alwaysShowID", Boolean.toString(false));
 		config.setProperty("textSearchRequiresShift", Boolean.toString(false));
 		config.setProperty("enableKeybind", Boolean.toString(true));
+		config.setProperty("enableItemRecipe", Boolean.toString(true));
 		config.setProperty("newerBackgroundStyle", Boolean.toString(false));
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
 		config.setProperty("insertBetterWithRenewablesRecipes", Boolean.toString(false));
@@ -231,6 +241,7 @@ public class CraftGuide
 		hideMundanePotionRecipes = Boolean.valueOf(config.getProperty("hideMundanePotionRecipes"));
 		insertBetterWithRenewablesRecipes = Boolean.valueOf(config.getProperty("insertBetterWithRenewablesRecipes"));
 		ThemeManager.debugOutput = Boolean.valueOf(config.getProperty("logThemeDebugInfo"));
+		enableItemRecipe = Boolean.valueOf(config.getProperty("enableItemRecipe"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{

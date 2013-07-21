@@ -26,6 +26,7 @@ xcopy "reobf\minecraft\CraftGuide" "zip\build-modloader\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build-modloader\uristqwerty\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\gui_craftguide" "zip\build-modloader\uristqwerty\gui_craftguide" /S /I /Y
 xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build-modloader" /Y
+xcopy "eclipse\CraftGuide\src\pack.mcmeta" "zip\build-modloader\" /Y
 xcopy "eclipse\CraftGuide\assets" "zip\build-modloader\assets" /S /I /Y
 xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build-modloader\uristqwerty\CraftGuide" /Y
 
@@ -35,6 +36,7 @@ xcopy "reobf\minecraft\CraftGuide" "zip\build\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build\uristqwerty\CraftGuide" /S /I /Y
 xcopy "reobf\minecraft\uristqwerty\gui_craftguide" "zip\build\uristqwerty\gui_craftguide" /S /I /Y
 xcopy "eclipse\CraftGuide\out\mcmod.info" "zip\build\" /Y
+xcopy "eclipse\CraftGuide\src\pack.mcmeta" "zip\build\" /Y
 xcopy "eclipse\CraftGuide\assets" "zip\build\assets" /S /I /Y
 xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build\uristqwerty\CraftGuide" /Y
 

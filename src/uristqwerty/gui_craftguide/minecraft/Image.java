@@ -41,12 +41,12 @@ public class Image implements Texture
 				if(image.texID == -1)
 				{
 					ResourceLocation resourceLocation = entry.getKey();
-					TextureObject texture = Minecraft.getMinecraft().renderEngine.func_110581_b(resourceLocation);
+					TextureObject texture = Minecraft.getMinecraft().func_110434_K().func_110581_b(resourceLocation);
 
 					if(texture == null)
 					{
 						texture = new SimpleTexture(resourceLocation);
-						Minecraft.getMinecraft().renderEngine.func_110579_a(resourceLocation, texture);
+						Minecraft.getMinecraft().func_110434_K().func_110579_a(resourceLocation, texture);
 					}
 
 					image.texID = texture.func_110552_b();

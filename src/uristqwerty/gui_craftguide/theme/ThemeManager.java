@@ -27,7 +27,7 @@ public class ThemeManager
 {
 	private ThemeReader xmlReader = new ThemeReader();
 	public Map<String, Theme> themeList;
-	public static boolean debugOutput = true;
+	public static boolean debugOutput = false;
 
 	public static ThemeManager instance = new ThemeManager();
 	public static Theme currentTheme;

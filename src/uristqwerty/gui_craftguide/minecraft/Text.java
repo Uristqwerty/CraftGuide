@@ -1,7 +1,6 @@
 package uristqwerty.gui_craftguide.minecraft;
 
 import net.minecraft.client.Minecraft;
-import uristqwerty.CraftGuide.client.CraftGuideClient;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 

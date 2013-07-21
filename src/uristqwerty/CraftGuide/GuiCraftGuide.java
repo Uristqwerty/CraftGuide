@@ -27,9 +27,9 @@ import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
 import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.components.Image;
 import uristqwerty.gui_craftguide.components.Window;
-import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.minecraft.Gui;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.Texture;
@@ -497,7 +497,7 @@ public class GuiCraftGuide extends Gui
 
 	public void drawOverlay(float f, Minecraft minecraft)
 	{
-		renderer.startFrame(minecraft, this);
+		renderer.startFrame(this);
 		guiOverlay.draw();
 		renderer.endFrame();
 	}
