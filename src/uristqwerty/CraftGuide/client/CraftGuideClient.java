@@ -11,9 +11,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.texturepacks.ITexturePack;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.src.ITexturePack;
+import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.Packet250CustomPayload;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.CraftGuideSide;

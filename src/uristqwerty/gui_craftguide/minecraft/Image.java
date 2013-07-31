@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +14,12 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.RenderEngine;
+
 import org.lwjgl.opengl.GL11;
 
-import uristqwerty.CraftGuide.client.CraftGuideClient;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 import uristqwerty.gui_craftguide.texture.Texture;
 
@@ -36,7 +41,28 @@ public class Image implements Texture
 
 				if(image.texID == -1)
 				{
-					image.texID = CraftGuideClient.getMinecraft().renderEngine.getTexture(entry.getKey());
+					Method getTexture;
+					try
+					{
+						getTexture = CommonUtilities.getPrivateMethod(RenderEngine.class, new String[]{"f", "getTexture", "func_78341_b"}, String.class);
+						image.texID = (Integer)getTexture.invoke(Minecraft.getMinecraft().renderEngine, entry.getKey());
+					}
+					catch(NoSuchMethodException e)
+					{
+						e.printStackTrace();
+					}
+					catch(IllegalArgumentException e)
+					{
+						e.printStackTrace();
+					}
+					catch(IllegalAccessException e)
+					{
+						e.printStackTrace();
+					}
+					catch(InvocationTargetException e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 

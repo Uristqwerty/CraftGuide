@@ -1,0 +1,22 @@
+In order for CraftGuide to work without ModLoader or FML, some Minecraft code needs to be altered to reference it.
+
+I used GuiAchievement (NOT GuiAchievements), since it has a method that is called every frame, and no reason for other mods to edit it (it's only the little popup you get when an achievement is unlocked, only containing GUI logic)
+
+
+The edit: Replace
+
+    public void updateAchievementWindow()
+    {
+
+with
+
+    CraftGuide_Vanilla craftguideInstance;
+    public void updateAchievementWindow()
+    {
+        if(craftguideInstance == null)
+        {
+            craftguideInstance = new CraftGuide_Vanilla();
+            craftguideInstance.load();
+        }
+
+        craftguideInstance.checkKeybind();

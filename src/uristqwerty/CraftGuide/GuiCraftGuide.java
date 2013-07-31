@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
@@ -27,9 +27,9 @@ import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
 import uristqwerty.gui_craftguide.components.GuiElement;
+import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.components.Image;
 import uristqwerty.gui_craftguide.components.Window;
-import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.minecraft.Gui;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.Texture;

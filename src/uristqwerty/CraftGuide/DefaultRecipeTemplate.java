@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;

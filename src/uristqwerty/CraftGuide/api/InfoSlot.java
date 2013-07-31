@@ -3,7 +3,7 @@ package uristqwerty.CraftGuide.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 
 public class InfoSlot extends ItemSlot
 {

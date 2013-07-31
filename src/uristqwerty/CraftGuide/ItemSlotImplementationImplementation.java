@@ -2,7 +2,7 @@ package uristqwerty.CraftGuide;
 
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.ItemSlotImplementation;

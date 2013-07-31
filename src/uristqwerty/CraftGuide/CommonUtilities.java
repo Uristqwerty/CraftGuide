@@ -1,11 +1,12 @@
 package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.CraftGuide.api.Util;
@@ -257,5 +258,39 @@ public class CommonUtilities
 				getItemDamage(second) == CraftGuide.DAMAGE_WILDCARD ||
 				getItemDamage(first) == getItemDamage(second)
 			);
+	}
+
+	public static Method getPrivateMethod(Class fromClass, String[] names, Class... params) throws NoSuchMethodException
+	{
+		Method method = null;
+
+		for(String name: names)
+		{
+			try
+			{
+				method = fromClass.getDeclaredMethod(name, params);
+				method.setAccessible(true);
+				return method;
+			}
+			catch(NoSuchMethodException e)
+			{
+			}
+		}
+
+		if(names.length == 1)
+		{
+			throw new NoSuchMethodException("Could not find a method named " + names[0]);
+		}
+		else
+		{
+			String nameStr = "[" + names[0];
+
+			for(int i = 1; i < names.length; i++)
+			{
+				nameStr += ", " + names[i];
+			}
+
+			throw new NoSuchMethodException("Could not find a method with any of the following names: " + nameStr + "]");
+		}
 	}
 }

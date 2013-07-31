@@ -3,8 +3,8 @@ package uristqwerty.CraftGuide;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.EnumRarity;
+import net.minecraft.src.ItemStack;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;

@@ -1,7 +1,7 @@
 package uristqwerty.CraftGuide.api;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.src.IRecipe;
+import net.minecraft.src.ItemStack;
 
 /**
  * This interface contains methods that can be used to provide CraftGuide with

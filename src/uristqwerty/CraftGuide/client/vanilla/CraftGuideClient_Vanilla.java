@@ -1,15 +1,14 @@
-package uristqwerty.CraftGuide.client.modloader;
+package uristqwerty.CraftGuide.client.vanilla;
 
 import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderEngine;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.texturepacks.ITexturePack;
-import net.minecraft.client.texturepacks.TexturePackList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.mod_CraftGuide;
+import net.minecraft.src.CraftGuide_Vanilla;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ITexturePack;
+import net.minecraft.src.RenderEngine;
+import net.minecraft.src.Tessellator;
+import net.minecraft.src.TexturePackList;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
@@ -17,26 +16,26 @@ import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 
 
-public class CraftGuideClient_ModLoader extends CraftGuideClient
+public class CraftGuideClient_Vanilla extends CraftGuideClient
 {
 	private static Field isDrawing = null;
 
 	@Override
 	public void initKeybind()
 	{
-		((mod_CraftGuide)CraftGuide.loaderSide).initKeybind();
+		((CraftGuide_Vanilla)CraftGuide.loaderSide).initKeybind();
 	}
 
 	@Override
 	public void openGUI(EntityPlayer player)
 	{
-		ModLoader.openGUI(player, GuiCraftGuide.getInstance());
+		Minecraft.getMinecraft().displayGuiScreen(GuiCraftGuide.getInstance());
 	}
 
 	@Override
 	public Minecraft getMinecraftInstance()
 	{
-		return ModLoader.getMinecraftInstance();
+		return Minecraft.getMinecraft();
 	}
 
 	@Override
@@ -76,27 +75,11 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 		{
 			try
 			{
-				try
-				{
-					isDrawing = Tessellator.class.getField("z");
-				}
-				catch(NoSuchFieldException e)
-				{
-					try
-					{
-						isDrawing = Tessellator.class.getField("field_78415_z");
-					}
-					catch(NoSuchFieldException e2)
-					{
-						isDrawing = Tessellator.class.getField("isDrawing");
-					}
-				}
-
-				isDrawing.setAccessible(true);
+				isDrawing = CommonUtilities.getPrivateField(Tessellator.class, "z", "isDrawing", "field_78415_z");
 			}
-			catch(Exception e)
+			catch(NoSuchFieldException e)
 			{
-				CraftGuideLog.log(e);
+				e.printStackTrace();
 			}
 		}
 

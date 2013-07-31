@@ -3,11 +3,11 @@ package uristqwerty.CraftGuide.client;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.src.CompressedStreamTools;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTBase;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
 import uristqwerty.CraftGuide.CraftGuide;
 
 public class BWRData

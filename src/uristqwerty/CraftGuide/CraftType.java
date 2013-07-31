@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 
 public class CraftType implements Comparable<CraftType>
 {

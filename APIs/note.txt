@@ -1,4 +1,0 @@
-Put APIs from other mods here.
-
-Currently used:
- - IC2 API, can be found at http://ic2api.player.to:8080/job/IC2_lf/

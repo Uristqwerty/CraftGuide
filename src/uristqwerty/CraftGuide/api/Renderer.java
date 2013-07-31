@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.api;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.ItemStack;
 
 /**
  * Provides useful methods to render common things, in

@@ -1,8 +1,8 @@
 package uristqwerty.CraftGuide;
 
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.Packet250CustomPayload;
 
 public interface CraftGuideSide
 {

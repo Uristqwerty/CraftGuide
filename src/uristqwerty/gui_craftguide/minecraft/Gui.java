@@ -1,7 +1,6 @@
 package uristqwerty.gui_craftguide.minecraft;
 
-
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

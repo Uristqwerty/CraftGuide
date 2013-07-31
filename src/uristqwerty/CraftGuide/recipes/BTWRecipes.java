@@ -4,11 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.src.Block;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.ShapedRecipes;
+import net.minecraft.src.ShapelessRecipes;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -49,12 +49,12 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 	{
 		try
 		{
-			Class btw = Class.forName("mod_FCBetterThanWolves");
+			Class btw = Class.forName("FCBetterThanWolves");
 			aestheticOpaque = (Block)btw.getField("fcAestheticOpaque").get(null);
 			crucible = new ItemStack((Block)btw.getField("fcCrucible").get(null));
 			bellows = new ItemStack((Block)btw.getField("fcBellows").get(null));
 			hibachi = new ItemStack((Block)btw.getField("fcBBQ").get(null));
-			soulUrn = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcSoulUrn").get(null));
+			soulUrn = new ItemStack((Item)btw.getField("fcSoulUrn").get(null));
 			urn = new ItemStack((Item)btw.getField("fcUrn").get(null));
 			unfiredPotteryClass = Class.forName("FCBlockUnfiredPottery");
 			endStoneClass = Class.forName("FCBlockEndStone");
@@ -358,7 +358,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 		};
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, turntable);
-		Block unfiredPottery = (Block)Class.forName("mod_FCBetterThanWolves").getField("fcUnfiredPottery").get(null);
+		Block unfiredPottery = (Block)Class.forName("FCBetterThanWolves").getField("fcUnfiredPottery").get(null);
 		ItemStack clay = new ItemStack(Item.clay);
 
 		addTurntableRecipe(generator, template, turntable, new ItemStack(Block.blockClay), new ItemStack(unfiredPottery, 1, 0), clay);
@@ -414,9 +414,9 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 	{
 		if(unfiredPotteryClass.isAssignableFrom(block.getClass()))
 		{
-			ItemStack planter = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcPlanter").get(null));
-			ItemStack vase = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcVase").get(null));
-			ItemStack mould = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcItemMould").get(null));
+			ItemStack planter = new ItemStack((Block)Class.forName("FCBetterThanWolves").getField("fcPlanter").get(null));
+			ItemStack vase = new ItemStack((Block)Class.forName("FCBetterThanWolves").getField("fcVase").get(null));
+			ItemStack mould = new ItemStack((Item)Class.forName("FCBetterThanWolves").getField("fcItemMould").get(null));
 
 			addKilnRecipe(generator, template, kiln, new ItemStack(block, 1, 0), crucible);
 			addKilnRecipe(generator, template, kiln, new ItemStack(block, 1, 1), planter);
@@ -430,7 +430,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 			if(endStoneClass.isAssignableFrom(block.getClass()))
 			{
-				ItemStack output1 = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcItemBrimstone").get(null));
+				ItemStack output1 = new ItemStack((Item)Class.forName("FCBetterThanWolves").getField("fcItemBrimstone").get(null));
 				ItemStack output2 = new ItemStack(aestheticOpaque, 1, 10);
 				addKilnRecipe(generator, template, kiln, input, output1, output2);
 			}
@@ -472,7 +472,7 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, hopper);
 		ItemStack groundNetherrackStack = new ItemStack(groundNetherrack, 8);
 		ItemStack hellfireDustStack = new ItemStack(hellfireDust, 8);
-		ItemStack wicker = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcWicker").get(null));
+		ItemStack wicker = new ItemStack((Item)Class.forName("FCBetterThanWolves").getField("fcWicker").get(null));
 		ItemStack slowsand = new ItemStack(Block.slowSand);
 		ItemStack soulDustStack = new ItemStack(soulDust, 8);
 		ItemStack sawDustStack = new ItemStack(sawDust, 8);
@@ -502,18 +502,18 @@ public class BTWRecipes extends CraftGuideAPIObject implements RecipeProvider
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, saw);
 
-		ItemStack bloodWood = new ItemStack((Block)Class.forName("mod_FCBetterThanWolves").getField("fcBloodWood").get(null));
-		ItemStack gears = new ItemStack((Item)Class.forName("mod_FCBetterThanWolves").getField("fcGear").get(null));
+		ItemStack bloodWood = new ItemStack((Block)Class.forName("FCBetterThanWolves").getField("fcBloodWood").get(null));
+		ItemStack gears = new ItemStack((Item)Class.forName("FCBetterThanWolves").getField("fcGear").get(null));
 		ItemStack soulDustStack = new ItemStack(soulDust, 2);
 		ItemStack sawDustStack = new ItemStack(sawDust, 2);
 		gears.stackSize = 2;
 
-		Block aestheticNonOpaque = (Block)Class.forName("mod_FCBetterThanWolves").getField("fcAestheticNonOpaque").get(null);
-		Block companionCube = (Block)Class.forName("mod_FCBetterThanWolves").getField("fcCompanionCube").get(null);
+		Block aestheticNonOpaque = (Block)Class.forName("FCBetterThanWolves").getField("fcAestheticNonOpaque").get(null);
+		Block companionCube = (Block)Class.forName("FCBetterThanWolves").getField("fcCompanionCube").get(null);
 
-		int mouldingID = (Integer)Class.forName("mod_FCBetterThanWolves").getField("fcBlockWoodMouldingItemStubID").get(null);
-		int sidingID = (Integer)Class.forName("mod_FCBetterThanWolves").getField("fcBlockWoodSidingItemStubID").get(null);
-		int cornerID = (Integer)Class.forName("mod_FCBetterThanWolves").getField("fcBlockWoodCornerItemStubID").get(null);
+		int mouldingID = (Integer)Class.forName("FCBetterThanWolves").getField("fcBlockWoodMouldingItemStubID").get(null);
+		int sidingID = (Integer)Class.forName("FCBetterThanWolves").getField("fcBlockWoodSidingItemStubID").get(null);
+		int cornerID = (Integer)Class.forName("FCBetterThanWolves").getField("fcBlockWoodCornerItemStubID").get(null);
 
 		addSawRecipe(generator, template, saw, bloodWood, new ItemStack(Block.planks, 4, 3), soulDustStack);
 
