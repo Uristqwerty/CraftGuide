@@ -14,7 +14,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
-import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.ChanceSlot;
@@ -268,25 +267,12 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 			if(itemString.startsWith("liquid$"))
 			{
-				int colon = itemString.indexOf(':');
-				int meta = CraftGuide.DAMAGE_WILDCARD;
-				int id;
-
-				if(colon == -1)
-				{
-					id = Integer.parseInt(itemString.substring(7));
-				}
-				else
-				{
-					id = Integer.parseInt(itemString.substring(7, colon - 1));
-					meta = Integer.parseInt(itemString.substring(colon + 1));
-				}
+				String fluidName = itemString.substring(7);
 
 				ArrayList containers = new ArrayList();
 				for(FluidContainerData container: FluidContainerRegistry.getRegisteredFluidContainerData())
 				{
-					if(container.filledContainer.itemID == id &&
-							(meta == CraftGuide.DAMAGE_WILDCARD || container.filledContainer.getItemDamage() == meta))
+					if(container.fluid.getFluid().getName().equals(fluidName))
 					{
 						containers.add(container.filledContainer);
 					}

@@ -4,5 +4,6 @@
 		<id>base_texpack</id>
 		<description>Causes base_image to load from the jar, for better compatibility with texture packs.</description>
 		<dependency>theme_base</dependency></metadata>
-	<image id="base_image">
-		<source type="resource">craftguide:textures/gui/CraftGuide.png</source></image></theme>
+	<image id="base_image" type="resource">
+		<source type="resource">craftguide:textures/gui/CraftGuide.png</source>
+		<source type="resource">minecraft:textures/gui/CraftGuide.png</source></image></theme>

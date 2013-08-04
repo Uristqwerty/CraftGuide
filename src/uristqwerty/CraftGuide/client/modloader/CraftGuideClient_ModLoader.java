@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_CraftGuide;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
@@ -35,25 +36,9 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 		{
 			try
 			{
-				try
-				{
-					isDrawing = Tessellator.class.getField("z");
-				}
-				catch(NoSuchFieldException e)
-				{
-					try
-					{
-						isDrawing = Tessellator.class.getField("field_78415_z");
-					}
-					catch(NoSuchFieldException e2)
-					{
-						isDrawing = Tessellator.class.getField("isDrawing");
-					}
-				}
-
-				isDrawing.setAccessible(true);
+				isDrawing = CommonUtilities.getPrivateField(Tessellator.class, "field_78415_z", "z", "isDrawing");
 			}
-			catch(Exception e)
+			catch(NoSuchFieldException e)
 			{
 				CraftGuideLog.log(e);
 			}

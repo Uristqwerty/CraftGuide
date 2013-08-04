@@ -78,6 +78,41 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			craftingType = workbench;
 		}
 
+		if(backgroundTexture.equals("/gui/BrewGuide.png"))
+		{
+			backgroundTexture = "craftguide:textures/gui/BrewGuide.png";
+		}
+		else if(backgroundTexture.equals("/gui/CraftGuide.png"))
+		{
+			backgroundTexture = "craftguide:textures/gui/CraftGuide.png";
+		}
+		else if(backgroundTexture.equals("/gui/CraftGuideRecipe.png"))
+		{
+			backgroundTexture = "craftguide:textures/gui/CraftGuideRecipe.png";
+		}
+
+		if(backgroundSelectedTexture.equals("/gui/BrewGuide.png"))
+		{
+			backgroundSelectedTexture = "craftguide:textures/gui/BrewGuide.png";
+		}
+		else if(backgroundSelectedTexture.equals("/gui/CraftGuide.png"))
+		{
+			backgroundSelectedTexture = "craftguide:textures/gui/CraftGuide.png";
+		}
+		else if(backgroundSelectedTexture.equals("/gui/CraftGuideRecipe.png"))
+		{
+			backgroundSelectedTexture = "craftguide:textures/gui/CraftGuideRecipe.png";
+		}
+
+		for(ItemStack stack: recipes.keySet())
+		{
+			if(ItemStack.areItemStacksEqual(stack, craftingType))
+			{
+				craftingType = stack;
+				break;
+			}
+		}
+
 		return new DefaultRecipeTemplate(
 				slots,
 				craftingType,

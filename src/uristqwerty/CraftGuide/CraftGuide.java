@@ -82,9 +82,9 @@ public class CraftGuide
 
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
 		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
-		loadModRecipes("GregTech_Addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
+		loadModRecipes("gregtech_addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
 		loadModRecipes("extendedWorkbench", "uristqwerty.CraftGuide.recipes.ExtendedWorkbench");
-
+		loadModRecipes("BuildCraft|Factory", "uristqwerty.CraftGuide.recipes.BuildCraftRecipes");
 		side.initNetworkChannels();
 	}
 

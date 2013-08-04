@@ -1,15 +1,11 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.lang.reflect.Method;
-import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.resources.FileResourcePack;
-import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -31,71 +27,6 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 {
 	private CraftGuide craftguide;
 	private KeyBinding keyBinding;
-
-	public mod_CraftGuide()
-	{
-		try
-		{
-			Class loader = Class.forName("cpw.mods.fml.common.Loader");
-			insertResources_FML(loader);
-		}
-		catch(ClassNotFoundException e)
-		{
-			insertResources_ModLoader();
-		}
-	}
-
-	private void insertResources_ModLoader()
-	{
-		try
-		{
-			File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-			addResourcePack(file);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void insertResources_FML(Class loader)
-	{
-		try
-		{
-			List mods = (List)loader.getMethod("getModList").invoke(loader.getMethod("instance").invoke(null));
-			Class container = Class.forName("cpw.mods.fml.common.modloader.ModLoaderModContainer");
-			Method getModId = container.getMethod("getModId");
-
-			for(Object mod: mods)
-			{
-				if(container.isAssignableFrom(mod.getClass()) && ((String)getModId.invoke(mod)).equalsIgnoreCase("mod_craftguide"))
-				{
-					addResourcePack((File)container.getMethod("getSource").invoke(mod));
-					return;
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void addResourcePack(File file) throws IllegalAccessException, NoSuchFieldException
-	{
-		List resourcePacks = (List)CommonUtilities.getPrivateField(Minecraft.class, "aq", "field_110449_ao").get(Minecraft.getMinecraft());
-		if(file.exists())
-		{
-			if(file.isDirectory())
-			{
-				resourcePacks.add(new FolderResourcePack(file));
-			}
-			else
-			{
-				resourcePacks.add(new FileResourcePack(file));
-			}
-		}
-	}
 
 	public void initKeybind()
 	{

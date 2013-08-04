@@ -385,7 +385,7 @@ public class ThemeManager
 		return null;
 	}
 
-	private void debug(String text)
+	public static void debug(String text)
 	{
 		if(debugOutput)
 		{
@@ -395,19 +395,23 @@ public class ThemeManager
 
 	public Theme buildTheme(String string)
 	{
+		debug("Building theme '" + string + "':");
 		Theme theme = themeList.get(string);
 
 		if(theme == null)
 		{
+			debug("  Could not find theme.");
 			return null;
 		}
 
 		Theme combined = new Theme(null);
+		debug("  Merging...");
 		merge(combined, theme);
 		combined.id = "[built-theme:" + string + "]";
 		combined.fileSourceType = Theme.SourceType.GENERATED;
 		combined.description = "Internal Theme that is a combination of the currently selected theme and all of its prerequisites.";
 
+		debug("  Generating textures...");
 		combined.generateTextures();
 
 		return combined;
@@ -415,24 +419,39 @@ public class ThemeManager
 
 	private void merge(Theme combined, Theme theme)
 	{
+		debug("    Handling dependencies:");
 		for(String dependency: theme.dependencies)
 		{
+			debug("      Dependency '" + dependency + "'");
 			if(!combined.dependencies.contains(dependency))
 			{
 				Theme dep = themeList.get(dependency);
 
 				if(dep != null)
 				{
+					debug("        Not merged yet. Merging... [");
 					merge(combined, dep);
+					debug("        ] finished merging '" + dependency + "'");
 				}
+				else
+				{
+					debug("        Not merged yet. Could not find theme, though.");
+				}
+			}
+			else
+			{
+				debug("        Already merged.");
 			}
 		}
 
+		debug("    Merging:");
 		if(combined.dependencies.contains(theme.id))
 		{
+			debug("      Already merged, skipping.");
 			return;
 		}
 
+		debug("      Not already merged. adding images and textures.");
 		combined.dependencies.add(theme.id);
 		combined.images.putAll(theme.images);
 		combined.textures.putAll(theme.textures);

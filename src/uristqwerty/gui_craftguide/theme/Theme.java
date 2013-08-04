@@ -1,11 +1,15 @@
 package uristqwerty.gui_craftguide.theme;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import uristqwerty.gui_craftguide.minecraft.Image;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.SolidColorTexture;
@@ -92,6 +96,7 @@ public class Theme
 	{
 		for(String imageID: images.keySet())
 		{
+			ThemeManager.debug("    Loading image '" + imageID + "'");
 			Texture texture = null;
 
 			for(Object[] imageFormat: images.get(imageID))
@@ -114,6 +119,7 @@ public class Theme
 
 		for(String id: textures.keySet())
 		{
+			ThemeManager.debug("    Adding texture '" + id + "'. Maps to '" + textures.get(id) + "'");
 			DynamicTexture.instance(id, textures.get(id));
 		}
 	}
@@ -122,6 +128,8 @@ public class Theme
 	{
 		String sourceType = (String)imageFormat[0];
 		String source = (String)imageFormat[1];
+
+		ThemeManager.debug("      Loading " + sourceType + " image '" + source + "'");
 
 		if(sourceType.equalsIgnoreCase("builtin"))
 		{
@@ -132,13 +140,27 @@ public class Theme
 		}
 		else if(sourceType.equalsIgnoreCase("file-jar") || sourceType.equalsIgnoreCase("resource"))
 		{
-			return Image.fromJar(source);
+			try
+			{
+				if(Minecraft.getMinecraft().func_110442_L().func_110536_a(new ResourceLocation(source)) != null)
+				{
+					return Image.fromJar(source);
+				}
+			}
+			catch(FileNotFoundException e)
+			{
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else if(sourceType.equalsIgnoreCase("file") && imageFormat[2] != null)
 		{
 			return Image.fromFile((File)imageFormat[2], source);
 		}
 
+		ThemeManager.debug("        Not found.");
 		return null;
 	}
 

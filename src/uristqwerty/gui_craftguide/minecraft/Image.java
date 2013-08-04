@@ -25,7 +25,7 @@ import uristqwerty.gui_craftguide.texture.Texture;
 public class Image implements Texture
 {
 	private int texID;
-	private static Map<ResourceLocation, Image> jarCache = new HashMap<ResourceLocation, Image>();
+	private static Map<String, Image> jarCache = new HashMap<String, Image>();
 	private static Map<String, Image> fileCache = new HashMap<String, Image>();
 	private static Image err = new Image(-1);
 	private static boolean needsInit = true;
@@ -34,13 +34,13 @@ public class Image implements Texture
 	{
 		if(needsInit)
 		{
-			for(Entry<ResourceLocation, Image> entry: jarCache.entrySet())
+			for(Entry<String, Image> entry: jarCache.entrySet())
 			{
 				Image image = entry.getValue();
 
 				if(image.texID == -1)
 				{
-					ResourceLocation resourceLocation = entry.getKey();
+					ResourceLocation resourceLocation = new ResourceLocation(entry.getKey());
 					TextureObject texture = Minecraft.getMinecraft().func_110434_K().func_110581_b(resourceLocation);
 
 					if(texture == null)
@@ -69,7 +69,7 @@ public class Image implements Texture
 		if(image == null)
 		{
 			image = new Image(-1);
-			jarCache.put(new ResourceLocation(filename), image);
+			jarCache.put(filename, image);
 			needsInit = true;
 		}
 

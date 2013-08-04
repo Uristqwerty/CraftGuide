@@ -8,12 +8,15 @@
 	<image id="base_image">
 		<source type="file">base.png</source>
 		<source type="resource">craftguide:textures/gui/CraftGuide.png</source>
+        <source type="resource">minecraft:textures/gui/CraftGuide.png</source>
 	</image>
 	<image id="recipe_backgrounds">
 		<source type="resource">craftguide:textures/gui/CraftGuideRecipe.png</source>
+        <source type="resource">minecraft:textures/gui/CraftGuideRecipe.png</source>
 	</image>
 	<image id="brew_recipe_background">
 		<source type="resource">craftguide:textures/gui/BrewGuide.png</source>
+        <source type="resource">minecraft:textures/gui/BrewGuide.png</source>
 	</image>
 	<texture type="clip" id="stack-any">
 		<source sourceid="base_image"></source>
