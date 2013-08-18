@@ -226,6 +226,10 @@ public class RecipeCache
 				{
 					CraftGuideLog.log(e);
 				}
+				catch(LinkageError e)
+				{
+					CraftGuideLog.log(e);
+				}
 			}
 		}
 

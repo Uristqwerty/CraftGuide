@@ -1,11 +1,18 @@
 package uristqwerty.CraftGuide;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -21,6 +28,8 @@ public class CraftGuide
 
 	public static ItemCraftGuide itemCraftGuide;
 	private static Properties config = new Properties();
+
+	private static Map<String, String> configComments;
 
 	public static int resizeRate;
 	public static int mouseWheelScrollRate;
@@ -104,6 +113,10 @@ public class CraftGuide
 			{
 				CraftGuideLog.log(e, "", true);
 			}
+			catch(LinkageError e)
+			{
+				CraftGuideLog.log(e, "", true);
+			}
 		}
 	}
 
@@ -142,6 +155,22 @@ public class CraftGuide
 					Character.valueOf('p'), Item.paper, Character.valueOf('b'),
 					Item.book});
 		}
+	}
+
+	static
+	{
+		configComments = new HashMap<String, String>();
+		configComments.put("newerBackgroundStyle", "If false, CraftGuide will use the images from CraftGuideRecipe.png for vanilla shaped crafting recipes, which is better for texture packs. If true, CraftGuide will use the default background (pieced together from parts of CraftGuide.png, then slot backgrounds drawn overtop), which is worse for texture packs, and looks identical without a texture pack.");
+		configComments.put("hideMundanePotionRecipes", "Hides recipes that convert a useful potion into a mundane potion with the damage value 8192, which is basically a failed potion. In the vanilla ingredients, they only occur when you try to add an effect without first adding netherwart (or add a second effect ingredient without using netherwart in between). Note that 8192 means, to the vanilla brewing system 'can make a splash potion without losing it's effects', and a potion with a value of EXACTLY 8192 does not have any effects anyway.");
+		configComments.put("logThemeDebugInfo", "If true, CraftGuide will output a lot of debugging text every time it reloads the themes.");
+		configComments.put("gridPacking", "Affects whether CraftGuide distributes leftover horizontal space between columns, or puts it all at the far right. Currently not useful, as any grid with columns now resizes itself so that it doesn't have any leftover horizntal space that needs to be distributed.");
+		configComments.put("resizeRate", "If greater than 0, the maximum number of pixels that the CraftGuide window will change size by each frame. When the effect was actually tried in-game, it just made the GUI feel slow, so defaults to 0 ('ALL the pixels!').");
+		configComments.put("textSearchRequiresShift", "Normally, when typing in the item list search box, pressing enter instantly returns to the recipe list, using whatever you had typed as the text filter. If this option is true, you also have to hold shift, to avoid accidentally searching.");
+		configComments.put("RecipeList_mouseWheelScrollRate", "How many rows to scroll for each unit of mouse wheel scrolliness.");
+		configComments.put("enableItemRecipe", "Whether you can craft the CraftGuide item.");
+		configComments.put("enableKeybind", "Whether CraftGuide sets up a keybind so that you can open it without the item.");
+		configComments.put("PauseWhileOpen", "In singleplayer, whether the game is paused while you have CraftGuide open. If false, you can browse recipes while waiting for your machines to run, but it also means that a ninja creeper may be able to sneak up behind you while you are distracted.");
+		configComments.put("alwaysShowID", "If true, item tooltips have an additional line showing their item ID and damage value. Added before the vanilla F3+H, it has a different format, and puts the item ID on a separate line from the item name. If this setting is false, CraftGuide will only show item IDs in this way in the rare case of an item error");
 	}
 
 	private void setConfigDefaults()
@@ -259,17 +288,55 @@ public class CraftGuide
 		{
 			try
 			{
-				config.store(new FileOutputStream(newConfigFile), "");
-			}
-			catch(FileNotFoundException e)
-			{
-				e.printStackTrace();
+				saveConfig(new FileOutputStream(newConfigFile));
 			}
 			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	// config.store() does not permit per-setting comments.
+	private void saveConfig(OutputStream outputStream) throws IOException
+	{
+		Set<String> properties = config.stringPropertyNames();
+
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+
+		writer.write("# ");
+		writer.write(new Date().toString());
+		writer.newLine();
+
+		for(String property: properties)
+		{
+			if(configComments.containsKey(property))
+			{
+				writer.newLine();
+				writer.write("# ");
+				writer.write(configComments.get(property));
+				writer.newLine();
+				writer.write(property);
+				writer.write('=');
+				writer.write(config.getProperty(property));
+				writer.newLine();
+			}
+		}
+
+		writer.newLine();
+
+		for(String property: properties)
+		{
+			if(!configComments.containsKey(property))
+			{
+				writer.write(property);
+				writer.write('=');
+				writer.write(config.getProperty(property));
+				writer.newLine();
+			}
+		}
+
+		writer.close();
 	}
 
 	public static File configDirectory()

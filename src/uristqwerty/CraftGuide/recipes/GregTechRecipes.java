@@ -15,9 +15,16 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.recipes.IC2Recipes.AdditionalMachines;
 
-public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvider
+public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvider, AdditionalMachines
 {
+	public GregTechRecipes()
+	{
+		super();
+		IC2Recipes.additionalMachines.add(this);
+	}
+
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
@@ -278,5 +285,109 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 			generator.addRecipe(template, recipeContents);
 		}
+	}
+
+	@Override
+	public ItemStack[] extraMacerators()
+	{
+		try
+		{
+			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
+			return new ItemStack[] {
+				new ItemStack(machine, 1, 50),
+			};
+		}
+		catch(IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public ItemStack[] extraExtractors()
+	{
+		try
+		{
+			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
+			return new ItemStack[] {
+				new ItemStack(machine, 1, 51),
+				new ItemStack(machine, 1, 135),
+			};
+		}
+		catch(IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public ItemStack[] extraCompressors()
+	{
+		try
+		{
+			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
+			return new ItemStack[] {
+				new ItemStack(machine, 1, 52),
+				new ItemStack(machine, 1, 134),
+			};
+		}
+		catch(IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

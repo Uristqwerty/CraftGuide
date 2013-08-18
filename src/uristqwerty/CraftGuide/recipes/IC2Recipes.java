@@ -32,6 +32,15 @@ import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 {
+	public static interface AdditionalMachines
+	{
+		public ItemStack[] extraMacerators();
+		public ItemStack[] extraExtractors();
+		public ItemStack[] extraCompressors();
+	}
+
+	public static List<AdditionalMachines> additionalMachines = new ArrayList<AdditionalMachines>();
+
 	public IC2Recipes()
 	{
 		StackInfo.addSource(new IC2GeneratorFuel());
@@ -46,9 +55,9 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		{
 			addCraftingRecipes(generator);
 
-			addMachineRecipes(generator, Items.getItem("macerator"), Recipes.macerator);
-			addMachineRecipes(generator, Items.getItem("extractor"), Recipes.extractor);
-			addMachineRecipes(generator, Items.getItem("compressor"), Recipes.compressor);
+			addMachineRecipes(generator, Items.getItem("macerator"), getMacerator(), Recipes.macerator);
+			addMachineRecipes(generator, Items.getItem("extractor"), getExtractor(), Recipes.extractor);
+			addMachineRecipes(generator, Items.getItem("compressor"), getCompressor(), Recipes.compressor);
 
 			addScrapboxOutput(generator, Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}
@@ -74,7 +83,70 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		}
 	}
 
-	private void addMachineRecipes(RecipeGenerator generator, ItemStack machine, IMachineRecipeManager<ItemStack> recipeManager)
+	private Object getMacerator()
+	{
+		ArrayList<Object> macerator = new ArrayList<Object>();
+		macerator.add(Items.getItem("macerator"));
+
+		for(AdditionalMachines additional: additionalMachines)
+		{
+			Object machines[] = additional.extraMacerators();
+
+			if(machines != null)
+			{
+				for(Object machine: machines)
+				{
+					macerator.add(machine);
+				}
+			}
+		}
+
+		return macerator;
+	}
+
+	private Object getExtractor()
+	{
+		ArrayList<Object> extractor = new ArrayList<Object>();
+		extractor.add(Items.getItem("extractor"));
+
+		for(AdditionalMachines additional: additionalMachines)
+		{
+			Object machines[] = additional.extraExtractors();
+
+			if(machines != null)
+			{
+				for(Object machine: machines)
+				{
+					extractor.add(machine);
+				}
+			}
+		}
+
+		return extractor;
+	}
+
+	private Object getCompressor()
+	{
+		ArrayList<Object> compressor = new ArrayList<Object>();
+		compressor.add(Items.getItem("compressor"));
+
+		for(AdditionalMachines additional: additionalMachines)
+		{
+			Object machines[] = additional.extraCompressors();
+
+			if(machines != null)
+			{
+				for(Object machine: machines)
+				{
+					compressor.add(machine);
+				}
+			}
+		}
+
+		return compressor;
+	}
+
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, Object machine, IMachineRecipeManager<ItemStack> recipeManager)
 	{
 		Slot[] recipeSlots = new Slot[]{
 				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
@@ -83,7 +155,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 				new EUSlot(31, 12).setConstantPacketSize(2).setConstantEUValue(-800),
 		};
 
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, type);
 
 		for(Entry<ItemStack, ItemStack> recipe: recipeManager.getRecipes().entrySet())
 		{

@@ -2,9 +2,9 @@ package uristqwerty.CraftGuide.client.modloader;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_CraftGuide;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
@@ -26,7 +26,7 @@ public class CraftGuideClient_ModLoader extends CraftGuideClient
 	@Override
 	public void openGUI(EntityPlayer player)
 	{
-		ModLoader.openGUI(player, GuiCraftGuide.getInstance());
+		Minecraft.getMinecraft().displayGuiScreen(GuiCraftGuide.getInstance());
 	}
 
 	@Override
