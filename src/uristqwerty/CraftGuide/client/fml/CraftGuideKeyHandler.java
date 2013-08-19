@@ -10,7 +10,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.CommonUtilities;
@@ -23,19 +22,17 @@ import cpw.mods.fml.common.TickType;
 
 public class CraftGuideKeyHandler extends KeyHandler
 {
-	private static KeyBinding[] keyBindings = new KeyBinding[] {
-		new KeyBinding("Open CraftGuide", Keyboard.KEY_G),
-	};
-
 	private static boolean[] repeatings = new boolean[] {
 		false,
 	};
 
 	private EnumSet<TickType> tickTypes = EnumSet.of(TickType.CLIENT);
 
-	public CraftGuideKeyHandler()
+	public CraftGuideKeyHandler(int defaultKeybind)
 	{
-		super(keyBindings, repeatings);
+		super(
+			new KeyBinding[] {new KeyBinding("Open CraftGuide", defaultKeybind)},
+			repeatings);
 	}
 
 	@Override

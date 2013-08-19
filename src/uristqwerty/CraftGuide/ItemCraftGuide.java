@@ -8,11 +8,11 @@ import net.minecraft.world.World;
 
 public class ItemCraftGuide extends Item
 {
-	public ItemCraftGuide(int i)
+	public ItemCraftGuide(int i, String iconName)
 	{
 		super(i);
 		setUnlocalizedName("craftguide_item");
-		func_111206_d("craftguide:craftguide_item");
+		func_111206_d(iconName);
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 

@@ -34,7 +34,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		CraftGuide.loaderSide = this;
 		CraftGuide.side = side;
 		craftguide = new CraftGuide();
-		craftguide.preInit();
+		craftguide.preInit("craftguide:craftguide_item");
 	}
 
 	@EventHandler

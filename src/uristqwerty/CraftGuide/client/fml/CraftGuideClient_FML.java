@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide.client.fml;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -12,7 +13,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	@Override
 	public void initKeybind()
 	{
-		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler());
+		KeyBindingRegistry.registerKeyBinding(new CraftGuideKeyHandler(CraftGuide.defaultKeybind));
 	}
 
 	@Override

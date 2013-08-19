@@ -13,7 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.CommonUtilities;
@@ -30,7 +29,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 
 	public void initKeybind()
 	{
-		keyBinding = new KeyBinding("Open CraftGuide", Keyboard.KEY_G);
+		keyBinding = new KeyBinding("Open CraftGuide", CraftGuide.defaultKeybind);
 		ModLoader.registerKey(this, keyBinding, false);
 	}
 
@@ -105,7 +104,7 @@ public class mod_CraftGuide extends BaseMod implements CraftGuideLoaderSide
 		CraftGuide.loaderSide = this;
 		CraftGuide.side = new CraftGuideClient_ModLoader();
 		craftguide = new CraftGuide();
-		craftguide.preInit();
+		craftguide.preInit("minecraft:craftguide_item");
 		craftguide.init();
 	}
 

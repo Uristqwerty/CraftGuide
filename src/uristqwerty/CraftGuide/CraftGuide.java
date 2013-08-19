@@ -17,6 +17,9 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import org.lwjgl.input.Keyboard;
+
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.gui_craftguide.theme.ThemeManager;
@@ -33,6 +36,7 @@ public class CraftGuide
 
 	public static int resizeRate;
 	public static int mouseWheelScrollRate;
+	public static int defaultKeybind;
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
 	public static boolean alwaysShowID = false;
@@ -50,7 +54,7 @@ public class CraftGuide
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
-	public void preInit()
+	public void preInit(String iconName)
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
@@ -66,7 +70,7 @@ public class CraftGuide
 			side.initKeybind();
 		}
 
-		addItem();
+		addItem(iconName);
 	}
 
 	public void init()
@@ -143,9 +147,9 @@ public class CraftGuide
 		}
 	}
 
-	private void addItem()
+	private void addItem(String iconName)
 	{
-		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID);
+		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID, iconName);
 		loaderSide.addName(itemCraftGuide, "Crafting Guide");
 
 		if(enableItemRecipe)
@@ -171,6 +175,7 @@ public class CraftGuide
 		configComments.put("enableKeybind", "Whether CraftGuide sets up a keybind so that you can open it without the item.");
 		configComments.put("PauseWhileOpen", "In singleplayer, whether the game is paused while you have CraftGuide open. If false, you can browse recipes while waiting for your machines to run, but it also means that a ninja creeper may be able to sneak up behind you while you are distracted.");
 		configComments.put("alwaysShowID", "If true, item tooltips have an additional line showing their item ID and damage value. Added before the vanilla F3+H, it has a different format, and puts the item ID on a separate line from the item name. If this setting is false, CraftGuide will only show item IDs in this way in the rare case of an item error");
+		configComments.put("defaultKeybind", "If Minecraft isn't properly loading changed keybinds, or you are putting together a config/modpack and want a different default value, you can change the default CraftGuide keybind here.");
 	}
 
 	private void setConfigDefaults()
@@ -188,6 +193,7 @@ public class CraftGuide
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
 		config.setProperty("insertBetterWithRenewablesRecipes", Boolean.toString(false));
 		config.setProperty("logThemeDebugInfo", Boolean.toString(false));
+		config.setProperty("defaultKeybind", Integer.toString(Keyboard.KEY_G));
 	}
 
 	/**
@@ -256,6 +262,14 @@ public class CraftGuide
 		{
 			mouseWheelScrollRate = Integer.valueOf(config
 					.getProperty("RecipeList_mouseWheelScrollRate"));
+		}
+		catch(NumberFormatException e)
+		{
+		}
+
+		try
+		{
+			defaultKeybind = Integer.valueOf(config.getProperty("defaultKeybind"));
 		}
 		catch(NumberFormatException e)
 		{
