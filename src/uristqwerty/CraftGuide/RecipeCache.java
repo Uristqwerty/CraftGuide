@@ -245,9 +245,20 @@ public class RecipeCache
 			{
 				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
 
-				for(ItemStack type: rawRecipes.keySet())
+				try
 				{
-					rawRecipes.put(type, ((RecipeFilter)object).filterRecipes(rawRecipes.get(type), type));
+					for(ItemStack type: rawRecipes.keySet())
+					{
+						rawRecipes.put(type, ((RecipeFilter)object).filterRecipes(rawRecipes.get(type), type));
+					}
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
+				}
+				catch(LinkageError e)
+				{
+					CraftGuideLog.log(e);
 				}
 			}
 			else if(object instanceof BasicRecipeFilter)
@@ -255,17 +266,28 @@ public class RecipeCache
 
 				CraftGuideLog.log("    Filtering recipes from " + object.getClass().getName());
 
-				for(ItemStack type: rawRecipes.keySet())
+				try
 				{
-					Iterator<CraftGuideRecipe> iterator = rawRecipes.get(type).iterator();
-
-					while(iterator.hasNext())
+					for(ItemStack type: rawRecipes.keySet())
 					{
-						if(!((BasicRecipeFilter)object).shouldKeepRecipe(iterator.next(), type))
+						Iterator<CraftGuideRecipe> iterator = rawRecipes.get(type).iterator();
+
+						while(iterator.hasNext())
 						{
-							iterator.remove();
+							if(!((BasicRecipeFilter)object).shouldKeepRecipe(iterator.next(), type))
+							{
+								iterator.remove();
+							}
 						}
 					}
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
+				}
+				catch(LinkageError e)
+				{
+					CraftGuideLog.log(e);
 				}
 			}
 		}

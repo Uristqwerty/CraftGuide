@@ -66,7 +66,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 
 	private static int getCachedBurnTime(ItemStack stack)
 	{
-		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) : 0);
+		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) & 0xffffffff : 0);
 
 		Integer value = burnCache.get(lookup);
 

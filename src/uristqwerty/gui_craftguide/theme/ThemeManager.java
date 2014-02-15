@@ -79,10 +79,10 @@ public class ThemeManager
 
 		try
 		{
-			ResourceManager resourceManager = Minecraft.getMinecraft().func_110442_L();
-			Resource packThemes = resourceManager.func_110536_a(new ResourceLocation("craftguide", "themes.txt"));
+			ResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+			Resource packThemes = resourceManager.getResource(new ResourceLocation("craftguide", "themes.txt"));
 			CraftGuideLog.log("Loading themes from texture pack...");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes.func_110527_b()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes.getInputStream()));
 			String line;
 
 			while((line = reader.readLine()) != null)
@@ -90,7 +90,7 @@ public class ThemeManager
 				CraftGuideLog.log("  Trying to load file from texture pack: " + line);
 				try
 				{
-					Theme theme = loadStream(resourceManager.func_110536_a(new ResourceLocation("craftguide", line)).func_110527_b());
+					Theme theme = loadStream(resourceManager.getResource(new ResourceLocation("craftguide", line)).getInputStream());
 
 					if(theme != null)
 					{
@@ -269,7 +269,7 @@ public class ThemeManager
 			debug("            Searching resource packs, Minecraft.jar, and mod jars/zips/dirs for '" + source + "'");
 			try
 			{
-				if(Minecraft.getMinecraft().func_110442_L().func_110536_a(new ResourceLocation(source)) != null)
+				if(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(source)) != null)
 				{
 					debug("              Found.");
 					return true;

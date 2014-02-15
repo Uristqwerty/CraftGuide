@@ -223,11 +223,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         		itemStack = fixedItemStack(itemStack);
         	}
 
-			itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().func_110434_K(), itemStack, 0, 0);
+			itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
 
 			if(renderOverlay)
 			{
-				itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().func_110434_K(), itemStack, 0, 0);
+				itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
 			}
 
 			error = false;

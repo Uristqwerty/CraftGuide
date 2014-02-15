@@ -68,7 +68,14 @@ public class GuiCraftGuide extends Gui
 
 	public void setFilterItem(ItemStack item)
 	{
-		recipeCache.filter(Util.instance.getCommonFilter(item.copy()));
+		try
+		{
+			recipeCache.filter(Util.instance.getCommonFilter(item.copy()));
+		}
+		catch(Exception e)
+		{
+			CraftGuideLog.log(e, "Error while trying to filter displayed recipes.", true);
+		}
 	}
 
 	private static final int initialWindowWidth = 248;

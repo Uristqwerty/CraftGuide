@@ -81,7 +81,7 @@ public class LiquidFilter implements ItemFilter
 
 			if(icon != null)
 			{
-				textureManager.func_110577_a(TextureMap.field_110575_b);
+				textureManager.bindTexture(TextureMap.locationBlocksTexture);
 
                 double u = icon.getInterpolatedU(3.0);
                 double u2 = icon.getInterpolatedU(13.0);

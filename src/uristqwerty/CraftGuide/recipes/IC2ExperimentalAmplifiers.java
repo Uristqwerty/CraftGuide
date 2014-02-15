@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide.recipes;
 
+import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
-public class IC2Amplifiers implements StackInfoSource
+public class IC2ExperimentalAmplifiers implements StackInfoSource
 {
 	private static Map<Long, Integer> amplifierCache = new HashMap<Long, Integer>();
 
@@ -36,7 +37,7 @@ public class IC2Amplifiers implements StackInfoSource
 
 		if(value == null)
 		{
-			value = Recipes.matterAmplifier.getOutputFor(stack, false);
+			value = getValue(Recipes.matterAmplifier.getOutputFor(stack, false));
 
 			if(value == null)
 			{
@@ -47,5 +48,15 @@ public class IC2Amplifiers implements StackInfoSource
 		}
 
 		return value;
+	}
+
+	private static Integer getValue(RecipeOutput output)
+	{
+		if(output != null && output.metadata != null)
+		{
+			return output.metadata.getInteger("amplification");
+		}
+
+		return 0;
 	}
 }

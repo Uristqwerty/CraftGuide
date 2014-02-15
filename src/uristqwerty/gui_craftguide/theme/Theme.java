@@ -142,7 +142,7 @@ public class Theme
 		{
 			try
 			{
-				if(Minecraft.getMinecraft().func_110442_L().func_110536_a(new ResourceLocation(source)) != null)
+				if(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(source)) != null)
 				{
 					return Image.fromJar(source);
 				}

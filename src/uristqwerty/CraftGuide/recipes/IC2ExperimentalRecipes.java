@@ -2,6 +2,9 @@ package uristqwerty.CraftGuide.recipes;
 
 import ic2.api.item.Items;
 import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.IRecipeInput;
+import ic2.api.recipe.IScrapboxManager;
+import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Field;
@@ -30,7 +33,7 @@ import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.TextureClip;
 
-public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
+public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
 	public static interface AdditionalMachines
 	{
@@ -41,11 +44,11 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 	public static List<AdditionalMachines> additionalMachines = new ArrayList<AdditionalMachines>();
 
-	public IC2Recipes()
+	public IC2ExperimentalRecipes()
 	{
 		StackInfo.addSource(new IC2GeneratorFuel());
 		StackInfo.addSource(new IC2Power());
-		StackInfo.addSource(new IC2Amplifiers());
+		StackInfo.addSource(new IC2ExperimentalAmplifiers());
 	}
 
 	@Override
@@ -58,6 +61,12 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 			addMachineRecipes(generator, Items.getItem("macerator"), getMacerator(), Recipes.macerator);
 			addMachineRecipes(generator, Items.getItem("extractor"), getExtractor(), Recipes.extractor);
 			addMachineRecipes(generator, Items.getItem("compressor"), getCompressor(), Recipes.compressor);
+			addMachineRecipes(generator, Items.getItem("centrifuge"), Recipes.centrifuge);
+			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerExtruding);
+			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerCutting);
+			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerRolling);
+			addMachineRecipes(generator, Items.getItem("orewashingplant"), Recipes.oreWashing);
+			addMachineRecipes(generator, Items.getItem("scanner"), Recipes.Scanner);
 
 			addScrapboxOutput(generator, Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}
@@ -146,31 +155,64 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		return compressor;
 	}
 
-	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, Object machine, IMachineRecipeManager<ItemStack> recipeManager)
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, IMachineRecipeManager recipeManager)
 	{
-		Slot[] recipeSlots = new Slot[]{
-				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
-				new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ExtraSlot(31, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
-				new EUSlot(31, 12).setConstantPacketSize(2).setConstantEUValue(-800),
-		};
+		addMachineRecipes(generator, type, type, recipeManager);
+	}
+
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, Object machine, IMachineRecipeManager recipeManager)
+	{
+		addMachineRecipes(generator, type, machine, recipeManager, 2, 800);
+	}
+
+	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, Object machine, IMachineRecipeManager recipeManager, int eut, int totalEU)
+	{
+		int maxOutput = 1;
+
+		for(RecipeOutput output: recipeManager.getRecipes().values())
+		{
+			maxOutput = Math.max(maxOutput, output.items.size());
+		}
+
+		int columns = (maxOutput+1) / 2;
+
+		Slot[] recipeSlots = new Slot[maxOutput + 3];
+
+		recipeSlots[0] = new ItemSlot(columns > 1? 3 : 12, 21, 16, 16, true).drawOwnBackground();
+		recipeSlots[1] = new ExtraSlot(columns > 1? 23 : 31, 30, 16, 16, machine).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+		recipeSlots[2] = new EUSlot(columns > 1? 23 : 31, 12).setConstantPacketSize(eut).setConstantEUValue(-totalEU);
+
+		for(int i = 0; i < maxOutput/2; i++)
+		{
+			recipeSlots[i * 2 + 3] = new ItemSlot((columns > 1? 41 : 50) + i * 18, 12, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+			recipeSlots[i * 2 + 4] = new ItemSlot((columns > 1? 41 : 50) + i * 18, 30, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+		}
+
+		if((maxOutput & 1) == 1)
+		{
+			recipeSlots[columns * 2 + 1] = new ItemSlot((columns > 1? 23 : 32) + columns * 18, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+		}
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, type);
 
-		for(Entry<ItemStack, ItemStack> recipe: recipeManager.getRecipes().entrySet())
+		for(Entry<IRecipeInput, RecipeOutput> recipe: recipeManager.getRecipes().entrySet())
 		{
-			generator.addRecipe(
-					template,
-					new Object[]{
-						recipe.getKey(),
-						recipe.getValue(),
-						machine,
-						null,
-					});
+			Object[] recipeContents = new Object[maxOutput + 3];
+			recipeContents[0] = recipe.getKey().getInputs();
+			recipeContents[1] = machine;
+			recipeContents[2] = null;
+			List<ItemStack> output = recipe.getValue().items;
+
+			for(int i = 0; i < Math.min(maxOutput, output.size()); i++)
+			{
+				recipeContents[i + 3] = output.get(i);
+			}
+
+			generator.addRecipe(template, recipeContents);
 		}
 	}
 
-	private void addScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, IMachineRecipeManager<Float> recipeManager)
+	private void addScrapboxOutput(RecipeGenerator generator, ItemStack scrapbox, IScrapboxManager scrapboxDrops)
 	{
 		Slot[] recipeSlots = new Slot[]{
 				new ExtraSlot(18, 21, 16, 16, scrapbox).clickable().showName().setSlotType(SlotType.INPUT_SLOT),
@@ -179,7 +221,7 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, scrapbox);
 
-		for(Entry<ItemStack, Float> entry: recipeManager.getRecipes().entrySet())
+		for(Entry<ItemStack, Float> entry: scrapboxDrops.getDrops().entrySet())
 		{
 			Object[] recipeContents = new Object[]{
 					scrapbox,
@@ -202,6 +244,13 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
 		Field hidden = advancedRecipe.getField("hidden");
+		Field maskField = null;
+
+		try
+		{
+			maskField = advancedRecipe.getField("masks");
+		}
+		catch(NoSuchFieldException e){}
 
 		Class shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
 		Field shapelessInput = shapelessRecipe.getField("input");
@@ -262,6 +311,11 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 				Object[] input = (Object[])inputField.get(recipe);
 				int width = (Integer)widthField.get(recipe);
 
+				if(maskField != null)
+				{
+					input = expandInput(input, width, ((int[])maskField.get(recipe))[0]);
+				}
+
 				if(width < 3 && input.length / width < 3)
 				{
 					addSmallRecipe(generator, smallTemplate, input, output, width);
@@ -281,16 +335,39 @@ public class IC2Recipes extends CraftGuideAPIObject implements RecipeProvider
 		}
 	}
 
+	private Object[] expandInput(Object[] input, int width, int mask)
+	{
+		int height = ((mask & 0x007) != 0? 1 : 0) + ((mask & 0x038) != 0? 1 : 0) + ((mask & 0x1c0) != 0? 1 : 0);
+
+		Object[] expanded = new Object[width * height];
+		int i = 0;
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++)
+			{
+				if((mask & (1 << (8 - (y * 3 + x)))) != 0)
+				{
+					expanded[y * width + x] = input[i++];
+				}
+			}
+		}
+
+		return expanded;
+	}
+
 	private void addLargeRecipe(RecipeGenerator generator, RecipeTemplate template,
 			Object[] input, ItemStack output, int width)
 	{
 		Object[] recipeContents = new Object[10];
 
+		int hShift = width == 1? 1 : 0;
+		int vShift = width == input.length? 1 : 0;
+
 		for(int y = 0; y < input.length / width; y++)
 		{
 			for(int x = 0; x < width; x++)
 			{
-				recipeContents[y * 3 + x + (width == 1? 1 : 0) + (width == input.length? 3 : 0)] = resolve(input[y * width + x]);
+				recipeContents[(y + vShift) * 3 + x + hShift] = resolve(input[y * width + x]);
 			}
 		}
 

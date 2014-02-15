@@ -94,11 +94,24 @@ public class CraftGuide
 		}
 
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
-		loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
+		addIC2Recipes();
 		loadModRecipes("gregtech_addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
 		loadModRecipes("extendedWorkbench", "uristqwerty.CraftGuide.recipes.ExtendedWorkbench");
 		loadModRecipes("BuildCraft|Factory", "uristqwerty.CraftGuide.recipes.BuildCraftRecipes");
 		side.initNetworkChannels();
+	}
+
+	private void addIC2Recipes()
+	{
+		try
+		{
+			Class.forName("ic2.core.block.machine.tileentity.TileEntityMetalFormer");
+			loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2ExperimentalRecipes");
+		}
+		catch(ClassNotFoundException e)
+		{
+			loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
+		}
 	}
 
 	private void loadModRecipes(String modID, String recipeClass)

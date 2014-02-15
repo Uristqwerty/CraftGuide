@@ -1,11 +1,17 @@
 package uristqwerty.CraftGuide.recipes;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CommonUtilities;
+import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -15,14 +21,14 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
-import uristqwerty.CraftGuide.recipes.IC2Recipes.AdditionalMachines;
+import uristqwerty.CraftGuide.recipes.IC2ExperimentalRecipes.AdditionalMachines;
 
 public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvider, AdditionalMachines
 {
 	public GregTechRecipes()
 	{
 		super();
-		IC2Recipes.additionalMachines.add(this);
+		IC2ExperimentalRecipes.additionalMachines.add(this);
 	}
 
 	@Override
@@ -45,6 +51,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			}
 
 			Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
+			Class modHandlerClass = Class.forName("gregtechmod.api.util.GT_ModHandler");
 
 			generateRecipes(
 					generator, new ItemStack(machine, 1, 80),
@@ -138,6 +145,10 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, new ItemStack(machine, 1, 113),
 					(ArrayList)recipeClass.getField("sCutterRecipes").get(null),
 					1, 1, -1, 0, false, null);
+
+			generatePulverizerRecipes(generator,
+					Arrays.asList(new ItemStack(machine, 1, 64), new ItemStack(machine, 1, 130)),
+					(Map<Integer, Object>)CommonUtilities.getPrivateValue(modHandlerClass, null, "sPulverizerRecipes"));
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -156,6 +167,14 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			e.printStackTrace();
 		}
 		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch(NoSuchMethodException e)
+		{
+			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
 		{
 			e.printStackTrace();
 		}
@@ -282,6 +301,45 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 				recipeContents[numInputs + numOutputs + 1] = new Object[]{
 						outputEU * (generated? 1 : -1), eut, extraData};
 			}
+
+			generator.addRecipe(template, recipeContents);
+		}
+	}
+
+	private void generatePulverizerRecipes(RecipeGenerator generator, List<ItemStack> machines, Map<Integer, Object> recipes) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	{
+		Slot[] recipeSlots = new Slot[] {
+				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
+				new ItemSlot(50, 12, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+				new ChanceSlot(50, 30, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
+				new ExtraSlot(31, 30, 16, 16, machines).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
+				new EUSlot(31, 12),
+		};
+
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machines.get(0));
+
+		Class recipeClass = Class.forName("gregtechmod.api.util.GT_PulverizerRecipe");
+		Method getInput = recipeClass.getMethod("getInput");
+		Method getPrimaryOutput = recipeClass.getMethod("getPrimaryOutput");
+		Method getSecondaryOutput = recipeClass.getMethod("getSecondaryOutput");
+		Method getSecondaryOutputChance = recipeClass.getMethod("getSecondaryOutputChance");
+		Method getEnergy = recipeClass.getMethod("getEnergy");
+
+		for(Object recipe: recipes.values())
+		{
+			if(!recipeClass.isInstance(recipe))
+				continue;
+
+			Object[] recipeContents = new Object[] {
+					getInput.invoke(recipe),
+					getPrimaryOutput.invoke(recipe),
+					new Object[]{
+						getSecondaryOutput.invoke(recipe),
+						getSecondaryOutputChance.invoke(recipe),
+					},
+					machines,
+					new Object[]{getEnergy.invoke(recipe), 3},
+			};
 
 			generator.addRecipe(template, recipeContents);
 		}

@@ -12,7 +12,8 @@ public class ItemCraftGuide extends Item
 	{
 		super(i);
 		setUnlocalizedName("craftguide_item");
-		func_111206_d(iconName);
+
+		setTextureName(iconName);
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 

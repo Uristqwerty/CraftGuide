@@ -22,7 +22,7 @@ import cpw.mods.fml.common.TickType;
 
 public class CraftGuideKeyHandler extends KeyHandler
 {
-	private static boolean[] repeatings = new boolean[] {
+	private static boolean[] repeating = new boolean[] {
 		false,
 	};
 
@@ -32,7 +32,7 @@ public class CraftGuideKeyHandler extends KeyHandler
 	{
 		super(
 			new KeyBinding[] {new KeyBinding("Open CraftGuide", defaultKeybind)},
-			repeatings);
+			repeating);
 	}
 
 	@Override
