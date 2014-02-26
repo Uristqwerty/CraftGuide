@@ -27,9 +27,9 @@ public class SingleItemFilter implements ItemFilter
 		}
 		else if(stack instanceof List)
 		{
-			for(ItemStack item: (List<ItemStack>)stack)
+			for(Object item: (List)stack)
 			{
-				if(CommonUtilities.checkItemStackMatch(item, comparison))
+				if(matches(item))
 				{
 					return true;
 				}

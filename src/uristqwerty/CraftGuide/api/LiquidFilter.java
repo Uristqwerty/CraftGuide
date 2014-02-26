@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -45,7 +44,7 @@ public class LiquidFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			return liquid.isFluidEqual((ItemStack)item) || FluidContainerRegistry.containsFluid((ItemStack)item, liquid);
+			return liquid.isFluidEqual((ItemStack)item);
 		}
 		else if(item instanceof FluidStack)
 		{

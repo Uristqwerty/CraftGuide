@@ -1,5 +1,8 @@
 package uristqwerty.CraftGuide;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +18,24 @@ public class ItemCraftGuide extends Item
 
 		setTextureName(iconName);
 		setCreativeTab(CreativeTabs.tabMisc);
+
+		registerItemName();
+	}
+
+	private  void registerItemName()
+	{
+		try
+		{
+			Class registry = Class.forName("cpw.mods.fml.common.registry.GameRegistry");
+			Method registerItem = registry.getMethod("registerItem", Item.class, String.class, String.class);
+			registerItem.invoke(null, this, "craftguide_item", "craftguide");
+		}
+		catch(ClassNotFoundException e){}
+		catch(SecurityException e){}
+		catch(NoSuchMethodException e){}
+		catch(IllegalArgumentException e){}
+		catch(IllegalAccessException e){}
+		catch(InvocationTargetException e){}
 	}
 
 	@Override

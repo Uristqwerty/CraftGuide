@@ -36,7 +36,7 @@ public class MultipleItemFilter implements ItemFilter
 		}
 		else if(stack instanceof List)
 		{
-			for(ItemStack item: (List<ItemStack>)stack)
+			for(Object item: (List)stack)
 			{
 				if(matches(item))
 				{
