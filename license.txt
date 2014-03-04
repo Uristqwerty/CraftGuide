@@ -1,6 +1,0 @@
-I haven't taken the time to find a proper license that I feel fits this project best, and don't intend to until I have a better understanding of software licenses and copyright, but for now:
-
-You are free to use any portion of this project however you want, though if you use a lot of it unaltered, it would be nice (but isn't required) if you mentioned it somewhere that people using it might see.
-
-
-I haven't put much thought into how this would work if/when other people make contributions to this project, I am not a lawyer and have not spoken with one about this license, so far I have completely ignored the possibility that something I wrote might might conflict with one or more patent in some country, and small bits of it are based off of Minecraft where necessary to keep it visually consistant with Minecraft (probably the most significant would be the code for drawing the tooltip background), so if you do use any part of this project, it is at your own risk.
