@@ -1,20 +1,17 @@
 package uristqwerty.CraftGuide.recipes;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
@@ -142,7 +139,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 		RecipeTemplate furnaceTemplate = new DefaultRecipeTemplate(
 				furnaceSlots,
-				new ItemStack(Block.furnaceBurning),
+				new ItemStack(Blocks.furnace),
 				new TextureClip(
 						DynamicTexture.instance("recipe_backgrounds"),
 						1, 181, 79, 58),
@@ -156,62 +153,36 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 	private void addFurnaceRecipes(RecipeTemplate template, RecipeGenerator generator)
 	{
-		Map furnaceRecipes = FurnaceRecipes.smelting().getSmeltingList();
+		Map<ItemStack, ItemStack> furnaceRecipes = FurnaceRecipes.smelting().getSmeltingList();
 
-		for(Object o: furnaceRecipes.keySet())
+		for(Entry<ItemStack, ItemStack> entry: furnaceRecipes.entrySet())
 		{
-			int blockID = (Integer)o;
-			Item item = Item.itemsList[blockID];
-
-			if(item != null)
+			ItemStack input = entry.getKey();
+			if(input.getItemDamage() == 32767 && input.getItem().getHasSubtypes())
 			{
-				ItemStack output = (ItemStack)furnaceRecipes.get(o);
-				if(item.getHasSubtypes())
-				{
-					List<ItemStack> items = new ArrayList<ItemStack>();
-					item.getSubItems(blockID, null, items);
+				List<ItemStack> items = new ArrayList<ItemStack>();
+				input.getItem().getSubItems(input.getItem(), null, items);
 
-					for(ItemStack subItem: items)
-					{
-						generator.addRecipe(
-								template,
-								new Object[]{
-										subItem,
-										output
-								});
-					}
-				}
-				else
+				for(ItemStack subItem: items)
 				{
 					generator.addRecipe(
 							template,
 							new Object[]{
-									new ItemStack(blockID, 1, 0),
-									output
+									subItem,
+									entry.getValue()
 							});
 				}
 			}
-		}
-
-
-		try
-		{
-			Field forgeMetadataSmelting = FurnaceRecipes.class.getDeclaredField("metaSmeltingList");
-			forgeMetadataSmelting.setAccessible(true);
-			Map<List<Integer>, ItemStack> recipes = (Map<List<Integer>, ItemStack>)forgeMetadataSmelting.get(FurnaceRecipes.smelting());
-
-			for(List<Integer> input: recipes.keySet())
+			else
 			{
-				int blockID = input.get(0);
-				int metadata = input.get(1);
-				ItemStack in = new ItemStack(blockID, 1, metadata);
-				ItemStack out = recipes.get(input);
-
-				generator.addRecipe(template, new ItemStack[]{in, out});
+				generator.addRecipe(
+						template,
+						new Object[]{
+								entry.getKey(),
+								entry.getValue()
+						});
 			}
 		}
-		catch(NoSuchFieldException e){}
-		catch(IllegalAccessException e){}
 	}
 
 	private void addCraftingRecipes(RecipeTemplate template, RecipeTemplate templateSmall, RecipeTemplate templateShapeless, RecipeGenerator generator)
@@ -275,20 +246,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 	@Override
 	public String getInfo(ItemStack itemStack)
 	{
-		int fuel;
-
-		if(Item.itemsList[itemStack.itemID] == null)
-		{
-			fuel = 0;
-		}
-		else if(itemStack.hasTagCompound())
-		{
-			fuel = TileEntityFurnace.getItemBurnTime(itemStack);
-		}
-		else
-		{
-			fuel = getCachedBurnTime(itemStack);
-		}
+		int fuel = TileEntityFurnace.func_145952_a(itemStack);
 
 		if(fuel > 0)
 		{
@@ -318,22 +276,5 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 		{
 			return null;
 		}
-	}
-
-	private static Map<Long, Integer> burnCache = new HashMap();
-
-	private static int getCachedBurnTime(ItemStack stack)
-	{
-		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) : 0);
-
-		Integer value = burnCache.get(lookup);
-
-		if(value == null)
-		{
-			value = TileEntityFurnace.getItemBurnTime(stack);
-			burnCache.put(lookup, value);
-		}
-
-		return value;
 	}
 }

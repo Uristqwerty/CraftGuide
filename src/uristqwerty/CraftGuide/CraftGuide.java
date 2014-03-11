@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
@@ -49,8 +49,6 @@ public class CraftGuide
 
 	public static boolean betterWithRenewablesDetected = false;
 	public static boolean needsRecipeRefresh = false;
-
-	private int itemCraftGuideID = 23361;
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
@@ -162,15 +160,15 @@ public class CraftGuide
 
 	private void addItem(String iconName)
 	{
-		itemCraftGuide = new ItemCraftGuide(itemCraftGuideID, iconName);
+		itemCraftGuide = new ItemCraftGuide(iconName);
 		loaderSide.addName(itemCraftGuide, "Crafting Guide");
 
 		if(enableItemRecipe)
 		{
 			loaderSide.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
-					"bcb", "pbp", Character.valueOf('c'), Block.workbench,
-					Character.valueOf('p'), Item.paper, Character.valueOf('b'),
-					Item.book});
+					"bcb", "pbp", Character.valueOf('c'), Blocks.crafting_table,
+					Character.valueOf('p'), Items.paper, Character.valueOf('b'),
+					Items.book});
 		}
 	}
 
@@ -193,7 +191,6 @@ public class CraftGuide
 
 	private void setConfigDefaults()
 	{
-		config.setProperty("itemCraftGuideID", "23361");
 		config.setProperty("RecipeList_mouseWheelScrollRate", "3");
 		config.setProperty("PauseWhileOpen", Boolean.toString(true));
 		config.setProperty("resizeRate", "0");
@@ -253,14 +250,6 @@ public class CraftGuide
 			{
 				e.printStackTrace();
 			}
-		}
-
-		try
-		{
-			itemCraftGuideID = Integer.valueOf(config.getProperty("itemCraftGuideID"));
-		}
-		catch(NumberFormatException e)
-		{
 		}
 
 		try

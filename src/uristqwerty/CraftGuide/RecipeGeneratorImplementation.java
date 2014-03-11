@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -37,7 +37,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private Texture defaultBackground = new BlankTexture();
 	private Texture defaultBackgroundSelected;
-	public static ItemStack workbench = new ItemStack(Block.workbench);
+	public static ItemStack workbench = new ItemStack(Blocks.crafting_table);
 
 	public static RecipeGeneratorForgeExtension forgeExt;
 

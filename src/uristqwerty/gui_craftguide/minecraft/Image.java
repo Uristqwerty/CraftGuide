@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
-import net.minecraft.client.renderer.texture.TextureObject;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -41,7 +41,7 @@ public class Image implements Texture
 				if(image.texID == -1)
 				{
 					ResourceLocation resourceLocation = new ResourceLocation(entry.getKey());
-					TextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
+					ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
 
 					if(texture == null)
 					{

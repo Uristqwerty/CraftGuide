@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.Resource;
-import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
@@ -79,8 +79,8 @@ public class ThemeManager
 
 		try
 		{
-			ResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
-			Resource packThemes = resourceManager.getResource(new ResourceLocation("craftguide", "themes.txt"));
+			IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+			IResource packThemes = resourceManager.getResource(new ResourceLocation("craftguide", "themes.txt"));
 			CraftGuideLog.log("Loading themes from texture pack...");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes.getInputStream()));
 			String line;

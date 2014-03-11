@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
@@ -45,10 +45,10 @@ public class LiquidSlot implements Slot
 		{
 			FluidStack liquid = (FluidStack)data[dataIndex];
 
-			TextureManager textureManager = Minecraft.getMinecraft().renderEngine;
+			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
 			Fluid fluid = liquid.getFluid();
-			Icon icon = fluid.getStillIcon();
+			IIcon icon = fluid.getStillIcon();
 
 			if(icon != null)
 			{

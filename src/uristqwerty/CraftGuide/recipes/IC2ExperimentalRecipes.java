@@ -1,6 +1,6 @@
 package uristqwerty.CraftGuide.recipes;
 
-import ic2.api.item.Items;
+import ic2.api.item.IC2Items;
 import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IScrapboxManager;
@@ -9,6 +9,7 @@ import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -58,17 +59,17 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		{
 			addCraftingRecipes(generator);
 
-			addMachineRecipes(generator, Items.getItem("macerator"), getMacerator(), Recipes.macerator);
-			addMachineRecipes(generator, Items.getItem("extractor"), getExtractor(), Recipes.extractor);
-			addMachineRecipes(generator, Items.getItem("compressor"), getCompressor(), Recipes.compressor);
-			addMachineRecipes(generator, Items.getItem("centrifuge"), Recipes.centrifuge);
-			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerExtruding);
-			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerCutting);
-			addMachineRecipes(generator, Items.getItem("metalformer"), Recipes.metalformerRolling);
-			addMachineRecipes(generator, Items.getItem("orewashingplant"), Recipes.oreWashing);
-			addMachineRecipes(generator, Items.getItem("scanner"), Recipes.Scanner);
+			addMachineRecipes(generator, IC2Items.getItem("macerator"), getMacerator(), Recipes.macerator);
+			addMachineRecipes(generator, IC2Items.getItem("extractor"), getExtractor(), Recipes.extractor);
+			addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
+			addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
+			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
+			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
+			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
+			addMachineRecipes(generator, IC2Items.getItem("orewashingplant"), Recipes.oreWashing);
+			addMachineRecipes(generator, IC2Items.getItem("scanner"), Recipes.Scanner);
 
-			addScrapboxOutput(generator, Items.getItem("scrapBox"), Recipes.scrapboxDrops);
+			addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -95,7 +96,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	private Object getMacerator()
 	{
 		ArrayList<Object> macerator = new ArrayList<Object>();
-		macerator.add(Items.getItem("macerator"));
+		macerator.add(IC2Items.getItem("macerator"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -116,7 +117,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	private Object getExtractor()
 	{
 		ArrayList<Object> extractor = new ArrayList<Object>();
-		extractor.add(Items.getItem("extractor"));
+		extractor.add(IC2Items.getItem("extractor"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -137,7 +138,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	private Object getCompressor()
 	{
 		ArrayList<Object> compressor = new ArrayList<Object>();
-		compressor.add(Items.getItem("compressor"));
+		compressor.add(IC2Items.getItem("compressor"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -434,9 +435,87 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 				return OreDictionary.getOres(itemString);
 			}
 		}
-		else if(item instanceof ItemStack || item instanceof List)
+		else if(item instanceof ItemStack)
 		{
 			return item;
+		}
+		else if(item instanceof IRecipeInput)
+		{
+			return ((IRecipeInput)item).getInputs();
+		}
+		else if(item instanceof List)
+		{
+			boolean containsItemStacks = true;
+
+			for(Object o: (List)item)
+			{
+				if(!(o instanceof ItemStack))
+				{
+					containsItemStacks = false;
+					break;
+				}
+			}
+
+			if(containsItemStacks)
+				return item;
+
+			ArrayList newlist = new ArrayList(((List)item).size());
+
+			for(Object o: (List)item)
+			{
+				Object r = resolve(o);
+
+				if(r instanceof Collection)
+				{
+					newlist.addAll((Collection)r);
+				}
+				else
+				{
+					newlist.add(r);
+				}
+			}
+
+			return newlist;
+		}
+		else if(item instanceof Iterable)
+		{
+			ArrayList newlist = new ArrayList();
+
+			for(Object o: (Iterable)item)
+			{
+				Object r = resolve(o);
+
+				if(r instanceof Collection)
+				{
+					newlist.addAll((Collection)r);
+				}
+				else
+				{
+					newlist.add(r);
+				}
+			}
+
+			return newlist;
+		}
+		else if(item != null && item.getClass().isArray())
+		{
+			ArrayList newlist = new ArrayList();
+
+			for(Object o: (Object[])item)
+			{
+				Object r = resolve(o);
+
+				if(r instanceof Collection)
+				{
+					newlist.addAll((Collection)r);
+				}
+				else
+				{
+					newlist.add(r);
+				}
+			}
+
+			return newlist;
 		}
 		else
 		{

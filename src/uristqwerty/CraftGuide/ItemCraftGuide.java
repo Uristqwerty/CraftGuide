@@ -11,9 +11,8 @@ import net.minecraft.world.World;
 
 public class ItemCraftGuide extends Item
 {
-	public ItemCraftGuide(int i, String iconName)
+	public ItemCraftGuide(String iconName)
 	{
-		super(i);
 		setUnlocalizedName("craftguide_item");
 
 		setTextureName(iconName);

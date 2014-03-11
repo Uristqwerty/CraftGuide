@@ -1,10 +1,11 @@
 xcopy "eclipse\CraftGuide\src" "src\minecraft" /S /I /Y
 xcopy "eclipse\CraftGuide\APIs" "src\minecraft" /S /I /Y
+xcopy "eclipse\CraftGuide\ForgeStubs" "src\minecraft" /S /I /Y
 perl eclipse\CraftGuide\setversion.pl
 del src\minecraft\mcmod.info
 
 runtime\bin\python\python_mcp runtime\recompile.py
-runtime\bin\python\python_mcp runtime\reobfuscate.py
+rem runtime\bin\python\python_mcp runtime\reobfuscate.py
 
 cd eclipse\CraftGuide
 call build-resources.bat
@@ -22,13 +23,13 @@ rmdir /S /Q zip\build-modloader
 mkdir zip\build
 mkdir zip\build-modloader
 
-xcopy "reobf\minecraft\CraftGuide" "zip\build-modloader\CraftGuide" /S /I /Y
-xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build-modloader\uristqwerty\CraftGuide" /S /I /Y
-xcopy "reobf\minecraft\uristqwerty\gui_craftguide" "zip\build-modloader\uristqwerty\gui_craftguide" /S /I /Y
-xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build-modloader" /Y
-xcopy "eclipse\CraftGuide\src\pack.mcmeta" "zip\build-modloader\" /Y
-xcopy "eclipse\CraftGuide\assets" "zip\build-modloader\assets" /S /I /Y
-xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build-modloader\uristqwerty\CraftGuide" /Y
+rem xcopy "reobf\minecraft\CraftGuide" "zip\build-modloader\CraftGuide" /S /I /Y
+rem xcopy "reobf\minecraft\uristqwerty\CraftGuide" "zip\build-modloader\uristqwerty\CraftGuide" /S /I /Y
+rem xcopy "reobf\minecraft\uristqwerty\gui_craftguide" "zip\build-modloader\uristqwerty\gui_craftguide" /S /I /Y
+rem xcopy "reobf\minecraft\mod_CraftGuide.class" "zip\build-modloader" /Y
+rem xcopy "eclipse\CraftGuide\src\pack.mcmeta" "zip\build-modloader\" /Y
+rem xcopy "eclipse\CraftGuide\assets" "zip\build-modloader\assets" /S /I /Y
+rem xcopy "eclipse\CraftGuide\CraftGuideResources.zip" "zip\build-modloader\uristqwerty\CraftGuide" /Y
 
 runtime\bin\python\python_mcp runtime\reobfuscate.py --srgnames
 
@@ -47,4 +48,4 @@ rmdir /S /Q "zip\build-modloader\uristqwerty\CraftGuide\client\fml"
 
 
 call eclipse\CraftGuide\build-zip.bat
-call eclipse\CraftGuide\build-zip-modloader.bat
+rem call eclipse\CraftGuide\build-zip-modloader.bat

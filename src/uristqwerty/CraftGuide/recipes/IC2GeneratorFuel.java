@@ -2,12 +2,7 @@ package uristqwerty.CraftGuide.recipes;
 
 import ic2.api.info.Info;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
 public class IC2GeneratorFuel implements StackInfoSource
@@ -17,19 +12,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 	{
 		try
 		{
-			int fuel;
-			if(Item.itemsList[itemStack.itemID] == null)
-			{
-				fuel = 0;
-			}
-			else if(itemStack.hasTagCompound())
-			{
-				fuel = Info.itemFuel.getFuelValue(itemStack, false);
-			}
-			else
-			{
-				fuel = getCachedBurnTime(itemStack);
-			}
+			int fuel =  Info.itemFuel.getFuelValue(itemStack, false);
 
 			if(fuel > 0)
 			{
@@ -60,22 +43,5 @@ public class IC2GeneratorFuel implements StackInfoSource
 		}
 
 		return null;
-	}
-
-	private static Map<Long, Integer> burnCache = new HashMap();
-
-	private static int getCachedBurnTime(ItemStack stack)
-	{
-		long lookup = (stack.itemID << 32) | (stack.getHasSubtypes()? CommonUtilities.getItemDamage(stack) & 0xffffffff : 0);
-
-		Integer value = burnCache.get(lookup);
-
-		if(value == null)
-		{
-			value = Info.itemFuel.getFuelValue(stack, false);
-			burnCache.put(lookup, value);
-		}
-
-		return value;
 	}
 }

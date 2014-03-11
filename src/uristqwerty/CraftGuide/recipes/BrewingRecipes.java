@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
@@ -33,7 +34,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
-		ItemStack stack = new ItemStack(Item.brewingStand);
+		ItemStack stack = new ItemStack(Items.brewing_stand);
 		List<ItemStack[]> recipes = getRecipes();
 		/*RecipeTemplate template = generator.createRecipeTemplate(slots, stack,
 			"/gui/BrewGuide.png", 1, 1, 82, 1);*/
@@ -75,7 +76,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 	{
 		List<Item> ingredients = getIngredients();
 
-		ItemStack water = new ItemStack(Item.potion);
+		ItemStack water = new ItemStack(Items.potionitem);
 		List<ItemStack[]> potionRecipes = new LinkedList<ItemStack[]>();
 		Set<Integer> done = new HashSet<Integer>();
 		done.add(0);
@@ -91,11 +92,11 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 
 		for(Item ingredient: ingredients)
 		{
-			int result = PotionHelper.applyIngredient(CommonUtilities.getItemDamage(potion), ingredient.getPotionEffect());
+			int result = PotionHelper.applyIngredient(CommonUtilities.getItemDamage(potion), ingredient.getPotionEffect(new ItemStack(ingredient)));
 
 			if(result != 0 && result != CommonUtilities.getItemDamage(potion))
 			{
-				ItemStack output = new ItemStack(Item.potion);
+				ItemStack output = new ItemStack(Items.potionitem);
 				output.setItemDamage(result);
 				potionRecipes.add(new ItemStack[] {potion, new ItemStack(ingredient), output});
 
@@ -117,11 +118,11 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 	{
 		List<Item> ingredients = new LinkedList<Item>();
 
-		for(Item item: Item.itemsList)
+		for(Object item: Item.itemRegistry)
 		{
-			if(item != null && item.isPotionIngredient())
+			if(item != null && ((Item)item).isPotionIngredient(new ItemStack((Item)item)))
 			{
-				ingredients.add(item);
+				ingredients.add(((Item)item));
 			}
 		}
 

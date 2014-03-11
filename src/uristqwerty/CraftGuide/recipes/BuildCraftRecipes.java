@@ -11,9 +11,9 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
-import buildcraft.api.recipes.AssemblyRecipe;
-import buildcraft.api.recipes.RefineryRecipes;
-import buildcraft.api.recipes.RefineryRecipes.Recipe;
+import buildcraft.api.recipes.BuildcraftRecipes;
+import buildcraft.api.recipes.IAssemblyRecipeManager.IAssemblyRecipe;
+import buildcraft.api.recipes.IRefineryRecipeManager.IRefineryRecipe;
 
 public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -57,9 +57,9 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 	{
 		int maxInput = 1;
 
-		for(AssemblyRecipe recipe: AssemblyRecipe.assemblyRecipes)
+		for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
 		{
-			maxInput = Math.max(maxInput, recipe.input.length);
+			maxInput = Math.max(maxInput, recipe.getInputs().length);
 		}
 
 		int rows = (maxInput + 2) / 3;
@@ -83,16 +83,16 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
 		template.setSize(79, rows > 3? 58 + (rows - 3) * 18 : 58);
 
-		for(AssemblyRecipe recipe: AssemblyRecipe.assemblyRecipes)
+		for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
 		{
 			Object[] recipeContents = new Object[rows * 3 + 3];
-			Object[] input = recipe.input;
+			Object[] input = recipe.getInputs();
 			for(int i = 0; i < Math.min(rows * 3, input.length); i++)
 			{
 				recipeContents[i] = input[i];
 			}
 
-			recipeContents[rows * 3 + 0] = recipe.output;
+			recipeContents[rows * 3 + 0] = recipe.getOutput();
 			recipeContents[rows * 3 + 1] = table;
 			recipeContents[rows * 3 + 2] = laser;
 
@@ -118,18 +118,18 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		RecipeTemplate templateOneInput = generator.createRecipeTemplate(recipeSlotsOneInput, refinery);
 		RecipeTemplate templateTwoInputs = generator.createRecipeTemplate(recipeSlotsTwoInputs, refinery);
 
-		for(Recipe recipe: RefineryRecipes.getRecipes())
+		for(IRefineryRecipe recipe: BuildcraftRecipes.refinery.getRecipes())
 		{
-			boolean twoInputs = recipe.ingredient2 != null;
+			boolean twoInputs = recipe.getIngredient2() != null;
 			Object[] recipeContents = new Object[twoInputs? 4 : 3];
-			recipeContents[0] = recipe.ingredient1;
+			recipeContents[0] = recipe.getIngredient1();
 
 			if(twoInputs)
 			{
-				recipeContents[1] = recipe.ingredient2;
+				recipeContents[1] = recipe.getIngredient2();
 			}
 
-			recipeContents[twoInputs? 2 : 1] = recipe.result;
+			recipeContents[twoInputs? 2 : 1] = recipe.getResult();
 			recipeContents[twoInputs? 3 : 2] = refinery;
 
 			generator.addRecipe(twoInputs? templateTwoInputs : templateOneInput, recipeContents);

@@ -155,7 +155,7 @@ public class RecipeCache
 			{
 				for(CraftType type: wild.keySet())
 				{
-					if(((ItemStack)item.getStack()).itemID == ((ItemStack)type.getStack()).itemID)
+					if(((ItemStack)item.getStack()).getItem() == ((ItemStack)type.getStack()).getItem())
 					{
 						wild.put(type, wild.get(type) + 1);
 					}
@@ -172,7 +172,7 @@ public class RecipeCache
 			else if(wild.get(type) == 1)
 			{
 				allItems.remove(type);
-				allItems.add(CraftType.getInstance(new ItemStack(type.getDisplayStack().itemID, 1, 0)));
+				allItems.add(CraftType.getInstance(new ItemStack(type.getDisplayStack().getItem(), 1, 0)));
 			}
 		}
 

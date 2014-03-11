@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.CraftGuideSide;
@@ -190,19 +188,5 @@ public abstract class CraftGuideClient implements CraftGuideSide
 	public void initNetworkChannels()
 	{
 		CraftGuide.loaderSide.initClientNetworkChannels();
-	}
-
-	@Override
-	public void handlePacket(NetClientHandler handler, Packet250CustomPayload packet)
-	{
-		if(packet.data.length > 0)
-		{
-			byte type = packet.data[0];
-
-			if(type == 0)
-			{
-				BWRData.readPacket(packet.data);
-			}
-		}
 	}
 }

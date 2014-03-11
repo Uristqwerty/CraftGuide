@@ -53,7 +53,7 @@ public class Gui extends GuiScreen
 				GuiTextInput.inFocus.onKeyTyped(eventChar, eventKey);
 			}
 		}
-		else if(eventKey == Keyboard.KEY_ESCAPE || eventKey == mc.gameSettings.keyBindInventory.keyCode)
+		else if(eventKey == Keyboard.KEY_ESCAPE || eventKey == mc.gameSettings.keyBindInventory.getKeyCode())
         {
             mc.thePlayer.closeScreen();
         }

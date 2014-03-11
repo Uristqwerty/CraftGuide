@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.StackInfo;
 import uristqwerty.CraftGuide.api.StackInfoSource;
@@ -61,11 +62,11 @@ public class CommonUtilities
 		{
 			if(item.getHasSubtypes())
 			{
-				idText = String.format(" (#%04d/%d)", item.itemID, getItemDamage(item));
+				idText = String.format(" (%04d/%d)", Item.itemRegistry.getNameForObject(item.getItem()), getItemDamage(item));
 			}
 			else
 			{
-				idText = String.format(" (#%04d)", item.itemID);
+				idText = String.format(" (%04d)", Item.itemRegistry.getNameForObject(item.getItem()));
 			}
 		}
 
@@ -79,7 +80,7 @@ public class CommonUtilities
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList<ItemStack> subItems = new ArrayList();
-			item.getItem().getSubItems(item.itemID, null, subItems);
+			item.getItem().getSubItems(item.getItem(), null, subItems);
 
 			for(ItemStack stack: subItems)
 			{
@@ -99,7 +100,7 @@ public class CommonUtilities
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
 			ArrayList temp = new ArrayList();
-			item.getItem().getSubItems(item.itemID, null, temp);
+			item.getItem().getSubItems(item.getItem(), null, temp);
 
 			return temp.size();
 		}
@@ -251,7 +252,7 @@ public class CommonUtilities
 			return first == second;
 		}
 
-		return first.itemID == second.itemID
+		return first.getItem() == second.getItem()
 			&& (
 				getItemDamage(first) == CraftGuide.DAMAGE_WILDCARD ||
 				getItemDamage(second) == CraftGuide.DAMAGE_WILDCARD ||

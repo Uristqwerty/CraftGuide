@@ -10,6 +10,7 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
@@ -238,7 +239,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
     		{
     			CraftGuideLog.log("Failed to render ItemStack {" + (
     					itemStack == null? "null" : (
-    						"itemID = " + itemStack.itemID +
+    						"itemID = " + Item.itemRegistry.getNameForObject(itemStack.getItem()) +
     						", itemDamage = " + CommonUtilities.getItemDamage(itemStack) +
     						", stackSize = " + itemStack.stackSize)) +
     					"} (Further stack traces from this particular ItemStack instance will not be logged)");
@@ -443,65 +444,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 
 		List<String> list = new ArrayList<String>();
-		list.add("Err: Item #" + stack.itemID + ", damage " + CommonUtilities.getItemDamage(stack));
+		list.add("Err: Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
 		return list;
 	}
 
-	/*
-	 * Profiling shows that the main cost of ItemStack.getTooltip is, when
-	 *  advanced tooltips is enabled, parsing the format strings.
-	 *
-	 * This wouldn't be worth avoiding, except for the fact that it may be
-	 *  called a lot during a text search, especially searching the item
-	 *  list (since it re-searches after each character).
-	 */
 	private List<String> getTooltip(ItemStack stack)
 	{
-		List<String> list = stack.getTooltip(Minecraft.getMinecraft().thePlayer, false);
-
-		if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
-		{
-			String name = list.get(0);
-			StringBuilder builder = new StringBuilder();
-
-			if(name.length() > 0)
-			{
-				builder.append(name);
-				builder.append(" (#");
-			}
-
-			if(stack.itemID < 1000)
-			{
-				if(stack.itemID >= 100)
-				{
-					builder.append("0");
-				}
-				else if(stack.itemID >= 10)
-				{
-					builder.append("00");
-				}
-				else
-				{
-					builder.append("000");
-				}
-			}
-
-			builder.append(stack.itemID);
-
-			if(stack.getHasSubtypes())
-			{
-				builder.append("/");
-				builder.append(CommonUtilities.getItemDamage(stack));
-			}
-
-			if(name.length() > 0)
-			{
-				builder.append(")");
-			}
-
-			list.set(0, builder.toString());
-		}
-
-		return list;
+		return stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
 	}
 }

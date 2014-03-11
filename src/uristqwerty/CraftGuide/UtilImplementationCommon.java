@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
@@ -41,13 +43,6 @@ public abstract class UtilImplementationCommon extends Util
 	@Override
 	public List<String> getItemStackText(ItemStack stack)
 	{
-		if(stack.getItem() == null)
-		{
-			List<String> text = new ArrayList<String>(1);
-			text.add("\247" + Integer.toHexString(15) + "Error: Item #" + Integer.toString(stack.itemID) + " does not exist");
-			return text;
-		}
-
 		try
 		{
 			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
@@ -81,18 +76,18 @@ public abstract class UtilImplementationCommon extends Util
 							rarity = EnumRarity.common;
 						}
 
-						text.add("\u00a7" + Integer.toHexString(rarity.rarityColor) + (String)o);
+						text.add(rarity.rarityColor + (String)o);
 
 						if(CraftGuide.alwaysShowID)
 						{
-							text.add("\u00a77" + "ID: " + stack.itemID + "; data: " + CommonUtilities.getItemDamage(stack));
+							text.add(EnumChatFormatting.DARK_GRAY + "ID: " + Item.itemRegistry.getNameForObject(stack.getItem()) + "; data: " + CommonUtilities.getItemDamage(stack));
 						}
 
 						first = false;
 					}
 					else
 					{
-						text.add("\u00a77" + (String)o);
+						text.add(EnumChatFormatting.DARK_GRAY + (String)o);
 					}
 				}
 			}
@@ -104,7 +99,7 @@ public abstract class UtilImplementationCommon extends Util
 			CraftGuideLog.log(e);
 
 			List<String> text = new ArrayList<String>(1);
-			text.add("\247" + Integer.toHexString(15) + "Item #" + Integer.toString(stack.itemID) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
+			text.add(EnumChatFormatting.YELLOW + "Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
 			return text;
 		}
 	}

@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -17,7 +17,7 @@ import uristqwerty.CraftGuide.api.SlotType;
 
 public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProvider
 {
-	private static ItemStack workbenchStack = new ItemStack(Block.workbench, 1, 1);
+	private static ItemStack workbenchStack = new ItemStack(Blocks.crafting_table, 1, 1);
 
 	@Override
 	public void generateRecipes(RecipeGenerator generator)

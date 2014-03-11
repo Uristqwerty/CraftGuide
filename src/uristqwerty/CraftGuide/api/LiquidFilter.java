@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -73,10 +73,10 @@ public class LiquidFilter implements ItemFilter
 	{
 		if(liquid != null)
 		{
-			TextureManager textureManager = Minecraft.getMinecraft().renderEngine;
+			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
 			Fluid fluid = liquid.getFluid();
-			Icon icon = fluid.getStillIcon();
+			IIcon icon = fluid.getStillIcon();
 
 			if(icon != null)
 			{

@@ -105,7 +105,7 @@ public class MultipleItemFilter implements ItemFilter
 					if(primaryItem.getHasSubtypes())
 					{
 						ArrayList<ItemStack> list = new ArrayList();
-						primaryItem.getItem().getSubItems(primaryItem.itemID, null, list);
+						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 						text = Util.instance.getItemStackText(list.get(0));
 					}
 					else
@@ -127,7 +127,7 @@ public class MultipleItemFilter implements ItemFilter
 					if(CommonUtilities.getItemDamage(primaryItem) == CraftGuide.DAMAGE_WILDCARD && primaryItem.getHasSubtypes())
 					{
 						ArrayList<ItemStack> list = new ArrayList();
-						primaryItem.getItem().getSubItems(primaryItem.itemID, null, list);
+						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 
 						for(int i = 1; i < list.size(); i++)
 						{
