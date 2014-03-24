@@ -15,9 +15,6 @@ public abstract class GuiScrollableGrid extends GuiScrollableContent
 	public int borderSize = 1;
 	public boolean flexibleSize = false;
 
-	private int lastMouseX, lastMouseY;
-	private float lastScroll;
-
 	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight, int columnWidth)
 	{
 		super(x, y, width, height, scrollBar);
@@ -34,12 +31,6 @@ public abstract class GuiScrollableGrid extends GuiScrollableContent
 	@Override
 	public void draw()
 	{
-		if(lastScroll != scrollBar.getValue())
-		{
-			lastScroll = scrollBar.getValue();
-			mouseMoved(lastMouseX, lastMouseY);
-		}
-
 		if(flexibleSize)
 		{
 			int width = columnWidth * ((bounds.width() + reducedWidth) / columnWidth);
@@ -52,6 +43,12 @@ public abstract class GuiScrollableGrid extends GuiScrollableContent
 				setPosition(bounds.x() - xOff + ((reducedWidth / 2) &~1), bounds.y());
 				setSize(width, bounds.height());
 			}
+		}
+
+		if(lastScroll != scrollBar.getValue())
+		{
+			lastScroll = scrollBar.getValue();
+			mouseMoved(lastMouseX, lastMouseY);
 		}
 
 		drawBackground();
@@ -74,10 +71,6 @@ public abstract class GuiScrollableGrid extends GuiScrollableContent
 		int gridY = y - bounds.y();
 		int scrollY = pixelsScrolledForY(gridY);
 		int row = rowAtY(gridY);
-
-		lastMouseX = x;
-		lastMouseY = y;
-		lastScroll = scrollBar.getValue();
 
 		mouseMovedRow(row, x - bounds.x(), scrollY - rowStartPixels(row), containsPoint(x, y));
 

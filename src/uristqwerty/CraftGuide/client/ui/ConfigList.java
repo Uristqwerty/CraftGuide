@@ -91,6 +91,8 @@ public class ConfigList extends GuiScrollableContent
 
 	private List<ConfigEntry> options = new ArrayList<ConfigEntry>();
 
+	private GuiElement innerPanel;
+
 	static interface ToggleConfig
 	{
 		public void onToggle(boolean newState);
@@ -99,6 +101,9 @@ public class ConfigList extends GuiScrollableContent
 	public ConfigList(int x, int y, int width, int height, GuiScrollBar scrollBar, ButtonTemplate buttonTemplate, ButtonTemplate toggleTemplate)
 	{
 		super(x, y, width, height, scrollBar);
+
+		innerPanel = new GuiElement(0, 0, width, height);
+		addElement(innerPanel);
 
 		addToggle("craftguide.gui.config.pause", toggleTemplate, CraftGuide.pauseWhileOpen,
 				new ToggleConfig()
@@ -266,7 +271,7 @@ public class ConfigList extends GuiScrollableContent
 
 		ConfigEntry entry = new ConfigEntry(text, element, pos);
 		options.add(entry);
-		addElement(entry);
+		innerPanel.addElement(entry);
 		//entry.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.TOP_RIGHT);
 	}
 
@@ -313,6 +318,7 @@ public class ConfigList extends GuiScrollableContent
 			pos += entry.height();
 		}
 
+		innerPanel.setSize(width(), pos);
 		updateScrollbarScale();
 	}
 
@@ -336,6 +342,7 @@ public class ConfigList extends GuiScrollableContent
 			end = 0;
 		}
 
+		scrollBar.setRowSize(8);
 		scrollBar.setScale(0, end);
 	}
 
@@ -357,16 +364,30 @@ public class ConfigList extends GuiScrollableContent
 	{
 		GuiRenderer renderer = getRenderer();
 		renderer.setClippingRegion(absoluteX() + 1, absoluteY() + 1, width() - 2, height() - 2);
-		int y = bounds.y();
-		setPosition(bounds.x(), y - (int)scrollBar.getValue());
+		innerPanel.setPosition(0, -(int)scrollBar.getValue());
 		try
 		{
 			super.drawChildren();
 		}
 		finally
 		{
-			setPosition(bounds.x(), y);
 			renderer.clearClippingRegion();
 		}
+	}
+
+	@Override
+	public void mouseMoved(int x, int y)
+	{
+		innerPanel.setPosition(0, -(int)scrollBar.getValue());
+
+		super.mouseMoved(x, y);
+	}
+
+	@Override
+	public void mousePressed(int x, int y)
+	{
+		innerPanel.setPosition(0, -(int)scrollBar.getValue());
+
+		super.mousePressed(x, y);
 	}
 }
