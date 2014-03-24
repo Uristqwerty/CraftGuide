@@ -1,7 +1,10 @@
 package uristqwerty.CraftGuide.recipes;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ExtraSlot;
 import uristqwerty.CraftGuide.api.ItemSlot;
@@ -89,7 +92,7 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 			Object[] input = recipe.getInputs();
 			for(int i = 0; i < Math.min(rows * 3, input.length); i++)
 			{
-				recipeContents[i] = input[i];
+				recipeContents[i] = convert(input[i]);
 			}
 
 			recipeContents[rows * 3 + 0] = recipe.getOutput();
@@ -97,6 +100,26 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 			recipeContents[rows * 3 + 2] = laser;
 
 			generator.addRecipe(template, recipeContents);
+		}
+	}
+
+	private Object convert(Object object)
+	{
+		if(object instanceof String)
+		{
+			return OreDictionary.getOres((String)object);
+		}
+		else if(object instanceof Item)
+		{
+			return new ItemStack((Item)object);
+		}
+		else if(object instanceof Block)
+		{
+			return new ItemStack((Block)object, 1, CraftGuide.DAMAGE_WILDCARD);
+		}
+		else
+		{
+			return object;
 		}
 	}
 

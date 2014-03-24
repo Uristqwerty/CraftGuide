@@ -1,13 +1,10 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.CraftGuide.client.ui.GuiScrollBar.ScrollBarAlignmentCallback;
 import uristqwerty.CraftGuide.client.ui.Rendering.GridRect;
-import uristqwerty.gui_craftguide.components.GuiElement;
 
-public abstract class GuiScrollableGrid extends GuiElement implements ScrollBarAlignmentCallback
+public abstract class GuiScrollableGrid extends GuiScrollableContent
 {
-	protected GuiScrollBar scrollBar;
 	protected int rowHeight;
 
 	private GridRect display;
@@ -23,10 +20,9 @@ public abstract class GuiScrollableGrid extends GuiElement implements ScrollBarA
 
 	public GuiScrollableGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, int rowHeight, int columnWidth)
 	{
-		super(x, y, width, height);
+		super(x, y, width, height, scrollBar);
 		this.display = new GridRect(0, 0, width, height, this);
 		this.rowHeight = rowHeight;
-		this.scrollBar = scrollBar;
 		this.columnWidth = columnWidth;
 
 		scrollBar.setAlignmentCallback(this);
@@ -340,7 +336,7 @@ public abstract class GuiScrollableGrid extends GuiElement implements ScrollBarA
 
 	public int lastVisibleRow()
 	{
-		return rowAtScreenY(absoluteY() + bounds.height());
+		return rowAtScreenY(absoluteY() + bounds.height() - 1);
 	}
 
 	@Override

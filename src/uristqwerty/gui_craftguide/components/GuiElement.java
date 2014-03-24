@@ -1,7 +1,7 @@
 package uristqwerty.gui_craftguide.components;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class GuiElement
 	public Texture background = null;
 
 	private GuiElement parent = null;
-	private List<GuiElement> children = new LinkedList<GuiElement>();
+	private List<GuiElement> children = new ArrayList<GuiElement>();
 
 	public enum AnchorPoint
 	{
@@ -360,6 +360,16 @@ public class GuiElement
 		}
 	}
 
+	public int relativeX()
+	{
+		return bounds.x();
+	}
+
+	public int relativeY()
+	{
+		return bounds.y();
+	}
+
 	public void onKeyTyped(char eventChar, int eventKey)
 	{
 		for(GuiElement element: children)
@@ -382,6 +392,11 @@ public class GuiElement
 		{
 			element.onGuiClosed();
 		}
+	}
+
+	public Iterable<GuiElement> getChildren()
+	{
+		return children;
 	}
 
 	public GuiElement setClickable(boolean clickable)

@@ -314,7 +314,7 @@ public class CraftGuide
 	}
 
 	// config.store() does not permit per-setting comments.
-	private void saveConfig(OutputStream outputStream) throws IOException
+	private static void saveConfig(OutputStream outputStream) throws IOException
 	{
 		Set<String> properties = config.stringPropertyNames();
 
@@ -367,27 +367,21 @@ public class CraftGuide
 		return dir;
 	}
 
-	public static String getTranslation(String string)
+	public static void saveConfig()
 	{
-		if(string.equals("filter_type.input"))
+		config.setProperty("PauseWhileOpen", Boolean.toString(pauseWhileOpen));
+
+		try
 		{
-			return "Input";
+			saveConfig(new FileOutputStream(new File(configDirectory(), "CraftGuide.cfg")));
 		}
-		else if(string.equals("filter_type.output"))
+		catch(FileNotFoundException e)
 		{
-			return "Output";
+			CraftGuideLog.log(e, "", true);
 		}
-		else if(string.equals("filter_type.machine"))
+		catch(IOException e)
 		{
-			return "Machine";
-		}
-		else if(string.equals("filter"))
-		{
-			return "Filter";
-		}
-		else
-		{
-			return null;
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 }

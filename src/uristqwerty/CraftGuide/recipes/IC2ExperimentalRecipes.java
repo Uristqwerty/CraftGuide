@@ -8,6 +8,8 @@ import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +20,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.ChanceSlot;
@@ -73,23 +76,31 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		catch(ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(SecurityException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalAccessException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(NoSuchFieldException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 
@@ -236,15 +247,13 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 	}
 
-	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException
+	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException
 	{
-		boolean hideSecretRecipes = Class.forName("ic2.core.IC2").getField("enableSecretRecipeHiding").getBoolean(null);
-
 		Class advancedRecipe = Class.forName("ic2.core.AdvRecipe");
 		Field outputField = advancedRecipe.getField("output");
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
-		Field hidden = advancedRecipe.getField("hidden");
+		Method canShow = advancedRecipe.getMethod("canShow");
 		Field maskField = null;
 
 		try
@@ -256,7 +265,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		Class shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
 		Field shapelessInput = shapelessRecipe.getField("input");
 		Field shapelessOutput = shapelessRecipe.getField("output");
-		Field shapelessHidden = shapelessRecipe.getField("hidden");
+		Method shapelessCanShow = shapelessRecipe.getMethod("canShow");
 
 		List recipes = CraftingManager.getInstance().getRecipeList();
 
@@ -306,7 +315,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 		for(Object recipe: recipes)
 		{
-			if(advancedRecipe.isInstance(recipe) && (!hideSecretRecipes || !hidden.getBoolean(recipe)))
+			if(advancedRecipe.isInstance(recipe) && (Boolean)canShow.invoke(recipe))
 			{
 				ItemStack output = (ItemStack)outputField.get(recipe);
 				Object[] input = (Object[])inputField.get(recipe);
@@ -326,7 +335,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 					addLargeRecipe(generator, template, input, output, width);
 				}
 			}
-			else if(shapelessRecipe.isInstance(recipe) && (!hideSecretRecipes || !shapelessHidden.getBoolean(recipe)))
+			else if(shapelessRecipe.isInstance(recipe) && (Boolean)shapelessCanShow.invoke(recipe))
 			{
 				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
 				Object[] input = (Object[])shapelessInput.get(recipe);

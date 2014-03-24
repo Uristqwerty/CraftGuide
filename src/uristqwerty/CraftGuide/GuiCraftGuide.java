@@ -17,6 +17,7 @@ import uristqwerty.CraftGuide.client.ui.CraftingDisplay;
 import uristqwerty.CraftGuide.client.ui.FilterSelectGrid;
 import uristqwerty.CraftGuide.client.ui.GuiButton;
 import uristqwerty.CraftGuide.client.ui.GuiButton.ButtonState;
+import uristqwerty.CraftGuide.client.ui.ConfigList;
 import uristqwerty.CraftGuide.client.ui.GuiResizeHandle;
 import uristqwerty.CraftGuide.client.ui.GuiScrollBar;
 import uristqwerty.CraftGuide.client.ui.GuiSlider;
@@ -26,6 +27,7 @@ import uristqwerty.CraftGuide.client.ui.GuiTextInput;
 import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
+import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.components.Image;
@@ -33,7 +35,6 @@ import uristqwerty.gui_craftguide.components.Window;
 import uristqwerty.gui_craftguide.minecraft.Gui;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.Texture;
-import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class GuiCraftGuide extends Gui
 {
@@ -95,6 +96,14 @@ public class GuiCraftGuide extends Gui
 						DynamicTexture.instance("button_down"),
 				});
 
+		ButtonTemplate toggleTemplate = new ButtonTemplate(
+				new Texture[]{
+						DynamicTexture.instance("toggle_off"),
+						DynamicTexture.instance("toggle_off_over"),
+						DynamicTexture.instance("toggle_on"),
+						DynamicTexture.instance("toggle_on_over"),
+				});
+
 		guiWindow.background = windowBackground;
 
 		guiWindow.addElement(
@@ -114,21 +123,29 @@ public class GuiCraftGuide extends Gui
 		guiWindow.addElement(
 			new GuiTabbedDisplay(0, 0, initialWindowWidth, initialWindowHeight)
 				.addTab(
-					generateRecipeTab(texture, buttonTemplate)
+					generateRecipeTab(texture, buttonTemplate, toggleTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					(GuiButton)new GuiButton(6, 6, 28, 28, buttonTemplate)
 						.setToolTip("Recipe list")
 						.addElement(new GuiElement(0, 0, 28,28)
-							.setBackground(new TextureClip(texture, 1, 76, 28,28))
+							.setBackground(DynamicTexture.instance("recipe-tab_icon"))
 							.setClickable(false)))
 				.addTab(
 					generateTypeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
-					(GuiButton)new GuiButton(34, 6, 28, 28, buttonTemplate)
+					(GuiButton)new GuiButton(6, 34, 28, 28, buttonTemplate)
 						.setToolTip("Show/Hide recipes by crafting type")
 						.addElement(new GuiElement(0, 0, 28,28)
-							.setBackground(new TextureClip(texture, 29, 76, 28,28))
+							.setBackground(DynamicTexture.instance("type-tab_icon"))
 							.setClickable(false)))
+				.addTab(
+						generateConfigTab(texture, buttonTemplate, toggleTemplate)
+							.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
+						(GuiButton)new GuiButton(34, 6, 28, 28, buttonTemplate)
+							.setToolTip("Options")
+							.addElement(new GuiElement(0, 0, 28,28)
+								.setBackground(DynamicTexture.instance("config-tab_icon"))
+								.setClickable(false)))
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.setClickable(false));
 
@@ -144,18 +161,10 @@ public class GuiCraftGuide extends Gui
 		);*/
 	}
 
-	private GuiElement generateRecipeTab(Texture texture, ButtonTemplate buttonTemplate)
+	private GuiElement generateRecipeTab(Texture texture, ButtonTemplate buttonTemplate, ButtonTemplate toggleTemplate)
 	{
 		GuiElement recipeTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 				.setClickable(false);
-
-		ButtonTemplate toggleTemplate = new ButtonTemplate(
-				new Texture[]{
-						DynamicTexture.instance("toggle_off"),
-						DynamicTexture.instance("toggle_off_over"),
-						DynamicTexture.instance("toggle_on"),
-						DynamicTexture.instance("toggle_on_over"),
-				});
 
 		recipeTab.addElement(
 				new GuiElement(initialWindowWidth - 19, 5, 14, initialWindowHeight - 10)
@@ -169,7 +178,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.INPUT_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.input"), 0xff000000)));
+							new GuiText(15, 3, new TranslatedTextSource("craftguide.gui.filter_type.input"), 0xff000000)));
 
 
 		recipeTab.addElement(
@@ -178,7 +187,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.OUTPUT_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.output"), 0xff000000)));
+							new GuiText(15, 3, new TranslatedTextSource("craftguide.gui.filter_type.output"), 0xff000000)));
 
 		recipeTab.addElement(
 				new ToggleButton(8, 130, 13, 13, toggleTemplate)
@@ -186,7 +195,7 @@ public class GuiCraftGuide extends Gui
 					.addButtonListener(new FilterToggle(SlotType.MACHINE_SLOT))
 					.anchor(AnchorPoint.BOTTOM_LEFT)
 					.addElement(
-							new GuiText(15, 3, CraftGuide.getTranslation("filter_type.machine"), 0xff000000)));
+							new GuiText(15, 3, new TranslatedTextSource("craftguide.gui.filter_type.machine"), 0xff000000)));
 
 		GuiButton clearButton =
 			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 50, 13, buttonTemplate, "Clear")
@@ -195,7 +204,7 @@ public class GuiCraftGuide extends Gui
 		recipeTab.addElement(clearButton);
 
 		recipeTab.addElement(
-			new GuiText(9, 151, CraftGuide.getTranslation("filter"), 0xff000000)
+			new GuiText(9, 151, new TranslatedTextSource("craftguide.gui.filter"), 0xff000000)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		recipeTab.addElement(
@@ -263,7 +272,7 @@ public class GuiCraftGuide extends Gui
 		itemListArea.addElement(filterGrid);
 
 		itemListArea.addElement(
-			new GuiText(68, 183, "Search", 0xff000000)
+			new GuiText(68, 183, new TranslatedTextSource("craftguide.gui.search"), 0xff000000)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		itemListArea.addElement(
@@ -365,6 +374,43 @@ public class GuiCraftGuide extends Gui
 		);
 
 		return typeTab;
+	}
+
+	private GuiElement generateConfigTab(Texture texture, ButtonTemplate buttonTemplate, ButtonTemplate toggleTemplate)
+	{
+		GuiElement configTab = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+				.setClickable(false);
+
+		configTab.addElement(
+				new GuiElement(initialWindowWidth - 19, 5, 14, 188)
+					.setBackground(paneBackground)
+					.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT)
+		);
+
+		GuiScrollBar scrollBar =
+			new GuiScrollBar(initialWindowWidth - 18, 6, 12, 186,
+				(GuiSlider) new GuiSlider(0, 10, 12, 166, 12, 15, texture, 0, 199)
+					.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT))
+				.addButton(new GuiButton(0, 0, 12, 10, texture, 0, 214), -1, true)
+				.addButton(
+					(GuiButton) new GuiButton(0, 176, 12, 10, texture, 0, 224)
+						.anchor(AnchorPoint.BOTTOM_RIGHT),
+					1, true);
+
+		scrollBar.anchor(AnchorPoint.TOP_RIGHT, AnchorPoint.BOTTOM_RIGHT);
+		configTab.addElement(scrollBar);
+
+		configTab.addElement(
+				new ConfigList(
+					68, 6, initialWindowWidth - 90, 186,
+					scrollBar, toggleTemplate
+				)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
+				.setBackground(paneBackground)
+			);
+
+		return configTab;
 	}
 
 	@Override
@@ -526,5 +572,7 @@ public class GuiCraftGuide extends Gui
 		{
 			reloadRecipes();
 		}
+
+		TranslatedTextSource.reloadAll();
 	}
 }

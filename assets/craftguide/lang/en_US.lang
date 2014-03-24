@@ -1,1 +1,8 @@
 item.craftguide_item.name=Crafting Guide
+
+craftguide.gui.filter_type.input=Input
+craftguide.gui.filter_type.output=Output
+craftguide.gui.filter_type.machine=Machine
+craftguide.gui.filter=Filter
+craftguide.gui.search=Search
+craftguide.gui.config.pause=Pause while open (singleplayer only)

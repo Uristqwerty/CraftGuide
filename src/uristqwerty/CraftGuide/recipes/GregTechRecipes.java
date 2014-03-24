@@ -189,6 +189,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 	}
 
+	@SuppressWarnings("null")
 	private void generateRecipes(RecipeGenerator generator, ItemStack machine, ArrayList recipes,
 			int numInputs, int numOutputs, int constantEUt, int startEUOutputMult, boolean generated,
 			final String extraFormat) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException

@@ -24,7 +24,7 @@ public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProv
 	{
 		try
 		{
-			Class craftingManagerClass = Class.forName("naruto1310.extendedWorkbench.ExtendedCraftingManager");
+			Class craftingManagerClass = Class.forName("naruto1310.extendedWorkbench.crafting.ExtendedCraftingManager");
 			Object craftingManager = craftingManagerClass.getMethod("getInstance").invoke(null);
 			addRecipes(generator, (List<IRecipe>)craftingManagerClass.getMethod("getRecipeList").invoke(craftingManager));
 		}
@@ -60,7 +60,7 @@ public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProv
 
 	private void addRecipes(RecipeGenerator generator, List<IRecipe> recipes) throws ClassNotFoundException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
 	{
-		Class extendedShapedRecipe = Class.forName("naruto1310.extendedWorkbench.ExtendedShapedRecipes");
+		Class extendedShapedRecipe = Class.forName("naruto1310.extendedWorkbench.crafting.ExtendedShapedRecipes");
 		Field shapedWidth = extendedShapedRecipe.getDeclaredField("recipeWidth");
 		Field shapedHeight = extendedShapedRecipe.getDeclaredField("recipeHeight");
 		Field shapedItems = extendedShapedRecipe.getDeclaredField("recipeItems");
@@ -68,7 +68,7 @@ public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProv
 		shapedHeight.setAccessible(true);
 		shapedItems.setAccessible(true);
 
-		Class extendedShapelessRecipe = Class.forName("naruto1310.extendedWorkbench.ExtendedShapelessRecipes");
+		Class extendedShapelessRecipe = Class.forName("naruto1310.extendedWorkbench.crafting.ExtendedShapelessRecipes");
 		Field shapelessItems = extendedShapelessRecipe.getDeclaredField("recipeItems");
 		shapelessItems.setAccessible(true);
 

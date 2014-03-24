@@ -43,10 +43,4 @@ public class ItemCraftGuide extends Item
 		CraftGuide.side.openGUI(player);
         return itemstack;
     }
-
-	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
-	{
-		return 0x9999ff;
-	}
 }

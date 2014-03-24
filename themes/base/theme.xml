@@ -3,20 +3,23 @@
 		<id>theme_base</id>
 		<name>Base Theme</name>
 		<description>This theme defines the standard set of images and
-			textures used by CraftGuide</description>
+			textures used by CraftGuide
+		</description>
 	</metadata>
 	<image id="base_image">
 		<source type="file">base.png</source>
 		<source type="resource">craftguide:textures/gui/CraftGuide.png</source>
-        <source type="resource">minecraft:textures/gui/CraftGuide.png</source>
+		<source type="resource">minecraft:textures/gui/CraftGuide.png</source>
 	</image>
 	<image id="recipe_backgrounds">
-		<source type="resource">craftguide:textures/gui/CraftGuideRecipe.png</source>
-        <source type="resource">minecraft:textures/gui/CraftGuideRecipe.png</source>
+		<source type="resource">craftguide:textures/gui/CraftGuideRecipe.png
+		</source>
+		<source type="resource">minecraft:textures/gui/CraftGuideRecipe.png
+		</source>
 	</image>
 	<image id="brew_recipe_background">
 		<source type="resource">craftguide:textures/gui/BrewGuide.png</source>
-        <source type="resource">minecraft:textures/gui/BrewGuide.png</source>
+		<source type="resource">minecraft:textures/gui/BrewGuide.png</source>
 	</image>
 	<texture type="clip" id="stack-any">
 		<source sourceid="base_image"></source>
@@ -243,22 +246,45 @@
 		</textures>
 		<borderwidth>2</borderwidth>
 		<borderheight>2</borderheight>
-		</texture>
+	</texture>
 	<texture type="clip" id="toggle_off">
 		<source sourceid="base_image"></source>
-		<rect x="48" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_off_over">
+		<rect x="48" y="191" width="13" height="13"></rect>
+	</texture>
+	<texture type="clip" id="toggle_off_over">
 		<source sourceid="base_image"></source>
-		<rect x="61" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_on_over">
+		<rect x="61" y="191" width="13" height="13"></rect>
+	</texture>
+	<texture type="clip" id="toggle_on_over">
 		<source sourceid="base_image"></source>
-		<rect x="74" y="191" width="13" height="13"></rect></texture><texture type="clip" id="toggle_on">
+		<rect x="74" y="191" width="13" height="13"></rect>
+	</texture>
+	<texture type="clip" id="toggle_on">
 		<source sourceid="base_image"></source>
-		<rect x="87" y="191" width="13" height="13"></rect></texture>
+		<rect x="87" y="191" width="13" height="13"></rect>
+	</texture>
 	<texture type="coloredtexture" id="stack-oredict-single">
 		<source sourceid="stack-oredict"></source>
-		<color red="255" green="255" blue="255" alpha="63"></color></texture>
+		<color red="255" green="255" blue="255" alpha="63"></color>
+	</texture>
 	<texture type="clip" id="EU-icon">
 		<source sourceid="base_image"></source>
-		<rect x="239" y="144" width="16" height="16"></rect></texture><texture type="clip" id="liquidFilterContainer">
+		<rect x="239" y="144" width="16" height="16"></rect>
+	</texture>
+	<texture type="clip" id="liquidFilterContainer">
 		<source sourceid="base_image"></source>
-		<rect x="238" y="124" width="18" height="18"></rect></texture>
+		<rect x="238" y="124" width="18" height="18"></rect>
+	</texture>
+	<texture type="clip" id="recipe-tab_icon">
+		<source sourceid="base_image"></source>
+		<rect x="1" y="76" width="28" height="28"></rect>
+	</texture>
+	<texture type="clip" id="type-tab_icon">
+		<source sourceid="base_image"></source>
+		<rect x="29" y="76" width="28" height="28"></rect>
+	</texture>
+	<texture type="clip" id="config-tab_icon">
+		<source sourceid="base_image"></source>
+		<rect x="57" y="76" width="28" height="28"></rect>
+	</texture>
 </theme>
