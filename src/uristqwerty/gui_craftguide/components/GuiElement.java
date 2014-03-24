@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui_craftguide.MutableRect;
 import uristqwerty.gui_craftguide.Rect;
 import uristqwerty.gui_craftguide.editor.GuiElementMeta.GuiElementProperty;
@@ -210,6 +211,18 @@ public class GuiElement
 		for(GuiElement element: children)
 		{
 			element.mouseReleased(x - bounds.x(), y - bounds.y());
+		}
+	}
+
+	public GuiRenderer getRenderer()
+	{
+		if(parent != null)
+		{
+			return parent.getRenderer();
+		}
+		else
+		{
+			return null;
 		}
 	}
 

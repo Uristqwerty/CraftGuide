@@ -11,10 +11,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.CraftType;
+import uristqwerty.CraftGuide.GuiCraftGuide;
+import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -71,7 +75,7 @@ public abstract class RecipeDump
 		}
 	}
 
-	public void dumpRecipes(OutputStream output)
+	public void dumpCraftingRecipes(OutputStream output)
 	{
 		try
 		{
@@ -103,6 +107,49 @@ public abstract class RecipeDump
 			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+	}
+
+	public void exportDisplayedRecipes(OutputStream output)
+	{
+		try
+		{
+			startWriting(output);
+
+			Map<CraftType, List<CraftGuideRecipe>> recipes = GuiCraftGuide.getInstance().getRecipeCache().getAllRecipes();
+
+			startArray();
+			for(Entry<CraftType, List<CraftGuideRecipe>> recipeSet: recipes.entrySet())
+			{
+				startObject("recipe_group");
+				writeItemStackValue(recipeSet.getKey().getDisplayStack(), "group type");
+
+				startArrayValue("recipes");
+				for(CraftGuideRecipe recipe: recipeSet.getValue())
+				{
+					Object[] values = recipe.getItems();
+
+					if(values != null)
+					{
+						startArray();
+						dumpArrayValues(values, values.getClass().getComponentType());
+						endArray();
+					}
+				}
+				endArrayValue();
+				endObject();
+			}
+			endArray();
+
+			stopWriting();
+		}
+		catch(IOException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(IllegalArgumentException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}

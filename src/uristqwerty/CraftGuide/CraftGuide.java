@@ -369,7 +369,17 @@ public class CraftGuide
 
 	public static void saveConfig()
 	{
+		//config.setProperty("RecipeList_mouseWheelScrollRate", "3");
 		config.setProperty("PauseWhileOpen", Boolean.toString(pauseWhileOpen));
+		//config.setProperty("resizeRate", "0");
+		//config.setProperty("gridPacking", Boolean.toString(true));
+		config.setProperty("alwaysShowID", Boolean.toString(alwaysShowID));
+		//config.setProperty("textSearchRequiresShift", Boolean.toString(false));
+		config.setProperty("enableKeybind", Boolean.toString(enableKeybind));
+		config.setProperty("enableItemRecipe", Boolean.toString(enableItemRecipe));
+		//config.setProperty("newerBackgroundStyle", Boolean.toString(newerBackgroundStyle));
+		config.setProperty("hideMundanePotionRecipes", Boolean.toString(hideMundanePotionRecipes));
+		config.setProperty("logThemeDebugInfo", Boolean.toString(ThemeManager.debugOutput));
 
 		try
 		{

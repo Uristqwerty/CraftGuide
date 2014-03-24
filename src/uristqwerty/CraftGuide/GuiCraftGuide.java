@@ -404,7 +404,7 @@ public class GuiCraftGuide extends Gui
 		configTab.addElement(
 				new ConfigList(
 					68, 6, initialWindowWidth - 90, 186,
-					scrollBar, toggleTemplate
+					scrollBar, buttonTemplate, toggleTemplate
 				)
 				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)
 				.setBackground(paneBackground)
@@ -574,5 +574,10 @@ public class GuiCraftGuide extends Gui
 		}
 
 		TranslatedTextSource.reloadAll();
+	}
+
+	public RecipeCache getRecipeCache()
+	{
+		return recipeCache;
 	}
 }

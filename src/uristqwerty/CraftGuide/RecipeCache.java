@@ -324,6 +324,11 @@ public class RecipeCache
 		return filteredResults;
 	}
 
+	public Map<CraftType, List<CraftGuideRecipe>> getAllRecipes()
+	{
+		return craftResults;
+	}
+
 	public void filter(ItemFilter filter)
 	{
 		filterItem = filter;

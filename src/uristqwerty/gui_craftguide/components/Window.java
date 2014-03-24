@@ -42,6 +42,12 @@ public class Window extends GuiElement
 	}
 
 	@Override
+	public GuiRenderer getRenderer()
+	{
+		return renderer;
+	}
+
+	@Override
 	public void render(Renderable renderable, int xOffset, int yOffset)
 	{
 		renderer.render(renderable, xOffset + bounds.x(), yOffset + bounds.y());
