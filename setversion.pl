@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 my $override = "";
+my $revision = "";
 my $version = "";
 my $build = "";
 
@@ -23,6 +24,10 @@ while(<$versionfile>)
         {
             $override = $2;
         }
+        elsif($1 eq "REVISION")
+        {
+            $revision = $2;
+        }
     }
 }
 
@@ -37,9 +42,9 @@ print "Version string: $versionstring\n";
 close $versionfile;
 my $infile;
 my $outfile;
-if(open($infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/CraftGuide.java"))
+if(open($infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/CraftGuide_FML.java"))
 {
-    open($outfile, ">", "src/minecraft/uristqwerty/CraftGuide/CraftGuide.java");
+    open($outfile, ">", "src/minecraft/uristqwerty/CraftGuide/CraftGuide_FML.java");
 
     while(<$infile>)
     {
@@ -56,6 +61,27 @@ if(open($infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/CraftGuide.
     close($infile);
     close($outfile);
 }
+
+if(open($infile, "<", "eclipse/CraftGuide/src/uristqwerty/CraftGuide/LiteMod_CraftGuide.java"))
+{
+    open($outfile, ">", "src/minecraft/uristqwerty/CraftGuide/LiteMod_CraftGuide.java");
+
+    while(<$infile>)
+    {
+        if($_ =~ /(.*)##VERSION##(.*)/)
+        {
+            print $outfile "$1$versionstring$2\n";
+        }
+        else
+        {
+            print $outfile "$_";
+        }
+    }
+
+    close($infile);
+    close($outfile);
+}
+
 open($infile, "<", "eclipse/CraftGuide/src/mcmod.info");
 open($outfile, ">", "eclipse/CraftGuide/out/mcmod.info");
 
@@ -74,13 +100,37 @@ while(<$infile>)
 close($infile);
 close($outfile);
 
+open($infile, "<", "eclipse/CraftGuide/src/litemod.json");
+open($outfile, ">", "eclipse/CraftGuide/out/litemod.json");
+
+while(<$infile>)
+{
+    if($_ =~ /(\s*)"version": ".+",/)
+    {
+        print $outfile "$1\"version\": \"$versionstring\",\n";
+    }
+    elsif($_ =~ /(\s*)"revision": ".+",/)
+    {
+        print $outfile "$1\"revision\": \"$revision\",\n";
+    }
+    else
+    {
+        print $outfile "$_";
+    }
+}
+
+close($infile);
+close($outfile);
+
 if($override eq "")
 {
     $build += 1;
+    $revision += 1;
 
     open($versionfile, ">", "eclipse/CraftGuide/version.txt");
     print $versionfile "BUILD\t\t$build\n";
     print $versionfile "VERSION\t\t$version\n";
+    print $versionfile "REVISION\t\t$revision\n";
     print $versionfile "OVERRIDE\t$override\n";
     close $versionfile;
 }
@@ -102,5 +152,17 @@ if(open($buildzip, ">", "eclipse/CraftGuide/build-zip-modloader.bat"))
     print $buildzip "if exist ..\\CraftGuide-$versionstring-modloader.zip del ..\\CraftGuide-$versionstring-modloader.zip\n";
     print $buildzip "7z a ..\\CraftGuide-$versionstring-modloader.zip \"*\"\n";
     print $buildzip "cd ..\\..\n";
+    close($buildzip);
+}
+
+if(open($buildzip, ">", "eclipse/CraftGuide/build-zip-liteloader.bat"))
+{
+    print $buildzip "cd zip\\build-liteloader\n";
+    print $buildzip "if exist ..\\CraftGuide-$versionstring.litemod del ..\\CraftGuide-$versionstring.litemod\n";
+    print $buildzip "if exist ..\\CraftGuide-$versionstring.litemod.zip del ..\\CraftGuide-$versionstring.litemod.zip\n";
+    print $buildzip "7z a ..\\CraftGuide-$versionstring.litemod.zip \"*\"\n";
+    print $buildzip "cd ..\n";
+    print $buildzip "RENAME CraftGuide-$versionstring.litemod.zip CraftGuide-$versionstring.litemod\n";
+    print $buildzip "cd ..\n";
     close($buildzip);
 }

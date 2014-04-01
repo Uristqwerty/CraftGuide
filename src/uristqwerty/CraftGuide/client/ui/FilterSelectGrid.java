@@ -32,8 +32,6 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private boolean overItem = false;
 	private String searchText = "";
 
-	private int lastMouseX, lastMouseY;
-
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
 	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");

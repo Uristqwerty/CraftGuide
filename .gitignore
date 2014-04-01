@@ -4,3 +4,4 @@ out/*
 build-zip.bat
 build-zip-modloader.bat
 CraftGuideResources.zip
+CraftGuide_API.jar

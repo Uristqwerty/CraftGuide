@@ -52,7 +52,7 @@ public class CraftGuide
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
-	public void preInit(String iconName)
+	public void preInit(String iconName, boolean disableItem)
 	{
 		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
 
@@ -68,7 +68,10 @@ public class CraftGuide
 			side.initKeybind();
 		}
 
-		addItem(iconName);
+		if(!disableItem)
+		{
+			addItem(iconName);
+		}
 	}
 
 	public void init()
@@ -161,7 +164,6 @@ public class CraftGuide
 	private void addItem(String iconName)
 	{
 		itemCraftGuide = new ItemCraftGuide(iconName);
-		loaderSide.addName(itemCraftGuide, "Crafting Guide");
 
 		if(enableItemRecipe)
 		{

@@ -191,9 +191,9 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		{
 			if(recipe instanceof ShapedRecipes)
 			{
-				int width = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeWidth", "field_77576_b");
-				int height = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeHeight", "field_77577_c");
-				Object[] items = (Object[])CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "d", "recipeItems", "field_77574_d");
+				int width = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "a", "recipeWidth", "field_77576_b");
+				int height = (Integer)CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "b", "recipeHeight", "field_77577_c");
+				Object[] items = (Object[])CommonUtilities.getPrivateValue(ShapedRecipes.class, (ShapedRecipes)recipe, "c", "recipeItems", "field_77574_d");
 
 				if(allowSmallGrid && width < 3 && height < 3)
 				{

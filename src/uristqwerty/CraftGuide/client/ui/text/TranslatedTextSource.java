@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import net.minecraft.util.StatCollector;
 
 public class TranslatedTextSource extends TextSource
@@ -40,14 +41,24 @@ public class TranslatedTextSource extends TextSource
 
 	public static void reloadAll()
 	{
-		for(WeakReference<TranslatedTextSource> reference: instances)
+		try
 		{
-			TranslatedTextSource text = reference.get();
-
-			if(text != null)
+			for(WeakReference<TranslatedTextSource> reference: instances)
 			{
-				text.setText(text.rawText);
+				if(reference != null)
+				{
+					TranslatedTextSource text = reference.get();
+
+					if(text != null)
+					{
+						text.setText(text.rawText);
+					}
+				}
 			}
+		}
+		catch(Exception e)
+		{
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 }

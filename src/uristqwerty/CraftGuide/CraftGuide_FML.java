@@ -5,7 +5,6 @@ import java.io.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -45,7 +44,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		CraftGuide.loaderSide = this;
 		CraftGuide.side = side;
 		craftguide = new CraftGuide();
-		craftguide.preInit("craftguide:craftguide_item");
+		craftguide.preInit("craftguide:craftguide_item", false);
 
 		FMLCommonHandler.instance().bus().register(new KeyCheckTick());
 	}
@@ -74,12 +73,6 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 	public void addRecipe(ItemStack output, Object[] recipe)
 	{
 		GameRegistry.addRecipe(output, recipe);
-	}
-
-	@Override
-	public void addName(Item item, String name)
-	{
-		//LanguageRegistry.addName(item, name);
 	}
 
 	@Override
