@@ -34,7 +34,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	@Override
 	public void checkKeybind()
 	{
-		if(key != null && Keyboard.isKeyDown(key.getKeyCode()))
+		if(key != null && CraftGuide.enableKeybind && Keyboard.isKeyDown(key.getKeyCode()))
 		{
 			Minecraft mc = Minecraft.getMinecraft();
 			GuiScreen screen = mc.currentScreen;
