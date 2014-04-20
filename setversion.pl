@@ -130,7 +130,7 @@ if($override eq "")
     open($versionfile, ">", "eclipse/CraftGuide/version.txt");
     print $versionfile "BUILD\t\t$build\n";
     print $versionfile "VERSION\t\t$version\n";
-    print $versionfile "REVISION\t\t$revision\n";
+    print $versionfile "REVISION\t$revision\n";
     print $versionfile "OVERRIDE\t$override\n";
     close $versionfile;
 }

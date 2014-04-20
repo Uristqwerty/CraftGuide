@@ -63,10 +63,7 @@ public class CraftGuide
 
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
 
-		if(enableKeybind)
-		{
-			side.initKeybind();
-		}
+		side.initKeybind();
 
 		if(!disableItem)
 		{
