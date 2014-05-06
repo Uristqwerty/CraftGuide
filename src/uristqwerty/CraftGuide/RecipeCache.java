@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.api.BasicRecipeFilter;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
@@ -139,72 +140,99 @@ public class RecipeCache
 
 	private void removeUselessDuplicates()
 	{
-		Map<CraftType, Integer> wild = new HashMap<CraftType, Integer>();
-		for(CraftType item: allItems)
-		{
-			if(!(item.getStack() instanceof ItemStack))
-			{
-				continue;
-			}
+		HashMap<Item, Set<CraftType>> items = new HashMap<Item, Set<CraftType>>();
 
-			if(CommonUtilities.getItemDamage(((ItemStack)item.getStack())) == CraftGuide.DAMAGE_WILDCARD)
+		for(CraftType type: allItems)
+		{
+			if(type.getStack() instanceof ItemStack)
 			{
-				wild.put(item, 1);
-			}
-			else
-			{
-				for(CraftType type: wild.keySet())
+				Item item = ((ItemStack)type.getStack()).getItem();
+				Set<CraftType> set = items.get(item);
+
+				if(set == null)
 				{
-					if(((ItemStack)item.getStack()).getItem() == ((ItemStack)type.getStack()).getItem())
+					set = new HashSet<CraftType>();
+					items.put(item, set);
+				}
+
+				set.add(type);
+			}
+			else if(type.getStack() instanceof List)
+			{
+				for(Object o: (List)type.getStack())
+				{
+					if(o instanceof ItemStack)
 					{
-						wild.put(type, wild.get(type) + 1);
+						Item item = ((ItemStack)o).getItem();
+						Set<CraftType> set = items.get(item);
+
+						if(set == null)
+						{
+							set = new HashSet<CraftType>();
+							items.put(item, set);
+						}
+
+						set.add(type);
 					}
 				}
 			}
 		}
 
-		for(CraftType type: wild.keySet())
+		List<CraftType> toAdd = new ArrayList<CraftType>();
+
+		for(Iterator<CraftType> i = allItems.iterator(); i.hasNext();)
 		{
-			if(wild.get(type) == 2)
+			CraftType type = i.next();
+
+			if(type.getStack() instanceof ItemStack && CommonUtilities.getItemDamage((ItemStack)type.getStack()) == CraftGuide.DAMAGE_WILDCARD)
 			{
-				allItems.remove(type);
-			}
-			else if(wild.get(type) == 1)
-			{
-				allItems.remove(type);
-				allItems.add(CraftType.getInstance(new ItemStack(type.getDisplayStack().getItem(), 1, 0)));
+				Item item = ((ItemStack)type.getStack()).getItem();
+				Set<CraftType> set = items.get(item);
+
+				if(set.size() == 1)
+				{
+					i.remove();
+					toAdd.add(CraftType.getInstance(new ItemStack(item, 1, 0)));
+				}
+				else if(set.size() == 2)
+				{
+					i.remove();
+				}
 			}
 		}
 
-		wild.clear();
-		for(CraftType item: allItems)
-		{
-			if(item.getStack() instanceof ArrayList &&
-					((ArrayList)item.getStack()).size() == 1 &&
-					((ArrayList)item.getStack()).get(0) != null)
-			{
-				wild.put(item, 1);
-				ItemStack stack = (ItemStack)((ArrayList)item.getStack()).get(0);
+		allItems.addAll(toAdd);
 
-				for(CraftType item2: allItems)
+		for(Iterator<CraftType> i = allItems.iterator(); i.hasNext();)
+		{
+			CraftType type = i.next();
+
+			if(type.getStack() instanceof List && ((List)type.getStack()).size() == 1 && ((List)type.getStack()).get(0) instanceof ItemStack)
+			{
+				ItemStack stack = (ItemStack)((List)type.getStack()).get(0);
+				Item item = stack.getItem();
+				Set<CraftType> set = items.get(item);
+				boolean found = false;
+
+				for(CraftType other: set)
 				{
-					if(item2.getStack() instanceof ItemStack)
+					if(other == type)
 					{
-						if(CommonUtilities.checkItemStackMatch(stack, (ItemStack)item2.getStack()))
+						continue;
+					}
+					else if(other.getStack() instanceof ItemStack)
+					{
+						ItemStack otherStack = (ItemStack)other.getStack();
+						if(ItemStack.areItemStacksEqual(stack, otherStack))
 						{
-							wild.put(item, 2);
+							found = true;
 							break;
 						}
 					}
 				}
-			}
-		}
 
-		for(CraftType type: wild.keySet())
-		{
-			if(wild.get(type) == 2)
-			{
-				allItems.remove(type);
+				if(found)
+					i.remove();
 			}
 		}
 	}

@@ -126,7 +126,7 @@ public class GuiCraftGuide extends Gui
 					generateRecipeTab(texture, buttonTemplate, toggleTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					(GuiButton)new GuiButton(6, 6, 28, 28, buttonTemplate)
-						.setToolTip("Recipe list")
+						.setToolTip(new TranslatedTextSource("craftguide.gui.tab_tooltip.recipe_list"))
 						.addElement(new GuiElement(0, 0, 28,28)
 							.setBackground(DynamicTexture.instance("recipe-tab_icon"))
 							.setClickable(false)))
@@ -134,7 +134,7 @@ public class GuiCraftGuide extends Gui
 					generateTypeTab(texture, buttonTemplate)
 						.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 					(GuiButton)new GuiButton(6, 34, 28, 28, buttonTemplate)
-						.setToolTip("Show/Hide recipes by crafting type")
+						.setToolTip(new TranslatedTextSource("craftguide.gui.tab_tooltip.type_visibility_list"))
 						.addElement(new GuiElement(0, 0, 28,28)
 							.setBackground(DynamicTexture.instance("type-tab_icon"))
 							.setClickable(false)))
@@ -142,7 +142,7 @@ public class GuiCraftGuide extends Gui
 						generateConfigTab(texture, buttonTemplate, toggleTemplate)
 							.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT),
 						(GuiButton)new GuiButton(34, 6, 28, 28, buttonTemplate)
-							.setToolTip("Options")
+							.setToolTip(new TranslatedTextSource("craftguide.gui.tab_tooltip.options"))
 							.addElement(new GuiElement(0, 0, 28,28)
 								.setBackground(DynamicTexture.instance("config-tab_icon"))
 								.setClickable(false)))
@@ -424,6 +424,8 @@ public class GuiCraftGuide extends Gui
 			filter.setFilter(recipeCache.getFilter());
 
 			super.drawScreen(mouseX, mouseY, f);
+
+	        CommonUtilities.clearTooltipCache();
 		}
 		catch(Exception e)
 		{

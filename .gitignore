@@ -3,5 +3,6 @@ out/*
 .settings/*
 build-zip.bat
 build-zip-modloader.bat
+build-zip-liteloader.bat
 CraftGuideResources.zip
 CraftGuide_API.jar

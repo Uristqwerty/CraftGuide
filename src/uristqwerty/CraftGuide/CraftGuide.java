@@ -54,7 +54,7 @@ public class CraftGuide
 
 	public void preInit(String iconName, boolean disableItem)
 	{
-		CraftGuideLog.init(new File(configDirectory(), "CraftGuide.log"));
+		CraftGuideLog.init(new File(logDirectory(), "CraftGuide.log"));
 
 		initForgeExtensions();
 		loadProperties();
@@ -93,9 +93,10 @@ public class CraftGuide
 
 		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
 		addIC2Recipes();
-		loadModRecipes("gregtech_addon", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
+		loadModRecipes("gregtech", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
 		loadModRecipes("extendedWorkbench", "uristqwerty.CraftGuide.recipes.ExtendedWorkbench");
 		loadModRecipes("BuildCraft|Factory", "uristqwerty.CraftGuide.recipes.BuildCraftRecipes");
+
 		side.initNetworkChannels();
 	}
 
@@ -364,6 +365,11 @@ public class CraftGuide
 		}
 
 		return dir;
+	}
+
+	public static File logDirectory()
+	{
+		return loaderSide.getLogDir();
 	}
 
 	public static void saveConfig()

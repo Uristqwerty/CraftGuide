@@ -8,9 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -37,127 +36,127 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	{
 		try
 		{
-			Class gregTechClass = Class.forName("gregtechmod.GT_Mod");
-			Object instance = gregTechClass.getField("instance").get(null);
-			Block machine;
-
-			try
-			{
-				machine = ((Block[])gregTechClass.getField("mBlocks").get(instance))[1];
-			}
-			catch(NoSuchFieldException e)
-			{
-				Class gregTechAPI = Class.forName("gregtechmod.api.GregTech_API");
-				machine = ((Block[])gregTechAPI.getField("sBlockList").get(null))[1];
-			}
-
-			Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
-			Class modHandlerClass = Class.forName("gregtechmod.api.util.GT_ModHandler");
+			Class itemList = Class.forName("gregtech.api.enums.ItemList");
+			Class recipeClass = Class.forName("gregtech.api.util.GT_Recipe");
 
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 80),
-					(ArrayList)recipeClass.getField("sFusionRecipes").get(null),
-					2, 1, -1, 0, true, "\u00a77  First reaction cost: %1$d EU");
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 62),
+					generator, getMachines(itemList, "Centrifuge"),
 					(ArrayList)recipeClass.getField("sCentrifugeRecipes").get(null),
 					2, 4, 5, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 25),
+					generator, getMachines(itemList, "Electrolyzer"),
 					(ArrayList)recipeClass.getField("sElectrolyzerRecipes").get(null),
 					2, 4, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 28),
-					(ArrayList)recipeClass.getField("sGrinderRecipes").get(null),
-					2, 4, -1, 0, false, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 29),
-					(ArrayList)recipeClass.getField("sBlastRecipes").get(null),
-					2, 2, -1, 0, false, "\u00a77  Required temperature: %1$d");
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 31),
-					(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
-					2, 2, -1, 0, false, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 32),
-					(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
-					2, 3, -1, 0, false, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 33),
-					(ArrayList)recipeClass.getField("sDieselFuels").get(null),
-					1, 1, 12, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 34),
-					(ArrayList)recipeClass.getField("sTurbineFuels").get(null),
-					1, 1, 16, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 35),
-					(ArrayList)recipeClass.getField("sHotFuels").get(null),
-					1, 1, 24, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 36),
-					(ArrayList)recipeClass.getField("sDenseLiquidFuels").get(null),
-					1, 1, 8, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 38),
-					(ArrayList)recipeClass.getField("sVacuumRecipes").get(null),
-					1, 1, -1, 0, false, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 41),
+					generator, getMachines(itemList, "ChemicalReactor"),
 					(ArrayList)recipeClass.getField("sChemicalRecipes").get(null),
 					2, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 42),
-					(ArrayList)recipeClass.getField("sMagicFuels").get(null),
-					1, 1, 24, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 44),
-					(ArrayList)recipeClass.getField("sDistillationRecipes").get(null),
-					2, 4, -1, 0, false, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 55),
+					generator, getMachines(itemList, "Wiremill"),
 					(ArrayList)recipeClass.getField("sWiremillRecipes").get(null),
 					1, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 56),
+					generator, getMachines(itemList, "AlloySmelter"),
 					(ArrayList)recipeClass.getField("sAlloySmelterRecipes").get(null),
 					2, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 59),
+					generator, getMachines(itemList, "Bender"),
 					(ArrayList)recipeClass.getField("sBenderRecipes").get(null),
 					1, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 60),
+					generator, getMachines(itemList, "Assembler"),
 					(ArrayList)recipeClass.getField("sAssemblerRecipes").get(null),
 					2, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 57),
+					generator, getMachines(itemList, "Canner"),
 					(ArrayList)recipeClass.getField("sCannerRecipes").get(null),
 					2, 2, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 37),
-					(ArrayList)recipeClass.getField("sPlasmaFuels").get(null),
-					1, 1, 2048, 1000, true, null);
-			generateRecipes(
-					generator, new ItemStack(machine, 1, 111),
+					generator, getMachines(itemList, "Lathe"),
 					(ArrayList)recipeClass.getField("sLatheRecipes").get(null),
 					1, 2, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 113),
+					generator, getMachines(itemList, "Cutter"),
 					(ArrayList)recipeClass.getField("sCutterRecipes").get(null),
 					1, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 115),
+					generator, getMachines(itemList, "Extruder"),
 					(ArrayList)recipeClass.getField("sExtruderRecipes").get(null),
 					2, 1, -1, 0, false, null);
 			generateRecipes(
-					generator, new ItemStack(machine, 1, 133),
+					generator, getMachines(itemList, "Bronze_Hammer"),
 					(ArrayList)recipeClass.getField("sHammerRecipes").get(null),
 					1, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, "Boxinator"),
+					(ArrayList)recipeClass.getField("sBoxinatorRecipes").get(null),
+					2, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, "Unboxinator"),
+					(ArrayList)recipeClass.getField("sUnboxinatorRecipes").get(null),
+					1, 2, -1, 0, false, null);
 
+			// Things GregTech 1.7 has not implemented yet (at the time of writing this):
+			/*
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sFusionRecipes").get(null),
+					2, 1, -1, 0, true, "\u00a77  First reaction cost: %1$d EU");
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sGrinderRecipes").get(null),
+					2, 4, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sBlastRecipes").get(null),
+					2, 2, -1, 0, false, "\u00a77  Required temperature: %1$d");
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sImplosionRecipes").get(null),
+					2, 2, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
+					2, 3, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sDieselFuels").get(null),
+					1, 1, 12, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sTurbineFuels").get(null),
+					1, 1, 16, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sHotFuels").get(null),
+					1, 1, 24, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sDenseLiquidFuels").get(null),
+					1, 1, 8, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sVacuumRecipes").get(null),
+					1, 1, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sMagicFuels").get(null),
+					1, 1, 24, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sDistillationRecipes").get(null),
+					2, 4, -1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, ""),
+					(ArrayList)recipeClass.getField("sPlasmaFuels").get(null),
+					1, 1, 2048, 1000, true, null);
+			*/
+
+			/*
 			generatePulverizerRecipes(generator,
 					new ItemStack(machine, 1, 64), new ItemStack(machine, 1, 130),
 					(Map<Integer, Object>)CommonUtilities.getPrivateValue(modHandlerClass, null, "sPulverizerRecipes"));
+			*/
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -189,13 +188,37 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 	}
 
+	private ArrayList<ItemStack> getMachines(Class<? extends Enum> itemList, String string) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
+	{
+		ArrayList<ItemStack> machines = new ArrayList<ItemStack>();
+
+		Method get = itemList.getMethod("get", long.class, Object[].class);
+
+		for(Enum e: itemList.getEnumConstants())
+		{
+			if(e.name().endsWith(string))
+			{
+				ItemStack item = (ItemStack)get.invoke(e, Long.valueOf(1), new Object[0]);
+
+				if(item != null)
+					machines.add(item);
+			}
+		}
+
+		return machines;
+	}
+
 	@SuppressWarnings("null")
-	private void generateRecipes(RecipeGenerator generator, ItemStack machine, ArrayList recipes,
+	private void generateRecipes(RecipeGenerator generator, ArrayList<ItemStack> machines, ArrayList recipes,
 			int numInputs, int numOutputs, int constantEUt, int startEUOutputMult, boolean generated,
 			final String extraFormat) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
 	{
+		if(machines.size() < 1)
+			return;
 
-		Class recipeClass = Class.forName("gregtechmod.api.util.GT_Recipe");
+		ItemStack typeMachine = machines.get(0);
+
+		Class recipeClass = Class.forName("gregtech.api.util.GT_Recipe");
 		Field eutField = recipeClass.getField("mEUt");
 		Field durationField = recipeClass.getField("mDuration");
 		Field extraField = recipeClass.getField("mStartEU");
@@ -239,8 +262,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 
 
-		Slot[] recipeSlots = layoutMachineSlots(machine, numInputs, numOutputs, extraFormat);
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machine);
+		Slot[] recipeSlots = layoutMachineSlots(machines, numInputs, numOutputs, extraFormat);
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, typeMachine);
 
 		if(slotColumns(numInputs) + slotColumns(numOutputs) > 3)
 		{
@@ -299,7 +322,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			int duration = durationField.getInt(recipe);
 			int outputEU = (startEUOutputMult != 0)? extraData * startEUOutputMult : duration * eut;
 
-			recipeContents[numInputs + numOutputs + 0] = machine;
+			recipeContents[numInputs + numOutputs + 0] = machines;
 
 			if(extraFormat == null)
 			{
@@ -327,7 +350,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		return 0;
 	}
 
-	private Slot[] layoutMachineSlots(ItemStack machine, int numInputs, int numOutputs, final String extraFormat)
+	private Slot[] layoutMachineSlots(ArrayList<ItemStack> machine, int numInputs, int numOutputs, final String extraFormat)
 	{
 		if(numInputs > 9 || numOutputs > 9)
 		{
@@ -466,7 +489,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		RecipeTemplate templateElectric = generator.createRecipeTemplate(recipeSlotsElectric, machines.get(0));
 		RecipeTemplate templateSteam = generator.createRecipeTemplate(recipeSlotsSteam, machines.get(1));
 
-		Class recipeClass = Class.forName("gregtechmod.api.util.GT_PulverizerRecipe");
+		Class recipeClass = Class.forName("gregtech.api.util.GT_PulverizerRecipe");
 		Method getInput = recipeClass.getMethod("getInput");
 		Method getPrimaryOutput = recipeClass.getMethod("getPrimaryOutput");
 		Method getSecondaryOutput = recipeClass.getMethod("getSecondaryOutput");
@@ -481,7 +504,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		Method contains = null;
 		try
 		{
-			prefixes = Class.forName("gregtechmod.api.enums.OrePrefixes");
+			prefixes = Class.forName("gregtech.api.enums.OrePrefixes");
 			ore = prefixes.getField("ore").get(null);
 			denseOre = prefixes.getField("oreDense").get(null);
 			endOre = prefixes.getField("oreEnd").get(null);
@@ -571,10 +594,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	{
 		try
 		{
-			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
-			return new ItemStack[] {
-				new ItemStack(machine, 1, 50),
-			};
+			Class itemList = Class.forName("gregtech.api.enums.ItemList");
+			return getMachines(itemList, "Macerator").toArray(new ItemStack[0]);
 		}
 		catch(IllegalArgumentException e)
 		{
@@ -588,13 +609,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			e.printStackTrace();
 		}
-		catch(NoSuchFieldException e)
-		{
-			e.printStackTrace();
-		}
 		catch(ClassNotFoundException e)
 		{
 			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
 		}
 
 		return null;
@@ -605,11 +630,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	{
 		try
 		{
-			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
-			return new ItemStack[] {
-				new ItemStack(machine, 1, 51),
-				new ItemStack(machine, 1, 135),
-			};
+			Class itemList = Class.forName("gregtech.api.enums.ItemList");
+			return getMachines(itemList, "Extractor").toArray(new ItemStack[0]);
 		}
 		catch(IllegalArgumentException e)
 		{
@@ -623,13 +645,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			e.printStackTrace();
 		}
-		catch(NoSuchFieldException e)
-		{
-			e.printStackTrace();
-		}
 		catch(ClassNotFoundException e)
 		{
 			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
 		}
 
 		return null;
@@ -640,11 +666,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	{
 		try
 		{
-			Block machine = ((Block[])Class.forName("gregtechmod.api.GregTech_API").getField("sBlockList").get(null))[1];
-			return new ItemStack[] {
-				new ItemStack(machine, 1, 52),
-				new ItemStack(machine, 1, 134),
-			};
+			Class itemList = Class.forName("gregtech.api.enums.ItemList");
+			return getMachines(itemList, "Compressor").toArray(new ItemStack[0]);
 		}
 		catch(IllegalArgumentException e)
 		{
@@ -658,13 +681,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			e.printStackTrace();
 		}
-		catch(NoSuchFieldException e)
-		{
-			e.printStackTrace();
-		}
 		catch(ClassNotFoundException e)
 		{
 			e.printStackTrace();
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
 		}
 
 		return null;

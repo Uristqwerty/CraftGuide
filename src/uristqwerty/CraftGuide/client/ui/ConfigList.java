@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -33,11 +35,16 @@ public class ConfigList extends GuiScrollableContent
 
 		public ConfigEntry(String text, GuiElement element, int pos)
 		{
+			this(new TranslatedTextSource(text), element, pos);
+		}
+
+		public ConfigEntry(TextSource text, GuiElement element, int pos)
+		{
 			super(0, pos, ConfigList.this.width(), 0);
 
 			this.element = element;
 			textDisplay = new MultilineText(BORDER_THICKNESS + element.width() + BORDER_THICKNESS, BORDER_THICKNESS, null);
-			translatedText = new TranslatedTextSource(text);
+			translatedText = text;
 			translatedText.addListener(this);
 			addElement(element);
 			recalculateHeight();
@@ -92,6 +99,8 @@ public class ConfigList extends GuiScrollableContent
 	private List<ConfigEntry> options = new ArrayList<ConfigEntry>();
 
 	private GuiElement innerPanel;
+
+	private CurrentThemeTextSource currentThemeSource;
 
 	static interface ToggleConfig
 	{
@@ -223,6 +232,9 @@ public class ConfigList extends GuiScrollableContent
 						}
 					}
 				});
+
+		addThemeButton(buttonTemplate);
+
 		updateScrollbarScale();
 	}
 
@@ -273,6 +285,99 @@ public class ConfigList extends GuiScrollableContent
 		options.add(entry);
 		innerPanel.addElement(entry);
 		//entry.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.TOP_RIGHT);
+	}
+
+	private void addThemeButton(ButtonTemplate buttonTemplate)
+	{
+		String translatedButtonText = StatCollector.translateToLocal("craftguide.gui.config.current_theme.button");
+		int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(translatedButtonText);
+
+		addThemeRow(
+				new GuiButton(BORDER_THICKNESS, BORDER_THICKNESS, Math.max(32, textWidth + 4), 13, buttonTemplate, translatedButtonText)
+					.addButtonListener(
+						new IButtonListener()
+						{
+							@Override
+							public void onButtonEvent(GuiButton button, Event event)
+							{
+								if(event == Event.PRESS)
+								{
+									nextTheme();
+								}
+							}
+						})
+					.anchor(AnchorPoint.TOP_RIGHT));
+	}
+
+	private void addThemeRow(GuiElement element)
+	{
+		int pos = 0;
+		if(options.size() > 0)
+		{
+			ConfigEntry last = options.get(options.size() - 1);
+			pos = last.relativeY() + last.height();
+		}
+
+		currentThemeSource = new CurrentThemeTextSource();
+		currentThemeSource.currentThemeName = ThemeManager.currentThemeName;
+		ConfigEntry entry = new ConfigEntry(currentThemeSource, element, pos);
+		options.add(entry);
+		innerPanel.addElement(entry);
+		//entry.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.TOP_RIGHT);
+	}
+
+	void nextTheme()
+	{
+		String themeNames[] = ThemeManager.instance.themeList.keySet().toArray(new String[0]);
+		Arrays.sort(themeNames);
+		int current = Arrays.binarySearch(themeNames, ThemeManager.currentThemeName);
+		if(current < 0)
+			current = 0;
+		else
+			current = (current + 1) % themeNames.length;
+
+		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(themeNames[current]);
+		ThemeManager.currentThemeName = themeNames[current];
+
+		currentThemeSource.themeChanged(ThemeManager.instance.themeList.get(themeNames[current]).name);
+	}
+
+	private static class CurrentThemeTextSource extends TextSource implements TextChangeListener
+	{
+		TextSource source;
+		String currentThemeName;
+
+		public CurrentThemeTextSource()
+		{
+			source = new TranslatedTextSource("craftguide.gui.config.current_theme.format_string");
+			source.addListener(this);
+		}
+
+		@Override
+		public String getText()
+		{
+			try
+			{
+				return String.format(source.getText(), currentThemeName);
+			}
+			catch(IllegalFormatException e)
+			{
+				CraftGuideLog.log(e);
+				return "Current theme: " + currentThemeName;
+			}
+		}
+
+		@Override
+		public void onTextChanged(TextSource source)
+		{
+			sendTextChanged();
+		}
+
+		public void themeChanged(String newThemeName)
+		{
+			currentThemeName = newThemeName;
+			sendTextChanged();
+		}
 	}
 
 	@Override

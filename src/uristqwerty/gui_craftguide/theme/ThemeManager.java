@@ -32,6 +32,7 @@ public class ThemeManager
 	public static ThemeManager instance = new ThemeManager();
 	public static Theme currentTheme;
 	public static Map<String, Class<? extends Texture>> textureTypes = new HashMap<String, Class<? extends Texture>>();
+	public static String currentThemeName;
 
 	public void reload()
 	{

@@ -2,8 +2,10 @@ package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -132,38 +134,64 @@ public class CommonUtilities
 		}
 	}
 
+	private static class Pair<T1, T2>
+	{
+		T1 first;
+		T2 second;
+
+		public Pair(T1 a, T2 b)
+		{
+			first = a;
+			second = b;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			// Null hashes arbitrarily chosen by keyboard mashing.
+			int firsthash = first == null? 5960343 : first.hashCode();
+			int secondhash = second == null? 1186323 : second.hashCode();
+			return firsthash ^ Integer.rotateLeft(secondhash, 13);
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if(!(obj instanceof Pair))
+				return false;
+
+			Pair other = (Pair)obj;
+
+			return (first == null? other.first == null : first.equals(other.first)) &&
+					(second == null? other.second == null : second.equals(other.second));
+		}
+	}
+
+	private static Map<Pair<Item, Integer>, List<String>> textCache = new HashMap<Pair<Item, Integer>, List<String>>();
+
+	static void clearTooltipCache()
+	{
+		textCache.clear();
+	}
+
+	private static List<String> cachedExtendedItemStackText(ItemStack stack)
+	{
+		Pair<Item, Integer> key = new Pair(stack.getItem(), stack.getItemDamage());
+
+		List<String> tooltip = textCache.get(key);
+
+		if(tooltip == null)
+		{
+			tooltip = new ArrayList(genExtendedItemStackText(stack));
+			textCache.put(key, tooltip);
+		}
+
+		return tooltip;
+	}
+
 	public static List<String> getExtendedItemStackText(Object item)
 	{
-		List<String> text = getItemStackText(item);
-
-		if(item instanceof ItemStack || (item instanceof List && ((List)item).get(0) instanceof ItemStack))
-		{
-			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0);
-
-			Iterator<StackInfoSource> iterator = StackInfo.sources.iterator();
-			while(iterator.hasNext())
-			{
-				StackInfoSource infoSource = iterator.next();
-				try
-				{
-					String info = infoSource.getInfo(stack);
-
-					if(info != null)
-					{
-						text.add(info);
-					}
-				}
-				catch(LinkageError e)
-				{
-					CraftGuideLog.log(e);
-					iterator.remove();
-				}
-				catch(Exception e)
-				{
-					CraftGuideLog.log(e);
-				}
-			}
-		}
+		List<String> text = getPossiblyCachedExtendedItemText(item);
 
 		if(item instanceof List && ((List)item).size() > 1)
 		{
@@ -172,6 +200,57 @@ public class CommonUtilities
 		}
 
 		return text;
+	}
+
+	private static List<String> getPossiblyCachedExtendedItemText(Object item)
+	{
+		if(item instanceof ItemStack || (item instanceof List && ((List)item).get(0) instanceof ItemStack))
+		{
+			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0);
+
+			if(stack.hasTagCompound())
+				return genExtendedItemStackText(stack);
+			else
+				return new ArrayList(cachedExtendedItemStackText(stack));
+		}
+		else
+		{
+			return getItemStackText(item);
+		}
+	}
+
+	private static List<String> genExtendedItemStackText(ItemStack stack)
+	{
+		List<String> text = getItemStackText(stack);
+		appendStackInfo(text, stack);
+		return text;
+	}
+
+	private static void appendStackInfo(List<String> text, ItemStack stack)
+	{
+		Iterator<StackInfoSource> iterator = StackInfo.sources.iterator();
+		while(iterator.hasNext())
+		{
+			StackInfoSource infoSource = iterator.next();
+			try
+			{
+				String info = infoSource.getInfo(stack);
+
+				if(info != null)
+				{
+					text.add(info);
+				}
+			}
+			catch(LinkageError e)
+			{
+				CraftGuideLog.log(e);
+				iterator.remove();
+			}
+			catch(Exception e)
+			{
+				CraftGuideLog.log(e);
+			}
+		}
 	}
 
 	public static boolean searchExtendedItemStackText(Object item, String text)

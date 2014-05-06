@@ -46,11 +46,14 @@ public abstract class CraftGuideClient implements CraftGuideSide
 
 		ThemeManager.instance.reload();
 
-		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(readThemeChoice());
+		String themeName = readThemeChoice();
+		ThemeManager.currentTheme = ThemeManager.instance.buildTheme(themeName);
+		ThemeManager.currentThemeName = themeName;
 
 		if(ThemeManager.currentTheme == null)
 		{
 			ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
+			ThemeManager.currentThemeName = "theme_base";
 		}
 	}
 

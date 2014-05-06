@@ -5,6 +5,9 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
+import uristqwerty.CraftGuide.client.ui.text.PlainTextSource;
+import uristqwerty.CraftGuide.client.ui.text.TextSource;
+import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.texture.Texture;
 import uristqwerty.gui_craftguide.texture.TextureClip;
@@ -27,7 +30,7 @@ public class GuiButton extends GuiElement
 
 	private static FloatingItemText toolTip = new FloatingItemText("");
 	private static Overlay toolTipRender = new Overlay(toolTip);
-	private String toolTipText = "";
+	private TextSource toolTipText = new PlainTextSource("");
 
 	public GuiButton(int x, int y, int width, int height, Texture texture, int u, int v)
 	{
@@ -74,9 +77,9 @@ public class GuiButton extends GuiElement
 	@Override
 	public void draw()
 	{
-		if(isOver() && !toolTipText.isEmpty())
+		if(isOver() && !toolTipText.getText().isEmpty())
 		{
-			toolTip.setText(toolTipText);
+			toolTip.setText(toolTipText.getText());
 			render(toolTipRender);
 		}
 
@@ -157,8 +160,12 @@ public class GuiButton extends GuiElement
 
 	public GuiButton setToolTip(String text)
 	{
-		toolTipText = text;
+		return setToolTip(new PlainTextSource(text));
+	}
 
+	public GuiButton setToolTip(TextSource textSource)
+	{
+		this.toolTipText = textSource;
 		return this;
 	}
 }

@@ -70,7 +70,6 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
 			addMachineRecipes(generator, IC2Items.getItem("orewashingplant"), Recipes.oreWashing);
-			addMachineRecipes(generator, IC2Items.getItem("scanner"), Recipes.Scanner);
 
 			addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}

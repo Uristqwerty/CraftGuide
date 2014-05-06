@@ -126,6 +126,19 @@ public class LiteMod_CraftGuide implements LiteMod, InitCompleteListener, CraftG
 	}
 
 	@Override
+	public File getLogDir()
+	{
+		File dir = new File(Minecraft.getMinecraft().mcDataDir, "logs");
+
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			return null;
+		}
+
+		return dir;
+	}
+
+	@Override
 	public void addRecipe(ItemStack output, Object[] input)
 	{
 		// TODO: Replace with either a LiteLoader-compatible way to call CraftingManager.addRecipe, or a proper implementation.

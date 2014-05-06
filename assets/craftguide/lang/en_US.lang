@@ -4,6 +4,10 @@ craftguide.gui.filter_type.input=Input
 craftguide.gui.filter_type.output=Output
 craftguide.gui.filter_type.machine=Machine
 
+craftguide.gui.tab_tooltip.recipe_list=Recipe list
+craftguide.gui.tab_tooltip.type_visibility_list=Show/Hide recipes by crafting type
+craftguide.gui.tab_tooltip.options=Options
+
 craftguide.gui.filter=Filter
 craftguide.gui.search=Search
 
@@ -22,3 +26,6 @@ craftguide.gui.config.export_displayed_recipes=Export recipes displayed by Craft
 
 craftguide.gui.config.export_crafting_recipes.button=Export
 craftguide.gui.config.export_crafting_recipes=Export all crafting table recipes
+
+craftguide.gui.config.current_theme.button=Next theme
+craftguide.gui.config.current_theme.format_string=Current theme: %s
