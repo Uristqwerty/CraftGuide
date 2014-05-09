@@ -1,0 +1,31 @@
+item.craftguide_item.name=Crafting Guide
+
+craftguide.gui.filter_type.input=Ввод
+craftguide.gui.filter_type.output=Вывод
+craftguide.gui.filter_type.machine=Механизм
+
+craftguide.gui.tab_tooltip.recipe_list=Список рецептов
+craftguide.gui.tab_tooltip.type_visibility_list=Показать/Спрятать рецепты по типу создания
+craftguide.gui.tab_tooltip.options=Опции
+
+craftguide.gui.filter=Фильтр
+craftguide.gui.search=Поиск
+
+craftguide.gui.config.pause=Пауза, когда открыт (только одиночный режим)
+craftguide.gui.config.show_ids=Показывать ID предмета и значения урона
+craftguide.gui.config.enable_keybind=Включить привязку клавиши
+craftguide.gui.config.enable_item_recipe=Включить рецепт предмета CraftGuide (требуется перезапуск)
+craftguide.gui.config.hide_mundane_potions=Спрятать мирские зелья из неудачных комбинаций зельеварения (требуется перезагрузка рецептов)
+craftguide.gui.config.theme_debugging=Выводить излишнюю отладочную информацию в CraftGuide.log
+
+craftguide.gui.config.reload_recipes.button=Перезагрузить
+craftguide.gui.config.reload_recipes=Перезагрузить рецепты
+
+craftguide.gui.config.export_displayed_recipes.button=Экспорт
+craftguide.gui.config.export_displayed_recipes=Экспортировать рецепты, показанные CraftGuide
+
+craftguide.gui.config.export_crafting_recipes.button=Экспорт
+craftguide.gui.config.export_crafting_recipes=Экспортировать все рецепты
+
+craftguide.gui.config.current_theme.button=Следующая тема
+craftguide.gui.config.current_theme.format_string=Текущая тема: %s
