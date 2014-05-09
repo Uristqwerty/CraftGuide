@@ -7,7 +7,6 @@ import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.client.ui.text.PlainTextSource;
 import uristqwerty.CraftGuide.client.ui.text.TextSource;
-import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.texture.Texture;
 import uristqwerty.gui_craftguide.texture.TextureClip;
