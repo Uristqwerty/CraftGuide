@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ChanceSlot;
@@ -42,59 +41,59 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			generateRecipes(
 					generator, getMachines(itemList, "Centrifuge"),
 					(ArrayList)recipeClass.getField("sCentrifugeRecipes").get(null),
-					2, 4, 5, 0, false, null);
+					5, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Electrolyzer"),
 					(ArrayList)recipeClass.getField("sElectrolyzerRecipes").get(null),
-					2, 4, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "ChemicalReactor"),
 					(ArrayList)recipeClass.getField("sChemicalRecipes").get(null),
-					2, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Wiremill"),
 					(ArrayList)recipeClass.getField("sWiremillRecipes").get(null),
-					1, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "AlloySmelter"),
 					(ArrayList)recipeClass.getField("sAlloySmelterRecipes").get(null),
-					2, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Bender"),
 					(ArrayList)recipeClass.getField("sBenderRecipes").get(null),
-					1, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Assembler"),
 					(ArrayList)recipeClass.getField("sAssemblerRecipes").get(null),
-					2, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Canner"),
 					(ArrayList)recipeClass.getField("sCannerRecipes").get(null),
-					2, 2, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Lathe"),
 					(ArrayList)recipeClass.getField("sLatheRecipes").get(null),
-					1, 2, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Cutter"),
 					(ArrayList)recipeClass.getField("sCutterRecipes").get(null),
-					1, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Extruder"),
 					(ArrayList)recipeClass.getField("sExtruderRecipes").get(null),
-					2, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Bronze_Hammer"),
 					(ArrayList)recipeClass.getField("sHammerRecipes").get(null),
-					1, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Boxinator"),
 					(ArrayList)recipeClass.getField("sBoxinatorRecipes").get(null),
-					2, 1, -1, 0, false, null);
+					-1, 0, false, null);
 			generateRecipes(
 					generator, getMachines(itemList, "Unboxinator"),
 					(ArrayList)recipeClass.getField("sUnboxinatorRecipes").get(null),
-					1, 2, -1, 0, false, null);
+					-1, 0, false, null);
 
 			// Things GregTech 1.7 has not implemented yet (at the time of writing this):
 			/*
@@ -208,13 +207,15 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		return machines;
 	}
 
-	@SuppressWarnings("null")
 	private void generateRecipes(RecipeGenerator generator, ArrayList<ItemStack> machines, ArrayList recipes,
-			int numInputs, int numOutputs, int constantEUt, int startEUOutputMult, boolean generated,
-			final String extraFormat) throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
+			int constantEUt, int startEUOutputMult, boolean generated, final String extraFormat)
+				throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
 	{
 		if(machines.size() < 1)
 			return;
+
+		int numInputs = 0;
+		int numOutputs = 0;
 
 		ItemStack typeMachine = machines.get(0);
 
@@ -222,45 +223,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		Field eutField = recipeClass.getField("mEUt");
 		Field durationField = recipeClass.getField("mDuration");
 		Field extraField = recipeClass.getField("mStartEU");
-
-		Field input1 = null;
-		Field input2 = null;
-		Field output1 = null;
-		Field output2 = null;
-		Field output3 = null;
-		Field output4 = null;
-
 		Field inputs = null;
 		Field outputs = null;
 
-		try
-		{
-			input1 = recipeClass.getField("mInput1");
-			input2 = recipeClass.getField("mInput2");
-			output1 = recipeClass.getField("mOutput1");
-			output2 = recipeClass.getField("mOutput2");
-			output3 = recipeClass.getField("mOutput3");
-			output4 = recipeClass.getField("mOutput4");
-		}
-		catch(NoSuchFieldException e)
-		{
-			inputs = recipeClass.getField("mInputs");
-			outputs = recipeClass.getField("mOutputs");
-		}
+		inputs = recipeClass.getField("mInputs");
+		outputs = recipeClass.getField("mOutputs");
 
-		if(outputs != null)
+		for(Object recipe: recipes)
 		{
-			for(Object recipe: recipes)
-			{
-				numInputs = Math.max(numInputs, recipeLength((ItemStack[])inputs.get(recipe)));
-				numOutputs = Math.max(numOutputs, recipeLength((ItemStack[])outputs.get(recipe)));
-			}
+			numInputs = Math.max(numInputs, recipeLength((ItemStack[])inputs.get(recipe)));
+			numOutputs = Math.max(numOutputs, recipeLength((ItemStack[])outputs.get(recipe)));
 		}
-		else if(numInputs < 1 || numInputs > 2 || numOutputs < 1 || numOutputs > 4)
-		{
-			throw new IllegalArgumentException();
-		}
-
 
 		Slot[] recipeSlots = layoutMachineSlots(machines, numInputs, numOutputs, extraFormat);
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, typeMachine);
@@ -275,46 +248,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			Object[] recipeContents = new Object[numInputs + numOutputs + 2];
 
-			if(output4 != null)
+			ItemStack[] inputStacks = (ItemStack[])inputs.get(recipe);
+			ItemStack[] outputStacks = (ItemStack[])outputs.get(recipe);
+
+			for(int i = 0; i < Math.min(inputStacks.length, numInputs); i++)
 			{
-				recipeContents[0] = input1.get(recipe);
-
-				if(numInputs == 2)
-				{
-					recipeContents[1] = input2.get(recipe);
-				}
-
-				recipeContents[numInputs + 0] = output1.get(recipe);
-
-				if(numOutputs > 1)
-				{
-					recipeContents[numInputs + 1] = output2.get(recipe);
-				}
-
-				if(numOutputs > 2)
-				{
-					recipeContents[numInputs + 2] = output3.get(recipe);
-				}
-
-				if(numOutputs > 3)
-				{
-					recipeContents[numInputs + 3] = output4.get(recipe);
-				}
+				recipeContents[i] = inputStacks[i];
 			}
-			else
+
+			for(int i = 0; i < Math.min(outputStacks.length, numOutputs); i++)
 			{
-				ItemStack[] inputStacks = (ItemStack[])inputs.get(recipe);
-				ItemStack[] outputStacks = (ItemStack[])outputs.get(recipe);
-
-				for(int i = 0; i < Math.min(inputStacks.length, numInputs); i++)
-				{
-					recipeContents[i] = inputStacks[i];
-				}
-
-				for(int i = 0; i < Math.min(outputStacks.length, numOutputs); i++)
-				{
-					recipeContents[i + numInputs] = outputStacks[i];
-				}
+				recipeContents[i + numInputs] = outputStacks[i];
 			}
 
 			int eut = (constantEUt == -1)? eutField.getInt(recipe) : constantEUt;
