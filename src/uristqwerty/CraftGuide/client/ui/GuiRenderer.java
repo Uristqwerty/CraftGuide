@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
@@ -204,47 +205,17 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		boolean error = true;
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glPushMatrix();
-        GL11.glRotatef(120F, 1.0F, 0.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
-        GL11.glPushMatrix();
-        GL11.glTranslatef(x, y, 0.0F);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        itemRenderer.zLevel = 100.0F;
-
-        int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+		int initialMatrixStackDepth = prepareGlForItemRender(x, y);
 
         try
         {
-        	if(CommonUtilities.getItemDamage(itemStack) == CraftGuide.DAMAGE_WILDCARD)
-        	{
-        		itemStack = fixedItemStack(itemStack);
-        	}
-
-			itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
-
-			if(renderOverlay)
-			{
-				itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
-			}
+        	itemStack = renderItem(itemStack, renderOverlay);
 
 			error = false;
         }
         catch(Exception e)
         {
-    		if(!hasLogged(itemStack))
-    		{
-    			CraftGuideLog.log("Failed to render ItemStack {" + (
-    					itemStack == null? "null" : (
-    						"itemID = " + Item.itemRegistry.getNameForObject(itemStack.getItem()) +
-    						", itemDamage = " + CommonUtilities.getItemDamage(itemStack) +
-    						", stackSize = " + itemStack.stackSize)) +
-    					"} (Further stack traces from this particular ItemStack instance will not be logged)");
-    			CraftGuideLog.log(e);
-    		}
+    		logItemRenderException(itemStack, e);
         }
         catch(Error e)
         {
@@ -253,31 +224,80 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         }
         finally
         {
-            int finalMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
-
-            // If something went wrong, and an exception was thrown after at least one matrix push,
-            //  fix it here, so that rendering errors do not affect later parts of the UI.
-            while(finalMatrixStackDepth > initialMatrixStackDepth)
-            {
-            	GL11.glPopMatrix();
-            	finalMatrixStackDepth--;
-            }
-
-        	CraftGuide.side.stopTessellating();
-
-            itemRenderer.zLevel = 0.0F;
-            GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderHelper.disableStandardItemLighting();
-    		GL11.glDisable(GL11.GL_DEPTH_TEST);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glPopMatrix();
+            fixGlState(initialMatrixStackDepth);
         }
 
         if(error)
         {
     		drawItemStackError(x, y);
         }
+	}
+
+	private void logItemRenderException(ItemStack itemStack, Exception e) {
+		if(!hasLogged(itemStack))
+		{
+			CraftGuideLog.log("Failed to render ItemStack {" + (
+					itemStack == null? "null" : (
+						"itemID = " + Item.itemRegistry.getNameForObject(itemStack.getItem()) +
+						", itemDamage = " + CommonUtilities.getItemDamage(itemStack) +
+						", stackSize = " + itemStack.stackSize)) +
+					"} (Further stack traces from this particular ItemStack instance will not be logged)");
+			CraftGuideLog.log(e);
+		}
+	}
+
+	private ItemStack renderItem(ItemStack itemStack, boolean renderOverlay)
+	{
+		if(CommonUtilities.getItemDamage(itemStack) == CraftGuide.DAMAGE_WILDCARD)
+		{
+			itemStack = fixedItemStack(itemStack);
+		}
+
+		itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
+
+		if(renderOverlay)
+		{
+			itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
+		}
+
+		return itemStack;
+	}
+
+	private int prepareGlForItemRender(int x, int y)
+	{
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		RenderHelper.enableGUIStandardItemLighting();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        itemRenderer.zLevel = 100.0F;
+
+        int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+		return initialMatrixStackDepth;
+	}
+
+	private void fixGlState(int initialMatrixStackDepth)
+	{
+		int finalMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+
+		// If something went wrong, and an exception was thrown after at least one matrix push,
+		//  fix it here, so that rendering errors do not affect later parts of the UI.
+		while(finalMatrixStackDepth > initialMatrixStackDepth)
+		{
+			GL11.glPopMatrix();
+			finalMatrixStackDepth--;
+		}
+
+		CraftGuide.side.stopTessellating();
+
+		itemRenderer.zLevel = 0.0F;
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glPopMatrix();
 	}
 
 	private HashSet<ItemStack> loggedStacks = new HashSet<ItemStack>();
