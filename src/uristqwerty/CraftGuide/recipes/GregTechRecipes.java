@@ -4,11 +4,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -151,11 +153,10 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					1, 1, 2048, 1000, true, null);
 			*/
 
-			/*
-			generatePulverizerRecipes(generator,
-					new ItemStack(machine, 1, 64), new ItemStack(machine, 1, 130),
+			Class modHandlerClass = Class.forName("gregtech.api.util.GT_ModHandler");
+			generatePulverizerRecipes(
+					generator, getMachines(itemList, "Macerator", 3),
 					(Map<Integer, Object>)CommonUtilities.getPrivateValue(modHandlerClass, null, "sPulverizerRecipes"));
-			*/
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -187,11 +188,23 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 	}
 
-	private ArrayList<ItemStack> getMachines(Class<? extends Enum> itemList, String string) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
+	private ArrayList<ItemStack> getMachines(Class<? extends Enum> itemList, String string) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
+	{
+		return getMachines(itemList, string, -1);
+	}
+
+	private ArrayList<ItemStack> getMachines(Class<? extends Enum> itemList, String string, int minimumTier) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
 	{
 		ArrayList<ItemStack> machines = new ArrayList<ItemStack>();
 
 		Method get = itemList.getMethod("get", long.class, Object[].class);
+
+		Class gregTechAPI = Class.forName("gregtech.api.GregTech_API");
+		Object[] metatileentities = (Object[])gregTechAPI.getField("METATILEENTITIES").get(null);
+		Item machineBlock = Item.getItemFromBlock((Block)gregTechAPI.getField("sBlockMachines").get(null));
+
+		Class tieredMachine = Class.forName("gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock");
+		Field tierField = tieredMachine.getField("mTier");
 
 		for(Enum e: itemList.getEnumConstants())
 		{
@@ -200,7 +213,25 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 				ItemStack item = (ItemStack)get.invoke(e, Long.valueOf(1), new Object[0]);
 
 				if(item != null)
+				{
+					if(item.getItem() == machineBlock && minimumTier >= 0)
+					{
+						if(item.getItemDamage() >= 0 && item.getItemDamage() < metatileentities.length &&
+								metatileentities[item.getItemDamage()] != null)
+						{
+							int tier = tierField.getInt(metatileentities[item.getItemDamage()]);
+
+							if(tier < minimumTier)
+								continue;
+						}
+						else
+						{
+							continue;
+						}
+					}
+
 					machines.add(item);
+				}
 			}
 		}
 
@@ -402,9 +433,10 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		return numSlots <= 0? 0 : numSlots <= 2? 1 : numSlots <= 6? 2 : 3;
 	}
 
-	private void generatePulverizerRecipes(RecipeGenerator generator, ItemStack electric, ItemStack steam, Map<Integer, Object> recipes) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	private void generatePulverizerRecipes(RecipeGenerator generator, ArrayList<ItemStack> machines, Map<Integer, Object> recipes) throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
 	{
-		List<ItemStack> machines = Arrays.asList(electric, steam);
+		if(machines.size() < 1)
+			return;
 
 		Slot[] recipeSlots = new Slot[] {
 				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
@@ -414,24 +446,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 				new EUSlot(31, 12),
 		};
 
-		Slot[] recipeSlotsElectric = new Slot[] {
-				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
-				new ItemSlot(50, 12, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ChanceSlot(50, 30, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ExtraSlot(31, 30, 16, 16, electric).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
-				new EUSlot(31, 12),
-		};
-
-		Slot[] recipeSlotsSteam = new Slot[] {
-				new ItemSlot(12, 21, 16, 16, true).drawOwnBackground(),
-				new ItemSlot(50, 12, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ChanceSlot(50, 30, 16, 16, true).setRatio(200).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				new ExtraSlot(31, 21, 16, 16, steam).clickable().showName().setSlotType(SlotType.MACHINE_SLOT),
-		};
-
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, machines.get(0));
-		RecipeTemplate templateElectric = generator.createRecipeTemplate(recipeSlotsElectric, machines.get(0));
-		RecipeTemplate templateSteam = generator.createRecipeTemplate(recipeSlotsSteam, machines.get(1));
 
 		Class recipeClass = Class.forName("gregtech.api.util.GT_PulverizerRecipe");
 		Method getInput = recipeClass.getMethod("getInput");
@@ -439,30 +454,6 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		Method getSecondaryOutput = recipeClass.getMethod("getSecondaryOutput");
 		Method getSecondaryOutputChance = recipeClass.getMethod("getSecondaryOutputChance");
 		Method getEnergy = recipeClass.getMethod("getEnergy");
-
-		Class prefixes = null;
-		Object ore = null;
-		Object denseOre = null;
-		Object endOre = null;
-		Object netherOre = null;
-		Method contains = null;
-		try
-		{
-			prefixes = Class.forName("gregtech.api.enums.OrePrefixes");
-			ore = prefixes.getField("ore").get(null);
-			denseOre = prefixes.getField("oreDense").get(null);
-			endOre = prefixes.getField("oreEnd").get(null);
-			netherOre = prefixes.getField("oreNether").get(null);
-			contains = prefixes.getMethod("contains", ItemStack.class);
-		}
-		catch(ClassNotFoundException e)
-		{
-		}
-		catch(NoSuchFieldException e)
-		{
-			prefixes = null;
-		}
-
 
 		for(Object recipe: recipes.values())
 		{
@@ -472,65 +463,20 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Object input = getInput.invoke(recipe);
 
 			ItemStack output = (ItemStack)getPrimaryOutput.invoke(recipe);
-			if(prefixes != null && isOre(input, ore, denseOre, endOre, netherOre, contains))
-			{
-				Object[] recipeContentsElectric = new Object[] {
-						input,
-						output,
-						new Object[]{
-							getSecondaryOutput.invoke(recipe),
-							getSecondaryOutputChance.invoke(recipe),
-						},
-						electric,
-						new Object[]{getEnergy.invoke(recipe), 3},
-				};
 
-				generator.addRecipe(templateElectric, recipeContentsElectric);
+			Object[] recipeContents = new Object[] {
+					input,
+					output,
+					new Object[]{
+						getSecondaryOutput.invoke(recipe),
+						getSecondaryOutputChance.invoke(recipe),
+					},
+					machines,
+					new Object[]{getEnergy.invoke(recipe), 3},
+			};
 
-				ItemStack steamOutput = output;
-
-				if(steamOutput.stackSize > 1)
-				{
-					steamOutput = output.copy();
-					steamOutput.stackSize /= 2;
-				}
-
-				Object[] recipeContentsSteam = new Object[] {
-						input,
-						steamOutput,
-						new Object[]{
-							getSecondaryOutput.invoke(recipe),
-							getSecondaryOutputChance.invoke(recipe),
-						},
-						steam,
-				};
-
-				generator.addRecipe(templateSteam, recipeContentsSteam);
-			}
-			else
-			{
-				Object[] recipeContents = new Object[] {
-						input,
-						output,
-						new Object[]{
-							getSecondaryOutput.invoke(recipe),
-							getSecondaryOutputChance.invoke(recipe),
-						},
-						machines,
-						new Object[]{getEnergy.invoke(recipe), 3},
-				};
-
-				generator.addRecipe(template, recipeContents);
-			}
+			generator.addRecipe(template, recipeContents);
 		}
-	}
-
-	private boolean isOre(Object input, Object ore, Object denseOre, Object endOre, Object netherOre, Method contains) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
-	{
-		return	(Boolean)contains.invoke(ore, input) ||
-				(Boolean)contains.invoke(denseOre, input) ||
-				(Boolean)contains.invoke(endOre, input) ||
-				(Boolean)contains.invoke(netherOre, input);
 	}
 
 	@Override
@@ -543,25 +489,29 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 		catch(IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(SecurityException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalAccessException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(InvocationTargetException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
 		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch (NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -579,25 +529,29 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 		catch(IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(SecurityException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalAccessException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(InvocationTargetException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
 		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch (NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -615,25 +569,29 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 		catch(IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(SecurityException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(IllegalAccessException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 		catch(InvocationTargetException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
 		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch (NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
