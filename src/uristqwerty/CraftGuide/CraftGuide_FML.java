@@ -5,7 +5,6 @@ import java.io.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -73,11 +72,36 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 	@Override
 	public File getLogDir()
 	{
-		File dir = new File(Minecraft.getMinecraft().mcDataDir, "logs");
+		File mcDir = null;
+		try
+		{
+			mcDir = (File)CommonUtilities.getPrivateValue(Loader.class, null, "minecraftDir");
+		}
+		catch(SecurityException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(IllegalArgumentException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+
+		if(mcDir == null)
+			return getConfigDir();
+
+		File dir = new File(mcDir, "logs");
 
 		if(!dir.exists() && !dir.mkdirs())
 		{
-			return null;
+			return getConfigDir();
 		}
 
 		return dir;

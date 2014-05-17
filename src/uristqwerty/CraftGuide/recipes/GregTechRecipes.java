@@ -96,6 +96,14 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, getMachines(itemList, "Unboxinator"),
 					(ArrayList)recipeClass.getField("sUnboxinatorRecipes").get(null),
 					-1, 0, false, null);
+			generateRecipes(
+					generator, getMachines(itemList, "Generator_Diesel"),
+					(ArrayList)recipeClass.getField("sDieselFuels").get(null),
+					12, 1000, true, null);
+			generateRecipes(
+					generator, getMachines(itemList, "Generator_Gas_Turbine"),
+					(ArrayList)recipeClass.getField("sTurbineFuels").get(null),
+					16, 1000, true, null);
 
 			// Things GregTech 1.7 has not implemented yet (at the time of writing this):
 			/*
@@ -119,14 +127,6 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, getMachines(itemList, ""),
 					(ArrayList)recipeClass.getField("sSawmillRecipes").get(null),
 					2, 3, -1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, ""),
-					(ArrayList)recipeClass.getField("sDieselFuels").get(null),
-					1, 1, 12, 1000, true, null);
-			generateRecipes(
-					generator, getMachines(itemList, ""),
-					(ArrayList)recipeClass.getField("sTurbineFuels").get(null),
-					1, 1, 16, 1000, true, null);
 			generateRecipes(
 					generator, getMachines(itemList, ""),
 					(ArrayList)recipeClass.getField("sHotFuels").get(null),

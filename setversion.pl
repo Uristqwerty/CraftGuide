@@ -10,7 +10,7 @@ open(my $versionfile, "<", "eclipse/CraftGuide/version.txt") or die "Could not r
 
 while(<$versionfile>)
 {
-    if($_ =~ /([^\t]+)\t+([^\t\n]*)\n?/)
+    if($_ =~ /([^\t]+)\t+([^\t\n\r]+)[\r\n]*/)
     {
         if($1 eq "BUILD")
         {
@@ -160,9 +160,11 @@ if(open($buildzip, ">", "eclipse/CraftGuide/build-zip-liteloader.bat"))
     print $buildzip "cd zip\\build-liteloader\n";
     print $buildzip "if exist ..\\CraftGuide-$versionstring.litemod del ..\\CraftGuide-$versionstring.litemod\n";
     print $buildzip "if exist ..\\CraftGuide-$versionstring.litemod.zip del ..\\CraftGuide-$versionstring.litemod.zip\n";
+    print $buildzip "if exist ..\\CraftGuide-$versionstring.litemod.extract_to_mods.zip del ..\\CraftGuide-$versionstring.extract_to_mods.zip\n";
     print $buildzip "7z a ..\\CraftGuide-$versionstring.litemod.zip \"*\"\n";
     print $buildzip "cd ..\n";
     print $buildzip "RENAME CraftGuide-$versionstring.litemod.zip CraftGuide-$versionstring.litemod\n";
+    print $buildzip "7z a CraftGuide-$versionstring.litemod.extract_to_mods.zip CraftGuide-$versionstring.litemod\n";
     print $buildzip "cd ..\n";
     close($buildzip);
 }
