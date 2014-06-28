@@ -29,6 +29,7 @@ minecraft {
     assetDir = "../run/assets"
 
     replaceIn "CraftGuide_FML.java"
+    replaceIn "LiteMod_CraftGuide.java"
     replace "@MOD_VERSION@", project.version
 }
 
