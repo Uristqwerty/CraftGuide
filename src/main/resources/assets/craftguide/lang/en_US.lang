@@ -1,0 +1,31 @@
+item.craftguide_item.name=Crafting Guide
+
+craftguide.gui.filter_type.input=Input
+craftguide.gui.filter_type.output=Output
+craftguide.gui.filter_type.machine=Machine
+
+craftguide.gui.tab_tooltip.recipe_list=Recipe list
+craftguide.gui.tab_tooltip.type_visibility_list=Show/Hide recipes by crafting type
+craftguide.gui.tab_tooltip.options=Options
+
+craftguide.gui.filter=Filter
+craftguide.gui.search=Search
+
+craftguide.gui.config.pause=Pause while open (singleplayer only)
+craftguide.gui.config.show_ids=Show item ID and damage values
+craftguide.gui.config.enable_keybind=Enable keybind
+craftguide.gui.config.enable_item_recipe=Enable CraftGuide item recipe (requires restart)
+craftguide.gui.config.hide_mundane_potions=Hide mundane potions from failed brewing combinations (requires recipe reload)
+craftguide.gui.config.theme_debugging=Output excessive theme debugging information to CraftGuide.log
+
+craftguide.gui.config.reload_recipes.button=Reload
+craftguide.gui.config.reload_recipes=Reload recipes
+
+craftguide.gui.config.export_displayed_recipes.button=Export
+craftguide.gui.config.export_displayed_recipes=Export recipes displayed by CraftGuide
+
+craftguide.gui.config.export_crafting_recipes.button=Export
+craftguide.gui.config.export_crafting_recipes=Export all crafting table recipes
+
+craftguide.gui.config.current_theme.button=Next theme
+craftguide.gui.config.current_theme.format_string=Current theme: %s

@@ -1,0 +1,22 @@
+[
+{
+  "modid": "craftguide",
+  "name": "CraftGuide",
+  "description": "A recipe viewer, WITH A SCROLL BAR!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.minecraftforum.net/topic/731133-",
+  "authors": [
+    "Uristqwerty"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "updateUrl": "",
+  "parent": "",
+  "screenshots": [
+  ],
+
+  "dependencies": [
+  ]
+}
+]

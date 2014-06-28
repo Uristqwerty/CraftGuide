@@ -1,0 +1,96 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+apply plugin: 'liteloader'
+
+version = "1.6.8.2"
+group = "uristqwerty" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "CraftGuide"
+
+ext.llrevision = "04"
+
+minecraft {
+    version = "1.7.2-10.12.2.1121"
+    assetDir = "../run/assets"
+
+    replaceIn "CraftGuide_FML.java"
+    replace "@MOD_VERSION@", project.version
+}
+
+repositories {
+    maven {
+        name = "Player's Repo"
+        url = "http://maven.ic2.player.to/"
+    }
+}
+
+dependencies {
+    compile 'com.mod-buildcraft:buildcraft:6.0.16:dev'
+    compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:dev'
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'litemod.json'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version, 'llrevision':project.llrevision
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        exclude 'litemod.json'
+    }
+}
+
+jar {
+    exclude '**/LiteMod_CraftGuide.*'
+    exclude 'litemod.json'
+}
+
+jarLiteloader {
+    exclude '**/CraftGuide_FML.*'
+    exclude 'mcmod.info'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+task apiJar(type: Jar) {
+    from (sourceSets.main.output) {
+        include 'uristqwerty/CraftGuide/api/**'
+    }
+    classifier = 'api'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+build.dependsOn deobfJar, apiJar, sourcesJar
