@@ -1,8 +1,21 @@
-bin/*
-out/*
-.settings/*
-build-zip.bat
-build-zip-modloader.bat
-build-zip-liteloader.bat
-CraftGuideResources.zip
-CraftGuide_API.jar
+# ForgeGradle
+/.gradle
+/build
+
+# Eclipse
+/.externalToolBuilders
+.classpath
+.project
+/.settings
+/bin
+
+# IntelliJ
+/.idea
+*.iml
+*.ipr
+*.iws
+/out
+
+# Mac Stuff
+.DS_Store
+*.command
