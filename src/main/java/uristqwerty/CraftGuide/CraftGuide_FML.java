@@ -17,7 +17,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
-@Mod(modid = "craftguide", name = "CraftGuide", version = "1.5.2")
+@Mod(modid = "craftguide", name = "CraftGuide", version = "@MOD_VERSION@")
 public class CraftGuide_FML implements CraftGuideLoaderSide
 {
 	private static Logger logger;

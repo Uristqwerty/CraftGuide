@@ -37,7 +37,7 @@ public class LiteMod_CraftGuide implements LiteMod, InitCompleteListener, CraftG
 	@Override
 	public String getVersion()
 	{
-		return "##VERSION##";
+		return "@MOD_VERSION@";
 	}
 
 	@Override

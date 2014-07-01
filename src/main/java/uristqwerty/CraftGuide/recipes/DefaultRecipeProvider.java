@@ -246,7 +246,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 	@Override
 	public String getInfo(ItemStack itemStack)
 	{
-		int fuel = TileEntityFurnace.func_145952_a(itemStack);
+		int fuel = TileEntityFurnace.getItemBurnTime(itemStack);
 
 		if(fuel > 0)
 		{

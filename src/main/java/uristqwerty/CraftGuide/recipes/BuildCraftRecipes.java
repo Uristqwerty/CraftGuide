@@ -124,7 +124,7 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		}
 		catch(NoSuchMethodException e)
 		{
-			addIntegrationRecipes_bc5(generator, table, laser);
+			CraftGuideLog.log(e, "Please use BuildCraft 6.0.7+. Previous versions are no longer supported.", true);
 		}
 		catch (SecurityException e)
 		{
@@ -141,40 +141,6 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		catch (InvocationTargetException e)
 		{
 			CraftGuideLog.log(e, "", true);
-		}
-	}
-
-	private void addIntegrationRecipes_bc5(RecipeGenerator generator, ItemStack table, ItemStack laser)
-	{
-		Slot[] recipeSlots = new Slot[5];
-
-		recipeSlots[0] = new ItemSlot(12, 12, 16, 16).drawOwnBackground();
-		recipeSlots[1] = new ItemSlot(12, 30, 16, 16).drawOwnBackground();
-		recipeSlots[2] = new ItemSlot(50, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
-		recipeSlots[3] = new ExtraSlot(31, 12, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-		recipeSlots[4] = new ExtraSlot(31, 30, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
-
-		for(IIntegrationRecipe recipe: BuildcraftRecipes.integrationTable.getRecipes())
-		{
-			ItemStack a[] = recipe.getExampleInputsA();
-			ArrayList<ItemStack> inputA = new ArrayList<ItemStack>(a.length);
-			for(ItemStack i: a)
-				inputA.add(i);
-
-			ItemStack b[] = recipe.getExampleInputsB();
-			ArrayList<ItemStack> inputB = new ArrayList<ItemStack>(b.length);
-			for(ItemStack i: b)
-				inputB.add(i);
-
-			Object[] recipeContents = new Object[] {
-					inputA, inputB,
-					recipe.getOutputForInputs(a.length > 0? a[0] : null, b.length > 0? b[0] : null),
-					table, laser,
-			};
-
-			generator.addRecipe(template, recipeContents);
 		}
 	}
 

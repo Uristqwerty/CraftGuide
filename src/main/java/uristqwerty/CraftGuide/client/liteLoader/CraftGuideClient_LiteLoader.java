@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.client.fml;
+package uristqwerty.CraftGuide.client.liteLoader;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -17,10 +17,8 @@ import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.client.CraftGuideClient;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
 
-public class CraftGuideClient_FML extends CraftGuideClient
+public class CraftGuideClient_LiteLoader extends CraftGuideClient
 {
 	private KeyBinding key;
 
@@ -28,7 +26,6 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	public void initKeybind()
 	{
 		key = new KeyBinding("Open CraftGuide", CraftGuide.defaultKeybind, "key.categories.misc");
-		ClientRegistry.registerKeyBinding(key);
 	}
 
 	@Override
@@ -75,7 +72,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 
 	private void openRecipe(GuiContainer screen, int x, int y)
 	{
-		Container container = screen.field_147002_h;
+		Container container = screen.inventorySlots;
 
 		for(int i = 0; i < container.inventorySlots.size(); i++)
 		{
@@ -99,7 +96,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	@Override
 	public void openGUI(EntityPlayer player)
 	{
-		FMLClientHandler.instance().displayGuiScreen(player, GuiCraftGuide.getInstance());
+		Minecraft.getMinecraft().displayGuiScreen(GuiCraftGuide.getInstance());
 	}
 
 	boolean failed = false;

@@ -1,9 +1,9 @@
 {
-    "mcversion": "1.7.2_02",
+    "mcversion": "${mcversion}_${llrevision}",
     "name": "craftguide",
     "revision": "0",
     "author": "Uristqwerty",
-    "version": "1.5.2",
+    "version": "${version}",
     "description": "A recipe viewer, WITH A SCROLL BAR!",
     "url": "http://www.minecraftforum.net/topic/731133-"
 }
