@@ -45,6 +45,12 @@ dependencies {
     compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:dev'
 }
 
+task themeZip(type: Zip) {
+    from 'themes'
+    archiveName 'CraftGuideResources.zip'
+    destinationDir sourceSets.main.output.resourcesDir
+}
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
@@ -67,6 +73,8 @@ processResources
     }
 }
 
+processResources.dependsOn themeZip
+
 jar {
     exclude '**/LiteMod_CraftGuide.*'
     exclude 'litemod.json'
@@ -84,6 +92,9 @@ task deobfJar(type: Jar) {
 
 task apiJar(type: Jar) {
     from (sourceSets.main.output) {
+        include 'uristqwerty/CraftGuide/api/**'
+    }
+    from (sourceSets.main.allJava) {
         include 'uristqwerty/CraftGuide/api/**'
     }
     classifier = 'api'

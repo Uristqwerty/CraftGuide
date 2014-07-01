@@ -95,13 +95,13 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		}
 
 		if(mcDir == null)
-			return getConfigDir();
+			return CraftGuide.configDirectory();
 
 		File dir = new File(mcDir, "logs");
 
 		if(!dir.exists() && !dir.mkdirs())
 		{
-			return getConfigDir();
+			return CraftGuide.configDirectory();
 		}
 
 		return dir;
