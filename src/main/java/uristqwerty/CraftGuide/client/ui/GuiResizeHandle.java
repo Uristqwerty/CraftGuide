@@ -71,12 +71,6 @@ public class GuiResizeHandle extends GuiElement
 	}
 
 	@Override
-	public void elementClicked(int x, int y)
-	{
-		super.elementClicked(x, y);
-	}
-
-	@Override
 	public void mouseReleased(int x, int y)
 	{
 		super.mouseReleased(x, y);

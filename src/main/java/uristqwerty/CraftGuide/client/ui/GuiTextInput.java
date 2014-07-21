@@ -8,6 +8,7 @@ import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.input.Keyboard;
 
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.minecraft.Text;
 
@@ -58,12 +59,20 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 	}
 
 	@Override
-	public void elementClicked(int x, int y)
+	public void elementClicked(int x, int y, MouseClick mouseButton)
 	{
 		setFocus(true);
-		moveCursor(xToCharIndex(x - xText));
 
-		super.elementClicked(x, y);
+		if(mouseButton == MouseClick.RIGHT_CLICK && CraftGuide.rightClickClearText)
+		{
+			setText("");
+		}
+		else
+		{
+			moveCursor(xToCharIndex(x - xText));
+		}
+
+		super.elementClicked(x, y, mouseButton);
 	}
 
 	private int xToCharIndex(int x)

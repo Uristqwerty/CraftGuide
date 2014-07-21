@@ -69,7 +69,7 @@ public class Window extends GuiElement
 		}
 	}
 
-	public void updateMouseState(int x, int y, boolean buttonState)
+	public void updateMouseState(int x, int y, boolean buttonState, MouseClick mouseButton)
 	{
 		if(mousePressed != buttonState)
 		{
@@ -82,7 +82,7 @@ public class Window extends GuiElement
 
 				if(element != null)
 				{
-					element.elementClicked(x - element.absoluteX(), y - element.absoluteY());
+					element.elementClicked(x - element.absoluteX(), y - element.absoluteY(), mouseButton);
 				}
 			}
 			else

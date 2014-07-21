@@ -1,6 +1,7 @@
 package uristqwerty.gui_craftguide.minecraft;
 
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
@@ -8,6 +9,7 @@ import org.lwjgl.input.Mouse;
 
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.CraftGuide.client.ui.GuiTextInput;
+import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.components.Window;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 
@@ -54,51 +56,59 @@ public class Gui extends GuiScreen
 			}
 		}
 		else if(eventKey == Keyboard.KEY_ESCAPE || eventKey == mc.gameSettings.keyBindInventory.getKeyCode())
-        {
-            mc.thePlayer.closeScreen();
-        }
-        else
-        {
-        	guiWindow.onKeyTyped(eventChar, eventKey);
-        }
+		{
+			mc.thePlayer.closeScreen();
+		}
+		else
+		{
+			guiWindow.onKeyTyped(eventChar, eventKey);
+		}
 	}
 
 	@Override
 	public void handleMouseInput()
 	{
-        int x = (Mouse.getEventX() * width) / mc.displayWidth;
-        int y = height - (Mouse.getEventY() * height) / mc.displayHeight - 1;
+		int x = (Mouse.getEventX() * width) / mc.displayWidth;
+		int y = height - (Mouse.getEventY() * height) / mc.displayHeight - 1;
+		int mouseButton = Mouse.getEventButton();
 
-        if(Mouse.getEventButton() == 0)
-        {
-        	guiWindow.updateMouseState(x, y, Mouse.getEventButtonState());
-        }
-        else if(Mouse.getEventButton() == -1)
-        {
-        	guiWindow.updateMouse(x, y);
+		if(mouseButton != -1)
+		{
+			if(mouseButton == 1 || (mouseButton == 0 && Minecraft.isRunningOnMac && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))))
+			{
+				guiWindow.updateMouseState(x, y, Mouse.getEventButtonState(), GuiElement.MouseClick.RIGHT_CLICK);
+			}
+			else if(mouseButton == 0)
+			{
+				guiWindow.updateMouseState(x, y, Mouse.getEventButtonState(), GuiElement.MouseClick.LEFT_CLICK);
+			}
+		}
+		else
+		{
+			guiWindow.updateMouse(x, y);
 		}
 
-    	if(Mouse.getEventDWheel() != 0)
-    	{
-    		guiWindow.scrollWheelTurned(Mouse.getEventDWheel() > 0? -mouseWheelRate() : mouseWheelRate());
-    	}
+		if(Mouse.getEventDWheel() != 0)
+		{
+			guiWindow.scrollWheelTurned(Mouse.getEventDWheel() > 0? -mouseWheelRate() : mouseWheelRate());
+		}
 	}
 
 	@Override
 	public void handleKeyboardInput()
 	{
-        if(Keyboard.getEventKeyState())
-        {
-            if(Keyboard.getEventKey() == Keyboard.KEY_F11)
-            {
-                mc.toggleFullscreen();
-                return;
-            }
-            else
-            {
-            	keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
-            }
-        }
+		if(Keyboard.getEventKeyState())
+		{
+			if(Keyboard.getEventKey() == Keyboard.KEY_F11)
+			{
+				mc.toggleFullscreen();
+				return;
+			}
+			else
+			{
+				keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
+			}
+		}
 	}
 
 	public int mouseWheelRate()

@@ -53,7 +53,7 @@ public class DropdownSelector extends GuiElement
 	}
 
 	@Override
-	public void elementClicked(int x, int y)
+	public void elementClicked(int x, int y, MouseClick mouseButton)
 	{
 		if(!open)
 		{
@@ -61,7 +61,7 @@ public class DropdownSelector extends GuiElement
 			getLayer(Layer.POPUP).addElement(selectionPane);
 		}
 
-		super.elementClicked(x, y);
+		super.elementClicked(x, y, mouseButton);
 	}
 
 	private boolean popupContainsPoint(int x, int y)

@@ -180,6 +180,17 @@ public class ConfigList extends GuiScrollableContent
 					}
 				});
 
+		addToggle("craftguide.gui.config.textinput_clear_on_right_click", toggleTemplate, CraftGuide.rightClickClearText,
+				new ToggleConfig()
+				{
+					@Override
+					public void onToggle(boolean newState)
+					{
+						CraftGuide.rightClickClearText = newState;
+						CraftGuide.saveConfig();
+					}
+				});
+
 		addButton("craftguide.gui.config.reload_recipes", "craftguide.gui.config.reload_recipes.button", buttonTemplate,
 				new IButtonListener()
 				{

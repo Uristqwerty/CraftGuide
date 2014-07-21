@@ -23,12 +23,18 @@ public class GuiElement
 	private GuiElement parent = null;
 	private List<GuiElement> children = new ArrayList<GuiElement>();
 
-	public enum AnchorPoint
+	public static enum AnchorPoint
 	{
 		TOP_LEFT,
 		TOP_RIGHT,
 		BOTTOM_LEFT,
 		BOTTOM_RIGHT,
+	}
+
+	public static enum MouseClick
+	{
+		LEFT_CLICK,
+		RIGHT_CLICK,
 	}
 
 	private AnchorPoint anchorTL = AnchorPoint.TOP_LEFT;
@@ -449,7 +455,7 @@ public class GuiElement
 		/** Default implementation: Do nothing */
 	}
 
-	public void elementClicked(int x, int y)
+	public void elementClicked(int x, int y, MouseClick mouseButton)
 	{
 		/** Default implementation: Do nothing */
 	}

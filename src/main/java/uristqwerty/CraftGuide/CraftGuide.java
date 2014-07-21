@@ -45,7 +45,8 @@ public class CraftGuide
 	public static boolean newerBackgroundStyle = false;
 	public static boolean hideMundanePotionRecipes = true;
 	public static boolean insertBetterWithRenewablesRecipes = false;
-	public static boolean enableItemRecipe;
+	public static boolean enableItemRecipe = true;
+	public static boolean rightClickClearText = true;
 
 	public static boolean betterWithRenewablesDetected = false;
 	public static boolean needsRecipeRefresh = false;
@@ -187,6 +188,7 @@ public class CraftGuide
 		configComments.put("PauseWhileOpen", "In singleplayer, whether the game is paused while you have CraftGuide open. If false, you can browse recipes while waiting for your machines to run, but it also means that a ninja creeper may be able to sneak up behind you while you are distracted.");
 		configComments.put("alwaysShowID", "If true, item tooltips have an additional line showing their item ID and damage value. Added before the vanilla F3+H, it has a different format, and puts the item ID on a separate line from the item name. If this setting is false, CraftGuide will only show item IDs in this way in the rare case of an item error");
 		configComments.put("defaultKeybind", "If Minecraft isn't properly loading changed keybinds, or you are putting together a config/modpack and want a different default value, you can change the default CraftGuide keybind here.");
+		configComments.put("rightClickClearText", "Right-clicking a text input clears it, instead of setting the cursor position.");
 	}
 
 	private void setConfigDefaults()
@@ -203,6 +205,7 @@ public class CraftGuide
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(true));
 		config.setProperty("insertBetterWithRenewablesRecipes", Boolean.toString(false));
 		config.setProperty("logThemeDebugInfo", Boolean.toString(false));
+		config.setProperty("rightClickClearText", Boolean.toString(true));
 		config.setProperty("defaultKeybind", Integer.toString(Keyboard.KEY_G));
 	}
 
@@ -287,6 +290,7 @@ public class CraftGuide
 		insertBetterWithRenewablesRecipes = Boolean.valueOf(config.getProperty("insertBetterWithRenewablesRecipes"));
 		ThemeManager.debugOutput = Boolean.valueOf(config.getProperty("logThemeDebugInfo"));
 		enableItemRecipe = Boolean.valueOf(config.getProperty("enableItemRecipe"));
+		rightClickClearText = Boolean.valueOf(config.getProperty("rightClickClearText"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{
@@ -385,6 +389,7 @@ public class CraftGuide
 		//config.setProperty("newerBackgroundStyle", Boolean.toString(newerBackgroundStyle));
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(hideMundanePotionRecipes));
 		config.setProperty("logThemeDebugInfo", Boolean.toString(ThemeManager.debugOutput));
+		config.setProperty("rightClickClearText", Boolean.toString(rightClickClearText));
 
 		try
 		{
