@@ -18,15 +18,15 @@ buildscript {
 apply plugin: 'forge'
 apply plugin: 'liteloader'
 
-version = "1.6.8.2"
+version = "1.6.8.3"
 group = "uristqwerty" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CraftGuide"
 
-ext.llrevision = "04"
+ext.llrevision = "03"
 
 minecraft {
-    version = "1.7.2-10.12.2.1121"
-    assetDir = "../run/assets"
+    version = "1.7.10-10.13.0.1180"
+    runDir = "run"
 
     replaceIn "CraftGuide_FML.java"
     replaceIn "LiteMod_CraftGuide.java"
@@ -41,8 +41,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.mod-buildcraft:buildcraft:6.0.16:dev'
-    compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:dev'
+    compile 'com.mod-buildcraft:buildcraft:6.0.17:dev'
+    compile 'net.industrial-craft:industrialcraft-2:2.2.584-experimental:dev'
 }
 
 task themeZip(type: Zip) {
@@ -105,4 +105,8 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-build.dependsOn deobfJar, apiJar, sourcesJar
+artifacts {
+    archives deobfJar
+    archives apiJar
+    archives sourcesJar
+}
