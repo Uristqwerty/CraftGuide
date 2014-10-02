@@ -1,0 +1,32 @@
+item.craftguide_item.name=Guide d'artisanat 
+ 
+craftguide.gui.filter_type.input=Entrée 
+craftguide.gui.filter_type.output=Sortie 
+craftguide.gui.filter_type.machine=Machine 
+
+craftguide.gui.tab_tooltip.recipe_list=Liste des recettes 
+craftguide.gui.tab_tooltip.type_visibility_list=Montrer/cacher les recette par type d'artisanat 
+craftguide.gui.tab_tooltip.options=Options 
+
+craftguide.gui.filter=Filtre
+craftguide.gui.search=Rechercher 
+ 
+craftguide.gui.config.pause=Pause si ouvert (joueur solo seulement) 
+craftguide.gui.config.show_ids=Montrer l'ID de l'élément et les valeurs de dommage 
+craftguide.gui.config.enable_keybind=Activer touches cachées 
+craftguide.gui.config.enable_item_recipe=Activer les recettes CraftGuide (redémmarage requis) 
+craftguide.gui.config.hide_mundane_potions=Cacher les potions inconnue des mauvaises combinations (rechargement des recettes requis) 
+craftguide.gui.config.theme_debugging=Sortie excessive du thème, les information de debug sont dans CraftGuide.log 
+craftguide.gui.config.textinput_clear_on_right_click=Effacer l'enttrée de texte par un clic droit
+
+craftguide.gui.config.reload_recipes.button=Recharger 
+craftguide.gui.config.reload_recipes=Recharger les recettes
+
+craftguide.gui.config.export_displayed_recipes.button=Exporter
+craftguide.gui.config.export_displayed_recipes=Exporter les receetes de CraftGuide 
+
+craftguide.gui.config.export_crafting_recipes.button=Exporter 
+craftguide.gui.config.export_crafting_recipes=Exporter toutes les recettes de l'établis 
+
+craftguide.gui.config.current_theme.button=Thème suivant 
+craftguide.gui.config.current_theme.format_string=Thème courant: %s 
