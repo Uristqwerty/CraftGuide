@@ -480,7 +480,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	}
 
 	@Override
-	public ItemStack[] extraMacerators()
+	public Object[] extraMacerators()
 	{
 		try
 		{
@@ -520,7 +520,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	}
 
 	@Override
-	public ItemStack[] extraExtractors()
+	public Object[] extraExtractors()
 	{
 		try
 		{
@@ -560,7 +560,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 	}
 
 	@Override
-	public ItemStack[] extraCompressors()
+	public Object[] extraCompressors()
 	{
 		try
 		{

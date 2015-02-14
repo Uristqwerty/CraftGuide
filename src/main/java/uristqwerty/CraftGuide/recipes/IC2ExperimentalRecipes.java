@@ -41,9 +41,9 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 {
 	public static interface AdditionalMachines
 	{
-		public ItemStack[] extraMacerators();
-		public ItemStack[] extraExtractors();
-		public ItemStack[] extraCompressors();
+		public Object[] extraMacerators();
+		public Object[] extraExtractors();
+		public Object[] extraCompressors();
 	}
 
 	public static List<AdditionalMachines> additionalMachines = new ArrayList<AdditionalMachines>();
