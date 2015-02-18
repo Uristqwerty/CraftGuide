@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
 
-import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.gui_craftguide.theme.ThemeManager;
 
@@ -143,7 +142,7 @@ public class CraftGuide
 		{
 			try
 			{
-				RecipeGeneratorImplementation.forgeExt = (RecipeGeneratorForgeExtension)Class.forName("uristqwerty.CraftGuide.ForgeStuff").newInstance();
+				ForgeExtensions.setImplementation((ForgeExtensions)Class.forName("uristqwerty.CraftGuide.ForgeExtensionsImplementation").newInstance());
 			}
 			catch(InstantiationException e)
 			{

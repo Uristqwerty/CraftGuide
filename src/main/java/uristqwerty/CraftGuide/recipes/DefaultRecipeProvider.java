@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import uristqwerty.CraftGuide.ForgeExtensions;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ItemSlot;
@@ -239,8 +240,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 	private boolean isShapelessRecipe(IRecipe recipe)
 	{
 		return recipe instanceof ShapelessRecipes ||
-			(RecipeGeneratorImplementation.forgeExt != null
-					&& RecipeGeneratorImplementation.forgeExt.isShapelessRecipe(recipe));
+			ForgeExtensions.isShapelessRecipe(recipe);
 	}
 
 	@Override

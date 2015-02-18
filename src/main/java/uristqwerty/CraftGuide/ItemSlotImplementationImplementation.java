@@ -163,13 +163,6 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 	private List<String> emptyOreDictEntryText(List oreDictionaryList)
 	{
-		if(RecipeGeneratorImplementation.forgeExt != null)
-		{
-			return RecipeGeneratorImplementation.forgeExt.emptyOreDictEntryText(oreDictionaryList);
-		}
-		else
-		{
-			return null;
-		}
+		return ForgeExtensions.emptyOreDictEntryText(oreDictionaryList);
 	}
 }

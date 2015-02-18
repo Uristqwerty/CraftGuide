@@ -25,21 +25,11 @@ import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class RecipeGeneratorImplementation implements RecipeGenerator
 {
-	public static interface RecipeGeneratorForgeExtension
-	{
-		boolean matchesType(IRecipe recipe);
-		boolean isShapelessRecipe(IRecipe recipe);
-		Object[] getCraftingRecipe(RecipeGeneratorImplementation recipeGeneratorImplementation, IRecipe recipe, boolean allowSmallGrid);
-		List<String> emptyOreDictEntryText(List oreDictionaryList);
-	}
-
 	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
 	private Texture defaultBackground = new BlankTexture();
 	private Texture defaultBackgroundSelected;
 	public static ItemStack workbench = new ItemStack(Blocks.crafting_table);
-
-	public static RecipeGeneratorForgeExtension forgeExt;
 
 	public RecipeGeneratorImplementation()
 	{
@@ -209,9 +199,9 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 				List items = (List)CommonUtilities.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems", "field_77579_b");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
-			else if(forgeExt != null && forgeExt.matchesType(recipe))
+			else if(ForgeExtensions.matchesType(recipe))
 			{
-				return forgeExt.getCraftingRecipe(this, recipe, allowSmallGrid);
+				return ForgeExtensions.getCraftingRecipe(this, recipe, allowSmallGrid);
 			}
 		}
 		catch(Exception e)

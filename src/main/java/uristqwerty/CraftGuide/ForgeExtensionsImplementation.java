@@ -12,24 +12,29 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import uristqwerty.CraftGuide.RecipeGeneratorImplementation.RecipeGeneratorForgeExtension;
 
-public class ForgeStuff implements RecipeGeneratorForgeExtension
+/**
+ * Implements all functionality that relies on Forge. As this class
+ *  is only instantiated if Forge is actually present, this allows
+ *  the rest of CraftGuide to use other loaders (so far has included
+ *  pure FML, ModLoader, LiteLoader, and even direct jar insertion).
+ */
+public class ForgeExtensionsImplementation extends ForgeExtensions
 {
 	@Override
-	public boolean matchesType(IRecipe recipe)
+	public boolean matchesTypeImpl(IRecipe recipe)
 	{
 		return recipe instanceof ShapedOreRecipe || recipe instanceof ShapelessOreRecipe;
 	}
 
 	@Override
-	public boolean isShapelessRecipe(IRecipe recipe)
+	public boolean isShapelessRecipeImpl(IRecipe recipe)
 	{
 		return recipe instanceof ShapelessOreRecipe;
 	}
 
 	@Override
-	public Object[] getCraftingRecipe(RecipeGeneratorImplementation gen, IRecipe recipe, boolean allowSmallGrid)
+	public Object[] getCraftingRecipeImpl(RecipeGeneratorImplementation gen, IRecipe recipe, boolean allowSmallGrid)
 	{
 		try
 		{
@@ -77,11 +82,11 @@ public class ForgeStuff implements RecipeGeneratorForgeExtension
 	private IdentityHashMap<List, String> mappingCache = new IdentityHashMap<List, String>();
 
 	@Override
-	public List<String> emptyOreDictEntryText(List oreDictionaryList)
+	public List<String> emptyOreDictEntryTextImpl(List oreDictionaryList)
 	{
 		if(!mappingCache.containsKey(oreDictionaryList))
 		{
-			mappingCache.put(oreDictionaryList, getOreDictName(oreDictionaryList));
+			mappingCache.put(oreDictionaryList, getOreDictionaryNameImpl(oreDictionaryList));
 		}
 
 		String name = mappingCache.get(oreDictionaryList);
@@ -96,6 +101,22 @@ public class ForgeStuff implements RecipeGeneratorForgeExtension
 			text.add("0 items for Ore Dictionary name '" + name + "'");
 			return text;
 		}
+	}
+
+	private IdentityHashMap<List, String> oreDictName = new IdentityHashMap<List, String>();
+
+	@Override
+	public String getOreDictionaryNameImpl(List list)
+	{
+		if(oreDictName.containsKey(list))
+		{
+			return oreDictName.get(list);
+		}
+
+		String name = getOreDictName(list);
+		oreDictName.put(list, name);
+
+		return name;
 	}
 
 	private String getOreDictName(List list)
