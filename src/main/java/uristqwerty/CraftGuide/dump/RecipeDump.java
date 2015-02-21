@@ -16,9 +16,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
-import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
+import uristqwerty.CraftGuide.itemtype.ItemType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -118,10 +118,10 @@ public abstract class RecipeDump
 		{
 			startWriting(output);
 
-			Map<CraftType, List<CraftGuideRecipe>> recipes = GuiCraftGuide.getInstance().getRecipeCache().getAllRecipes();
+			Map<ItemType, List<CraftGuideRecipe>> recipes = GuiCraftGuide.getInstance().getRecipeCache().getAllRecipes();
 
 			startArray();
-			for(Entry<CraftType, List<CraftGuideRecipe>> recipeSet: recipes.entrySet())
+			for(Entry<ItemType, List<CraftGuideRecipe>> recipeSet: recipes.entrySet())
 			{
 				startObject("recipe_group");
 				writeItemStackValue(recipeSet.getKey().getDisplayStack(), "group type");

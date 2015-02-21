@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
 import uristqwerty.CraftGuide.client.ui.Rendering.ShadedRect;
+import uristqwerty.CraftGuide.itemtype.ItemType;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 import uristqwerty.gui_craftguide.rendering.TexturedRect;
 import uristqwerty.gui_craftguide.texture.BorderedTexture;
@@ -20,7 +20,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	private Texture displayBackground;
 	private Renderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
 	private RecipeCache recipeCache;
-	private Map<CraftType, Integer> settings = new HashMap<CraftType, Integer>();
+	private Map<ItemType, Integer> settings = new HashMap<ItemType, Integer>();
 	private FloatingItemText toolTip = new FloatingItemText("");
 	private Overlay toolTipOverlay = new Overlay(toolTip);
 	private String toolTipText = "";
@@ -50,17 +50,17 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 
 	private void initTypes(RecipeCache recipeCache)
 	{
-		Set<CraftType> types = recipeCache.getCraftTypes();
-		Set<CraftType> filteredTypes = recipeCache.getFilterTypes();
+		Set<ItemType> types = recipeCache.getCraftTypes();
+		Set<ItemType> filteredTypes = recipeCache.getFilterTypes();
 
 		if(filteredTypes != null)
 		{
-			for(CraftType type: types)
+			for(ItemType type: types)
 			{
 				settings.put(type, 1);
 			}
 
-			for(CraftType type: filteredTypes)
+			for(ItemType type: filteredTypes)
 			{
 				settings.put(type, 0);
 			}
@@ -70,11 +70,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void renderGridRow(GuiRenderer renderer, int xOffset, int yOffset, int row)
 	{
-		Set<CraftType> types = recipeCache.getCraftTypes();
+		Set<ItemType> types = recipeCache.getCraftTypes();
 
 		if(row < types.size())
 		{
-			CraftType type = (CraftType)types.toArray()[row];
+			ItemType type = (ItemType)types.toArray()[row];
 			displayBackground.renderRect(renderer, xOffset, yOffset, width(), rowHeight, 0, 0);
 			renderer.drawItemStack(type.getDisplayStack(), xOffset + 8, yOffset + 8, false);
 
@@ -92,7 +92,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		}
 	}
 
-	private boolean hidden(CraftType type)
+	private boolean hidden(ItemType type)
 	{
 		switch(setting(type))
 		{
@@ -103,7 +103,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 				return true;
 
 			default:
-				for(CraftType otherType: settings.keySet())
+				for(ItemType otherType: settings.keySet())
 				{
 					if(setting(otherType) == 2)
 					{
@@ -144,7 +144,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		super.setColumns(1);
 	}
 
-	private int setting(CraftType type)
+	private int setting(ItemType type)
 	{
 		if(!settings.containsKey(type))
 		{
@@ -156,11 +156,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 
 	private void set(int row, int setting)
 	{
-		Set<CraftType> types = recipeCache.getCraftTypes();
+		Set<ItemType> types = recipeCache.getCraftTypes();
 
 		if(row < types.size())
 		{
-			CraftType type = (CraftType)types.toArray()[row];
+			ItemType type = (ItemType)types.toArray()[row];
 
 			settings.put(type, setting);
 
@@ -168,11 +168,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 		}
 	}
 
-	private void settingChanged(CraftType type, int setting)
+	private void settingChanged(ItemType type, int setting)
 	{
 		if(setting == 2)
 		{
-			for(CraftType settingType: settings.keySet())
+			for(ItemType settingType: settings.keySet())
 			{
 				if(settingType != type && settings.get(settingType) == 2)
 				{
@@ -186,9 +186,9 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 
 	private void updateFilter()
 	{
-		Set<CraftType> set = new HashSet<CraftType>();
+		Set<ItemType> set = new HashSet<ItemType>();
 
-		for(CraftType type: settings.keySet())
+		for(ItemType type: settings.keySet())
 		{
 			if(setting(type) == 2)
 			{
@@ -198,7 +198,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 			}
 		}
 
-		for(CraftType type: recipeCache.getCraftTypes())
+		for(ItemType type: recipeCache.getCraftTypes())
 		{
 			if(setting(type) != 1)
 			{

@@ -9,12 +9,12 @@ import org.lwjgl.input.Keyboard;
 
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.CraftGuide.CraftType;
 import uristqwerty.CraftGuide.RecipeCache;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
 import uristqwerty.CraftGuide.client.ui.Rendering.Overlay;
+import uristqwerty.CraftGuide.itemtype.ItemType;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 import uristqwerty.gui_craftguide.rendering.TexturedRect;
 import uristqwerty.gui_craftguide.texture.Texture;
@@ -166,7 +166,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		{
 			for(Object item: items)
 			{
-				itemResults.add(((CraftType)item).getStack());
+				itemResults.add(((ItemType)item).getStack());
 			}
 
 			setCells(itemResults.size());
@@ -177,7 +177,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 
 			for(Object item: items)
 			{
-				Object stack = ((CraftType)item).getStack();
+				Object stack = ((ItemType)item).getStack();
 
 				if(CommonUtilities.searchExtendedItemStackText(stack, search))
 				{

@@ -1,21 +1,68 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.itemtype;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import uristqwerty.CraftGuide.CommonUtilities;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class CraftType implements Comparable<CraftType>
+public class ItemType implements Comparable<ItemType>
 {
-	private static Map<Integer, Map<Integer, CraftType>> cache = new HashMap<Integer, Map<Integer, CraftType>>();
-	private static Map<ArrayList, CraftType> arrayListCache = new HashMap<ArrayList, CraftType>();
+	private static final class ItemTypeKey
+	{
+		public final int id, damage;
+
+		public ItemTypeKey(ItemStack stack) {
+			this(stack.getItem(), stack.getItemDamage());
+		}
+
+		public ItemTypeKey(Item item, int damage)
+		{
+			this(Item.getIdFromItem(item), damage);
+		}
+
+		public ItemTypeKey(int id, int damage)
+		{
+			this.id = id;
+			this.damage = damage;
+		}
+
+		// Automatically-generated .hashCode(), with prime increased from 31
+		@Override
+		public int hashCode()
+		{
+			final int prime = 104147;
+			int result = 1;
+			result = prime * result + damage;
+			result = prime * result + id;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if(this == obj)
+				return true;
+			if(obj == null)
+				return false;
+			if(this.getClass() != obj.getClass())
+				return false;
+
+			ItemTypeKey other = (ItemTypeKey) obj;
+			return this.id == other.id &&
+					this.damage == other.damage;
+		}
+	}
+
+	private static Map<ItemTypeKey, ItemType> cache = new HashMap<ItemTypeKey, ItemType>();
+	private static Map<ArrayList, ItemType> arrayListCache = new HashMap<ArrayList, ItemType>();
 	private int itemID, damage;
 	private Item item;
 	private Object stack;
 
-	private CraftType(Item item, int itemDamage)
+	private ItemType(Item item, int itemDamage)
 	{
 		this.item = item;
 		itemID = Item.getIdFromItem(item);
@@ -23,7 +70,7 @@ public class CraftType implements Comparable<CraftType>
 		stack = new ItemStack(item, 1, damage);
 	}
 
-	private CraftType(ArrayList<ItemStack> items)
+	private ItemType(ArrayList<ItemStack> items)
 	{
 		ItemStack itemStack = items.get(0);
 		item = itemStack.getItem();
@@ -32,7 +79,7 @@ public class CraftType implements Comparable<CraftType>
 		stack = items;
 	}
 
-	public static CraftType getInstance(Object stack)
+	public static ItemType getInstance(Object stack)
 	{
 		if(stack instanceof ItemStack)
 		{
@@ -48,36 +95,28 @@ public class CraftType implements Comparable<CraftType>
 		}
 	}
 
-	private static CraftType getInstance(ArrayList stack)
+	private static ItemType getInstance(ArrayList stack)
 	{
-		CraftType type = arrayListCache.get(stack);
+		ItemType type = arrayListCache.get(stack);
 
 		if(type == null)
 		{
-			type = new CraftType(stack);
+			type = new ItemType(stack);
 			arrayListCache.put(stack, type);
 		}
 
 		return type;
 	}
 
-	private static CraftType getInstance(ItemStack stack)
+	private static ItemType getInstance(ItemStack stack)
 	{
-		int id = Item.getIdFromItem(stack.getItem());
-		Map<Integer, CraftType> map = cache.get(id);
-
-		if(map == null)
-		{
-			map = new HashMap<Integer, CraftType>();
-			cache.put(id, map);
-		}
-
-		CraftType type = map.get(CommonUtilities.getItemDamage(stack));
+		ItemTypeKey key = new ItemTypeKey(stack);
+		ItemType type = cache.get(key);
 
 		if(type == null)
 		{
-			type = new CraftType(stack.getItem(), CommonUtilities.getItemDamage(stack));
-			map.put(CommonUtilities.getItemDamage(stack), type);
+			type = new ItemType(stack.getItem(), CommonUtilities.getItemDamage(stack));
+			cache.put(key, type);
 		}
 
 		return type;
@@ -85,17 +124,12 @@ public class CraftType implements Comparable<CraftType>
 
 	public static boolean hasInstance(ItemStack stack)
 	{
-		int id = Item.getIdFromItem(stack.getItem());
-		if(!cache.containsKey(id))
-		{
-			return false;
-		}
-
-		return cache.get(id).containsKey(CommonUtilities.getItemDamage(stack));
+		ItemTypeKey key = new ItemTypeKey(stack);
+		return cache.containsKey(key);
 	}
 
 	@Override
-	public int compareTo(CraftType other)
+	public int compareTo(ItemType other)
 	{
 		if(this.itemID != other.itemID)
 		{
@@ -116,9 +150,9 @@ public class CraftType implements Comparable<CraftType>
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj != null && obj instanceof CraftType)
+		if(obj != null && obj instanceof ItemType)
 		{
-			CraftType type = (CraftType)obj;
+			ItemType type = (ItemType)obj;
 
 			if(stack instanceof ItemStack && type.stack instanceof ItemStack)
 			{

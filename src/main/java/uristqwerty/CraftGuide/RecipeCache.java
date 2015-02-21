@@ -21,18 +21,19 @@ import uristqwerty.CraftGuide.api.RecipeFilter;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
+import uristqwerty.CraftGuide.itemtype.ItemType;
 
 public class RecipeCache
 {
-	private SortedSet<CraftType> craftingTypes = new TreeSet<CraftType>();
-	private Map<CraftType, List<CraftGuideRecipe>> craftResults = new HashMap<CraftType, List<CraftGuideRecipe>>();
+	private SortedSet<ItemType> craftingTypes = new TreeSet<ItemType>();
+	private Map<ItemType, List<CraftGuideRecipe>> craftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
 	private List<CraftGuideRecipe> typeResults;
 	private List<CraftGuideRecipe> filteredResults;
 	private RecipeGeneratorImplementation generator = new RecipeGeneratorImplementation();
 	private ItemFilter filterItem = null;
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
-	private Set<CraftType> currentTypes = null;
-	private SortedSet<CraftType> allItems = new TreeSet<CraftType>();
+	private Set<ItemType> currentTypes = null;
+	private SortedSet<ItemType> allItems = new TreeSet<ItemType>();
 	private boolean firstReset = true;
 
 	public RecipeCache()
@@ -52,7 +53,7 @@ public class RecipeCache
 
 		for(ItemStack key: rawRecipes.keySet())
 		{
-			CraftType type = CraftType.getInstance(key);
+			ItemType type = ItemType.getInstance(key);
 
 			if(type == null)
 			{
@@ -76,12 +77,12 @@ public class RecipeCache
 
 		if(firstReset)
 		{
-			currentTypes = new HashSet<CraftType>();
+			currentTypes = new HashSet<ItemType>();
 			currentTypes.addAll(craftingTypes);
 
 			for(ItemStack stack: generator.disabledTypes)
 			{
-				currentTypes.remove(CraftType.getInstance(stack));
+				currentTypes.remove(ItemType.getInstance(stack));
 			}
 
 			firstReset = false;
@@ -109,13 +110,13 @@ public class RecipeCache
 					{
 						if(item instanceof ItemStack)
 						{
-							allItems.add(CraftType.getInstance(item));
+							allItems.add(ItemType.getInstance(item));
 						}
 						else if(item instanceof ArrayList)
 						{
 							for(ItemStack stack: (ArrayList<ItemStack>)item)
 							{
-								CraftType craftType = CraftType.getInstance(stack);
+								ItemType craftType = ItemType.getInstance(stack);
 
 								if(craftType != null)
 								{
@@ -123,7 +124,7 @@ public class RecipeCache
 								}
 							}
 
-							CraftType craftType = CraftType.getInstance(item);
+							ItemType craftType = ItemType.getInstance(item);
 
 							if(craftType != null)
 							{
@@ -140,18 +141,18 @@ public class RecipeCache
 
 	private void removeUselessDuplicates()
 	{
-		HashMap<Item, Set<CraftType>> items = new HashMap<Item, Set<CraftType>>();
+		HashMap<Item, Set<ItemType>> items = new HashMap<Item, Set<ItemType>>();
 
-		for(CraftType type: allItems)
+		for(ItemType type: allItems)
 		{
 			if(type.getStack() instanceof ItemStack)
 			{
 				Item item = ((ItemStack)type.getStack()).getItem();
-				Set<CraftType> set = items.get(item);
+				Set<ItemType> set = items.get(item);
 
 				if(set == null)
 				{
-					set = new HashSet<CraftType>();
+					set = new HashSet<ItemType>();
 					items.put(item, set);
 				}
 
@@ -164,11 +165,11 @@ public class RecipeCache
 					if(o instanceof ItemStack)
 					{
 						Item item = ((ItemStack)o).getItem();
-						Set<CraftType> set = items.get(item);
+						Set<ItemType> set = items.get(item);
 
 						if(set == null)
 						{
-							set = new HashSet<CraftType>();
+							set = new HashSet<ItemType>();
 							items.put(item, set);
 						}
 
@@ -178,21 +179,21 @@ public class RecipeCache
 			}
 		}
 
-		List<CraftType> toAdd = new ArrayList<CraftType>();
+		List<ItemType> toAdd = new ArrayList<ItemType>();
 
-		for(Iterator<CraftType> i = allItems.iterator(); i.hasNext();)
+		for(Iterator<ItemType> i = allItems.iterator(); i.hasNext();)
 		{
-			CraftType type = i.next();
+			ItemType type = i.next();
 
 			if(type.getStack() instanceof ItemStack && CommonUtilities.getItemDamage((ItemStack)type.getStack()) == CraftGuide.DAMAGE_WILDCARD)
 			{
 				Item item = ((ItemStack)type.getStack()).getItem();
-				Set<CraftType> set = items.get(item);
+				Set<ItemType> set = items.get(item);
 
 				if(set.size() == 1)
 				{
 					i.remove();
-					toAdd.add(CraftType.getInstance(new ItemStack(item, 1, 0)));
+					toAdd.add(ItemType.getInstance(new ItemStack(item, 1, 0)));
 				}
 				else if(set.size() == 2)
 				{
@@ -203,18 +204,18 @@ public class RecipeCache
 
 		allItems.addAll(toAdd);
 
-		for(Iterator<CraftType> i = allItems.iterator(); i.hasNext();)
+		for(Iterator<ItemType> i = allItems.iterator(); i.hasNext();)
 		{
-			CraftType type = i.next();
+			ItemType type = i.next();
 
 			if(type.getStack() instanceof List && ((List)type.getStack()).size() == 1 && ((List)type.getStack()).get(0) instanceof ItemStack)
 			{
 				ItemStack stack = (ItemStack)((List)type.getStack()).get(0);
 				Item item = stack.getItem();
-				Set<CraftType> set = items.get(item);
+				Set<ItemType> set = items.get(item);
 				boolean found = false;
 
-				for(CraftType other: set)
+				for(ItemType other: set)
 				{
 					if(other == type)
 					{
@@ -321,21 +322,21 @@ public class RecipeCache
 		}
 	}
 
-	public void setTypes(Set<CraftType> types)
+	public void setTypes(Set<ItemType> types)
 	{
 		typeResults = new ArrayList<CraftGuideRecipe>();
 		currentTypes = types;
 
 		if(types == null)
 		{
-			for(CraftType type: craftingTypes)
+			for(ItemType type: craftingTypes)
 			{
 				typeResults.addAll(craftResults.get(type));
 			}
 		}
 		else
 		{
-			for(CraftType type: craftingTypes)
+			for(ItemType type: craftingTypes)
 			{
 				if(types.contains(type))
 				{
@@ -352,7 +353,7 @@ public class RecipeCache
 		return filteredResults;
 	}
 
-	public Map<CraftType, List<CraftGuideRecipe>> getAllRecipes()
+	public Map<ItemType, List<CraftGuideRecipe>> getAllRecipes()
 	{
 		return craftResults;
 	}
@@ -404,7 +405,7 @@ public class RecipeCache
 		return filterItem;
 	}
 
-	public Set<CraftType> getCraftTypes()
+	public Set<ItemType> getCraftTypes()
 	{
 		return craftingTypes;
 	}
@@ -414,12 +415,12 @@ public class RecipeCache
 		listeners.add(listener);
 	}
 
-	public SortedSet<CraftType> getAllItems()
+	public SortedSet<ItemType> getAllItems()
 	{
 		return allItems;
 	}
 
-	public Set<CraftType> getFilterTypes()
+	public Set<ItemType> getFilterTypes()
 	{
 		return currentTypes;
 	}
