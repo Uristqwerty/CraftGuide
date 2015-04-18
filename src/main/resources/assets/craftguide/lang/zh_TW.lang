@@ -1,0 +1,32 @@
+item.craftguide_item.name=合成指南
+
+craftguide.gui.filter_type.input=輸入
+craftguide.gui.filter_type.output=輸出
+craftguide.gui.filter_type.machine=機械
+
+craftguide.gui.tab_tooltip.recipe_list=合成表
+craftguide.gui.tab_tooltip.type_visibility_list=依據合成方式顯示/隱藏合成公式
+craftguide.gui.tab_tooltip.options=選項
+
+craftguide.gui.filter=過濾
+craftguide.gui.search=搜尋
+
+craftguide.gui.config.pause=打開合成表時暫停遊戲 (只在單人遊戲有效)
+craftguide.gui.config.show_ids=顯示物品ID及其顯示信息
+craftguide.gui.config.enable_keybind=啟用快捷鍵
+craftguide.gui.config.enable_item_recipe=啟用合成指南物品合成公式 (需要重啟)
+craftguide.gui.config.hide_mundane_potions=從失敗的藥水釀造組合隱藏平凡的藥水 (需要重載合成表)
+craftguide.gui.config.theme_debugging=輸出更多除錯訊息到CraftGuide.log
+craftguide.gui.config.textinput_clear_on_right_click=右鍵點擊時清除已輸入文字
+
+craftguide.gui.config.reload_recipes.button=重載
+craftguide.gui.config.reload_recipes=重載合成公式
+
+craftguide.gui.config.export_displayed_recipes.button=匯出
+craftguide.gui.config.export_displayed_recipes=匯出合成指南顯示的合成公式
+
+craftguide.gui.config.export_crafting_recipes.button=匯出
+craftguide.gui.config.export_crafting_recipes=匯出所有合成公式
+
+craftguide.gui.config.current_theme.button=切換主題
+craftguide.gui.config.current_theme.format_string=選擇主題: %s
