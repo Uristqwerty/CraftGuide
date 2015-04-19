@@ -80,7 +80,12 @@ public abstract class UtilImplementationCommon extends Util
 
 						if(CraftGuide.alwaysShowID)
 						{
-							text.add(EnumChatFormatting.DARK_GRAY + "ID: " + Item.itemRegistry.getNameForObject(stack.getItem()) + "; data: " + CommonUtilities.getItemDamage(stack));
+							text.add(EnumChatFormatting.DARK_GRAY +
+									"ID: " + Item.itemRegistry.getNameForObject(stack.getItem()) +
+									"; data: " + CommonUtilities.getItemDamage(stack) +
+									(stack.hasTagCompound()?
+											"; NBT: " +Integer.toHexString(stack.getTagCompound().hashCode()) : ""
+									));
 						}
 
 						first = false;

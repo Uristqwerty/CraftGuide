@@ -2,15 +2,18 @@ package uristqwerty.CraftGuide.itemtype;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.CommonUtilities;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemType implements Comparable<ItemType>
 {
-	private static final class ItemTypeKey
+	private static final class ItemTypeKey implements Comparable<ItemTypeKey>
 	{
 		public final int id, damage;
 
@@ -54,29 +57,62 @@ public class ItemType implements Comparable<ItemType>
 			return this.id == other.id &&
 					this.damage == other.damage;
 		}
+
+		@Override
+		public int compareTo(ItemTypeKey other)
+		{
+			if(this.id != other.id)
+				return this.id > other.id? 1 : -1;
+			else
+				return this.damage == other.damage? 0 :
+					this.damage > other.damage? 1 : -1;
+		}
 	}
 
-	private static Map<ItemTypeKey, ItemType> cache = new HashMap<ItemTypeKey, ItemType>();
-	private static Map<ArrayList, ItemType> arrayListCache = new HashMap<ArrayList, ItemType>();
-	private int itemID, damage;
-	private Item item;
-	private Object stack;
+	private static Map<ItemTypeKey, ItemType> simpleItemStacks = new HashMap<ItemTypeKey, ItemType>();
+	private static Map<ItemTypeKey, List<ItemType>> nbtItemStacks = new HashMap<ItemTypeKey, List<ItemType>>();
+	private static Map<String, ItemType> oreDictionaryEntries = new HashMap<String, ItemType>();
+	private static Map<ArrayList, ItemType> generalArrayLists = new IdentityHashMap<ArrayList, ItemType>();
+
+	private final ItemTypeKey key;
+	private final Item item;
+	private final Object stack;
+
+	private final int originalHashcode;
 
 	private ItemType(Item item, int itemDamage)
 	{
 		this.item = item;
-		itemID = Item.getIdFromItem(item);
-		damage = itemDamage;
-		stack = new ItemStack(item, 1, damage);
+		key = new ItemTypeKey(Item.getIdFromItem(item), itemDamage);
+		stack = new ItemStack(item, 1, itemDamage);
+		originalHashcode = 0;
+	}
+
+	private ItemType(ItemTypeKey key)
+	{
+		this.item = Item.getItemById(key.id);
+		this.key = key;
+		stack = new ItemStack(item, 1, key.damage);
+		originalHashcode = 0;
 	}
 
 	private ItemType(ArrayList<ItemStack> items)
 	{
 		ItemStack itemStack = items.get(0);
 		item = itemStack.getItem();
-		itemID = Item.getIdFromItem(item);
-		damage = CommonUtilities.getItemDamage(itemStack);
+		key = new ItemTypeKey(Item.getIdFromItem(item), CommonUtilities.getItemDamage(itemStack));
 		stack = items;
+		originalHashcode = items.hashCode();
+	}
+
+	public ItemType(ItemTypeKey key, NBTTagCompound nbt)
+	{
+		this.item = Item.getItemById(key.id);
+		this.key = key;
+		ItemStack stack = new ItemStack(item, 1, key.damage);
+		stack.setTagCompound((NBTTagCompound)nbt.copy());
+		this.stack = stack;
+		originalHashcode = nbt.hashCode();
 	}
 
 	public static ItemType getInstance(Object stack)
@@ -97,12 +133,12 @@ public class ItemType implements Comparable<ItemType>
 
 	private static ItemType getInstance(ArrayList stack)
 	{
-		ItemType type = arrayListCache.get(stack);
+		ItemType type = generalArrayLists.get(stack);
 
 		if(type == null)
 		{
 			type = new ItemType(stack);
-			arrayListCache.put(stack, type);
+			generalArrayLists.put(stack, type);
 		}
 
 		return type;
@@ -111,35 +147,84 @@ public class ItemType implements Comparable<ItemType>
 	private static ItemType getInstance(ItemStack stack)
 	{
 		ItemTypeKey key = new ItemTypeKey(stack);
-		ItemType type = cache.get(key);
+		ItemType type;
 
-		if(type == null)
+		if(!stack.hasTagCompound())
 		{
-			type = new ItemType(stack.getItem(), CommonUtilities.getItemDamage(stack));
-			cache.put(key, type);
+			type = simpleItemStacks.get(key);
+
+			if(type == null)
+			{
+				type = new ItemType(key);
+				simpleItemStacks.put(key, type);
+			}
+		}
+		else
+		{
+			List<ItemType> items = nbtItemStacks.get(key);
+
+			if(items == null)
+			{
+				items = new ArrayList<ItemType>();
+				nbtItemStacks.put(key,  items);
+			}
+
+			type = findMatchingNBT(items, stack.getTagCompound());
+
+			if(type == null)
+			{
+				type = new ItemType(key, stack.getTagCompound());
+				items.add(type);
+			}
 		}
 
 		return type;
 	}
 
+	private static ItemType findMatchingNBT(List<ItemType> items, NBTTagCompound nbt) {
+		for(ItemType type: items)
+		{
+			ItemStack stack = (ItemStack)type.stack;
+
+			if(stack.getTagCompound().equals(nbt))
+			{
+				return type;
+			}
+		}
+
+		return null;
+	}
+
 	public static boolean hasInstance(ItemStack stack)
 	{
 		ItemTypeKey key = new ItemTypeKey(stack);
-		return cache.containsKey(key);
+
+		if(!stack.hasTagCompound())
+		{
+			return simpleItemStacks.containsKey(key);
+		}
+		else
+		{
+			List<ItemType> items = nbtItemStacks.get(key);
+
+			if(items == null)
+			{
+				return false;
+			}
+
+			return findMatchingNBT(items, stack.getTagCompound()) != null;
+		}
 	}
 
 	@Override
 	public int compareTo(ItemType other)
 	{
-		if(this.itemID != other.itemID)
-		{
-			return this.itemID > other.itemID? 1 : -1;
-		}
-		else if(this.damage != other.damage)
-		{
-			return this.damage > other.damage? 1 : -1;
-		}
-		else if((this.stack instanceof ArrayList) != (other.stack instanceof ArrayList))
+		int keySort = this.key.compareTo(other.key);
+
+		if(keySort != 0)
+			return keySort;
+
+		if((this.stack instanceof ArrayList) != (other.stack instanceof ArrayList))
 		{
 			return (this.stack instanceof ArrayList)? -1 : 1;
 		}
@@ -150,31 +235,49 @@ public class ItemType implements Comparable<ItemType>
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj != null && obj instanceof ItemType)
-		{
-			ItemType type = (ItemType)obj;
+		if(obj == null || !(obj instanceof ItemType))
+			return super.equals(obj);
 
-			if(stack instanceof ItemStack && type.stack instanceof ItemStack)
-			{
-				return type.itemID == this.itemID && type.damage == this.damage;
-			}
-			else if(stack instanceof ArrayList && type.stack instanceof ArrayList)
-			{
-				return stack.equals(type.stack);
-			}
-			else
+		ItemType other = (ItemType)obj;
+
+		if(stack instanceof ItemStack && other.stack instanceof ItemStack)
+		{
+			if(!this.key.equals(other.key))
 			{
 				return false;
 			}
-		}
 
-		return super.equals(obj);
+			ItemStack thisStack = (ItemStack)this.stack;
+			ItemStack otherStack = (ItemStack)other.stack;
+
+			if(thisStack.hasTagCompound() != otherStack.hasTagCompound())
+			{
+				return false;
+			}
+
+			if(!thisStack.hasTagCompound())
+			{
+				return true;
+			}
+			else
+			{
+				return thisStack.getTagCompound().equals(otherStack.getTagCompound());
+			}
+		}
+		else if(stack instanceof ArrayList && other.stack instanceof ArrayList)
+		{
+			return stack.equals(other.stack);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return damage * 3571 + itemID;
+		return key.hashCode() ^ originalHashcode;
 	}
 
 	public Object getStack()
