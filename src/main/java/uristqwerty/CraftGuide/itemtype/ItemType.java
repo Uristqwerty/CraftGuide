@@ -221,15 +221,44 @@ public class ItemType implements Comparable<ItemType>
 	{
 		int keySort = this.key.compareTo(other.key);
 
+		// First, sort by item and metadata
 		if(keySort != 0)
 			return keySort;
 
+		// ArrayLists sort before ItemStacks
 		if((this.stack instanceof ArrayList) != (other.stack instanceof ArrayList))
 		{
 			return (this.stack instanceof ArrayList)? -1 : 1;
 		}
 
+		if(this.stack instanceof ItemStack)
+		{
+			ItemStack thisStack = (ItemStack)this.stack;
+			ItemStack otherStack = (ItemStack)other.stack;
+
+			// Stacks with NBT data sort before stacks without
+			if(thisStack.hasTagCompound() != otherStack.hasTagCompound())
+			{
+				return thisStack.hasTagCompound()? -1 : 1;
+			}
+
+			if(thisStack.hasTagCompound())
+			{
+				// Need something here, as SortedSet requires compareTo to be consistent with equals.
+				return compareInts(this.hashCode(), other.hashCode());
+			}
+		}
+		else
+		{
+			// Need something here, as SortedSet requires compareTo to be consistent with equals.
+			return compareInts(this.hashCode(), other.hashCode());
+		}
+
 		return 0;
+	}
+
+	private int compareInts(int a, int b) {
+		return Integer.signum(a - b);
 	}
 
 	@Override
