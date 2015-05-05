@@ -19,6 +19,7 @@ craftguide.gui.config.enable_keybind=启用快捷键
 craftguide.gui.config.enable_item_recipe=启用G键合成表合成公式 (重启后有效)
 craftguide.gui.config.hide_mundane_potions=从失败的药水酿造组合隐藏平凡的药水 (需要重载G键合成表)
 craftguide.gui.config.theme_debugging=输出更多信息到Log文件
+craftguide.gui.config.textinput_clear_on_right_click=右键清除所有输入的内容
 
 craftguide.gui.config.reload_recipes.button=重载
 craftguide.gui.config.reload_recipes=重载合成公式
