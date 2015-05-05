@@ -1,0 +1,25 @@
+#pt_BR
+item.craftguide_item.name=Guia de Elaboração
+craftguide.gui.filter_type.input=Entrada
+craftguide.gui.filter_type.output=Saída
+craftguide.gui.filter_type.machine=Máquina
+craftguide.gui.tab_tooltip.recipe_list=Lista de receita
+craftguide.gui.tab_tooltip.type_visibility_list=Mostrar/Ocultar receitas por tipo de elaboração
+craftguide.gui.tab_tooltip.options=Opções
+craftguide.gui.filter=Filtro
+craftguide.gui.search=Busca
+craftguide.gui.config.pause=Pausar jogo quanto aberto (com apenas um jogador)
+craftguide.gui.config.show_ids=Mostrar o ID do item e os valores de dano
+craftguide.gui.config.enable_keybind=Habilitar teclas de atalho
+craftguide.gui.config.enable_item_recipe=Ativar receita de itens do CraftGuide (necessita Atualizar)
+craftguide.gui.config.hide_mundane_potions=Esconder poções mundanas de falha formando combinações (necessita Atualizar receitas)
+craftguide.gui.config.theme_debugging=Saída do tema excessiva informações para depuração no 'CraftGuide.log'
+craftguide.gui.config.textinput_clear_on_right_click=Limpar entrada de texto ao clicar com o botão direito
+craftguide.gui.config.reload_recipes.button=Atualizar
+craftguide.gui.config.reload_recipes=Atualizar receitas
+craftguide.gui.config.export_displayed_recipes.button=Exportar
+craftguide.gui.config.export_displayed_recipes=Exportar receitas exibidas pelo CraftGuide
+craftguide.gui.config.export_crafting_recipes.button=Exportar
+craftguide.gui.config.export_crafting_recipes=Exportar todas as receitas da Bancada de Trabalho
+craftguide.gui.config.current_theme.button=Próximo tema
+craftguide.gui.config.current_theme.format_string=Tema atual: %s
