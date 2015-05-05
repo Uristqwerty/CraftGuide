@@ -15,6 +15,7 @@ public class UtilImplementationClient extends UtilImplementationCommon
 	private NamedTextureObject itemStackOreDict = new NamedTextureObject(DynamicTexture.instance("stack-oredict"));
 	private NamedTextureObject itemStackOreDictSingle = new NamedTextureObject(DynamicTexture.instance("stack-oredict-single"));
 	private NamedTextureObject itemStackBackground = new NamedTextureObject(DynamicTexture.instance("stack-background"));
+	private NamedTextureObject error = new NamedTextureObject(DynamicTexture.instance("item_error"));
 
 	private Map<String, NamedTextureObject> textureLookup = new HashMap<String, NamedTextureObject>();
 
@@ -40,6 +41,10 @@ public class UtilImplementationClient extends UtilImplementationCommon
 		else if("TextFilter".equalsIgnoreCase(identifier))
 		{
 			return textFilter;
+		}
+		else if("Error".equalsIgnoreCase(identifier))
+		{
+			return error;
 		}
 
 		if(!textureLookup.containsKey(identifier))

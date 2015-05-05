@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
 	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
+	private NamedTexture errorIcon = Util.instance.getTexture("Error");
 
 	public FilterSelectGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, Texture texture,
 		RecipeCache recipeCache, GuiButton backButton, GuiTabbedDisplay display)
@@ -84,7 +86,15 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			if(cell < itemResults.size())
 			{
 				overItem = true;
-				itemName.setText(CommonUtilities.getExtendedItemStackText(itemResults.get(cell)));
+				Object stack = itemResults.get(cell);
+				if(stack instanceof String)
+				{
+					itemName.setText(Arrays.asList(((String)stack).split("\n")));
+				}
+				else
+				{
+					itemName.setText(CommonUtilities.getExtendedItemStackText(stack));
+				}
 			}
 			else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
 			{
@@ -102,16 +112,23 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			gridBackground.render(renderer, xOffset, yOffset);
 			ItemStack stack = displayItem(cell);
 
-			renderer.drawItemStack(stack, xOffset + 1, yOffset + 1);
-
-			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
+			if(stack != null)
 			{
-				renderer.renderRect(xOffset, yOffset, 18, 18, overlayAny);
+				renderer.drawItemStack(stack, xOffset + 1, yOffset + 1);
+
+				if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
+				{
+					renderer.renderRect(xOffset, yOffset, 18, 18, overlayAny);
+				}
+
+				if(itemResults.get(cell) instanceof ArrayList)
+				{
+					renderer.renderRect(xOffset, yOffset, 18, 18, overlayForge);
+				}
 			}
-
-			if(itemResults.get(cell) instanceof ArrayList)
+			else if(itemResults.get(cell) instanceof String)
 			{
-				renderer.renderRect(xOffset, yOffset, 18, 18, overlayForge);
+				renderer.renderRect(xOffset, yOffset, 18, 18, errorIcon);
 			}
 		}
 		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
@@ -178,6 +195,11 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			for(Object item: items)
 			{
 				Object stack = ((ItemType)item).getStack();
+
+				if(stack instanceof String)
+				{
+					continue;
+				}
 
 				if(CommonUtilities.searchExtendedItemStackText(stack, search))
 				{

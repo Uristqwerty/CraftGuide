@@ -13,6 +13,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemType implements Comparable<ItemType>
 {
+	private static final ItemTypeKey errKey = new ItemTypeKey(Integer.MAX_VALUE, Integer.MIN_VALUE);
+	private static final ItemType errType_nullItem = new ItemType(errKey, "Error\nOne or more recipe contains an ItemStack with a null item.");
+	private static final ItemType errType_unknownType = new ItemType(errKey, "Error\nItemType requested for unknown type of item.");
+
 	private static final class ItemTypeKey implements Comparable<ItemTypeKey>
 	{
 		public final int id, damage;
@@ -92,17 +96,17 @@ public class ItemType implements Comparable<ItemType>
 	{
 		this.item = Item.getItemById(key.id);
 		this.key = key;
-		stack = new ItemStack(item, 1, key.damage);
-		originalHashcode = 0;
+		this.stack = new ItemStack(item, 1, key.damage);
+		this.originalHashcode = 0;
 	}
 
 	private ItemType(ArrayList<ItemStack> items)
 	{
 		ItemStack itemStack = items.get(0);
-		item = itemStack.getItem();
-		key = new ItemTypeKey(Item.getIdFromItem(item), CommonUtilities.getItemDamage(itemStack));
-		stack = items;
-		originalHashcode = items.hashCode();
+		this.item = itemStack.getItem();
+		this.key = new ItemTypeKey(Item.getIdFromItem(item), CommonUtilities.getItemDamage(itemStack));
+		this.stack = items;
+		this.originalHashcode = items.hashCode();
 	}
 
 	public ItemType(ItemTypeKey key, NBTTagCompound nbt)
@@ -112,7 +116,14 @@ public class ItemType implements Comparable<ItemType>
 		ItemStack stack = new ItemStack(item, 1, key.damage);
 		stack.setTagCompound((NBTTagCompound)nbt.copy());
 		this.stack = stack;
-		originalHashcode = nbt.hashCode();
+		this.originalHashcode = nbt.hashCode();
+	}
+
+	public ItemType(ItemTypeKey key, String msg) {
+		this.item = null;
+		this.key = key;
+		this.stack = msg;
+		this.originalHashcode = msg.hashCode();
 	}
 
 	public static ItemType getInstance(Object stack)
@@ -127,7 +138,7 @@ public class ItemType implements Comparable<ItemType>
 		}
 		else
 		{
-			return null;
+			return errType_unknownType;
 		}
 	}
 
@@ -146,6 +157,9 @@ public class ItemType implements Comparable<ItemType>
 
 	private static ItemType getInstance(ItemStack stack)
 	{
+		if(stack.getItem() == null)
+			return errType_nullItem;
+
 		ItemTypeKey key = new ItemTypeKey(stack);
 		ItemType type;
 
@@ -231,6 +245,12 @@ public class ItemType implements Comparable<ItemType>
 			return (this.stack instanceof ArrayList)? -1 : 1;
 		}
 
+		// Sort error strings last
+		if((this.stack instanceof String) != (other.stack instanceof String))
+		{
+			return (other.stack instanceof ArrayList)? -1 : 1;
+		}
+
 		if(this.stack instanceof ItemStack)
 		{
 			ItemStack thisStack = (ItemStack)this.stack;
@@ -247,6 +267,13 @@ public class ItemType implements Comparable<ItemType>
 				// Need something here, as SortedSet requires compareTo to be consistent with equals.
 				return compareInts(this.hashCode(), other.hashCode());
 			}
+		}
+		else if(this.stack instanceof String)
+		{
+			String thisStack = (String)this.stack;
+			String otherStack = (String)other.stack;
+
+			return thisStack.compareTo(otherStack);
 		}
 		else
 		{
@@ -294,6 +321,10 @@ public class ItemType implements Comparable<ItemType>
 			}
 		}
 		else if(stack instanceof ArrayList && other.stack instanceof ArrayList)
+		{
+			return stack.equals(other.stack);
+		}
+		else if(stack instanceof String && other.stack instanceof String)
 		{
 			return stack.equals(other.stack);
 		}

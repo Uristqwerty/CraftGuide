@@ -34,42 +34,49 @@ public class CraftGuideClient_FML extends CraftGuideClient
 	@Override
 	public void checkKeybind()
 	{
-		if(key != null && CraftGuide.enableKeybind && Keyboard.isKeyDown(key.getKeyCode()))
+		try
 		{
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiScreen screen = mc.currentScreen;
+			if(key != null && CraftGuide.enableKeybind && Keyboard.isKeyDown(key.getKeyCode()))
+			{
+				Minecraft mc = Minecraft.getMinecraft();
+				GuiScreen screen = mc.currentScreen;
 
-			if(screen == null)
-			{
-				CraftGuide.side.openGUI(mc.thePlayer);
+				if(screen == null)
+				{
+					CraftGuide.side.openGUI(mc.thePlayer);
+				}
+				else if(screen instanceof GuiContainer)
+				{
+					try
+					{
+						int x = Mouse.getX() * screen.width / mc.displayWidth;
+						int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
+						int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_147003_i", "i", "guiLeft");
+						int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_147009_r", "r", "guiTop");
+						openRecipe((GuiContainer)screen, x - left, y - top);
+					}
+					catch(IllegalArgumentException e)
+					{
+						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+					}
+					catch(SecurityException e)
+					{
+						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+					}
+					catch(NoSuchFieldException e)
+					{
+						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+					}
+					catch(IllegalAccessException e)
+					{
+						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
+					}
+				}
 			}
-			else if(screen instanceof GuiContainer)
-			{
-				try
-				{
-					int x = Mouse.getX() * screen.width / mc.displayWidth;
-					int y = screen.height - (Mouse.getY() * screen.height / mc.displayHeight) - 1;
-					int left = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_147003_i", "i", "guiLeft");
-					int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_147009_r", "r", "guiTop");
-					openRecipe((GuiContainer)screen, x - left, y - top);
-				}
-				catch(IllegalArgumentException e)
-				{
-					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-				}
-				catch(SecurityException e)
-				{
-					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-				}
-				catch(NoSuchFieldException e)
-				{
-					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-				}
-				catch(IllegalAccessException e)
-				{
-					CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-				}
-			}
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			CraftGuideLog.log(e, "Exception while checking keybind.", true);
 		}
 	}
 
