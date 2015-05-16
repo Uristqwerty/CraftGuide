@@ -111,11 +111,11 @@ build.dependsOn deobfJar, apiJar, sourcesJar
 curse {
     projectId = '75557'
     apiKey = project.curseForgeApiKey
-    releaseType = 'alpha'
+    releaseType = 'beta'
 
     addGameVersion '1.7.10'
     additionalArtifact deobfJar, apiJar, sourcesJar
-    changelog 'Exploring forgegradle uploading to curseforge'
+    changelog 'More translations (thanks to everyone who has contributed!); A variety of long-needed bugfixes'
 }
 
 curse.dependsOn build

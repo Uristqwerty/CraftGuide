@@ -191,6 +191,17 @@ public class ConfigList extends GuiScrollableContent
 					}
 				});
 
+		addToggle("craftguide.gui.config.ae2_workaround", toggleTemplate, CraftGuide.ae2Workaround,
+				new ToggleConfig()
+				{
+					@Override
+					public void onToggle(boolean newState)
+					{
+						CraftGuide.ae2Workaround = newState;
+						CraftGuide.saveConfig();
+					}
+				});
+
 		addButton("craftguide.gui.config.reload_recipes", "craftguide.gui.config.reload_recipes.button", buttonTemplate,
 				new IButtonListener()
 				{

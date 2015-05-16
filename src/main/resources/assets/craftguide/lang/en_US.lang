@@ -18,6 +18,7 @@ craftguide.gui.config.enable_item_recipe=Enable CraftGuide item recipe (requires
 craftguide.gui.config.hide_mundane_potions=Hide mundane potions from failed brewing combinations (requires recipe reload)
 craftguide.gui.config.theme_debugging=Output excessive theme debugging information to CraftGuide.log
 craftguide.gui.config.textinput_clear_on_right_click=Clear text input on right click
+craftguide.gui.config.ae2_workaround=Workaround for slow recipe reload with AE2
 
 craftguide.gui.config.reload_recipes.button=Reload
 craftguide.gui.config.reload_recipes=Reload recipes

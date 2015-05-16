@@ -49,6 +49,7 @@ public class CraftGuide
 
 	public static boolean betterWithRenewablesDetected = false;
 	public static boolean needsRecipeRefresh = false;
+	public static boolean ae2Workaround = true;
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
@@ -188,6 +189,7 @@ public class CraftGuide
 		configComments.put("alwaysShowID", "If true, item tooltips have an additional line showing their item ID and damage value. Added before the vanilla F3+H, it has a different format, and puts the item ID on a separate line from the item name. If this setting is false, CraftGuide will only show item IDs in this way in the rare case of an item error");
 		configComments.put("defaultKeybind", "If Minecraft isn't properly loading changed keybinds, or you are putting together a config/modpack and want a different default value, you can change the default CraftGuide keybind here.");
 		configComments.put("rightClickClearText", "Right-clicking a text input clears it, instead of setting the cursor position.");
+		configComments.put("ae2Workaround", "Workaround for slow startup time and exception spam with some AE2 versions.");
 	}
 
 	private void setConfigDefaults()
@@ -206,6 +208,7 @@ public class CraftGuide
 		config.setProperty("logThemeDebugInfo", Boolean.toString(false));
 		config.setProperty("rightClickClearText", Boolean.toString(true));
 		config.setProperty("defaultKeybind", Integer.toString(Keyboard.KEY_G));
+		config.setProperty("ae2Workaround", Boolean.toString(true));
 	}
 
 	/**
@@ -290,6 +293,7 @@ public class CraftGuide
 		ThemeManager.debugOutput = Boolean.valueOf(config.getProperty("logThemeDebugInfo"));
 		enableItemRecipe = Boolean.valueOf(config.getProperty("enableItemRecipe"));
 		rightClickClearText = Boolean.valueOf(config.getProperty("rightClickClearText"));
+		ae2Workaround = Boolean.valueOf(config.getProperty("ae2Workaround"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{
@@ -389,6 +393,7 @@ public class CraftGuide
 		config.setProperty("hideMundanePotionRecipes", Boolean.toString(hideMundanePotionRecipes));
 		config.setProperty("logThemeDebugInfo", Boolean.toString(ThemeManager.debugOutput));
 		config.setProperty("rightClickClearText", Boolean.toString(rightClickClearText));
+		config.setProperty("ae2Workaround", Boolean.toString(ae2Workaround));
 
 		try
 		{

@@ -18,6 +18,7 @@ import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.CraftGuideRecipeExtra1;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.RecipeFilter;
+import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
@@ -246,6 +247,12 @@ public class RecipeCache
 		{
 			if(object instanceof RecipeProvider)
 			{
+				if(CraftGuide.ae2Workaround && object instanceof RecipeGenerator)
+				{
+					CraftGuideLog.log("    *NOT* Generating recipes from " + object.getClass().getName());
+					continue;
+				}
+
 				CraftGuideLog.log("    Generating recipes from " + object.getClass().getName());
 				try
 				{
