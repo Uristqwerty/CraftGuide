@@ -19,7 +19,7 @@ apply plugin: 'forge'
 apply plugin: 'liteloader'
 apply plugin: 'curseforge'
 
-version = "1.6.8.2-pr2"
+version = "1.6.8.2"
 group = "uristqwerty" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CraftGuide"
 
@@ -111,11 +111,24 @@ build.dependsOn deobfJar, apiJar, sourcesJar
 curse {
     projectId = '75557'
     apiKey = project.curseForgeApiKey
-    releaseType = 'beta'
+    releaseType = 'release'
 
     addGameVersion '1.7.10'
     additionalArtifact deobfJar, apiJar, sourcesJar
-    changelog 'More translations (thanks to everyone who has contributed!); A variety of long-needed bugfixes'
+
+    changelog '''\
+More translations (thanks to everyone who has contributed!)
+A variety of long-needed bugfixes:
+  - fixed NPE if keybind disabled
+  - fixed tooltips for multi-item filters
+  - don't crash the game when encountering an ItemStack with a null item
+Features added since 1.6.8.1:
+  - in-game theme switch button
+  - right-clicking item search text input clears it
+  - item list finally handles NBT properly
+  - workaround for opening slowly with some AE2 versions
+'''
+
 }
 
 curse.dependsOn build
