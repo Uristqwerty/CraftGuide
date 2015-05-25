@@ -2,6 +2,7 @@ package uristqwerty.CraftGuide;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -235,9 +236,16 @@ public class CommonUtilities
 			{
 				String info = infoSource.getInfo(stack);
 
-				if(info != null)
+				if(info != null && !info.isEmpty())
 				{
-					text.add(info);
+					if(info.indexOf('\n') == -1)
+					{
+						text.add(info);
+					}
+					else
+					{
+						text.addAll(Arrays.asList(info.split("\n")));
+					}
 				}
 			}
 			catch(LinkageError e)

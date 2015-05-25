@@ -53,12 +53,24 @@ public abstract class Util
 
 	/**
 	 * Gets a texture usable with {@link Renderer#renderRect}
-	 * from a String identifier. At the moment, it only accepts the
-	 * hardcoded values "ItemStack-Any", "ItemStack-Background", and
-	 * "ItemStack-OreDict", but the eventual intention is to load the
-	 * definitions from external text files, to allow for a far more
-	 * advanced ability to re-skin the entire GUI than is normally
-	 * possible from just swapping a texture file.
+	 * from a String identifier.
+	 * If the texture does not exist in the current theme, nothing will be drawn.
+	 * <br><br>
+	 * In addition to anything defined by the
+	 * currently-active theme, converts the following aliases to the equivalent
+	 * name used in theme files for backwards compatibility:
+	 *
+	 * <li>"ItemStack-Any": ItemStack overlay indicating that any metadata value
+	 * matches</li>
+	 * <li>"ItemStack-OreDict": ItemStack overlay indicating that any one of a
+	 * list of ItemStacks are acceptable.</li>
+	 * <li>"ItemStack-OreDict-Single": Used in place of ItemStack-OreDict when
+	 * the list of ItemStacks is exactly one element long.</li>
+	 * <li>"ItemStack-Background": Image used as background for  GUI slots</li>
+	 * <li>"TextFilter": Icon used in place of an ItemStack when searching for
+	 * a String</li>
+	 * <li>"Error": Displayed in place of an ItemStack when an error prevents
+	 * that stack from being rendered.</li>
 	 *
 	 * @param identifier
 	 * @return

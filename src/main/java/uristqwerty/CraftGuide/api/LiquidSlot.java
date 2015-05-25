@@ -110,7 +110,7 @@ public class LiquidSlot implements Slot
 		{
 			tooltip = new ArrayList<String>(1);
 			FluidStack stack = (FluidStack)data[dataIndex];
-			tooltip.add(stack.getFluid().getLocalizedName(stack) + " (" + stack.amount + " milliBuckets)");
+			tooltip.add(stack.getFluid().getLocalizedName() + " (" + stack.amount + " milliBuckets)");
 		}
 
 		return tooltip;
