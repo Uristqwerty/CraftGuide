@@ -245,7 +245,9 @@ public class CraftGuide
 		{
 			try
 			{
-				config.load(new FileInputStream(configFile));
+				FileInputStream inStream = new FileInputStream(configFile);
+				config.load(inStream);
+				inStream.close();
 			}
 			catch(FileNotFoundException e)
 			{
@@ -311,7 +313,9 @@ public class CraftGuide
 		{
 			try
 			{
-				saveConfig(new FileOutputStream(newConfigFile));
+				FileOutputStream outputStream = new FileOutputStream(newConfigFile);
+				saveConfig(outputStream);
+				outputStream.close();
 			}
 			catch(IOException e)
 			{
@@ -397,7 +401,9 @@ public class CraftGuide
 
 		try
 		{
-			saveConfig(new FileOutputStream(new File(configDirectory(), "CraftGuide.cfg")));
+			FileOutputStream outputStream = new FileOutputStream(new File(configDirectory(), "CraftGuide.cfg"));
+			saveConfig(outputStream);
+			outputStream.close();
 		}
 		catch(FileNotFoundException e)
 		{

@@ -114,6 +114,7 @@ public class Image implements Texture
 
 			InputStream input = new FileInputStream(new File(directory, filename));
 			BufferedImage image = ImageIO.read(input);
+			input.close();
 
 			while(width < image.getWidth())
 			{

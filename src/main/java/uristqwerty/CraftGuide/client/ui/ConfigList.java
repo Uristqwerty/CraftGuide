@@ -225,7 +225,9 @@ public class ConfigList extends GuiScrollableContent
 						{
 							try
 							{
-								new JsonRecipeDump().exportDisplayedRecipes(new FileOutputStream(new File(Minecraft.getMinecraft().mcDataDir, "CraftGuide_DisplayedRecipes.json")));
+								FileOutputStream output = new FileOutputStream(new File(Minecraft.getMinecraft().mcDataDir, "CraftGuide_DisplayedRecipes.json"));
+								new JsonRecipeDump().exportDisplayedRecipes(output);
+								output.close();
 							}
 							catch(IOException e)
 							{
@@ -245,7 +247,9 @@ public class ConfigList extends GuiScrollableContent
 						{
 							try
 							{
-								new JsonRecipeDump().dumpCraftingRecipes(new FileOutputStream(new File(Minecraft.getMinecraft().mcDataDir, "CraftGuide_CraftingRecipes.json")));
+								FileOutputStream output = new FileOutputStream(new File(Minecraft.getMinecraft().mcDataDir, "CraftGuide_CraftingRecipes.json"));
+								new JsonRecipeDump().dumpCraftingRecipes(output);
+								output.close();
 							}
 							catch(IOException e)
 							{

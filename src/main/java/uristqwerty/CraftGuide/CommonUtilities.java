@@ -81,7 +81,7 @@ public class CommonUtilities
 
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
-			ArrayList<ItemStack> subItems = new ArrayList();
+			ArrayList<ItemStack> subItems = new ArrayList<ItemStack>();
 			item.getItem().getSubItems(item.getItem(), null, subItems);
 
 			for(ItemStack stack: subItems)
@@ -176,13 +176,13 @@ public class CommonUtilities
 
 	private static List<String> cachedExtendedItemStackText(ItemStack stack)
 	{
-		Pair<Item, Integer> key = new Pair(stack.getItem(), stack.getItemDamage());
+		Pair<Item, Integer> key = new Pair<Item, Integer>(stack.getItem(), stack.getItemDamage());
 
 		List<String> tooltip = textCache.get(key);
 
 		if(tooltip == null)
 		{
-			tooltip = new ArrayList(genExtendedItemStackText(stack));
+			tooltip = new ArrayList<String>(genExtendedItemStackText(stack));
 			textCache.put(key, tooltip);
 		}
 
@@ -211,7 +211,7 @@ public class CommonUtilities
 			if(stack.hasTagCompound())
 				return genExtendedItemStackText(stack);
 			else
-				return new ArrayList(cachedExtendedItemStackText(stack));
+				return new ArrayList<String>(cachedExtendedItemStackText(stack));
 		}
 		else
 		{

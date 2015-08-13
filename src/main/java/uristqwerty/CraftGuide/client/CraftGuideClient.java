@@ -179,6 +179,8 @@ public abstract class CraftGuideClient implements CraftGuideSide
 						output.close();
 					}
 				}
+
+				resources.close();
 			}
 		}
 		catch(IOException e)

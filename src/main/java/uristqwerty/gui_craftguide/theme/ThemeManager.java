@@ -345,7 +345,9 @@ public class ThemeManager
 				{
 					try
 					{
-						Theme theme = xmlReader.read(new FileInputStream(file), dir);
+						FileInputStream source = new FileInputStream(file);
+						Theme theme = xmlReader.read(source, dir);
+						source.close();
 
 						if(theme != null)
 						{
@@ -355,6 +357,11 @@ public class ThemeManager
 						}
 					}
 					catch(FileNotFoundException e)
+					{
+						e.printStackTrace();
+						CraftGuideLog.log(e);
+					}
+					catch (IOException e)
 					{
 						e.printStackTrace();
 						CraftGuideLog.log(e);
