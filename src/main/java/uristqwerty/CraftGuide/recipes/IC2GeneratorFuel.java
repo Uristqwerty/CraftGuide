@@ -52,8 +52,19 @@ public class IC2GeneratorFuel implements StackInfoSource
 		{
 			try
 			{
-				Object config = Class.forName("ic2.core.IC2").getField("config").get(null);
-				return (Float)Class.forName("ic2.core.util.Config").getMethod("getFloat", String.class).invoke(config, "balance/energy/generator/generator");
+				Class configClass = Class.forName("ic2.core.util.Config");
+
+				try
+				{
+					Class configUtilClass = Class.forName("ic2.core.util.ConfigUtil");
+					Object config = Class.forName("ic2.core.init.MainConfig").getMethod("get").invoke(null);
+					return (Float)configUtilClass.getMethod("getFloat", configClass, String.class).invoke(null, config, "balance/energy/generator/generator");
+				}
+				catch(ClassNotFoundException _)
+				{
+					Object config = Class.forName("ic2.core.IC2").getField("config").get(null);
+					return 10*(Float)configClass.getMethod("getFloat", String.class).invoke(config, "balance/energy/generator/generator");
+				}
 			}
 			catch(NoSuchFieldException e1)
 			{

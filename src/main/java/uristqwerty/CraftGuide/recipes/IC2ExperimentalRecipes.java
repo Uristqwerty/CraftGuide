@@ -66,6 +66,9 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			addMachineRecipes(generator, IC2Items.getItem("extractor"), getExtractor(), Recipes.extractor);
 			addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
 			addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
+			addMachineRecipes(generator, IC2Items.getItem("blockcutter"), Recipes.blockcutter);
+			addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurance);
+			addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
@@ -178,6 +181,9 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private void addMachineRecipes(RecipeGenerator generator, ItemStack type, Object machine, IMachineRecipeManager recipeManager, int eut, int totalEU)
 	{
+		if(recipeManager == null || recipeManager.getRecipes() == null)
+			return;
+
 		int maxOutput = 1;
 
 		for(RecipeOutput output: recipeManager.getRecipes().values())

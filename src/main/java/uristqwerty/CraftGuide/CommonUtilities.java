@@ -262,11 +262,16 @@ public class CommonUtilities
 
 	public static boolean searchExtendedItemStackText(Object item, String text)
 	{
-		for(String line: getExtendedItemStackText(item))
+		List<String> lines = getExtendedItemStackText(item);
+
+		if(lines != null)
 		{
-			if(line != null && line.toLowerCase().contains(text))
+			for(String line: lines)
 			{
-				return true;
+				if(line != null && line.toLowerCase().contains(text))
+				{
+					return true;
+				}
 			}
 		}
 

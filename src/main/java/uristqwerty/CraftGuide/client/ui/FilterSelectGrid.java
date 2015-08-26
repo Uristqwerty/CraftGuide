@@ -146,9 +146,9 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		{
 			return (ItemStack)item;
 		}
-		else if(item instanceof ArrayList && ((ArrayList)item).size() > 0)
+		else if(item instanceof ArrayList && ((ArrayList<ItemStack>)item).size() > 0)
 		{
-			return (ItemStack)((ArrayList)item).get(0);
+			return ((ArrayList<ItemStack>)item).get(0);
 		}
 		else
 		{
