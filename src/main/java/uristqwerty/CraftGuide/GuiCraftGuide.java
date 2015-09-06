@@ -14,6 +14,7 @@ import uristqwerty.CraftGuide.client.FilterDisplay;
 import uristqwerty.CraftGuide.client.ui.ButtonTemplate;
 import uristqwerty.CraftGuide.client.ui.CraftTypeDisplay;
 import uristqwerty.CraftGuide.client.ui.CraftingDisplay;
+import uristqwerty.CraftGuide.client.ui.FilterCombineModeDisplay;
 import uristqwerty.CraftGuide.client.ui.FilterSelectGrid;
 import uristqwerty.CraftGuide.client.ui.GuiButton;
 import uristqwerty.CraftGuide.client.ui.GuiButton.ButtonState;
@@ -214,6 +215,10 @@ public class GuiCraftGuide extends Gui
 		filter = new FilterDisplay(41, 147);
 		filter.anchor(AnchorPoint.BOTTOM_LEFT);
 		recipeTab.addElement(filter);
+
+		recipeTab.addElement(
+				new FilterCombineModeDisplay(59, 147)
+				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		GuiElement recipeArea = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)
 			.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT)

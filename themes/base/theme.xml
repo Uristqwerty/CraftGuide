@@ -291,4 +291,12 @@
 		<source sourceid="base_image"></source>
 		<rect x="238" y="200" width="18" height="18"></rect>
 	</texture>
+	<texture type="clip" id="filter-add">
+		<source sourceid="base_image"></source>
+		<rect x="238" y="105" width="8" height="18"></rect>
+	</texture>
+	<texture type="clip" id="filter-remove">
+		<source sourceid="base_image"></source>
+		<rect x="247" y="105" width="8" height="18"></rect>
+	</texture>
 </theme>
