@@ -217,7 +217,7 @@ public class GuiCraftGuide extends Gui
 		recipeTab.addElement(filter);
 
 		recipeTab.addElement(
-				new FilterCombineModeDisplay(59, 147)
+				new FilterCombineModeDisplay(59, 147, filter)
 				.anchor(AnchorPoint.BOTTOM_LEFT));
 
 		GuiElement recipeArea = new GuiElement(0, 0, initialWindowWidth, initialWindowHeight)

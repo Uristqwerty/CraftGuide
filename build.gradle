@@ -115,16 +115,15 @@ curse {
     additionalArtifact deobfJar, apiJar, sourcesJar
 
     changelog '''\
-More translations (thanks to everyone who has contributed!)
-A variety of long-needed bugfixes:
-  - fixed NPE if keybind disabled
-  - fixed tooltips for multi-item filters
-  - don't crash the game when encountering an ItemStack with a null item
-Features added since 1.6.8.1:
-  - in-game theme switch button
-  - right-clicking item search text input clears it
-  - item list finally handles NBT properly
-  - workaround for opening slowly with some AE2 versions
+API changes
+  - Added interface allowing item filters to be combined
+
+Additions:
+  - If shift or control is held when clicking an item, instead of outright setting the current filter, will try adding to or removing from it. Shift adds, control removes.
+
+Other changes:
+  - Updated tooltip EU display to work with more recent IC2 versions
+  - A few bugfixes
 '''
 
 }
