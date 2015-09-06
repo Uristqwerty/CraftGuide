@@ -32,13 +32,32 @@ public class StringItemFilter implements ItemFilter
 		}
 		else if(item instanceof List)
 		{
-			for(Object o: (List)item)
+			List<?> list = (List<?>)item;
+
+			for(Object o: list)
 			{
 				if(matches(o))
 				{
 					return true;
 				}
 			}
+
+			if(list.size() < 1)
+			{
+				List<String> lines = ForgeExtensions.emptyOreDictEntryText(list);
+
+				if(lines != null)
+				{
+					for(String line: lines)
+					{
+						if(line != null && line.toLowerCase().contains(comparison))
+						{
+							return true;
+						}
+					}
+				}
+			}
+
 
 			return false;
 		}

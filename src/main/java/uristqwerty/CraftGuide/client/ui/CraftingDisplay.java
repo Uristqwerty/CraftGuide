@@ -2,7 +2,10 @@ package uristqwerty.CraftGuide.client.ui;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import uristqwerty.CraftGuide.RecipeCache;
+import uristqwerty.CraftGuide.api.CombinableItemFilter;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
@@ -148,9 +151,27 @@ public class CraftingDisplay extends GuiVariableRowHeightGrid implements IRecipe
 
 		if(stack != null)
 		{
-			setFilter(stack);
+			boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+			boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+			ItemFilter oldFilter = recipeCache.getFilter();
+
+			if((shift || ctrl) && oldFilter instanceof CombinableItemFilter)
+			{
+				CombinableItemFilter f = (CombinableItemFilter)oldFilter;
+				ItemFilter result = shift? f.addItemFilter(stack) : f.subtractItemFilter(stack);
+
+				if(result != null)
+				{
+					setFilter(result);
+				}
+			}
+			else
+			{
+				setFilter(stack);
+			}
 		}
 	}
+
 
 	@Override
 	public void onReset(RecipeCache cache)

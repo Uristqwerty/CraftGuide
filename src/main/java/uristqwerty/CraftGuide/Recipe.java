@@ -39,7 +39,7 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack display = displayStack(recipe[i]);
-			if(this.recipe[i] != null && slots[i] instanceof ItemSlot && !((ItemSlot)slots[i]).drawQuantity && display != null && display.stackSize > 1)
+			if(recipe[i] instanceof ItemStack && slots[i] instanceof ItemSlot && !((ItemSlot)slots[i]).drawQuantity && display != null && display.stackSize > 1)
 			{
 				ItemStack old = display;
 
@@ -60,13 +60,13 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 		}
 		else if(item instanceof ArrayList)
 		{
-			if(((ArrayList)item).size() < 1)
+			if(((ArrayList<?>)item).size() < 1)
 			{
 				return null;
 			}
 			else
 			{
-				return displayStack(((ArrayList)item).get(0));
+				return displayStack(((ArrayList<?>)item).get(0));
 			}
 		}
 		else

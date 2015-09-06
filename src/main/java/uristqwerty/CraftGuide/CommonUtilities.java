@@ -17,7 +17,7 @@ import uristqwerty.CraftGuide.api.Util;
 
 public class CommonUtilities
 {
-	public static Field getPrivateField(Class fromClass, String... names) throws NoSuchFieldException
+	public static Field getPrivateField(Class<?> fromClass, String... names) throws NoSuchFieldException
 	{
 		Field field = null;
 
@@ -101,7 +101,7 @@ public class CommonUtilities
 	{
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
-			ArrayList temp = new ArrayList();
+			ArrayList<ItemStack> temp = new ArrayList<ItemStack>();
 			item.getItem().getSubItems(item.getItem(), null, temp);
 
 			return temp.size();
@@ -121,7 +121,7 @@ public class CommonUtilities
 		else if(item instanceof List)
 		{
 			int count = 0;
-			for(Object o: (List)item)
+			for(Object o: (List<?>)item)
 			{
 				count += countItemNames(o);
 			}
@@ -160,7 +160,7 @@ public class CommonUtilities
 			if(!(obj instanceof Pair))
 				return false;
 
-			Pair other = (Pair)obj;
+			Pair<T1, T2> other = (Pair<T1, T2>)obj;
 
 			return (first == null? other.first == null : first.equals(other.first)) &&
 					(second == null? other.second == null : second.equals(other.second));
@@ -193,7 +193,7 @@ public class CommonUtilities
 	{
 		List<String> text = getPossiblyCachedExtendedItemText(item);
 
-		if(item instanceof List && ((List)item).size() > 1)
+		if(item instanceof List && ((List<?>)item).size() > 1)
 		{
 			int count = CommonUtilities.countItemNames(item);
 			text.add("\u00a77" + (count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
@@ -204,9 +204,9 @@ public class CommonUtilities
 
 	private static List<String> getPossiblyCachedExtendedItemText(Object item)
 	{
-		if(item instanceof ItemStack || (item instanceof List && ((List)item).get(0) instanceof ItemStack))
+		if(item instanceof ItemStack || (item instanceof List && ((List<?>)item).size() > 0 && ((List<?>)item).get(0) instanceof ItemStack))
 		{
-			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List)item).get(0);
+			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List<?>)item).get(0);
 
 			if(stack.hasTagCompound())
 				return genExtendedItemStackText(stack);
@@ -282,7 +282,16 @@ public class CommonUtilities
 	{
 		if(item instanceof List)
 		{
-			return getItemStackText(((List)item).get(0));
+			List<?> list = ((List<?>)item);
+
+			if(list.size() > 0)
+			{
+				return getItemStackText(list.get(0));
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else if(item instanceof ItemStack)
 		{
@@ -348,6 +357,11 @@ public class CommonUtilities
 				getItemDamage(first) == CraftGuide.DAMAGE_WILDCARD ||
 				getItemDamage(second) == CraftGuide.DAMAGE_WILDCARD ||
 				getItemDamage(first) == getItemDamage(second)
+			)
+			&& (
+				!first.hasTagCompound() ||
+				!second.hasTagCompound() ||
+				ItemStack.areItemStackTagsEqual(first, second)
 			);
 	}
 }

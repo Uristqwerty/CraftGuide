@@ -11,6 +11,8 @@ import org.lwjgl.input.Keyboard;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.RecipeCache;
+import uristqwerty.CraftGuide.api.CombinableItemFilter;
+import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.Rendering.FloatingItemText;
@@ -57,14 +59,42 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void cellClicked(int cell, int x, int y)
 	{
+		ItemFilter newFilter;
 		if(cell < itemResults.size())
 		{
-			recipeCache.filter(Util.instance.getCommonFilter(itemResults.get(cell)));
-			display.openTab(backButton);
+			newFilter= Util.instance.getCommonFilter(itemResults.get(cell));
 		}
 		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
 		{
-			recipeCache.filter(Util.instance.getCommonFilter(searchText));
+			newFilter = Util.instance.getCommonFilter(searchText);
+		}
+		else
+		{
+			return;
+		}
+
+		ItemFilter oldFilter = recipeCache.getFilter();
+		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+
+		boolean returnToRecipeList = true;
+
+		if((shift || ctrl) && oldFilter instanceof CombinableItemFilter)
+		{
+			CombinableItemFilter f = (CombinableItemFilter)oldFilter;
+			ItemFilter result = shift? f.addItemFilter(newFilter) : f.subtractItemFilter(newFilter);
+
+			if(result != null)
+			{
+				newFilter = result;
+				returnToRecipeList = false;
+			}
+		}
+
+		recipeCache.filter(newFilter);
+
+		if(returnToRecipeList)
+		{
 			display.openTab(backButton);
 		}
 	}
@@ -247,9 +277,9 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			{
 				return (ItemStack)content;
 			}
-			else if(content instanceof List && ((List)content).size() > 0 && ((List)content).get(0) instanceof ItemStack)
+			else if(content instanceof List && ((List<?>)content).size() > 0 && ((List<?>)content).get(0) instanceof ItemStack)
 			{
-				return (ItemStack)((List)content).get(0);
+				return (ItemStack)((List<?>)content).get(0);
 			}
 		}
 

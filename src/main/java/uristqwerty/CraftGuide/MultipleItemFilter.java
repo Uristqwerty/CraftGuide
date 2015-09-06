@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.api.CombinableItemFilter;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Util;
 
-public class MultipleItemFilter implements ItemFilter
+public class MultipleItemFilter implements CombinableItemFilter
 {
 	public final List<ItemStack> comparison;
 	private static final NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
@@ -17,7 +18,7 @@ public class MultipleItemFilter implements ItemFilter
 	private static final NamedTexture overlayForgeSingle = Util.instance.getTexture("ItemStack-OreDict-Single");
 	private List<String> tooltip = null;
 
-	public MultipleItemFilter(List stack)
+	public MultipleItemFilter(List<ItemStack> stack)
 	{
 		comparison = stack;
 	}
@@ -36,7 +37,7 @@ public class MultipleItemFilter implements ItemFilter
 		}
 		else if(stack instanceof List)
 		{
-			for(Object item: (List)stack)
+			for(Object item: (List<?>)stack)
 			{
 				if(matches(item))
 				{
@@ -104,7 +105,7 @@ public class MultipleItemFilter implements ItemFilter
 				{
 					if(primaryItem.getHasSubtypes())
 					{
-						ArrayList<ItemStack> list = new ArrayList();
+						ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 						text = Util.instance.getItemStackText(list.get(0));
 					}
@@ -126,7 +127,7 @@ public class MultipleItemFilter implements ItemFilter
 
 					if(CommonUtilities.getItemDamage(primaryItem) == CraftGuide.DAMAGE_WILDCARD && primaryItem.getHasSubtypes())
 					{
-						ArrayList<ItemStack> list = new ArrayList();
+						ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 
 						for(int i = 1; i < list.size(); i++)
@@ -153,5 +154,56 @@ public class MultipleItemFilter implements ItemFilter
 		}
 
 		return tooltip;
+	}
+
+	@Override
+	public ItemFilter addItemFilter(ItemFilter other)
+	{
+		if(other instanceof CombinableItemFilter)
+		{
+			List<ItemStack> otherItems = ((CombinableItemFilter)other).getRepresentativeItems();
+
+			if(otherItems != null)
+			{
+				return Util.instance.getCommonFilter(Util.instance.addItemLists(getRepresentativeItems(), otherItems));
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public ItemFilter subtractItemFilter(ItemFilter other)
+	{
+		if(other instanceof CombinableItemFilter)
+		{
+			List<ItemStack> otherItems = ((CombinableItemFilter)other).getRepresentativeItems();
+
+			if(otherItems != null)
+			{
+				return Util.instance.getCommonFilter(Util.instance.subtractItemLists(getRepresentativeItems(), otherItems));
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public List<ItemStack> getRepresentativeItems()
+	{
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>(comparison.size());
+
+		for(ItemStack stack: comparison)
+		{
+			if(stack.stackSize != 1)
+			{
+				stack = stack.copy();
+				stack.stackSize = 1;
+			}
+
+			list.add(stack);
+		}
+
+		return list;
 	}
 }

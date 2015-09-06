@@ -1,5 +1,6 @@
 package uristqwerty.CraftGuide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -36,9 +37,9 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 		if(stack == null)
 		{
-			if(data instanceof List && ((List)data).size() < 1)
+			if(data instanceof List && ((List<?>)data).size() < 1)
 			{
-				return emptyOreDictEntryText((List)data);
+				return emptyOreDictEntryText((List<?>)data);
 			}
 			else
 			{
@@ -79,7 +80,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 			if(data instanceof List)
 			{
-				if(((List)data).size() > 1)
+				if(((List<?>)data).size() > 1)
 				{
 					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
 				}
@@ -89,7 +90,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 				}
 			}
 		}
-		else if(data instanceof List && ((List)data).size() < 1)
+		else if(data instanceof List && ((List<?>)data).size() < 1)
 		{
 			renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
 		}
@@ -105,9 +106,9 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		{
 			return (ItemStack)data;
 		}
-		else if(data instanceof List && ((List)data).size() > 0)
+		else if(data instanceof List && ((List<?>)data).size() > 0)
 		{
-			return item(((List)data).get(0));
+			return item(((List<?>)data).get(0));
 		}
 
 		return null;
@@ -134,7 +135,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		}
 		else if(data instanceof List)
 		{
-			for(Object content: (List)data)
+			for(Object content: (List<?>)data)
 			{
 				if(search.matches(content))
 				{
@@ -161,8 +162,16 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		return Util.instance.getCommonFilter(object);
 	}
 
-	private List<String> emptyOreDictEntryText(List oreDictionaryList)
+	private List<String> emptyOreDictEntryText(List<?> oreDictionaryList)
 	{
-		return ForgeExtensions.emptyOreDictEntryText(oreDictionaryList);
+		List<String> list = ForgeExtensions.emptyOreDictEntryText(oreDictionaryList);
+
+		if(list == null)
+		{
+			list = new ArrayList<String>(1);
+			list.add("Empty item list, not in ore dictionary");
+		}
+
+		return list;
 	}
 }

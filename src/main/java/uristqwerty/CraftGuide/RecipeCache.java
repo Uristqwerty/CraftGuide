@@ -161,7 +161,7 @@ public class RecipeCache
 			}
 			else if(type.getStack() instanceof List)
 			{
-				for(Object o: (List)type.getStack())
+				for(Object o: (List<?>)type.getStack())
 				{
 					if(o instanceof ItemStack)
 					{
@@ -209,9 +209,9 @@ public class RecipeCache
 		{
 			ItemType type = i.next();
 
-			if(type.getStack() instanceof List && ((List)type.getStack()).size() == 1 && ((List)type.getStack()).get(0) instanceof ItemStack)
+			if(type.getStack() instanceof List && ((List<?>)type.getStack()).size() == 1 && ((List<?>)type.getStack()).get(0) instanceof ItemStack)
 			{
-				ItemStack stack = (ItemStack)((List)type.getStack()).get(0);
+				ItemStack stack = (ItemStack)((List<?>)type.getStack()).get(0);
 				Item item = stack.getItem();
 				Set<ItemType> set = items.get(item);
 				boolean found = false;
@@ -367,6 +367,11 @@ public class RecipeCache
 
 	public void filter(ItemFilter filter)
 	{
+		if(filter instanceof NoItemFilter)
+		{
+			filter = null;
+		}
+
 		filterItem = filter;
 
 		boolean input = GuiCraftGuide.filterSlotTypes.get(SlotType.INPUT_SLOT);

@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.item.EnumRarity;
@@ -13,6 +14,8 @@ import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 
 public abstract class UtilImplementationCommon extends Util
 {
+	private static final List<ItemStack> specialEmptyItemList = new ArrayList<ItemStack>(0);
+
 	public float partialTicks;
 
 	@Override
@@ -26,18 +29,31 @@ public abstract class UtilImplementationCommon extends Util
 		{
 			return new SingleItemFilter((ItemStack)stack);
 		}
-		else if(stack instanceof List && ((List)stack).size() > 0)
+		else if(stack instanceof List)
 		{
-			return new MultipleItemFilter((List)stack);
+			if(((List<ItemStack>)stack).size() > 0)
+			{
+				return new MultipleItemFilter((List<ItemStack>)stack);
+			}
+			else if(stack == specialEmptyItemList)
+			{
+				return new NoItemFilter();
+			}
+			else
+			{
+				String oreDictionaryName = ForgeExtensions.getOreDictionaryName((List<ItemStack>)stack);
+				if(oreDictionaryName != null)
+				{
+					return new EmptyOreDictionaryFilter((List<ItemStack>)stack, oreDictionaryName);
+				}
+			}
 		}
 		else if(stack instanceof String)
 		{
 			return new StringItemFilter((String)stack);
 		}
-		else
-		{
-			return null;
-		}
+
+		return null;
 	}
 
 	@Override
@@ -45,9 +61,9 @@ public abstract class UtilImplementationCommon extends Util
 	{
 		try
 		{
-			List list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
+			List<String> list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(stack);
 
-			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || (list.get(0) instanceof String && ((String)list.get(0)).isEmpty())))))
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD && (list.size() < 1 || (list.size() == 1 && (list.get(0) == null || list.get(0).isEmpty()))))
 			{
 				list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(GuiRenderer.fixedItemStack(stack));
 			}
@@ -119,5 +135,61 @@ public abstract class UtilImplementationCommon extends Util
 	public float getPartialTicks()
 	{
 		return partialTicks;
+	}
+
+	@Override
+	public List<ItemStack> addItemLists(List<ItemStack> a, List<ItemStack> b)
+	{
+		ArrayList<ItemStack> result = new ArrayList<ItemStack>();
+		addUniqueItemsToList(result, a);
+		addUniqueItemsToList(result, b);
+		return result;
+	}
+
+	@Override
+	public List<ItemStack> subtractItemLists(List<ItemStack> a, List<ItemStack> b)
+	{
+		ArrayList<ItemStack> result = new ArrayList<ItemStack>();
+		addUniqueItemsToList(result, a);
+		removeItemsFromList(result, b);
+
+		if(result.isEmpty())
+			return specialEmptyItemList;
+
+		return result;
+	}
+
+	private void addUniqueItemsToList(ArrayList<ItemStack> result, List<ItemStack> a)
+	{
+		outer:
+		for(ItemStack item: a)
+		{
+			for(ItemStack t: result)
+			{
+				if(CommonUtilities.checkItemStackMatch(item, t))
+					continue outer;
+			}
+
+			result.add(item);
+		}
+	}
+
+	private void removeItemsFromList(ArrayList<ItemStack> result, List<ItemStack> a)
+	{
+		Iterator<ItemStack> i = result.iterator();
+
+		while(i.hasNext())
+		{
+			ItemStack stack = i.next();
+
+			for(ItemStack t: a)
+			{
+				if(CommonUtilities.checkItemStackMatch(stack, t))
+				{
+					i.remove();
+					break;
+				}
+			}
+		}
 	}
 }
