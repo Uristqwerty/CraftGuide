@@ -15,7 +15,7 @@ public class ItemCraftGuide extends Item
 	{
 		setUnlocalizedName("craftguide_item");
 
-		setTextureName(iconName);
+//		setTextureName(iconName);
 		setCreativeTab(CreativeTabs.tabMisc);
 
 		registerItemName();

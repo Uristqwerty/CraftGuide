@@ -267,7 +267,7 @@ public class ConfigList extends GuiScrollableContent
 	private void addButton(String text, String buttonText, ButtonTemplate buttonTemplate, IButtonListener listener)
 	{
 		String translatedButtonText = StatCollector.translateToLocal(buttonText);
-		int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(translatedButtonText);
+		int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(translatedButtonText);
 
 		addRow(text,
 				new GuiButton(BORDER_THICKNESS, BORDER_THICKNESS, Math.max(32, textWidth + 4), 13, buttonTemplate, translatedButtonText)
@@ -316,7 +316,7 @@ public class ConfigList extends GuiScrollableContent
 	private void addThemeButton(ButtonTemplate buttonTemplate)
 	{
 		String translatedButtonText = StatCollector.translateToLocal("craftguide.gui.config.current_theme.button");
-		int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(translatedButtonText);
+		int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(translatedButtonText);
 
 		addThemeRow(
 				new GuiButton(BORDER_THICKNESS, BORDER_THICKNESS, Math.max(32, textWidth + 4), 13, buttonTemplate, translatedButtonText)
@@ -484,7 +484,7 @@ public class ConfigList extends GuiScrollableContent
 			width = 64; // Arbitrary minimum width, to prevent excessive wrapping. Space for at least 4 characters.
 		}
 
-		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		List<String> lines = fr.listFormattedStringToWidth(text, width);
 
 		return lines.toArray(new String[lines.size()]);

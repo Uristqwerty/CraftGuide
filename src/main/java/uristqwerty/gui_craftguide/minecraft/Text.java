@@ -42,11 +42,11 @@ public class Text implements Renderable
 
 	public int textWidth()
 	{
-		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
 	}
 
 	public static int textWidth(String text)
 	{
-		return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
+		return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
 	}
 }

@@ -30,7 +30,6 @@ import uristqwerty.gui_craftguide.texture.Texture;
 
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
-    private RenderItem itemRenderer = new RenderItem();
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
 
@@ -89,13 +88,13 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	@Override
 	public void drawText(String text, int x, int y)
 	{
-		Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, currentColor());
+		Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, currentColor());
 	}
 
 	@Override
 	public void drawTextWithShadow(String text, int x, int y)
 	{
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, x, y, currentColor());
+		Minecraft.getMinecraft().fontRendererObj.func_175063_a(text, x, y, currentColor());
 	}
 
 	private int currentColor()
@@ -121,11 +120,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 			if(s.charAt(0) == '\u00a7')
 			{
-				w = Minecraft.getMinecraft().fontRenderer.getStringWidth(s.substring(2));
+				w = Minecraft.getMinecraft().fontRendererObj.getStringWidth(s.substring(2));
 			}
 			else
 			{
-				w = Minecraft.getMinecraft().fontRenderer.getStringWidth(s);
+				w = Minecraft.getMinecraft().fontRendererObj.getStringWidth(s);
 			}
 
 			if(w > textWidth)
@@ -253,11 +252,13 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 			itemStack = fixedItemStack(itemStack);
 		}
 
-		itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
+		RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+		itemRenderer.func_180450_b(itemStack, 0, 0);
 
 		if(renderOverlay)
 		{
-			itemRenderer.renderItemOverlayIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), itemStack, 0, 0);
+			String count = null; // TODO: arbitrary-text-for-stacksize looks interesting. Expose?
+			itemRenderer.func_180453_a(Minecraft.getMinecraft().fontRendererObj, itemStack, 0, 0, count);
 		}
 
 		return itemStack;
@@ -271,6 +272,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
         GL11.glTranslatef(x, y, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
         itemRenderer.zLevel = 100.0F;
 
         int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
@@ -291,6 +293,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		CraftGuide.side.stopTessellating();
 
+		RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
 		itemRenderer.zLevel = 0.0F;
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

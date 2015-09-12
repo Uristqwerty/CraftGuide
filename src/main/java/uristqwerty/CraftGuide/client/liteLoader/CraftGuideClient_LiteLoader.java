@@ -109,9 +109,9 @@ public class CraftGuideClient_LiteLoader extends CraftGuideClient
 
 		try
 		{
-			if((Boolean)CommonUtilities.getPrivateValue(Tessellator.class, Tessellator.instance, "field_78415_z", "isDrawing", "x"))
+			if((Boolean)CommonUtilities.getPrivateValue(Tessellator.class, Tessellator.getInstance(), "field_78415_z", "isDrawing", "x"))
 			{
-				Tessellator.instance.draw();
+				Tessellator.getInstance().draw();
 			}
 		}
 		catch(SecurityException e)
