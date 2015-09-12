@@ -2,6 +2,7 @@ package uristqwerty.gui_craftguide.rendering;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.GlStateManager;
 import uristqwerty.gui_craftguide.Color;
 import uristqwerty.gui_craftguide.texture.Texture;
 
@@ -42,8 +43,8 @@ public abstract class RendererBase
 	{
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-	    GL11.glBlendFunc(770, 771);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(770, 771);
 
 	    setGlColor(red, green, blue, alpha);
 	    GL11.glBegin(GL11.GL_QUADS);
@@ -53,7 +54,6 @@ public abstract class RendererBase
 	        GL11.glVertex2i(x + width, y);
 	    GL11.glEnd();
 
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
@@ -63,8 +63,8 @@ public abstract class RendererBase
 	{
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-	    GL11.glBlendFunc(770, 771);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(770, 771);
 
 	    setGlColor(red, green, blue, alpha);
 	    GL11.glBegin(GL11.GL_QUADS);
@@ -80,8 +80,6 @@ public abstract class RendererBase
 	        GL11.glTexCoord2d(u2, v);
 	        GL11.glVertex2i(x + width, y);
 	    GL11.glEnd();
-
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	public void drawTexturedRect(Texture texture,
@@ -152,6 +150,6 @@ public abstract class RendererBase
 
 	public void setGlColor(double red, double green, double blue, double alpha)
 	{
-		GL11.glColor4d(red * redModifier, green * greenModifier, blue * blueModifier, alpha * alphaModifier);
+		GlStateManager.color((float)(red * redModifier), (float)(green * greenModifier), (float)(blue * blueModifier), (float)(alpha * alphaModifier));
 	}
 }

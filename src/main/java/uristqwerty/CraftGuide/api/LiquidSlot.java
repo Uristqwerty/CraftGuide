@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -60,7 +61,7 @@ public class LiquidSlot implements Slot
                 double v2 = icon.getInterpolatedV(15.0);
 
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
         		GL11.glBegin(GL11.GL_QUADS);
         	        GL11.glTexCoord2d(u, v);
@@ -110,7 +111,7 @@ public class LiquidSlot implements Slot
 		{
 			tooltip = new ArrayList<String>(1);
 			FluidStack stack = (FluidStack)data[dataIndex];
-			tooltip.add(stack.getFluid().getLocalizedName() + " (" + stack.amount + " milliBuckets)");
+			tooltip.add(stack.getFluid().getLocalizedName(stack) + " (" + stack.amount + " milliBuckets)");
 		}
 
 		return tooltip;

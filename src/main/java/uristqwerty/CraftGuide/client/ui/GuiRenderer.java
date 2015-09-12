@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
@@ -52,7 +53,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		overlays.clear();
 
-		GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public void setColor(int colour, int alpha)
@@ -66,7 +67,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		if(textureID != -1)
 		{
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+            GlStateManager.func_179144_i(textureID);
 		}
 	}
 
@@ -412,10 +413,10 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	public void renderGradient(int x, int y, int width, int height, int topLeftColor_argb, int topRightColor_argb,
 			int bottomLeftColor_argb, int bottomRightColor_argb)
 	{
-		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glBlendFunc(770, 771);
+		GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
 
 	    GL11.glBegin(GL11.GL_QUADS);
 	    	glColor1i(topLeftColor_argb);
@@ -432,7 +433,6 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	    GL11.glEnd();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	private void glColor1i(int color)
@@ -471,6 +471,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<String> getTooltip(ItemStack stack)
 	{
 		return stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
