@@ -45,10 +45,36 @@ public class ChanceSlot extends ItemSlot
 		}
 
 		List<String> tooltip = implementation.getTooltip(this, stack(data, dataIndex));
-		double probability = ((Integer)((Object[])data[dataIndex])[1]) * 100 / (double)ratio;
+		double val = unboxToDouble(((Object[])data[dataIndex])[1]) * 100 / ratio;
 
-		tooltip.set(0, tooltip.get(0) + String.format(formatString, probability));
+		tooltip.set(0, tooltip.get(0) + String.format(formatString, val));
 		return tooltip;
+	}
+
+	private static double unboxToDouble(Object obj)
+	{
+		if(obj instanceof Double)
+			return (Double)obj;
+
+		else if(obj instanceof Float)
+			return (Float)obj;
+
+		else if(obj instanceof Long)
+			return (Long)obj;
+
+		else if(obj instanceof Integer)
+			return (Integer)obj;
+
+		else if(obj instanceof Short)
+			return (Short)obj;
+
+		else if(obj instanceof Character)
+			return (Character)obj;
+
+		else if(obj instanceof Byte)
+			return (Byte)obj;
+
+		return (Double)obj; // As instanceof Double was already checked, this will throw with a meaningful error message.
 	}
 
 	@Override
