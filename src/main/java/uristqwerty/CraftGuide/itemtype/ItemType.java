@@ -76,7 +76,7 @@ public class ItemType implements Comparable<ItemType>
 	private static Map<ItemTypeKey, ItemType> simpleItemStacks = new HashMap<ItemTypeKey, ItemType>();
 	private static Map<ItemTypeKey, List<ItemType>> nbtItemStacks = new HashMap<ItemTypeKey, List<ItemType>>();
 	private static Map<String, ItemType> oreDictionaryEntries = new HashMap<String, ItemType>();
-	private static Map<ArrayList, ItemType> generalArrayLists = new IdentityHashMap<ArrayList, ItemType>();
+	private static Map<ArrayList<ItemStack>, ItemType> generalArrayLists = new IdentityHashMap<ArrayList<ItemStack>, ItemType>();
 
 	private final ItemTypeKey key;
 	private final Item item;
@@ -132,9 +132,15 @@ public class ItemType implements Comparable<ItemType>
 		{
 			return getInstance((ItemStack)stack);
 		}
-		else if(stack instanceof ArrayList && ((ArrayList)stack).size() > 0)
+		else if(stack instanceof ArrayList<?> && ((ArrayList<?>)stack).size() > 0)
 		{
-			return getInstance((ArrayList)stack);
+			for(Object o: (ArrayList<?>)stack)
+			{
+				if(o != null && !(o instanceof ItemStack))
+					return errType_unknownType;
+			}
+
+			return getInstance((ArrayList<ItemStack>)stack);
 		}
 		else
 		{
@@ -142,7 +148,7 @@ public class ItemType implements Comparable<ItemType>
 		}
 	}
 
-	private static ItemType getInstance(ArrayList stack)
+	private static ItemType getInstance(ArrayList<ItemStack> stack)
 	{
 		ItemType type = generalArrayLists.get(stack);
 
@@ -195,12 +201,13 @@ public class ItemType implements Comparable<ItemType>
 		return type;
 	}
 
-	private static ItemType findMatchingNBT(List<ItemType> items, NBTTagCompound nbt) {
+	private static ItemType findMatchingNBT(List<ItemType> items, NBTTagCompound nbt)
+	{
 		for(ItemType type: items)
 		{
 			ItemStack stack = (ItemStack)type.stack;
 
-			if(stack.getTagCompound().equals(nbt))
+			if(nbt.equals(stack.getTagCompound()))
 			{
 				return type;
 			}
@@ -353,7 +360,7 @@ public class ItemType implements Comparable<ItemType>
 		}
 		else if(stack instanceof ArrayList)
 		{
-			return (ItemStack)((ArrayList)stack).get(0);
+			return ((ArrayList<ItemStack>)stack).get(0);
 		}
 		else
 		{

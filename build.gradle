@@ -26,7 +26,7 @@ archivesBaseName = "CraftGuide"
 ext.llrevision = "03"
 
 minecraft {
-    version = "1.7.10-10.13.0.1180"
+    version = "1.7.10-10.13.4.1492-1.7.10"
     runDir = "run"
 
     replaceIn "CraftGuide_FML.java"
@@ -109,7 +109,7 @@ task sourcesJar(type: Jar) {
 curse {
     projectId = '75557'
     apiKey = project.curseForgeApiKey
-    releaseType = 'release'
+    releaseType = 'beta' //alpha|beta|release
 
     addGameVersion '1.7.10'
     additionalArtifact deobfJar, apiJar, sourcesJar
