@@ -1,7 +1,7 @@
 {
     "mcversion": "${mcversion}_${llrevision}",
     "name": "craftguide",
-    "revision": "0",
+    "revision": "${revision}",
     "author": "Uristqwerty",
     "version": "${version}",
     "description": "A recipe viewer, WITH A SCROLL BAR!",
