@@ -20,7 +20,7 @@ public class ValueType
 		return getTemplate(field.getType());
 	}
 
-	public static ValueTemplate getTemplate(Class type)
+	public static ValueTemplate getTemplate(Class<?> type)
 	{
 		if(type.equals(Color.class))
 		{
@@ -34,9 +34,14 @@ public class ValueType
 		{
 			return new TextureElement();
 		}
-		else if(type.equals(int.class) || type.equals(Integer.class))
+		else if(type.equals(int.class) || type.equals(Integer.class) || type.equals(long.class) || type.equals(Long.class) ||
+				type.equals(short.class) || type.equals(Short.class) || type.equals(byte.class) || type.equals(Byte.class))
 		{
 			return new IntegerElement();
+		}
+		else if(type.equals(float.class) || type.equals(Float.class) || type.equals(double.class) || type.equals(Double.class))
+		{
+			return new DoubleElement();
 		}
 		else if(type.isArray())
 		{

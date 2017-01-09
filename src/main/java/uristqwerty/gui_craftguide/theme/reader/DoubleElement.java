@@ -4,16 +4,16 @@ import java.lang.reflect.Field;
 
 import uristqwerty.gui_craftguide.theme.Theme;
 
-public class IntegerElement extends PrimitiveValueTemplate
+public class DoubleElement extends PrimitiveValueTemplate
 {
-	Long value = 0L;
+	Double value = 0.0;
 
 	@Override
 	public void characters(Theme theme, char[] chars, int start, int length)
 	{
 		try
 		{
-			value = Long.parseLong(String.valueOf(chars, start, length));
+			value = Double.parseDouble(String.valueOf(chars, start, length));
 		}
 		catch(NumberFormatException e)
 		{
@@ -23,7 +23,7 @@ public class IntegerElement extends PrimitiveValueTemplate
 	@Override
 	public Class<?> valueType()
 	{
-		return Long.class;
+		return Double.class;
 	}
 
 	@Override
@@ -36,21 +36,13 @@ public class IntegerElement extends PrimitiveValueTemplate
 	public boolean setField(Field field, Object object) throws IllegalArgumentException, IllegalAccessException
 	{
 		Class<?> type = field.getType();
-		if(type == Long.class || type == long.class)
+		if(type == Double.class || type == double.class)
 		{
 			field.set(object, value);
 		}
-		else if(type == Integer.class || type == int.class)
+		else if(type == Float.class || type == float.class)
 		{
-			field.set(object, value.intValue());
-		}
-		else if(type == Short.class || type == short.class)
-		{
-			field.set(object, value.shortValue());
-		}
-		else if(type == Byte.class || type == byte.class)
-		{
-			field.set(object, value.byteValue());
+			field.set(object, value.floatValue());
 		}
 		else
 		{

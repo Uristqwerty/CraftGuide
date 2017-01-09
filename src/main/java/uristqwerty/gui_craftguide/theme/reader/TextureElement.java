@@ -99,10 +99,13 @@ public class TextureElement implements ValueTemplate
 							{
 								ValueTemplate template = (ValueTemplate)handler;
 
-								if(field.getType().isAssignableFrom(template.valueType()) ||
-										(field.getType().equals(int.class) && template.valueType().equals(Integer.class)))
+								if(field.getType().isAssignableFrom(template.valueType()))
 								{
 									field.set(texture, template.getValue());
+								}
+								else if(handler instanceof PrimitiveValueTemplate)
+								{
+									((PrimitiveValueTemplate)handler).setField(field, texture);
 								}
 							}
 						}
@@ -132,7 +135,7 @@ public class TextureElement implements ValueTemplate
 	}
 
 	@Override
-	public Class valueType()
+	public Class<?> valueType()
 	{
 		return Texture.class;
 	}

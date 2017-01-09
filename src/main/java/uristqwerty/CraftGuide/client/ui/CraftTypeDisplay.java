@@ -212,6 +212,8 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void onReset(RecipeCache cache)
 	{
+		setRows(recipeCache.getCraftTypes().size());
+		setCells(recipeCache.getCraftTypes().size());
 	}
 
 	@Override

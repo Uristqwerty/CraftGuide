@@ -125,23 +125,31 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 			return false;
 		}
 
-		if(search == null)
+		try
 		{
-			return false;
-		}
-		else if(data == null || data instanceof ItemStack)
-		{
-			return search.matches(data);
-		}
-		else if(data instanceof List)
-		{
-			for(Object content: (List<?>)data)
+			if(search == null)
 			{
-				if(search.matches(content))
+				return false;
+			}
+			else if(data == null || data instanceof ItemStack)
+			{
+				return search.matches(data);
+			}
+			else if(data instanceof List)
+			{
+				for(Object content: (List<?>)data)
 				{
-					return true;
+					if(search.matches(content))
+					{
+						return true;
+					}
 				}
 			}
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.ItemSlotImplementationImplementation.matches data " + (data != null? data.getClass() : "null"));
+			throw new RuntimeException(e);
 		}
 
 		return false;

@@ -143,9 +143,17 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 		{
 			for(int i = 0; i < slots.length; i++)
 			{
-				if(slots[i].matches(filter, recipe, i, type))
+				try
 				{
-					return true;
+					if(slots[i].matches(filter, recipe, i, type))
+					{
+						return true;
+					}
+				}
+				catch(Throwable e)
+				{
+					CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.Recipe.containsItem, while checking slot #" + i + " " + (slots[i] != null? slots[i].getClass() : "null slot"));
+					throw new RuntimeException(e);
 				}
 			}
 		}

@@ -134,39 +134,6 @@ public class CommonUtilities
 		}
 	}
 
-	private static class Pair<T1, T2>
-	{
-		T1 first;
-		T2 second;
-
-		public Pair(T1 a, T2 b)
-		{
-			first = a;
-			second = b;
-		}
-
-		@Override
-		public int hashCode()
-		{
-			// Null hashes arbitrarily chosen by keyboard mashing.
-			int firsthash = first == null? 5960343 : first.hashCode();
-			int secondhash = second == null? 1186323 : second.hashCode();
-			return firsthash ^ Integer.rotateLeft(secondhash, 13);
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if(!(obj instanceof Pair))
-				return false;
-
-			Pair<T1, T2> other = (Pair<T1, T2>)obj;
-
-			return (first == null? other.first == null : first.equals(other.first)) &&
-					(second == null? other.second == null : second.equals(other.second));
-		}
-	}
-
 	private static Map<Pair<Item, Integer>, List<String>> textCache = new HashMap<Pair<Item, Integer>, List<String>>();
 
 	static void clearTooltipCache()
@@ -176,30 +143,57 @@ public class CommonUtilities
 
 	private static List<String> cachedExtendedItemStackText(ItemStack stack)
 	{
-		Pair<Item, Integer> key = new Pair<Item, Integer>(stack.getItem(), stack.getItemDamage());
-
-		List<String> tooltip = textCache.get(key);
-
-		if(tooltip == null)
+		try
 		{
-			tooltip = new ArrayList<String>(genExtendedItemStackText(stack));
-			textCache.put(key, tooltip);
-		}
+			Pair<Item, Integer> key = new Pair<Item, Integer>(stack.getItem(), stack.getItemDamage());
 
-		return tooltip;
+			List<String> tooltip = textCache.get(key);
+
+			if(tooltip == null)
+			{
+				tooltip = new ArrayList<String>(genExtendedItemStackText(stack));
+				textCache.put(key, tooltip);
+			}
+
+			return tooltip;
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.CommonUtilities.cachedExtendedItemStackText item " + (stack != null? stack.getClass() : "null"));
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static List<String> getExtendedItemStackText(Object item)
 	{
-		List<String> text = getPossiblyCachedExtendedItemText(item);
-
-		if(item instanceof List && ((List<?>)item).size() > 1)
+		try
 		{
-			int count = CommonUtilities.countItemNames(item);
-			text.add("\u00a77" + (count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
-		}
+			List<String> text = getPossiblyCachedExtendedItemText(item);
 
-		return text;
+			if(item instanceof List && ((List<?>)item).size() > 1)
+			{
+				int count = CommonUtilities.countItemNames(item);
+				text.add("\u00a77" + (count - 1) + " other type" + (count > 2? "s" : "") + " of item accepted");
+			}
+
+			return text;
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.CommonUtilities.getExtendedItemStackText item " + (item != null? item.getClass() : "null"));
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static List<String> nullItemText, nullItemStackText;
+	static
+	{
+		nullItemText = new ArrayList<String>();
+		nullItemText.add("Error: ItemStack has null item!");
+		nullItemText.add("This is a bug in one of the mods adding recipes.");
+
+		nullItemStackText = new ArrayList<String>();
+		nullItemStackText.add("null ItemStack (might be a bug)");
 	}
 
 	private static List<String> getPossiblyCachedExtendedItemText(Object item)
@@ -207,6 +201,11 @@ public class CommonUtilities
 		if(item instanceof ItemStack || (item instanceof List && ((List<?>)item).size() > 0 && ((List<?>)item).get(0) instanceof ItemStack))
 		{
 			ItemStack stack = item instanceof ItemStack? (ItemStack)item : (ItemStack)((List<?>)item).get(0);
+
+			if(stack == null)
+				return nullItemStackText;
+			if(stack.getItem() == null)
+				return nullItemText;
 
 			if(stack.hasTagCompound())
 				return genExtendedItemStackText(stack);
@@ -228,78 +227,102 @@ public class CommonUtilities
 
 	private static void appendStackInfo(List<String> text, ItemStack stack)
 	{
-		Iterator<StackInfoSource> iterator = StackInfo.sources.iterator();
-		while(iterator.hasNext())
+		try
 		{
-			StackInfoSource infoSource = iterator.next();
-			try
+			Iterator<StackInfoSource> iterator = StackInfo.sources.iterator();
+			while(iterator.hasNext())
 			{
-				String info = infoSource.getInfo(stack);
-
-				if(info != null && !info.isEmpty())
+				StackInfoSource infoSource = iterator.next();
+				try
 				{
-					if(info.indexOf('\n') == -1)
+					String info = infoSource.getInfo(stack);
+
+					if(info != null && !info.isEmpty())
 					{
-						text.add(info);
-					}
-					else
-					{
-						text.addAll(Arrays.asList(info.split("\n")));
+						if(info.indexOf('\n') == -1)
+						{
+							text.add(info);
+						}
+						else
+						{
+							text.addAll(Arrays.asList(info.split("\n")));
+						}
 					}
 				}
+				catch(LinkageError e)
+				{
+					CraftGuideLog.log(e);
+					iterator.remove();
+				}
+				catch(Exception e)
+				{
+					CraftGuideLog.log(e);
+				}
 			}
-			catch(LinkageError e)
-			{
-				CraftGuideLog.log(e);
-				iterator.remove();
-			}
-			catch(Exception e)
-			{
-				CraftGuideLog.log(e);
-			}
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.CommonUtilities.appendStackInfo stack " + (stack != null? stack.getClass() : "null"));
+			throw new RuntimeException(e);
 		}
 	}
 
 	public static boolean searchExtendedItemStackText(Object item, String text)
 	{
-		List<String> lines = getExtendedItemStackText(item);
-
-		if(lines != null)
+		try
 		{
-			for(String line: lines)
+			List<String> lines = getExtendedItemStackText(item);
+
+			if(lines != null)
 			{
-				if(line != null && line.toLowerCase().contains(text))
+				for(String line: lines)
 				{
-					return true;
+					if(line != null && line.toLowerCase().contains(text))
+					{
+						return true;
+					}
 				}
 			}
-		}
 
-		return false;
+			return false;
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.CommonUtilities.searchExtendedItemStackText item " + (item != null? item.getClass() : "null"));
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static List<String> getItemStackText(Object item)
 	{
-		if(item instanceof List)
+		try
 		{
-			List<?> list = ((List<?>)item);
-
-			if(list.size() > 0)
+			if(item instanceof List)
 			{
-				return getItemStackText(list.get(0));
+				List<?> list = ((List<?>)item);
+
+				if(list.size() > 0)
+				{
+					return getItemStackText(list.get(0));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else if(item instanceof ItemStack)
+			{
+				return Util.instance.getItemStackText((ItemStack)item);
 			}
 			else
 			{
 				return null;
 			}
 		}
-		else if(item instanceof ItemStack)
+		catch (Throwable e)
 		{
-			return Util.instance.getItemStackText((ItemStack)item);
-		}
-		else
-		{
-			return null;
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.CommonUtilities.getItemStackText item " + (item != null? item.getClass() : "null"));
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package uristqwerty.CraftGuide;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,13 +30,89 @@ public class RecipeCache
 	private SortedSet<ItemType> craftingTypes = new TreeSet<ItemType>();
 	private Map<ItemType, List<CraftGuideRecipe>> craftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
 	private List<CraftGuideRecipe> typeResults;
-	private List<CraftGuideRecipe> filteredResults;
 	private RecipeGeneratorImplementation generator = new RecipeGeneratorImplementation();
+	private List<CraftGuideRecipe> filteredResults = new ArrayList<CraftGuideRecipe>();
 	private ItemFilter filterItem = null;
+	private Deque<ItemFilter> filterHistory = new LinkedList<ItemFilter>();
+	private Deque<ItemFilter> filterHistoryForwards = new LinkedList<ItemFilter>();
 	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
 	private Set<ItemType> currentTypes = null;
 	private SortedSet<ItemType> allItems = new TreeSet<ItemType>();
 	private boolean firstReset = true;
+
+	private static Task nextTask = null;
+	private static Thread taskThread = null;
+	/* Effectively Runnable, but having a separate type should make code searches
+	 * more useful for identifying relevant implementations
+	 */
+	private static interface Task
+	{
+		void run();
+	}
+	static
+	{
+		taskThread = new Thread(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					while(true)
+					{
+						synchronized(taskThread)
+						{
+							if(nextTask == null)
+							{
+								try
+								{
+									taskThread.wait();
+								}
+								catch(InterruptedException e)
+								{
+								}
+							}
+						}
+
+						if(nextTask != null)
+						{
+							Task current = nextTask;
+
+							try
+							{
+								current.run();
+							}
+							catch(Exception e)
+							{
+								CraftGuideLog.log(e, "Exception encountered in task thread", true);
+							}
+
+							if(nextTask == current)
+								nextTask = null;
+						}
+					}
+				}
+			},
+			"CraftGuide Asynchronous Recipe Processing (CARP)"
+		);
+		taskThread.setDaemon(true);
+		taskThread.start();
+	}
+
+	private void runTask(Task task)
+	{
+		if(CraftGuide.useWorkerThread)
+		{
+			synchronized(taskThread)
+			{
+				nextTask = task;
+				taskThread.notify();
+			}
+		}
+		else
+		{
+			task.run();
+		}
+	}
 
 	public RecipeCache()
 	{
@@ -46,60 +123,69 @@ public class RecipeCache
 	{
 		CraftGuide.needsRecipeRefresh = false;
 
-		CraftGuideLog.log("(re)loading recipe list...");
-		Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
-
-		filterRawRecipes(rawRecipes);
-		craftResults.clear();
-
-		for(ItemStack key: rawRecipes.keySet())
-		{
-			ItemType type = ItemType.getInstance(key);
-
-			if(type == null)
+		runTask(new Task(){
+			@Override
+			public void run()
 			{
-				CraftGuideLog.log("  Error: null type, " + rawRecipes.get(key).size() + " recipes skipped");
-				continue;
+				CraftGuideLog.log("(re)loading recipe list...");
+				Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
+
+				filterRawRecipes(rawRecipes);
+				Map<ItemType, List<CraftGuideRecipe>> newCraftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
+
+				for(ItemStack key: rawRecipes.keySet())
+				{
+					ItemType type = ItemType.getInstance(key);
+
+					if(type == null)
+					{
+						CraftGuideLog.log("  Error: null type, " + rawRecipes.get(key).size() + " recipes skipped");
+						continue;
+					}
+
+					if(!newCraftResults.containsKey(type))
+					{
+						newCraftResults.put(type, new ArrayList<CraftGuideRecipe>());
+					}
+
+					newCraftResults.get(type).addAll(rawRecipes.get(key));
+				}
+
+				SortedSet<ItemType> newAllItems = generateAllItemList(newCraftResults);
+
+				SortedSet<ItemType> newCraftingTypes = new TreeSet<ItemType>();
+				newCraftingTypes.addAll(newCraftResults.keySet());
+
+				if(firstReset)
+				{
+					currentTypes = new HashSet<ItemType>();
+					currentTypes.addAll(newCraftingTypes);
+
+					for(ItemStack stack: generator.disabledTypes)
+					{
+						currentTypes.remove(ItemType.getInstance(stack));
+					}
+
+					firstReset = false;
+				}
+
+				craftResults = newCraftResults;
+				allItems = newAllItems;
+				craftingTypes = newCraftingTypes;
+
+				setTypes(currentTypes);
+
+				for(IRecipeCacheListener listener: listeners)
+				{
+					listener.onReset(RecipeCache.this);
+				}
 			}
-
-			if(!craftResults.containsKey(type))
-			{
-				craftResults.put(type, new ArrayList<CraftGuideRecipe>());
-			}
-
-			craftResults.get(type).addAll(rawRecipes.get(key));
-		}
-
-		generator.clearRecipes();
-
-		generateAllItemList();
-
-		craftingTypes.addAll(craftResults.keySet());
-
-		if(firstReset)
-		{
-			currentTypes = new HashSet<ItemType>();
-			currentTypes.addAll(craftingTypes);
-
-			for(ItemStack stack: generator.disabledTypes)
-			{
-				currentTypes.remove(ItemType.getInstance(stack));
-			}
-
-			firstReset = false;
-		}
-
-		setTypes(currentTypes);
-
-		for(IRecipeCacheListener listener: listeners)
-		{
-			listener.onReset(this);
-		}
+		});
 	}
 
-	private void generateAllItemList()
+	private static SortedSet<ItemType> generateAllItemList(Map<ItemType, List<CraftGuideRecipe>> craftResults)
 	{
-		allItems.clear();
+		SortedSet<ItemType> allItems = new TreeSet<ItemType>();
 
 		for(List<CraftGuideRecipe> type: craftResults.values())
 		{
@@ -137,10 +223,11 @@ public class RecipeCache
 			}
 		}
 
-		removeUselessDuplicates();
+		removeUselessDuplicates(allItems);
+		return allItems;
 	}
 
-	private void removeUselessDuplicates()
+	private static void removeUselessDuplicates(SortedSet<ItemType> allItems)
 	{
 		HashMap<Item, Set<ItemType>> items = new HashMap<Item, Set<ItemType>>();
 
@@ -372,6 +459,54 @@ public class RecipeCache
 			filter = null;
 		}
 
+		if(filterItem != null)
+		{
+			filterHistory.push(filterItem);
+		}
+
+		filterHistoryForwards.clear();
+
+		setFilter(filter);
+	}
+
+	public boolean hasPreviousFilter()
+	{
+		return filterHistory.size() > 0;
+	}
+
+	public void previousFilter()
+	{
+		if(hasPreviousFilter())
+		{
+			if(filterItem != null)
+			{
+				filterHistoryForwards.push(filterItem);
+			}
+
+			setFilter(filterHistory.pop());
+		}
+	}
+
+	public boolean hasNextFilter()
+	{
+		return filterHistoryForwards.size() > 0;
+	}
+
+	public void nextFilter()
+	{
+		if(hasNextFilter())
+		{
+			if(filterItem != null)
+			{
+				filterHistory.push(filterItem);
+			}
+
+			setFilter(filterHistoryForwards.pop());
+		}
+	}
+
+	private void setFilter(ItemFilter filter)
+	{
 		filterItem = filter;
 
 		boolean input = GuiCraftGuide.filterSlotTypes.get(SlotType.INPUT_SLOT);
@@ -388,20 +523,27 @@ public class RecipeCache
 
 			for(CraftGuideRecipe recipe: typeResults)
 			{
-				if(recipe instanceof CraftGuideRecipeExtra1)
+				try
 				{
-					CraftGuideRecipeExtra1 e = (CraftGuideRecipeExtra1)recipe;
+					if(recipe instanceof CraftGuideRecipeExtra1)
+					{
+						CraftGuideRecipeExtra1 e = (CraftGuideRecipeExtra1)recipe;
 
-					if((input && e.containsItem(filter, SlotType.INPUT_SLOT))
-					|| (output && e.containsItem(filter, SlotType.OUTPUT_SLOT))
-					|| (machine && e.containsItem(filter, SlotType.MACHINE_SLOT)))
+						if((input && e.containsItem(filter, SlotType.INPUT_SLOT))
+						|| (output && e.containsItem(filter, SlotType.OUTPUT_SLOT))
+						|| (machine && e.containsItem(filter, SlotType.MACHINE_SLOT)))
+						{
+							filteredResults.add(recipe);
+						}
+					}
+					else if(recipe.containsItem(filter))
 					{
 						filteredResults.add(recipe);
 					}
 				}
-				else if(recipe.containsItem(filter))
+				catch(Exception e)
 				{
-					filteredResults.add(recipe);
+					CraftGuideLog.log(e, "Exception thrown while matching against recipe " + recipe, false);
 				}
 			}
 		}

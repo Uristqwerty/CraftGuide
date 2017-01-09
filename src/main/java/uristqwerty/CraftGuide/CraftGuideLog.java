@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+
 public class CraftGuideLog
 {
 	private static PrintWriter output;
@@ -52,6 +55,7 @@ public class CraftGuideLog
 				CraftGuide.loaderSide.logConsole(text, e);
 			}
 
+			output.println(text);
 			e.printStackTrace(output);
 			output.flush();
 
@@ -61,6 +65,17 @@ public class CraftGuideLog
 			}
 
 			exceptionsLogged++;
+		}
+	}
+
+	public static void checkGlError()
+	{
+		int i = GL11.glGetError();
+
+		if (i != 0)
+		{
+			String str = GLU.gluErrorString(i);
+			log(new Throwable(), "Encountered OpenGL error #" + i + ": " + str, true);
 		}
 	}
 }

@@ -22,6 +22,10 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 	private Text textDisplayAfter = new Text(1, 2, "", 0xff000000);
 	private int yText;
 	private int xText;
+	private boolean shiftHeld = false;
+	private boolean ctrlHeld = false;
+	private boolean altHeld = false;
+	private boolean metaHeld = false;
 
 	public GuiTextInput(int x, int y, int width, int height)
 	{
@@ -140,6 +144,25 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 	@Override
 	public void onKeyTyped(char eventChar, int eventKey)
 	{
+		boolean textChanged = false;
+
+		/* With key repeat of non-printing keys suppressed, it'll still be useful to trigger changes once for
+		 * modifier keys that might change tooltip text */
+		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+		boolean alt = Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
+		boolean meta = Keyboard.isKeyDown(Keyboard.KEY_LMETA) || Keyboard.isKeyDown(Keyboard.KEY_RMETA);
+
+		if(shiftHeld != shift || ctrlHeld != ctrl || altHeld != alt || metaHeld != meta)
+		{
+			shiftHeld = shift;
+			ctrlHeld = ctrl;
+			altHeld = alt;
+			metaHeld = meta;
+
+			textChanged = true;
+		}
+
 		if(inFocus == this)
 		{
 			if(eventKey == Keyboard.KEY_BACK)
@@ -147,6 +170,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 				if(before.length() > 0)
 				{
 					before = before.substring(0, before.length() - 1);
+					textChanged = true;
 				}
 			}
 			else if(eventKey == Keyboard.KEY_DELETE)
@@ -154,6 +178,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 				if(after.length() > 0)
 				{
 					after = after.substring(1);
+					textChanged = true;
 				}
 			}
 			else if(eventKey == Keyboard.KEY_LEFT)
@@ -187,11 +212,15 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 			else if(eventChar != 0 && eventKey != Keyboard.KEY_ESCAPE)
 			{
 				before = before + eventChar;
+				textChanged = true;
 			}
 
-			for(ITextInputListener listener: listeners)
+			if(textChanged)
 			{
-				listener.onTextChanged(this);
+				for(ITextInputListener listener: listeners)
+				{
+					listener.onTextChanged(this);
+				}
 			}
 		}
 		else

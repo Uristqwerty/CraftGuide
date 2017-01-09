@@ -16,7 +16,7 @@ public class TextureClip implements Texture
 {
 	@TextureParameter
 	public Texture source;
-	
+
 	@TextureParameter
 	public Rect rect;
 
@@ -44,26 +44,46 @@ public class TextureClip implements Texture
 			width += u;
 			u = 0;
 		}
-		
+
 		if(u + width > rect.width)
 		{
 			width = rect.width - u;
 		}
-		
+
 		if(v < 0)
 		{
 			height += v;
 			v = 0;
 		}
-		
+
 		if(v + height > rect.height)
 		{
 			height = rect.height - v;
 		}
-		
+
 		if(width > 0 && height > 0)
 		{
 			source.renderRect(renderer, x, y, width, height, u + rect.x, v + rect.y);
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(!(obj instanceof TextureClip))
+			return false;
+
+		TextureClip other = (TextureClip)obj;
+
+		return (this.source == null || other.source == null?
+				this.source == other.source :
+				this.source.equals(other.source)) && this.rect.equals(other.rect);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// TODO Auto-generated method stub
+		return super.hashCode();
 	}
 }

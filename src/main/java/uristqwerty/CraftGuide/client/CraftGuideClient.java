@@ -17,6 +17,7 @@ import uristqwerty.CraftGuide.GuiCraftGuide;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
+import uristqwerty.gui_craftguide.texture.AnimatedTexture;
 import uristqwerty.gui_craftguide.texture.BlankTexture;
 import uristqwerty.gui_craftguide.texture.BorderedTexture;
 import uristqwerty.gui_craftguide.texture.MultipleTextures;
@@ -37,6 +38,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 
 		ThemeManager.addTextureType(SolidColorTexture.class);
 		ThemeManager.addTextureType(MultipleTextures.class);
+		ThemeManager.addTextureType(AnimatedTexture.class);
 		ThemeManager.addTextureType(BorderedTexture.class);
 		ThemeManager.addTextureType(TintedTexture.class);
 		ThemeManager.addTextureType(BlankTexture.class);

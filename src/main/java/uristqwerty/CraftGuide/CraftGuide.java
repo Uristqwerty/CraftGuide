@@ -8,11 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -50,6 +50,7 @@ public class CraftGuide
 	public static boolean betterWithRenewablesDetected = false;
 	public static boolean needsRecipeRefresh = false;
 	public static boolean ae2Workaround = true;
+	public static boolean useWorkerThread = true;
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
@@ -78,6 +79,7 @@ public class CraftGuide
 		{
 			Class.forName("uristqwerty.CraftGuide.recipes.DefaultRecipeProvider").newInstance();
 			Class.forName("uristqwerty.CraftGuide.recipes.BrewingRecipes").newInstance();
+			Class.forName("uristqwerty.CraftGuide.recipes.GrassSeedDrops").newInstance();
 		}
 		catch(InstantiationException e)
 		{
@@ -190,6 +192,7 @@ public class CraftGuide
 		configComments.put("defaultKeybind", "If Minecraft isn't properly loading changed keybinds, or you are putting together a config/modpack and want a different default value, you can change the default CraftGuide keybind here.");
 		configComments.put("rightClickClearText", "Right-clicking a text input clears it, instead of setting the cursor position.");
 		configComments.put("ae2Workaround", "Workaround for slow startup time and exception spam with some AE2 versions.");
+		configComments.put("useWorkerThread", "Run potentially slow tasks (such as constructing the recipe list, or performing searches) in a separate thread. Will keep the game responsive, but may cause stability issues.");
 	}
 
 	private void setConfigDefaults()
@@ -209,6 +212,7 @@ public class CraftGuide
 		config.setProperty("rightClickClearText", Boolean.toString(true));
 		config.setProperty("defaultKeybind", Integer.toString(Keyboard.KEY_G));
 		config.setProperty("ae2Workaround", Boolean.toString(true));
+		config.setProperty("useWorkerThread", Boolean.toString(true));
 	}
 
 	/**
@@ -296,6 +300,7 @@ public class CraftGuide
 		enableItemRecipe = Boolean.valueOf(config.getProperty("enableItemRecipe"));
 		rightClickClearText = Boolean.valueOf(config.getProperty("rightClickClearText"));
 		ae2Workaround = Boolean.valueOf(config.getProperty("ae2Workaround"));
+		useWorkerThread = Boolean.valueOf(config.getProperty("useWorkerThread"));
 
 		if(newConfigFile != null && !newConfigFile.exists())
 		{
@@ -327,13 +332,10 @@ public class CraftGuide
 	// config.store() does not permit per-setting comments.
 	private static void saveConfig(OutputStream outputStream) throws IOException
 	{
-		Set<String> properties = config.stringPropertyNames();
+		SortedSet<String> properties = new TreeSet<String>();
+		properties.addAll(config.stringPropertyNames());
 
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-
-		writer.write("# ");
-		writer.write(new Date().toString());
-		writer.newLine();
 
 		for(String property: properties)
 		{
@@ -398,6 +400,7 @@ public class CraftGuide
 		config.setProperty("logThemeDebugInfo", Boolean.toString(ThemeManager.debugOutput));
 		config.setProperty("rightClickClearText", Boolean.toString(rightClickClearText));
 		config.setProperty("ae2Workaround", Boolean.toString(ae2Workaround));
+		config.setProperty("useWorkerThread", Boolean.toString(useWorkerThread));
 
 		try
 		{

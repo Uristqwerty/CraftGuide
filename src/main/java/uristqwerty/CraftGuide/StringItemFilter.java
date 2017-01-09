@@ -24,42 +24,66 @@ public class StringItemFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			return CommonUtilities.searchExtendedItemStackText(item, comparison);
+			try
+			{
+				return CommonUtilities.searchExtendedItemStackText(item, comparison);
+			}
+			catch (Throwable e)
+			{
+				CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.StringItemFilter.matches ItemStack branch");
+				throw new RuntimeException(e);
+			}
 		}
 		else if(item instanceof String)
 		{
-			return ((String)item).toLowerCase().contains(comparison);
+			try
+			{
+				return ((String)item).toLowerCase().contains(comparison);
+			}
+			catch (Throwable e)
+			{
+				CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.StringItemFilter.matches String branch");
+				throw new RuntimeException(e);
+			}
 		}
 		else if(item instanceof List)
 		{
-			List<?> list = (List<?>)item;
-
-			for(Object o: list)
+			try
 			{
-				if(matches(o))
-				{
-					return true;
-				}
-			}
+				List<?> list = (List<?>)item;
 
-			if(list.size() < 1)
-			{
-				List<String> lines = ForgeExtensions.emptyOreDictEntryText(list);
-
-				if(lines != null)
+				for(Object o: list)
 				{
-					for(String line: lines)
+					if(matches(o))
 					{
-						if(line != null && line.toLowerCase().contains(comparison))
+						return true;
+					}
+				}
+
+				if(list.size() < 1)
+				{
+					List<String> lines = ForgeExtensions.emptyOreDictEntryText(list);
+
+					if(lines != null)
+					{
+						for(String line: lines)
 						{
-							return true;
+							if(line != null && line.toLowerCase().contains(comparison))
+							{
+								return true;
+							}
 						}
 					}
 				}
+
+
+				return false;
 			}
-
-
-			return false;
+			catch (Throwable e)
+			{
+				CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.StringItemFilter.matches List branch");
+				throw new RuntimeException(e);
+			}
 		}
 		else
 		{

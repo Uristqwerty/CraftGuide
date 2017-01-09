@@ -149,7 +149,7 @@ artifacts {
 }
 
 build.doLast {
-    ver.build++
-    ver.revision++
+    ver.build = "" + ((ver.build as int) + 1)
+    ver.revision = "" + ((ver.revision as int) + 1)
     ver.store(versionFile.newWriter(), null)
 }

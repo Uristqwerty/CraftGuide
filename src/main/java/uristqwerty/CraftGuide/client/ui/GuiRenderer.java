@@ -6,12 +6,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -30,7 +32,7 @@ import uristqwerty.gui_craftguide.texture.Texture;
 
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
-    private RenderItem itemRenderer = new RenderItem();
+	private RenderItem itemRenderer = new RenderItem();
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
 
@@ -41,7 +43,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	public void startFrame(Gui gui)
 	{
 		this.gui = gui;
-    	resetValues();
+		resetValues();
 	}
 
 	public void endFrame()
@@ -67,7 +69,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		if(textureID != -1)
 		{
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 		}
 	}
 
@@ -157,7 +159,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 			y = 4;
 		}
 
-    	setColor(0xf0100010);
+		setColor(0xf0100010);
 		drawRect(x - 3,				y - 4,				textWidth + 6,	1);
 		drawRect(x - 3,				y + textHeight + 3,	textWidth + 6,	1);
 		drawRect(x - 3,				y - 3,				textWidth + 6,	textHeight + 6);
@@ -173,21 +175,21 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		drawGradient(x - 3,				y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 		drawGradient(x + textWidth + 2, y - 2, 1, textHeight + 4, 0x505000ff, 0x5028007f);
 
-    	setColor(0xffffffff);
+		setColor(0xffffffff);
 
 		int textY = y;
 		boolean first = true;
 		for(String s: text)
 		{
-        	drawTextWithShadow(s, x, textY);
+			drawTextWithShadow(s, x, textY);
 
 			if(first)
 			{
-                textY += 2;
-                first = false;
+				textY += 2;
+				first = false;
 			}
 
-            textY += 10;
+			textY += 10;
 		}
 	}
 
@@ -198,42 +200,43 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public void drawItemStack(ItemStack itemStack, int x, int y, boolean renderOverlay)
 	{
-    	if(itemStack == null)
-    	{
-    		return;
-    	}
+		if(itemStack == null)
+		{
+			return;
+		}
 
 		boolean error = true;
 
 		int initialMatrixStackDepth = prepareGlForItemRender(x, y);
 
-        try
-        {
-        	itemStack = renderItem(itemStack, renderOverlay);
+		try
+		{
+			itemStack = renderItem(itemStack, renderOverlay);
 
 			error = false;
-        }
-        catch(Exception e)
-        {
-    		logItemRenderException(itemStack, e);
-        }
-        catch(Error e)
-        {
-        	CraftGuideLog.log(e);
-        	throw e;
-        }
-        finally
-        {
-            fixGlState(initialMatrixStackDepth);
-        }
+		}
+		catch(Exception e)
+		{
+			logItemRenderException(itemStack, e);
+		}
+		catch(Error e)
+		{
+			CraftGuideLog.log(e);
+			throw e;
+		}
+		finally
+		{
+			fixGlState(initialMatrixStackDepth);
+		}
 
-        if(error)
-        {
-    		drawItemStackError(x, y);
-        }
+		if(error)
+		{
+			drawItemStackError(x, y);
+		}
 	}
 
-	private void logItemRenderException(ItemStack itemStack, Exception e) {
+	private void logItemRenderException(ItemStack itemStack, Exception e)
+	{
 		if(!hasLogged(itemStack))
 		{
 			CraftGuideLog.log("Failed to render ItemStack {" + (
@@ -267,13 +270,13 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glTranslatef(x, y, 0.0F);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        itemRenderer.zLevel = 100.0F;
+		GL11.glPushMatrix();
+		GL11.glTranslatef(x, y, 0.0F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		itemRenderer.zLevel = 100.0F;
 
-        int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
+		int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
 		return initialMatrixStackDepth;
 	}
 
@@ -292,7 +295,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		CraftGuide.side.stopTessellating();
 
 		itemRenderer.zLevel = 0.0F;
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -345,12 +348,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public int guiXFromMouseX(int x)
 	{
-        return (x * gui.width) / Minecraft.getMinecraft().displayWidth;
+		return (x * gui.width) / Minecraft.getMinecraft().displayWidth;
 	}
 
 	public int guiYFromMouseY(int y)
 	{
-        return gui.height - (y * gui.height) / Minecraft.getMinecraft().displayHeight - 1;
+		return gui.height - (y * gui.height) / Minecraft.getMinecraft().displayHeight - 1;
 	}
 
 	@Override
@@ -412,21 +415,21 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glBlendFunc(770, 771);
+		GL11.glBlendFunc(770, 771);
 
-	    GL11.glBegin(GL11.GL_QUADS);
-	    	glColor1i(topLeftColor_argb);
-	        GL11.glVertex2i(x, y);
+		GL11.glBegin(GL11.GL_QUADS);
+			glColor1i(topLeftColor_argb);
+			GL11.glVertex2i(x, y);
 
-	    	glColor1i(bottomLeftColor_argb);
-	        GL11.glVertex2i(x, y + height);
+			glColor1i(bottomLeftColor_argb);
+			GL11.glVertex2i(x, y + height);
 
-	    	glColor1i(bottomRightColor_argb);
-	        GL11.glVertex2i(x + width, y + height);
+			glColor1i(bottomRightColor_argb);
+			GL11.glVertex2i(x + width, y + height);
 
-	    	glColor1i(topRightColor_argb);
-	        GL11.glVertex2i(x + width, y);
-	    GL11.glEnd();
+			glColor1i(topRightColor_argb);
+			GL11.glVertex2i(x + width, y);
+		GL11.glEnd();
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
@@ -434,37 +437,43 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	private void glColor1i(int color)
 	{
-	    setGlColor(
+		setGlColor(
 				((color >> 16) & 0xff) / 255.0,
 				((color >>  8) & 0xff) / 255.0,
 				((color >>  0) & 0xff) / 255.0,
 				((color >> 24) & 0xff) / 255.0);
 	}
 
+	private WeakHashMap<ItemStack, Void> invalidStacks = new WeakHashMap<ItemStack, Void>();
+
 	public List<String> getItemNameandInformation(ItemStack stack)
 	{
-		if(stack.getItem() != null)
+		if(!invalidStacks.containsKey(stack))
 		{
-			try
-			{
-				return getTooltip(stack);
-			}
-			catch(Exception e)
+			if(stack.getItem() != null)
 			{
 				try
 				{
-					stack = fixedItemStack(stack);
 					return getTooltip(stack);
 				}
-				catch(Exception e2)
+				catch(Exception e)
 				{
-					CraftGuideLog.log(e2);
+					try
+					{
+						stack = fixedItemStack(stack);
+						return getTooltip(stack);
+					}
+					catch(Exception e2)
+					{
+						CraftGuideLog.log(e2);
+					}
 				}
 			}
 		}
 
+		invalidStacks.put(stack, null);
 		List<String> list = new ArrayList<String>();
-		list.add("Err: Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
+		list.add(EnumChatFormatting.YELLOW + "Err: Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
 		return list;
 	}
 
