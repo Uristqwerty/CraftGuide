@@ -109,17 +109,17 @@ public class ItemType implements Comparable<ItemType>
 		this.originalHashcode = items.hashCode();
 	}
 
-	public ItemType(ItemTypeKey key, NBTTagCompound nbt)
+	private ItemType(ItemTypeKey key, NBTTagCompound nbt, int nbtHash)
 	{
 		this.item = Item.getItemById(key.id);
 		this.key = key;
 		ItemStack stack = new ItemStack(item, 1, key.damage);
 		stack.setTagCompound((NBTTagCompound)nbt.copy());
 		this.stack = stack;
-		this.originalHashcode = nbt.hashCode();
+		this.originalHashcode = nbtHash;
 	}
 
-	public ItemType(ItemTypeKey key, String msg) {
+	private ItemType(ItemTypeKey key, String msg) {
 		this.item = null;
 		this.key = key;
 		this.stack = msg;
@@ -189,11 +189,15 @@ public class ItemType implements Comparable<ItemType>
 				nbtItemStacks.put(key,  items);
 			}
 
-			type = findMatchingNBT(items, stack.getTagCompound());
+			NBTTagCompound nbt = stack.getTagCompound();
+			int nbtHash = nbt.hashCode();
+
+			type = findMatchingNBT(items, nbt, nbtHash);
 
 			if(type == null)
 			{
-				type = new ItemType(key, stack.getTagCompound());
+				nbt = (NBTTagCompound)nbt.copy();
+				type = new ItemType(key, nbt, nbtHash);
 				items.add(type);
 			}
 		}
@@ -203,11 +207,16 @@ public class ItemType implements Comparable<ItemType>
 
 	private static ItemType findMatchingNBT(List<ItemType> items, NBTTagCompound nbt)
 	{
+		return findMatchingNBT(items, nbt, nbt.hashCode());
+	}
+
+	private static ItemType findMatchingNBT(List<ItemType> items, NBTTagCompound nbt, int nbtHash)
+	{
 		for(ItemType type: items)
 		{
 			ItemStack stack = (ItemStack)type.stack;
 
-			if(nbt.equals(stack.getTagCompound()))
+			if(type.originalHashcode == nbtHash && nbt.equals(stack.getTagCompound()))
 			{
 				return type;
 			}

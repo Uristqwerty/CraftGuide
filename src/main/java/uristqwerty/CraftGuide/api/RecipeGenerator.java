@@ -117,4 +117,6 @@ public interface RecipeGenerator
 	 * @return an Object[10] or an Object[5]
 	 */
 	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid);
+
+	public RecipeTemplateBuilder buildTemplate(ItemStack type);
 }

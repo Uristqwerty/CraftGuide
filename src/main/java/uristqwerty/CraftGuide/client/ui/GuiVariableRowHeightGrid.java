@@ -43,7 +43,7 @@ public abstract class GuiVariableRowHeightGrid extends GuiScrollableGrid
 
 			rowHeights[row] = height;
 
-			if(row < rowCount - 1)
+			if(row + 1 < rowCount)
 			{
 				rowStartY[row + 1] = rowStartY[row] + height;
 			}

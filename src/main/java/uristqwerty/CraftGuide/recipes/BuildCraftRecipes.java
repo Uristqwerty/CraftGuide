@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 	{
 		try
 		{
-			Class silicon = Class.forName("buildcraft.BuildCraftSilicon");
+			Class<?> silicon = Class.forName("buildcraft.BuildCraftSilicon");
 			addAssemblyRecipes(generator,
 					new ItemStack((Block)silicon.getField("assemblyTableBlock").get(null), 1, 0),
 					new ItemStack((Block)silicon.getField("laserBlock").get(null)));
@@ -42,7 +43,7 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 					new ItemStack((Block)silicon.getField("assemblyTableBlock").get(null), 1, 2),
 					new ItemStack((Block)silicon.getField("laserBlock").get(null)));
 
-			Class factory = Class.forName("buildcraft.BuildCraftFactory");
+			Class<?> factory = Class.forName("buildcraft.BuildCraftFactory");
 			addRefineryRecipes(generator,
 					new ItemStack((Block)factory.getField("refineryBlock").get(null)));
 		}
@@ -70,48 +71,130 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 
 	private void addAssemblyRecipes(RecipeGenerator generator, ItemStack table, ItemStack laser)
 	{
-		int maxInput = 1;
-
-		for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
+		try
 		{
-			maxInput = Math.max(maxInput, recipe.getInputs().length);
-		}
+			int maxInput = 1;
 
-		int rows = (maxInput + 2) / 3;
-		Slot[] recipeSlots = new Slot[rows * 3 + 3];
-
-		int offset = rows == 1? 18 : rows == 2? 9 : 0;
-
-		for(int i = 0; i < rows; i++)
-		{
-			recipeSlots[i * 3 + 0] = new ItemSlot( 3, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-			recipeSlots[i * 3 + 1] = new ItemSlot(21, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-			recipeSlots[i * 3 + 2] = new ItemSlot(39, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-		}
-
-		offset = rows <= 3? 3 : 3 + (rows - 3) * 9;
-
-		recipeSlots[rows * 3 + 0] = new ItemSlot(59, offset + 18, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
-		recipeSlots[rows * 3 + 1] = new ExtraSlot(59, offset +  0, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-		recipeSlots[rows * 3 + 2] = new ExtraSlot(59, offset + 36, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-
-		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
-		template.setSize(79, rows > 3? 58 + (rows - 3) * 18 : 58);
-
-		for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
-		{
-			Object[] recipeContents = new Object[rows * 3 + 3];
-			Object[] input = recipe.getInputs();
-			for(int i = 0; i < Math.min(rows * 3, input.length); i++)
+			try
 			{
-				recipeContents[i] = convert(input[i]);
+				for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
+				{
+					maxInput = Math.max(maxInput, recipe.getInputs().length);
+				}
+			}
+			catch(NoClassDefFoundError e)
+			{
+				Object manager = Class.forName("buildcraft.api.recipes.BuildcraftRecipeRegistry").getField("assemblyTable").get(null);
+				Collection<?> recipes = (Collection<?>) manager.getClass().getMethod("getRecipes").invoke(manager);
+				Class<?> viewable = Class.forName("buildcraft.api.recipes.IFlexibleRecipeViewable");
+				Method getInputs = viewable.getMethod("getInputs");
+				for(Object recipe: recipes)
+				{
+					if(viewable.isInstance(recipe))
+						maxInput = Math.max(maxInput, ((Collection<Object>)(getInputs.invoke(recipe))).size());
+				}
 			}
 
-			recipeContents[rows * 3 + 0] = recipe.getOutput();
-			recipeContents[rows * 3 + 1] = table;
-			recipeContents[rows * 3 + 2] = laser;
+			int rows = (maxInput + 2) / 3;
+			Slot[] recipeSlots = new Slot[rows * 3 + 3];
 
-			generator.addRecipe(template, recipeContents);
+			int offset = rows == 1? 18 : rows == 2? 9 : 0;
+
+			for(int i = 0; i < rows; i++)
+			{
+				recipeSlots[i * 3 + 0] = new ItemSlot( 3, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
+				recipeSlots[i * 3 + 1] = new ItemSlot(21, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
+				recipeSlots[i * 3 + 2] = new ItemSlot(39, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
+			}
+
+			offset = rows <= 3? 3 : 3 + (rows - 3) * 9;
+
+			recipeSlots[rows * 3 + 0] = new ItemSlot(59, offset + 18, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+			recipeSlots[rows * 3 + 1] = new ExtraSlot(59, offset +  0, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+			recipeSlots[rows * 3 + 2] = new ExtraSlot(59, offset + 36, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+
+			RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
+			template.setSize(79, rows > 3? 58 + (rows - 3) * 18 : 58);
+
+			try
+			{
+				for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
+				{
+					Object[] recipeContents = new Object[rows * 3 + 3];
+					Object[] input = recipe.getInputs();
+					for(int i = 0; i < Math.min(rows * 3, input.length); i++)
+					{
+						recipeContents[i] = convert(input[i]);
+					}
+
+					recipeContents[rows * 3 + 0] = recipe.getOutput();
+					recipeContents[rows * 3 + 1] = table;
+					recipeContents[rows * 3 + 2] = laser;
+
+					generator.addRecipe(template, recipeContents);
+				}
+			}
+			catch(NoClassDefFoundError e)
+			{
+				Object manager = Class.forName("buildcraft.api.recipes.BuildcraftRecipeRegistry").getField("assemblyTable").get(null);
+				Collection<?> recipes = (Collection<?>) manager.getClass().getMethod("getRecipes").invoke(manager);
+				Class<?> viewable = Class.forName("buildcraft.api.recipes.IFlexibleRecipeViewable");
+				Method getInputs = viewable.getMethod("getInputs");
+				Method getOutput = viewable.getMethod("getOutput");
+
+				for(Object recipe: recipes)
+				{
+					Object[] recipeContents = new Object[rows * 3 + 3];
+					Collection<?> input = (Collection<?>) getInputs.invoke(recipe);
+
+					int i = 0;
+					for(Object o: input)
+					{
+						recipeContents[i++] = convert(o);
+					}
+
+					recipeContents[rows * 3 + 0] = getOutput.invoke(recipe);
+					recipeContents[rows * 3 + 1] = table;
+					recipeContents[rows * 3 + 2] = laser;
+
+					generator.addRecipe(template, recipeContents);
+				}
+			}
+		}
+		catch(SecurityException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(NoSuchMethodException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(IllegalArgumentException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(IllegalAccessException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(InvocationTargetException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(ClassNotFoundException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
+		}
+		catch(NoSuchFieldException e1)
+		{
+			CraftGuideLog.log(e1);
+			return;
 		}
 	}
 
@@ -119,8 +202,22 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 	{
 		try
 		{
-			IIntegrationRecipe.class.getMethod("getComponents");
-			addIntegrationRecipes_bc6(generator, table, laser);
+			try
+			{
+				IIntegrationRecipe.class.getMethod("getComponents");
+				addIntegrationRecipes_bc6(generator, table, laser);
+			}
+			catch(NoClassDefFoundError e)
+			{
+				try
+				{
+					addIntegrationRecipes_bc7(generator, table, laser);
+				}
+				catch(ClassNotFoundException e1)
+				{
+					CraftGuideLog.log(e, "", true);
+				}
+			}
 		}
 		catch(NoSuchMethodException e)
 		{
@@ -142,6 +239,11 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		{
 			CraftGuideLog.log(e, "", true);
 		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e, "", true);
+		}
+
 	}
 
 	private void addIntegrationRecipes_bc6(RecipeGenerator generator, ItemStack table, ItemStack laser) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
@@ -204,11 +306,85 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		}
 	}
 
+	private void addIntegrationRecipes_bc7(RecipeGenerator generator, ItemStack table, ItemStack laser) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassNotFoundException, NoSuchFieldException
+	{
+
+		Class<?> integrationRecipe = Class.forName("buildcraft.api.recipes.IIntegrationRecipe");
+		Method getExampleInput = integrationRecipe.getMethod("getExampleInput");
+		Method getExampleExpansions = integrationRecipe.getMethod("getExampleExpansions");
+		Method getExampleOutput = integrationRecipe.getMethod("getExampleOutput");
+		Object manager = Class.forName("buildcraft.api.recipes.BuildcraftRecipeRegistry").getField("integrationTable").get(null);
+		Collection<?> recipes = (Collection<?>) manager.getClass().getMethod("getRecipes").invoke(manager);
+
+		int maxExpansions = 0;
+
+		for(Object recipe: recipes)
+		{
+			List<List<ItemStack>> components = (List<List<ItemStack>>)getExampleExpansions.invoke(recipe);
+			maxExpansions = Math.max(maxExpansions, components.size());
+		}
+
+		int inputSlots = 1 + maxExpansions;
+		Slot recipeSlots[] = new Slot[inputSlots + 3];
+
+		int hOffset = slotColumns(inputSlots) == 1? 12 : 3;
+
+		for(int i = 0; i < maxExpansions + 1; i++)
+		{
+			recipeSlots[i] = new ItemSlot(slotX(i, inputSlots) + hOffset, slotY(i, inputSlots) + 3, 16, 16).drawOwnBackground();
+		}
+
+		int vOffset = slotRows(inputSlots) <= 3? 3 : (slotRows(inputSlots) - 3) * 9 + 3;
+		hOffset += slotColumns(inputSlots) * 18 + 1;
+
+		if(slotColumns(inputSlots) < 3)
+		{
+			recipeSlots[inputSlots + 0] = new ItemSlot(hOffset + 19, vOffset + 18, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+			recipeSlots[inputSlots + 1] = new ExtraSlot(hOffset + 0, vOffset + 9, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+			recipeSlots[inputSlots + 2] = new ExtraSlot(hOffset + 0, vOffset + 27, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+		}
+		else
+		{
+			recipeSlots[inputSlots + 0] = new ItemSlot(hOffset, vOffset + 18, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
+			recipeSlots[inputSlots + 1] = new ExtraSlot(hOffset, vOffset + 0, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+			recipeSlots[inputSlots + 2] = new ExtraSlot(hOffset, vOffset + 36, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
+		}
+
+		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
+
+		if(slotRows(maxExpansions + 1) > 3)
+		{
+			template.setSize(79, 58 + (slotRows(inputSlots) - 3) * 18);
+		}
+
+		for(Object recipe: recipes)
+		{
+			List<ItemStack> input = (List<ItemStack>) getExampleInput.invoke(recipe);
+			List<ItemStack> output = (List<ItemStack>) getExampleOutput.invoke(recipe);
+			List<List<ItemStack>> components = (List<List<ItemStack>>)getExampleExpansions.invoke(recipe);
+
+			Object[] recipeContents = new Object[inputSlots + 3];
+
+			recipeContents[0] = input;
+
+			for(int i = 0; i < Math.min(maxExpansions, components.size()); i++)
+			{
+				recipeContents[i + 1] = components.get(i);
+			}
+
+			recipeContents[inputSlots + 0] = output;
+			recipeContents[inputSlots + 1] = table;
+			recipeContents[inputSlots + 2] = laser;
+
+			generator.addRecipe(template, recipeContents);
+		}
+	}
+
 	private void addFacades(ArrayList<ItemStack> list, boolean swapFirst)
 	{
 		try
 		{
-			Class facade = Class.forName("buildcraft.transport.ItemFacade");
+			Class<?> facade = Class.forName("buildcraft.transport.ItemFacade");
 			Field allFacades = facade.getField("allFacades");
 			list.addAll((List<ItemStack>)allFacades.get(null));
 
@@ -368,6 +544,20 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 		RecipeTemplate templateOneInput = generator.createRecipeTemplate(recipeSlotsOneInput, refinery);
 		RecipeTemplate templateTwoInputs = generator.createRecipeTemplate(recipeSlotsTwoInputs, refinery);
 
+		try
+		{
+			Class.forName("buildcraft.api.recipes.BuildcraftRecipes");
+
+			addRefineryRecipes_bc6(generator, refinery, templateOneInput, templateTwoInputs);
+		}
+		catch(ClassNotFoundException e)
+		{
+			addRefineryRecipes_bc7(generator, refinery, templateOneInput, templateTwoInputs);
+		}
+	}
+
+	private void addRefineryRecipes_bc6(RecipeGenerator generator, ItemStack refinery, RecipeTemplate templateOneInput, RecipeTemplate templateTwoInputs)
+	{
 		for(IRefineryRecipe recipe: BuildcraftRecipes.refinery.getRecipes())
 		{
 			boolean twoInputs = recipe.getIngredient2() != null;
@@ -383,6 +573,74 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 			recipeContents[twoInputs? 3 : 2] = refinery;
 
 			generator.addRecipe(twoInputs? templateTwoInputs : templateOneInput, recipeContents);
+		}
+	}
+
+	private void addRefineryRecipes_bc7(RecipeGenerator generator, ItemStack refinery, RecipeTemplate templateOneInput, RecipeTemplate templateTwoInputs)
+	{
+		try
+		{
+			Object manager = Class.forName("buildcraft.api.recipes.BuildcraftRecipeRegistry").getField("refinery").get(null);
+			Collection<?> recipes = (Collection<?>) manager.getClass().getMethod("getRecipes").invoke(manager);
+			Class<?> recipeClass = Class.forName("buildcraft.core.recipes.FlexibleRecipe");
+			Method getInputs = recipeClass.getMethod("getInputs");
+			Method getOutput = recipeClass.getMethod("getOutput");
+
+			for(Object recipe: recipes)
+			{
+				List<Object> inputs = (List<Object>) getInputs.invoke(recipe);
+				Object output = getOutput.invoke(recipe);
+
+				if(inputs.size() == 1)
+				{
+					generator.addRecipe(templateOneInput, new Object[] {
+							inputs.get(0),
+							output,
+							refinery,
+					});
+				}
+				else if(inputs.size() == 2)
+				{
+					generator.addRecipe(templateOneInput, new Object[] {
+							inputs.get(0),
+							inputs.get(1),
+							output,
+							refinery,
+					});
+				}
+				else
+				{
+					CraftGuideLog.log("Warning: Unexpected input count for BuildCraft recinery recipe: " + inputs.size());
+				}
+			}
+		}
+		catch(ClassNotFoundException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(IllegalArgumentException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(SecurityException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(IllegalAccessException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e);
 		}
 	}
 }

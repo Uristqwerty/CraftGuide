@@ -32,7 +32,7 @@ public class LiquidFilter implements ItemFilter
 
 	public void setLiquid(FluidStack liquid)
 	{
-		String name = liquid.getFluid().getLocalizedName();
+		String name = liquid.getLocalizedName();
 		this.liquid = liquid;
 		liquidName = name.toLowerCase();
 		tooltip.clear();
@@ -44,7 +44,10 @@ public class LiquidFilter implements ItemFilter
 	{
 		if(item instanceof ItemStack)
 		{
-			return liquid.isFluidEqual((ItemStack)item);
+			ItemStack stack = (ItemStack)item;
+
+			if(stack.getItem() != null)
+				return liquid.isFluidEqual(stack);
 		}
 		else if(item instanceof FluidStack)
 		{
@@ -56,7 +59,7 @@ public class LiquidFilter implements ItemFilter
 		}
 		else if(item instanceof List)
 		{
-			for(Object object: ((List)item))
+			for(Object object: ((List<?>)item))
 			{
 				if(matches(object))
 				{
@@ -82,27 +85,27 @@ public class LiquidFilter implements ItemFilter
 			{
 				textureManager.bindTexture(TextureMap.locationBlocksTexture);
 
-                double u = icon.getInterpolatedU(3.0);
-                double u2 = icon.getInterpolatedU(13.0);
-                double v = icon.getInterpolatedV(1.0);
-                double v2 = icon.getInterpolatedV(15.0);
+				double u = icon.getInterpolatedU(3.0);
+				double u2 = icon.getInterpolatedU(13.0);
+				double v = icon.getInterpolatedV(1.0);
+				double v2 = icon.getInterpolatedV(15.0);
 
-                GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
 
-        		GL11.glBegin(GL11.GL_QUADS);
-        	        GL11.glTexCoord2d(u, v);
-        	        GL11.glVertex2i(x + 3, y + 1);
+				GL11.glBegin(GL11.GL_QUADS);
+					GL11.glTexCoord2d(u, v);
+					GL11.glVertex2i(x + 3, y + 1);
 
-        	        GL11.glTexCoord2d(u, v2);
-        	        GL11.glVertex2i(x + 3, y + 15);
+					GL11.glTexCoord2d(u, v2);
+					GL11.glVertex2i(x + 3, y + 15);
 
-        	        GL11.glTexCoord2d(u2, v2);
-        	        GL11.glVertex2i(x + 13, y + 15);
+					GL11.glTexCoord2d(u2, v2);
+					GL11.glVertex2i(x + 13, y + 15);
 
-        	        GL11.glTexCoord2d(u2, v);
-        	        GL11.glVertex2i(x + 13, y + 1);
-        		GL11.glEnd();
+					GL11.glTexCoord2d(u2, v);
+					GL11.glVertex2i(x + 13, y + 1);
+				GL11.glEnd();
 			}
 		}
 

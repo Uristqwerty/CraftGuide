@@ -19,8 +19,8 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 {
 	protected Slot[] slots;
 	protected Object[] recipe;
-	private Renderable background;
-	private Renderable backgroundSelected;
+	public Renderable background;
+	public Renderable backgroundSelected;
 
 	private int width = 79, height = 58;
 
@@ -215,5 +215,10 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 		{
 			return slots[slot].getClickedFilter(x, y, recipe, slot);
 		}
+	}
+
+	public Slot[] getSlotData()
+	{
+		return slots;
 	}
 }

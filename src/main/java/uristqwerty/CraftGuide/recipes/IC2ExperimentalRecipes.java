@@ -214,8 +214,17 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 		for(Entry<IRecipeInput, RecipeOutput> recipe: recipeManager.getRecipes().entrySet())
 		{
+			ArrayList<ItemStack> inputs = new ArrayList<ItemStack>();
+
+			for(ItemStack s: recipe.getKey().getInputs())
+			{
+				ItemStack stack = s.copy();
+				stack.stackSize = recipe.getKey().getAmount();
+				inputs.add(stack);
+			}
+
 			Object[] recipeContents = new Object[maxOutput + 3];
-			recipeContents[0] = recipe.getKey().getInputs();
+			recipeContents[0] = inputs;
 			recipeContents[1] = machine;
 			recipeContents[2] = null;
 			List<ItemStack> output = recipe.getValue().items;
@@ -254,7 +263,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException
 	{
-		Class advancedRecipe = Class.forName("ic2.core.AdvRecipe");
+		Class<?> advancedRecipe = Class.forName("ic2.core.AdvRecipe");
 		Field outputField = advancedRecipe.getField("output");
 		Field inputField = advancedRecipe.getField("input");
 		Field widthField = advancedRecipe.getField("inputWidth");
@@ -267,12 +276,12 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		catch(NoSuchFieldException e){}
 
-		Class shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
+		Class<?> shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
 		Field shapelessInput = shapelessRecipe.getField("input");
 		Field shapelessOutput = shapelessRecipe.getField("output");
 		Method shapelessCanShow = shapelessRecipe.getMethod("canShow");
 
-		List recipes = CraftingManager.getInstance().getRecipeList();
+		List<?> recipes = CraftingManager.getInstance().getRecipeList();
 
 		RecipeTemplate template = generator.createRecipeTemplate(
 				new Slot[]{
@@ -433,7 +442,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			{
 				String fluidName = itemString.substring(7);
 
-				ArrayList containers = new ArrayList();
+				ArrayList<Object> containers = new ArrayList<Object>();
 				for(FluidContainerData container: FluidContainerRegistry.getRegisteredFluidContainerData())
 				{
 					if(container.fluid.getFluid().getName().equals(fluidName))
@@ -461,7 +470,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		{
 			boolean containsItemStacks = true;
 
-			for(Object o: (List)item)
+			for(Object o: (List<?>)item)
 			{
 				if(!(o instanceof ItemStack))
 				{
@@ -473,15 +482,15 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			if(containsItemStacks)
 				return item;
 
-			ArrayList newlist = new ArrayList(((List)item).size());
+			ArrayList<Object> newlist = new ArrayList<Object>(((List<?>)item).size());
 
-			for(Object o: (List)item)
+			for(Object o: (List<?>)item)
 			{
 				Object r = resolve(o);
 
 				if(r instanceof Collection)
 				{
-					newlist.addAll((Collection)r);
+					newlist.addAll((Collection<?>)r);
 				}
 				else
 				{
@@ -493,15 +502,15 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		else if(item instanceof Iterable)
 		{
-			ArrayList newlist = new ArrayList();
+			ArrayList<Object> newlist = new ArrayList<Object>();
 
-			for(Object o: (Iterable)item)
+			for(Object o: (Iterable<?>)item)
 			{
 				Object r = resolve(o);
 
 				if(r instanceof Collection)
 				{
-					newlist.addAll((Collection)r);
+					newlist.addAll((Collection<?>)r);
 				}
 				else
 				{
@@ -513,7 +522,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		else if(item != null && item.getClass().isArray())
 		{
-			ArrayList newlist = new ArrayList();
+			ArrayList<Object> newlist = new ArrayList<Object>();
 
 			for(Object o: (Object[])item)
 			{
@@ -521,7 +530,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 				if(r instanceof Collection)
 				{
-					newlist.addAll((Collection)r);
+					newlist.addAll((Collection<?>)r);
 				}
 				else
 				{

@@ -19,12 +19,10 @@ public class IC2GeneratorFuel implements StackInfoSource
 		}
 		catch(IllegalAccessException e)
 		{
-			// TODO Auto-generated catch block
 			CraftGuideLog.log(e, "", true);
 		}
 		catch(ClassNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			CraftGuideLog.log(e, "", true);
 		}
 	}
@@ -42,6 +40,8 @@ public class IC2GeneratorFuel implements StackInfoSource
 		return null;
 	}
 
+	// This method will become *so* much simpler in 1.8+, once I can drop support for older IC² versions.
+	// Also, Java 7's Exception1|Exception2 syntax. Plan is to also drop support for Java 6 in the upgrade to MC 1.8
 	private float getGeneratorMult() throws IllegalAccessException, ClassNotFoundException
 	{
 		try
@@ -52,11 +52,11 @@ public class IC2GeneratorFuel implements StackInfoSource
 		{
 			try
 			{
-				Class configClass = Class.forName("ic2.core.util.Config");
+				Class<?> configClass = Class.forName("ic2.core.util.Config");
 
 				try
 				{
-					Class configUtilClass = Class.forName("ic2.core.util.ConfigUtil");
+					Class<?> configUtilClass = Class.forName("ic2.core.util.ConfigUtil");
 					Object config = Class.forName("ic2.core.init.MainConfig").getMethod("get").invoke(null);
 					return (Float)configUtilClass.getMethod("getFloat", configClass, String.class).invoke(null, config, "balance/energy/generator/generator");
 				}

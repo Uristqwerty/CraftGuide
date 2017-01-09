@@ -14,7 +14,9 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import uristqwerty.CraftGuide.api.CraftGuideRecipe;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.RecipeTemplateBuilder;
 import uristqwerty.CraftGuide.api.Slot;
+import uristqwerty.CraftGuide.template_builder.RecipeTemplateBuilderImplementation;
 import uristqwerty.gui_craftguide.minecraft.Image;
 import uristqwerty.gui_craftguide.texture.BlankTexture;
 import uristqwerty.gui_craftguide.texture.BorderedTexture;
@@ -27,11 +29,12 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 {
 	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();
 	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
-	private Texture defaultBackground = new BlankTexture();
-	private Texture defaultBackgroundSelected;
+	public Texture defaultBackground = new BlankTexture();
+	public Texture defaultBackgroundSelected;
 	public static ItemStack workbench = new ItemStack(Blocks.crafting_table);
+	public static final RecipeGeneratorImplementation instance = new RecipeGeneratorImplementation();
 
-	public RecipeGeneratorImplementation()
+	private RecipeGeneratorImplementation()
 	{
 		Texture source = DynamicTexture.instance("base_image");
 		defaultBackgroundSelected = new BorderedTexture(
@@ -196,7 +199,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
-				List items = (List)CommonUtilities.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems", "field_77579_b");
+				List<?> items = (List<?>)CommonUtilities.getPrivateValue(ShapelessRecipes.class, (ShapelessRecipes)recipe, "b", "recipeItems", "field_77579_b");
 				return getCraftingShapelessRecipe(items, ((ShapelessRecipes)recipe).getRecipeOutput());
 			}
 			else if(ForgeExtensions.matchesType(recipe))
@@ -230,7 +233,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		return output;
 	}
 
-	Object[] getCraftingShapelessRecipe(List items, ItemStack recipeOutput)
+	Object[] getCraftingShapelessRecipe(List<?> items, ItemStack recipeOutput)
 	{
 		Object[] output = new Object[10];
 
@@ -257,5 +260,11 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 
 		output[9] = recipeOutput;
 		return output;
+	}
+
+	@Override
+	public RecipeTemplateBuilder buildTemplate(ItemStack type)
+	{
+		return new RecipeTemplateBuilderImplementation(type);
 	}
 }

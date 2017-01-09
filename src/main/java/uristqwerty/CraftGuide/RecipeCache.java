@@ -30,8 +30,8 @@ public class RecipeCache
 	private SortedSet<ItemType> craftingTypes = new TreeSet<ItemType>();
 	private Map<ItemType, List<CraftGuideRecipe>> craftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
 	private List<CraftGuideRecipe> typeResults;
-	private RecipeGeneratorImplementation generator = new RecipeGeneratorImplementation();
 	private List<CraftGuideRecipe> filteredResults = new ArrayList<CraftGuideRecipe>();
+	private RecipeGeneratorImplementation generator = RecipeGeneratorImplementation.instance;
 	private ItemFilter filterItem = null;
 	private Deque<ItemFilter> filterHistory = new LinkedList<ItemFilter>();
 	private Deque<ItemFilter> filterHistoryForwards = new LinkedList<ItemFilter>();
