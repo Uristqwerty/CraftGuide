@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.ExtraSlot;
 import uristqwerty.CraftGuide.api.ItemSlot;
@@ -96,42 +97,19 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 			}
 
 			int rows = (maxInput + 2) / 3;
-			Slot[] recipeSlots = new Slot[rows * 3 + 3];
-
-			int offset = rows == 1? 18 : rows == 2? 9 : 0;
-
-			for(int i = 0; i < rows; i++)
-			{
-				recipeSlots[i * 3 + 0] = new ItemSlot( 3, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-				recipeSlots[i * 3 + 1] = new ItemSlot(21, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-				recipeSlots[i * 3 + 2] = new ItemSlot(39, 3 + i * 18 + offset, 16, 16).drawOwnBackground();
-			}
-
-			offset = rows <= 3? 3 : 3 + (rows - 3) * 9;
-
-			recipeSlots[rows * 3 + 0] = new ItemSlot(59, offset + 18, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground();
-			recipeSlots[rows * 3 + 1] = new ExtraSlot(59, offset +  0, 16, 16, table).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-			recipeSlots[rows * 3 + 2] = new ExtraSlot(59, offset + 36, 16, 16, laser).clickable().showName().setSlotType(SlotType.MACHINE_SLOT);
-
-			RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, table);
-			template.setSize(79, rows > 3? 58 + (rows - 3) * 18 : 58);
+			ConstructedRecipeTemplate template = generator.buildTemplate(table)
+				.shapelessItemGrid(3, rows).nextColumn(1)
+				.outputItem().machineItem().machineItem()
+				.finishTemplate();
 
 			try
 			{
 				for(IAssemblyRecipe recipe: BuildcraftRecipes.assemblyTable.getRecipes())
 				{
-					Object[] recipeContents = new Object[rows * 3 + 3];
-					Object[] input = recipe.getInputs();
-					for(int i = 0; i < Math.min(rows * 3, input.length); i++)
-					{
-						recipeContents[i] = convert(input[i]);
-					}
-
-					recipeContents[rows * 3 + 0] = recipe.getOutput();
-					recipeContents[rows * 3 + 1] = table;
-					recipeContents[rows * 3 + 2] = laser;
-
-					generator.addRecipe(template, recipeContents);
+					template.buildRecipe()
+						.shapelessItemGrid(convertAll(recipe.getInputs()))
+						.item(recipe.getOutput()).item(table).item(laser)
+						.addRecipe(generator);
 				}
 			}
 			catch(NoClassDefFoundError e)
@@ -144,20 +122,11 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 
 				for(Object recipe: recipes)
 				{
-					Object[] recipeContents = new Object[rows * 3 + 3];
-					Collection<?> input = (Collection<?>) getInputs.invoke(recipe);
-
-					int i = 0;
-					for(Object o: input)
-					{
-						recipeContents[i++] = convert(o);
-					}
-
-					recipeContents[rows * 3 + 0] = getOutput.invoke(recipe);
-					recipeContents[rows * 3 + 1] = table;
-					recipeContents[rows * 3 + 2] = laser;
-
-					generator.addRecipe(template, recipeContents);
+					Object[] inputs = convertAll(((Collection<?>) getInputs.invoke(recipe)).toArray());
+					template.buildRecipe()
+						.shapelessItemGrid(inputs)
+						.item(getOutput.invoke(recipe)).item(table).item(laser)
+						.addRecipe(generator);
 				}
 			}
 		}
@@ -504,6 +473,14 @@ public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProv
 	private int slotRows(int numSlots)
 	{
 		return numSlots <= 0? 0 : numSlots == 1? 1 : numSlots <= 4? 2 : numSlots <= 9? 3 : (numSlots + 2)/3;
+	}
+
+	private Object[] convertAll(Object[] inputs)
+	{
+		Object out[] = new Object[inputs.length];
+		for(int i = 0; i < out.length; i++)
+			out[i] = convert(inputs[i]);
+		return out;
 	}
 
 	private Object convert(Object object)
