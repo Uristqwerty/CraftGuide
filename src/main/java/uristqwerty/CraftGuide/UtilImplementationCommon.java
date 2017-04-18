@@ -11,6 +11,11 @@ import net.minecraft.util.EnumChatFormatting;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
+import uristqwerty.CraftGuide.filters.EmptyOreDictionaryFilter;
+import uristqwerty.CraftGuide.filters.MultipleItemFilter;
+import uristqwerty.CraftGuide.filters.NoItemFilter;
+import uristqwerty.CraftGuide.filters.SingleItemFilter;
+import uristqwerty.CraftGuide.filters.StringItemFilter;
 
 public abstract class UtilImplementationCommon extends Util
 {

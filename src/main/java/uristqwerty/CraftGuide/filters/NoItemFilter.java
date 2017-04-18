@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.filters;
 
 import java.util.List;
 

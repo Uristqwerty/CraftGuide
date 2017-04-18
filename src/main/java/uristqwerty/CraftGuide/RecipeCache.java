@@ -23,6 +23,7 @@ import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
+import uristqwerty.CraftGuide.filters.NoItemFilter;
 import uristqwerty.CraftGuide.itemtype.ItemType;
 
 public class RecipeCache

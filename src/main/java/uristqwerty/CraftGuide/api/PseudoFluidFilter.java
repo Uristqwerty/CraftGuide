@@ -3,24 +3,21 @@ package uristqwerty.CraftGuide.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
-import org.lwjgl.opengl.GL11;
-
-public class LiquidFilter implements ItemFilter
+public class PseudoFluidFilter implements ItemFilter
 {
 	private static NamedTexture containerTexture = null;
-	public FluidStack liquid;
+	public PseudoFluidStack liquid;
 	private String liquidName;
 	private List<String> tooltip = new ArrayList<String>();
 
-	public LiquidFilter(FluidStack liquid)
+	public PseudoFluidFilter(PseudoFluidStack liquid)
 	{
 		if(containerTexture == null)
 		{
@@ -30,7 +27,7 @@ public class LiquidFilter implements ItemFilter
 		setLiquid(liquid);
 	}
 
-	public void setLiquid(FluidStack liquid)
+	public void setLiquid(PseudoFluidStack liquid)
 	{
 		String name = liquid.getLocalizedName();
 		this.liquid = liquid;
@@ -42,16 +39,9 @@ public class LiquidFilter implements ItemFilter
 	@Override
 	public boolean matches(Object item)
 	{
-		if(item instanceof ItemStack)
+		if(item instanceof PseudoFluidStack)
 		{
-			ItemStack stack = (ItemStack)item;
-
-			if(stack.getItem() != null)
-				return liquid.isFluidEqual(stack);
-		}
-		else if(item instanceof FluidStack)
-		{
-			return liquid.isFluidEqual((FluidStack)item);
+			return liquid.isFluidEqual((PseudoFluidStack)item);
 		}
 		else if(item instanceof String)
 		{
@@ -78,8 +68,7 @@ public class LiquidFilter implements ItemFilter
 		{
 			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
-			Fluid fluid = liquid.getFluid();
-			IIcon icon = fluid.getStillIcon();
+			IIcon icon = liquid.getIcon();
 
 			if(icon != null)
 			{

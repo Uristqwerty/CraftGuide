@@ -1,9 +1,12 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.filters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CommonUtilities;
+import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.ForgeExtensions;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.Renderer;
@@ -11,7 +14,7 @@ import uristqwerty.CraftGuide.api.Util;
 
 public class StringItemFilter implements ItemFilter
 {
-	private String comparison;
+	String comparison;
 	private NamedTexture textImage = Util.instance.getTexture("TextFilter");
 
 	public StringItemFilter(String string)

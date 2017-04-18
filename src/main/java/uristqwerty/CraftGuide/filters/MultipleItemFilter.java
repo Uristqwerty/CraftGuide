@@ -1,12 +1,16 @@
-package uristqwerty.CraftGuide;
+package uristqwerty.CraftGuide.filters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CommonUtilities;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.api.CombinableItemFilter;
 import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.LiquidFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.PseudoFluidFilter;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Util;
 
@@ -167,6 +171,10 @@ public class MultipleItemFilter implements CombinableItemFilter
 			{
 				return Util.instance.getCommonFilter(Util.instance.addItemLists(getRepresentativeItems(), otherItems));
 			}
+		}
+		else if(other instanceof StringItemFilter || other instanceof LiquidFilter || other instanceof PseudoFluidFilter)
+		{
+			return new MultiFilter(this).addItemFilter(other);
 		}
 
 		return null;

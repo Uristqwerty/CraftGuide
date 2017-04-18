@@ -264,7 +264,7 @@ public class ItemType implements Comparable<ItemType>
 		// Sort error strings last
 		if((this.stack instanceof String) != (other.stack instanceof String))
 		{
-			return (other.stack instanceof ArrayList)? -1 : 1;
+			return (other.stack instanceof String)? -1 : 1;
 		}
 
 		if(this.stack instanceof ItemStack)

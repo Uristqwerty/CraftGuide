@@ -122,6 +122,10 @@ public class LiquidSlot implements Slot
 		{
 			return new LiquidFilter((FluidStack)data[dataIndex]);
 		}
+		else if(data[dataIndex] instanceof PseudoFluidStack)
+		{
+			return new PseudoFluidFilter((PseudoFluidStack)data[dataIndex]);
+		}
 		else
 		{
 			return null;
@@ -161,8 +165,7 @@ public class LiquidSlot implements Slot
 	@Override
 	public boolean matches(ItemFilter filter, Object[] data, int dataIndex, SlotType type)
 	{
-		if(!(data[dataIndex] instanceof FluidStack) ||
-				(type != slotType && (
+		if((type != slotType && (
 					type != SlotType.ANY_SLOT ||
 					slotType == SlotType.DISPLAY_SLOT ||
 					slotType == SlotType.HIDDEN_SLOT)))
@@ -170,24 +173,31 @@ public class LiquidSlot implements Slot
 			return false;
 		}
 
-		FluidStack stack = (FluidStack)data[dataIndex];
+		if(data[dataIndex] instanceof FluidStack)
+		{
+			FluidStack stack = (FluidStack)data[dataIndex];
 
-		if(filter.matches(stack))
-		{
-			return true;
-		}
-		else
-		{
-			for(FluidContainerData liquidData: FluidContainerRegistry.getRegisteredFluidContainerData())
+			if(filter.matches(stack))
 			{
-				if(stack.isFluidEqual(liquidData.fluid) && filter.matches(liquidData.filledContainer))
+				return true;
+			}
+			else
+			{
+				for(FluidContainerData liquidData: FluidContainerRegistry.getRegisteredFluidContainerData())
 				{
-					return true;
+					if(stack.isFluidEqual(liquidData.fluid) && filter.matches(liquidData.filledContainer))
+					{
+						return true;
+					}
 				}
 			}
-
-			return false;
 		}
+		else if(data[dataIndex] instanceof PseudoFluidStack)
+		{
+			return filter.matches(data[dataIndex]);
+		}
+
+		return false;
 	}
 
 	public Slot setSlotType(SlotType type)
