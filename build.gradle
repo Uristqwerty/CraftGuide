@@ -30,7 +30,7 @@ apply plugin: 'forge'
 apply plugin: 'liteloader'
 apply plugin: 'curseforge'
 
-version = '1.6.9.' + ver.build
+version = '1.7.0.' + ver.build
 group = 'uristqwerty' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'CraftGuide'
 
@@ -121,21 +121,22 @@ task sourcesJar(type: Jar) {
 curse {
     projectId = '75557'
     apiKey = project.curseForgeApiKey
-    releaseType = 'beta' //alpha|beta|release
+    releaseType = 'alpha' //alpha|beta|release
 
     addGameVersion '1.7.10'
     additionalArtifact deobfJar, apiJar, sourcesJar
 
     changelog '''\
 API changes
-  - Added interface allowing item filters to be combined
+  - New, even more convenient API for adding recipes. Rather than creating arrays of slots and data, uses method chaining for both. Rather than specifying coordinates explicitly, automatically positions elements within columns. Supports shaped/shapeless grids using a single method call!
 
 Additions:
-  - If shift or control is held when clicking an item, instead of outright setting the current filter, will try adding to or removing from it. Shift adds, control removes.
+  - Option for recipe generation to run in a separate thread
+  - Grass drop probabilities
 
 Other changes:
-  - Updated tooltip EU display to work with more recent IC2 versions
-  - A few bugfixes
+  - Updated integrated recipe support in some ways? Been quite a while between changing that code and writing this message, so I'm not entirely sure how.
+  - Vast improvement in recipe generation speed
 '''
 
 }

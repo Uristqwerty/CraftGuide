@@ -41,15 +41,16 @@ public class RecipeCache
 	private SortedSet<ItemType> allItems = new TreeSet<ItemType>();
 	private boolean firstReset = true;
 
-	private static Task nextTask = null;
-	private static Thread taskThread = null;
 	/* Effectively Runnable, but having a separate type should make code searches
 	 * more useful for identifying relevant implementations
 	 */
-	private static interface Task
+	public static interface Task
 	{
 		void run();
 	}
+
+	private static Task nextTask = null;
+	private static Thread taskThread = null;
 	static
 	{
 		taskThread = new Thread(
@@ -99,7 +100,7 @@ public class RecipeCache
 		taskThread.start();
 	}
 
-	private void runTask(Task task)
+	public static void runTask(Task task)
 	{
 		if(CraftGuide.useWorkerThread)
 		{

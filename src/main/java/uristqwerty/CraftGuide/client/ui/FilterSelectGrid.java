@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.RecipeCache;
+import uristqwerty.CraftGuide.RecipeCache.Task;
 import uristqwerty.CraftGuide.api.CombinableItemFilter;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.NamedTexture;
@@ -39,6 +40,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private NamedTexture overlayAny = Util.instance.getTexture("ItemStack-Any");
 	private NamedTexture overlayForge = Util.instance.getTexture("ItemStack-OreDict");
 	private NamedTexture errorIcon = Util.instance.getTexture("Error");
+	private List<Object> nextResults = null;
 
 	public FilterSelectGrid(int x, int y, int width, int height, GuiScrollBar scrollBar, Texture texture,
 		RecipeCache recipeCache, GuiButton backButton, GuiTabbedDisplay display)
@@ -62,7 +64,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		ItemFilter newFilter;
 		if(cell < itemResults.size())
 		{
-			newFilter= Util.instance.getCommonFilter(itemResults.get(cell));
+			newFilter = Util.instance.getCommonFilter(itemResults.get(cell));
 		}
 		else if(cell == itemResults.size() && searchText != null && !searchText.isEmpty())
 		{
@@ -189,6 +191,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	@Override
 	public void draw()
 	{
+		checkAsyncResults();
 		super.draw();
 
 		if(overItem)
@@ -204,7 +207,8 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 		search(searchText);
 	}
 
-	public void search(String text)
+	private static int searchId = 0;
+	public void search(final String text)
 	{
 		searchText = text;
 		itemResults.clear();
@@ -217,32 +221,72 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 			}
 
 			setCells(itemResults.size());
+			mouseMoved(lastMouseX, lastMouseY);
 		}
 		else
 		{
-			String search = text.toLowerCase();
-
-			for(Object item: items)
-			{
-				Object stack = ((ItemType)item).getStack();
-
-				if(stack instanceof String)
+			final int id = ++searchId;
+			RecipeCache.runTask(new Task(){
+				@Override
+				public void run()
 				{
-					continue;
-				}
+					String search = text.toLowerCase();
+					List<Object> results = new ArrayList<Object>();
 
-				if(CommonUtilities.searchExtendedItemStackText(stack, search))
-				{
-					itemResults.add(stack);
-				}
-			}
+					int prevSize = 0;
+					int iters = 0;
+					for(Object item: items)
+					{
+						Object stack = ((ItemType)item).getStack();
 
-			setCells(itemResults.size() + 1);
+						if(stack instanceof String)
+						{
+							continue;
+						}
+
+						if(CommonUtilities.searchExtendedItemStackText(stack, search))
+						{
+							results.add(stack);
+						}
+						if(++iters % 500 == 0 && results.size() != prevSize)
+						{
+							if(id != searchId)
+							{
+								break;
+							}
+							prevSize = results.size();
+							updateResultsAsync(results);
+							results = new ArrayList<Object>(results);
+						}
+					}
+
+					updateResultsAsync(results);
+				}});
 		}
-
-		mouseMoved(lastMouseX, lastMouseY);
 	}
 
+
+	private void updateResultsAsync(List<Object> results)
+	{
+		synchronized(this)
+		{
+			nextResults  = results;
+		}
+	}
+
+	private void checkAsyncResults()
+	{
+		if(nextResults != null)
+		{
+			synchronized(this)
+			{
+				itemResults = nextResults;
+				nextResults = null;
+				setCells(itemResults.size());
+				mouseMoved(lastMouseX, lastMouseY);
+			}
+		}
+	}
 
 	@Override
 	public void onChange(RecipeCache cache)

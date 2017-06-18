@@ -15,15 +15,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.CraftGuideLog;
-import uristqwerty.CraftGuide.DefaultRecipeTemplate;
-import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.ChanceSlot;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -34,8 +35,6 @@ import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.StackInfo;
-import uristqwerty.gui_craftguide.texture.DynamicTexture;
-import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
@@ -281,55 +280,34 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		Field shapelessOutput = shapelessRecipe.getField("output");
 		Method shapelessCanShow = shapelessRecipe.getMethod("canShow");
 
-		List<?> recipes = CraftingManager.getInstance().getRecipeList();
+		ItemStack workbench = new ItemStack(Blocks.crafting_table);
+		ConstructedRecipeTemplate smallShaped = generator.buildTemplate(workbench)
+				.shapedItemGrid(2, 2).nextColumn(1)
+				.outputItem()
+				.finishTemplate();
 
-		RecipeTemplate template = generator.createRecipeTemplate(
-				new Slot[]{
-						new ItemSlot( 3,  3, 16, 16).drawOwnBackground(),
-						new ItemSlot(21,  3, 16, 16).drawOwnBackground(),
-						new ItemSlot(39,  3, 16, 16).drawOwnBackground(),
-						new ItemSlot( 3, 21, 16, 16).drawOwnBackground(),
-						new ItemSlot(21, 21, 16, 16).drawOwnBackground(),
-						new ItemSlot(39, 21, 16, 16).drawOwnBackground(),
-						new ItemSlot( 3, 39, 16, 16).drawOwnBackground(),
-						new ItemSlot(21, 39, 16, 16).drawOwnBackground(),
-						new ItemSlot(39, 39, 16, 16).drawOwnBackground(),
-						new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				}, null);
+		ConstructedRecipeTemplate shaped = generator.buildTemplate(workbench)
+				.shapedItemGrid(3, 3).nextColumn(1)
+				.outputItem()
+				.finishTemplate();
 
-		RecipeTemplate shapelessTemplate = new DefaultRecipeTemplate(
-				new Slot[]{
-						new ItemSlot( 3,  3, 16, 16),
-						new ItemSlot(21,  3, 16, 16),
-						new ItemSlot(39,  3, 16, 16),
-						new ItemSlot( 3, 21, 16, 16),
-						new ItemSlot(21, 21, 16, 16),
-						new ItemSlot(39, 21, 16, 16),
-						new ItemSlot( 3, 39, 16, 16),
-						new ItemSlot(21, 39, 16, 16),
-						new ItemSlot(39, 39, 16, 16),
-						new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT),
-				},
-				RecipeGeneratorImplementation.workbench,
-				new TextureClip(
-						DynamicTexture.instance("recipe_backgrounds"),
-						1, 121, 79, 58),
-				new TextureClip(
-						DynamicTexture.instance("recipe_backgrounds"),
-						82, 121, 79, 58));
+		ConstructedRecipeTemplate shapeless = generator.buildTemplate(workbench)
+				.shapelessItemGrid(3, 3).nextColumn(1)
+				.outputItem()
+				.finishTemplate();
 
-		RecipeTemplate smallTemplate = generator.createRecipeTemplate(
-				new Slot[]{
-						new ItemSlot(12, 12, 16, 16).drawOwnBackground(),
-						new ItemSlot(30, 12, 16, 16).drawOwnBackground(),
-						new ItemSlot(12, 30, 16, 16).drawOwnBackground(),
-						new ItemSlot(30, 30, 16, 16).drawOwnBackground(),
-						new ItemSlot(59, 21, 16, 16, true).setSlotType(SlotType.OUTPUT_SLOT).drawOwnBackground(),
-				}, null);
-
-		for(Object recipe: recipes)
+		for(IRecipe recipe: (List<IRecipe>)CraftingManager.getInstance().getRecipeList())
 		{
-			if(advancedRecipe.isInstance(recipe) && (Boolean)canShow.invoke(recipe))
+			if(shapelessRecipe.isInstance(recipe) && (Boolean)shapelessCanShow.invoke(recipe))
+			{
+				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
+				Object[] input = (Object[])shapelessInput.get(recipe);
+				shapeless.buildRecipe()
+					.shapelessItemGrid(resolveAll(input))
+					.item(output)
+					.addRecipe(generator);
+			}
+			else if(advancedRecipe.isInstance(recipe) && (Boolean)canShow.invoke(recipe))
 			{
 				ItemStack output = (ItemStack)outputField.get(recipe);
 				Object[] input = (Object[])inputField.get(recipe);
@@ -340,21 +318,13 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 					input = expandInput(input, width, ((int[])maskField.get(recipe))[0]);
 				}
 
-				if(width < 3 && input.length / width < 3)
-				{
-					addSmallRecipe(generator, smallTemplate, input, output, width);
-				}
-				else
-				{
-					addLargeRecipe(generator, template, input, output, width);
-				}
-			}
-			else if(shapelessRecipe.isInstance(recipe) && (Boolean)shapelessCanShow.invoke(recipe))
-			{
-				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
-				Object[] input = (Object[])shapelessInput.get(recipe);
+				int height = input.length / width;
 
-				addShapelessRecipe(generator, shapelessTemplate, input, output);
+				ConstructedRecipeTemplate template = width < 3 && height < 3? smallShaped : shaped;
+				template.buildRecipe()
+					.shapedItemGrid(width, height, resolveAll(input))
+					.item(output)
+					.addRecipe(generator);
 			}
 		}
 	}
@@ -379,57 +349,14 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		return expanded;
 	}
 
-	private void addLargeRecipe(RecipeGenerator generator, RecipeTemplate template,
-			Object[] input, ItemStack output, int width)
+	private Object[] resolveAll(Object[] input)
 	{
-		Object[] recipeContents = new Object[10];
-
-		int hShift = width == 1? 1 : 0;
-		int vShift = width == input.length? 1 : 0;
-
-		for(int y = 0; y < input.length / width; y++)
+		Object ret[] = new Object[input.length];
+		for(int i = 0; i< input.length; i++)
 		{
-			for(int x = 0; x < width; x++)
-			{
-				recipeContents[(y + vShift) * 3 + x + hShift] = resolve(input[y * width + x]);
-			}
+			ret[i] = resolve(input[i]);
 		}
-
-		recipeContents[9] = output;
-
-		generator.addRecipe(template, recipeContents);
-	}
-
-	private void addSmallRecipe(RecipeGenerator generator, RecipeTemplate template,
-			Object[] input, ItemStack output, int width)
-	{
-		Object[] recipeContents = new Object[5];
-
-		for(int y = 0; y < input.length / width; y++)
-		{
-			for(int x = 0; x < width; x++)
-			{
-				recipeContents[y * 2 + x] = resolve(input[y * width + x]);
-			}
-		}
-
-		recipeContents[4] = output;
-
-		generator.addRecipe(template, recipeContents);
-	}
-
-	private void addShapelessRecipe(RecipeGenerator generator, RecipeTemplate template,
-			Object[] input, ItemStack output)
-	{
-		Object[] recipeContents = new Object[10];
-
-		for(int i = 0; i < Math.min(input.length, 9); i++)
-		{
-			recipeContents[i] = resolve(input[i]);
-		}
-
-		recipeContents[9] = output;
-		generator.addRecipe(template, recipeContents);
+		return ret;
 	}
 
 	private Object resolve(Object item)
