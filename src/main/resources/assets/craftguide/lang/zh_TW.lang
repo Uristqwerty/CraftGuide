@@ -18,6 +18,7 @@ craftguide.gui.config.enable_item_recipe=啟用合成指南物品合成公式 (�
 craftguide.gui.config.hide_mundane_potions=從失敗的藥水釀造組合隱藏平凡的藥水 (需要重載合成表)
 craftguide.gui.config.theme_debugging=輸出更多除錯訊息到CraftGuide.log
 craftguide.gui.config.textinput_clear_on_right_click=右鍵點擊時清除已輸入文字
+craftguide.gui.config.ae2_workaround=迴避 AE2 導致的重載速度過慢的問題
 
 craftguide.gui.config.reload_recipes.button=重載
 craftguide.gui.config.reload_recipes=重載合成公式
@@ -29,4 +30,4 @@ craftguide.gui.config.export_crafting_recipes.button=匯出
 craftguide.gui.config.export_crafting_recipes=匯出所有合成公式
 
 craftguide.gui.config.current_theme.button=切換主題
-craftguide.gui.config.current_theme.format_string=選擇主題: %s
+craftguide.gui.config.current_theme.format_string=目前主題：%s
