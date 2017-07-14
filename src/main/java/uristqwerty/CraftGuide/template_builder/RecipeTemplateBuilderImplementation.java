@@ -114,6 +114,30 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	}
 
 	@Override
+	public RecipeTemplateBuilder text(int width)
+	{
+		throw new RuntimeException("Unimplemented");
+	}
+
+	@Override
+	public RecipeTemplateBuilder textBlock(int width, int rows)
+	{
+		throw new RuntimeException("Unimplemented");
+	}
+
+	@Override
+	public RecipeTemplateBuilder icon(int width, int height)
+	{
+		throw new RuntimeException("Unimplemented");
+	}
+
+	@Override
+	public RecipeTemplateBuilder iconWithData(int width, int height, IconMode mode, int spaceForText)
+	{
+		throw new RuntimeException("Unimplemented");
+	}
+
+	@Override
 	public RecipeTemplateBuilder setColumnAlign(VerticalAlign align)
 	{
 		throw new RuntimeException("Unimplemented");
@@ -153,7 +177,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				{
 					int hAlign = (column.totalWidth - 18) / 2;
 					slots.add(new ItemSlot(xOffset + 1 + hAlign, yOffset + 1, 16, 16, true)
-						.drawOwnBackground(item.slotType.drawBackgroupnd())
+						.drawOwnBackground(item.slotType.drawBackground())
 						.setSlotType(item.slotType.toSlotType()));
 					yOffset += 18;
 				}
@@ -162,7 +186,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 					int hAlign = (column.totalWidth - 18) / 2;
 					slots.add(new ChanceSlot(xOffset + 1 + hAlign, yOffset + 1, 16, 16, true)
 						.setRatio(1)
-						.drawOwnBackground(item.slotType.drawBackgroupnd())
+						.drawOwnBackground(item.slotType.drawBackground())
 						.setSlotType(item.slotType.toSlotType()));
 					yOffset += 18;
 				}
@@ -198,7 +222,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 						for(int x = 0; x < grid.width; x++)
 						{
 							slots.add(new ItemSlot(xOffset + x * 18 + 1 + hAlign, yOffset + y * 18 + 1, 16, 16, true)
-								.drawOwnBackground(item.slotType.drawBackgroupnd())
+								.drawOwnBackground(item.slotType.drawBackground())
 								.setSlotType(item.slotType.toSlotType()));
 						}
 					}
@@ -415,6 +439,37 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				throw new RuntimeException("Data type mismatch");
 
 			return this;
+		}
+
+		@Override
+		public RecipeBuilder text(String text)
+		{
+			throw new RuntimeException("Unimplemented");
+		}
+
+		@Override
+		public RecipeBuilder icon(String iconName)
+		{
+			throw new RuntimeException("Unimplemented");
+		}
+
+		@Override
+		public RecipeBuilder icon(String iconName, float u, float v, float u2, float v2)
+		{
+			throw new RuntimeException("Unimplemented");
+		}
+
+		@Override
+		public RecipeBuilder iconWithData(String iconName, int data)
+		{
+			throw new RuntimeException("Unimplemented");
+		}
+
+		@Override
+		public RecipeBuilder iconWithData(String iconName, float u, float v, float u2, float v2, int data)
+		{
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 

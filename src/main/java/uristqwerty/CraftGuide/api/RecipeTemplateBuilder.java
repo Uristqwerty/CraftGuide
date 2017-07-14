@@ -15,6 +15,10 @@ public interface RecipeTemplateBuilder
 	public RecipeTemplateBuilder machineItem();
 	public RecipeTemplateBuilder chanceItem();
 	public RecipeTemplateBuilder liquid();
+	public RecipeTemplateBuilder text(int width);
+	public RecipeTemplateBuilder textBlock(int width, int rows);
+	public RecipeTemplateBuilder icon(int width, int height);
+	public RecipeTemplateBuilder iconWithData(int width, int height, IconMode mode, int spaceForText);
 	public RecipeTemplateBuilder setColumnAlign(VerticalAlign align);
 	public RecipeTemplateBuilder setItemAlign(HorizontalAlign align);
 	public RecipeTemplateBuilder nextSlotType(TemplateBuilderSlotType type);
@@ -25,7 +29,7 @@ public interface RecipeTemplateBuilder
 	{
 		INPUT, OUTPUT, MACHINE, DECORATIVE;
 
-		public boolean drawBackgroupnd()
+		public boolean drawBackground()
 		{
 			return this.equals(INPUT) || this.equals(OUTPUT);
 		}
@@ -47,7 +51,11 @@ public interface RecipeTemplateBuilder
 
 	public static enum HorizontalAlign
 	{
-		LEFt, CENTER, RIGHT
+		LEFT, CENTER, RIGHT
 	}
 
+	public static enum IconMode
+	{
+		PLAIN_ICON, ICON_AND_STACKSIZE, ICON_AND_LABEL
+	}
 }

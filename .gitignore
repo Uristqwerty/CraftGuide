@@ -19,3 +19,6 @@
 # Mac Stuff
 .DS_Store
 *.command
+
+publish.bat
+version-list.txt
