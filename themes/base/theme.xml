@@ -21,6 +21,10 @@
 		<source type="resource">craftguide:textures/gui/BrewGuide.png</source>
 		<source type="resource">minecraft:textures/gui/BrewGuide.png</source>
 	</image>
+	<image id="spinner-img">
+		<source type="file">spinner.png</source>
+		<source type="resource">craftguide:textures/gui/spinner-img</source>
+	</image>
 	<texture type="clip" id="stack-any">
 		<source sourceid="base_image"></source>
 		<rect x="238" y="238" width="18" height="18"></rect>
@@ -340,5 +344,74 @@
 	<texture type="clip" id="filter-remove">
 		<source sourceid="base_image"></source>
 		<rect x="247" y="105" width="8" height="18"></rect>
+	</texture>
+	<texture type="animation" id="spinner">
+	<!-- 
+		<framestrip width="24" height="16" x="0" y="0" xstep="0" ystep="16" framecount="10" frameduration="10 ticks">
+			<source sourceid="spinner-img"></source>
+		</framestrip>
+	 -->
+	 	<frames>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="1" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="17" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="33" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="49" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="65" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="81" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="97" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="113" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="129" width="24" height="15" />
+				</texture>
+			</frame>
+	 		<frame duration="10 ticks">
+				<texture type="clip">
+					<source sourceid="spinner-img" />
+					<rect x="0" y="145" width="24" height="15" />
+				</texture>
+			</frame>
+	 	</frames>
 	</texture>
 </theme>

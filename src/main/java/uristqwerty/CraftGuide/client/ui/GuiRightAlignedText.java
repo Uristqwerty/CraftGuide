@@ -11,7 +11,7 @@ public class GuiRightAlignedText extends GuiElement
 	public GuiRightAlignedText(int x, int y, String text, int color)
 	{
 		super(x, y, 0, 0);
-		
+
 		this.text = new RightAlignedText(0, 0, text, color);
 	}
 
@@ -24,12 +24,17 @@ public class GuiRightAlignedText extends GuiElement
 	{
 		this.text.setText(text);
 	}
-	
+
 	@Override
 	public void draw()
 	{
 		render(text);
-		
+
 		super.draw();
+	}
+
+	public int getTextWidth()
+	{
+		return text.textWidth();
 	}
 }

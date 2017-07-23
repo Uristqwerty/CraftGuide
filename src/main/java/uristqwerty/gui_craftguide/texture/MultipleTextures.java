@@ -10,6 +10,10 @@ public class MultipleTextures implements Texture
 	@TextureParameter
 	public Texture[] textures;
 
+	public MultipleTextures()
+	{
+	}
+
 	public MultipleTextures(Texture[] textures)
 	{
 		this.textures = textures;

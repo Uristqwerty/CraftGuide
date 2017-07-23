@@ -25,6 +25,8 @@ import uristqwerty.gui_craftguide.texture.Texture;
 public class Image implements Texture
 {
 	private int texID;
+	private int height = 256;
+	private int width = 256;
 	private static Map<String, Image> jarCache = new HashMap<String, Image>();
 	private static Map<String, Image> fileCache = new HashMap<String, Image>();
 	private static Image err = new Image(-1);
@@ -99,13 +101,13 @@ public class Image implements Texture
 
 		if(image.texID == -1)
 		{
-			image.texID = LoadImageFile(directory, filename);
+			image.texID = LoadImageFile(directory, filename, image);
 		}
 
 		return image;
 	}
 
-	private static int LoadImageFile(File directory, String filename)
+	private static int LoadImageFile(File directory, String filename, Image writeDimsTo)
 	{
 		try
 		{
@@ -158,6 +160,8 @@ public class Image implements Texture
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
 
+			writeDimsTo.width = width;
+			writeDimsTo.height = height;
 			return texID;
 		}
 		catch(IOException e)
@@ -177,10 +181,10 @@ public class Image implements Texture
 	{
 		if(texID >= 0)
 		{
-			double u = (textureX % 256) / 256.0;
-			double v = (textureY % 256) / 256.0;
-			double u2 = ((textureX % 256) + width) / 256.0;
-			double v2 = ((textureY % 256) + height) / 256.0;
+			double u = (textureX % this.width) / (float)this.width;
+			double v = (textureY % this.height) / (float)this.height;
+			double u2 = ((textureX % this.width) + width) / (float)this.width;
+			double v2 = ((textureY % this.height) + height) / (float)this.height;
 
 			renderer.setTextureID(texID);
 			renderer.drawTexturedRect(x, y, width, height, u, v, u2, v2);

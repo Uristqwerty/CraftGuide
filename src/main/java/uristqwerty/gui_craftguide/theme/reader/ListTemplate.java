@@ -5,24 +5,29 @@ import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 
+import uristqwerty.gui_craftguide.editor.TextureMeta.WithUnits;
 import uristqwerty.gui_craftguide.theme.Theme;
 
 public class ListTemplate implements ValueTemplate
 {
 	private int size = -1;
+	@SuppressWarnings("rawtypes")
 	private ArrayList list = new ArrayList();
-	private Class type;
+	private Class<?> type;
 	public Object result;
+	private WithUnits withUnits;
 
-	public ListTemplate(Class type)
+	public ListTemplate(Class<?> type, WithUnits units)
 	{
 		this.type = type;
+		this.withUnits = units;
 	}
 
-	public ListTemplate(Class type, int size)
+	public ListTemplate(Class<?> type, int size, WithUnits units)
 	{
 		this.type = type;
 		this.size = size;
+		this.withUnits = units;
 	}
 
 	@Override
@@ -38,7 +43,7 @@ public class ListTemplate implements ValueTemplate
 	@Override
 	public ElementHandler getSubElement(String name, Attributes attributes)
 	{
-		ValueTemplate t = ValueType.getTemplate(type.getComponentType());
+		ValueTemplate t = ValueType.getTemplate(type.getComponentType(), withUnits);
 
 		if(t != null)
 		{
@@ -76,7 +81,7 @@ public class ListTemplate implements ValueTemplate
 	}
 
 	@Override
-	public Class valueType()
+	public Class<?> valueType()
 	{
 		return type;
 	}

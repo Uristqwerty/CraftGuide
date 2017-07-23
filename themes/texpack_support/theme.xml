@@ -6,4 +6,5 @@
 		<dependency>theme_base</dependency></metadata>
 	<image id="base_image" type="resource">
 		<source type="resource">craftguide:textures/gui/CraftGuide.png</source>
-		<source type="resource">minecraft:textures/gui/CraftGuide.png</source></image></theme>
+		<source type="resource">minecraft:textures/gui/CraftGuide.png</source></image>
+</theme>

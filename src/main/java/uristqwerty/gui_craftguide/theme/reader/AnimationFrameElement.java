@@ -2,19 +2,33 @@ package uristqwerty.gui_craftguide.theme.reader;
 
 import org.xml.sax.Attributes;
 
-import uristqwerty.gui_craftguide.Color;
 import uristqwerty.gui_craftguide.editor.TextureMeta.Unit;
 import uristqwerty.gui_craftguide.editor.TextureMeta.WithUnits;
+import uristqwerty.gui_craftguide.texture.AnimationFrame;
+import uristqwerty.gui_craftguide.texture.Texture;
 import uristqwerty.gui_craftguide.theme.Theme;
 
-public class ColorTemplate implements ValueTemplate
+public class AnimationFrameElement implements ValueTemplate
 {
-	public int red = 255, green = 255, blue = 255, alpha = 255;
-	private final WithUnits units;
+	private AnimationFrame frame;
+	private static final WithUnits units;
 
-	public ColorTemplate(WithUnits units)
+	static
 	{
-		this.units = units;
+		try
+		{
+			units = AnimationFrame.class.getField("duration").getAnnotation(WithUnits.class);
+		}
+		catch(SecurityException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("Can't handle this case");
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("This really shouldn't be possible");
+		}
 	}
 
 	@Override
@@ -22,21 +36,10 @@ public class ColorTemplate implements ValueTemplate
 	{
 		for(int i = 0; i < attributes.getLength(); i++)
 		{
-			if(attributes.getLocalName(i).equalsIgnoreCase("red"))
+			if(attributes.getLocalName(i).equalsIgnoreCase("duration"))
 			{
-				red = num(attributes.getValue(i));
-			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("green"))
-			{
-				green = num(attributes.getValue(i));
-			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("blue"))
-			{
-				blue = num(attributes.getValue(i));
-			}
-			else if(attributes.getLocalName(i).equalsIgnoreCase("alpha"))
-			{
-				alpha = num(attributes.getValue(i));
+				frame = new AnimationFrame();
+				frame.duration = num(attributes.getValue(i));
 			}
 		}
 	}
@@ -49,6 +52,11 @@ public class ColorTemplate implements ValueTemplate
 	@Override
 	public ElementHandler getSubElement(String name, Attributes attributes)
 	{
+		if(frame != null && name.equalsIgnoreCase("texture"))
+		{
+			return new TextureElement();
+		}
+
 		return NullElement.instance;
 	}
 
@@ -60,9 +68,25 @@ public class ColorTemplate implements ValueTemplate
 	@Override
 	public void endSubElement(Theme theme, ElementHandler handler, String name)
 	{
+		if(frame != null && name.equalsIgnoreCase("texture"))
+		{
+			frame.source = (Texture)((TextureElement)handler).getValue();
+		}
 	}
 
-	private int num(String str)
+	@Override
+	public Class<?> valueType()
+	{
+		return AnimationFrame.class;
+	}
+
+	@Override
+	public Object getValue()
+	{
+		return frame;
+	}
+
+	private double num(String str)
 	{
 		double multiplier = 1;
 		if(units != null)
@@ -87,23 +111,11 @@ public class ColorTemplate implements ValueTemplate
 		}
 		try
 		{
-			return (int)(Double.parseDouble(str) * multiplier);
+			return Double.parseDouble(str) * multiplier;
 		}
 		catch(NumberFormatException e)
 		{
 			return 0;
 		}
-	}
-
-	@Override
-	public Class<?> valueType()
-	{
-		return Color.class;
-	}
-
-	@Override
-	public Object getValue()
-	{
-		return new Color(red, green, blue, alpha);
 	}
 }

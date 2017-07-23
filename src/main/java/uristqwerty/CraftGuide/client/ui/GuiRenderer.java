@@ -32,6 +32,7 @@ import uristqwerty.gui_craftguide.texture.Texture;
 
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
+	private double frameStartTime;
 	private RenderItem itemRenderer = new RenderItem();
 	private List<Overlay> overlays = new LinkedList<Overlay>();
 	private Gui gui;
@@ -44,6 +45,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		this.gui = gui;
 		resetValues();
+		frameStartTime = Minecraft.getSystemTime() / 1000.0;
 	}
 
 	public void endFrame()
@@ -480,5 +482,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	private List<String> getTooltip(ItemStack stack)
 	{
 		return stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+	}
+
+	@Override
+	public double getClock()
+	{
+		return frameStartTime;
 	}
 }

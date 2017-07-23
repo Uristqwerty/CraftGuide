@@ -1,11 +1,15 @@
 package uristqwerty.gui_craftguide.theme.reader;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.gui_craftguide.editor.TextureMeta.GeneratedFrom;
+import uristqwerty.gui_craftguide.editor.TextureMeta.ListElementType;
 import uristqwerty.gui_craftguide.editor.TextureMeta.TextureParameter;
+import uristqwerty.gui_craftguide.editor.TextureMeta.WithUnits;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.Texture;
 import uristqwerty.gui_craftguide.theme.Theme;
@@ -69,11 +73,27 @@ public class TextureElement implements ValueTemplate
 			{
 				if(field.getName().equalsIgnoreCase(name))
 				{
-					ValueTemplate template = ValueType.getTemplate(field);
+					WithUnits units = field.getAnnotation(WithUnits.class);
+
+					ValueTemplate template = ValueType.getTemplate(field, units);
 
 					if(template != null)
 					{
 						return template;
+					}
+				}
+				else if(field.isAnnotationPresent(GeneratedFrom.class))
+				{
+					GeneratedFrom from = field.getAnnotation(GeneratedFrom.class);
+					Class<?> type = field.getType();
+					if(ArrayList.class.isAssignableFrom(type))
+					{
+						type = field.getAnnotation(ListElementType.class).value();
+					}
+
+					for(Class<?> src: from.value())
+					{
+						throw new RuntimeException("Not implemented yet; ideas of a better system might replace this feature entirely" + src);
 					}
 				}
 			}

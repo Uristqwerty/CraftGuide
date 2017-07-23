@@ -45,4 +45,36 @@ public @interface TextureMeta
 	public @interface TextureInit
 	{
 	}
+
+	/**
+	 * Indicates that a @TextureParameter can be produced by multiple types of Object
+	 * rather than written out directly. This allows shorthand notations in theme files,
+	 * such as more easily representing a strip of animation frames or a bordered texture.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
+	public @interface GeneratedFrom
+	{
+		public Class<?>[] value();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
+	public @interface ListElementType
+	{
+		public Class<?> value();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD})
+	public @interface WithUnits
+	{
+		public Unit[] value();
+	}
+
+	public @interface Unit
+	{
+		public double multiplier();
+		public String[] names();
+	}
 }

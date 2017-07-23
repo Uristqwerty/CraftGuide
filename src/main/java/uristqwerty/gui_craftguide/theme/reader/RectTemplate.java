@@ -3,11 +3,19 @@ package uristqwerty.gui_craftguide.theme.reader;
 import org.xml.sax.Attributes;
 
 import uristqwerty.gui_craftguide.Rect;
+import uristqwerty.gui_craftguide.editor.TextureMeta.Unit;
+import uristqwerty.gui_craftguide.editor.TextureMeta.WithUnits;
 import uristqwerty.gui_craftguide.theme.Theme;
 
 public class RectTemplate implements ValueTemplate
 {
 	public int x, y, width, height;
+	private final WithUnits units;
+
+	public RectTemplate(WithUnits units)
+	{
+		this.units = units;
+	}
 
 	@Override
 	public void startElement(Theme theme, String name, Attributes attributes)
@@ -56,9 +64,30 @@ public class RectTemplate implements ValueTemplate
 
 	private int num(String value)
 	{
+		double multiplier = 1;
+		if(units != null)
+		{
+			String lower = value.toLowerCase();
+			int longestMatch = 0;
+			for(Unit u: units.value())
+			{
+				for(String unitName: u.names())
+				{
+					if(lower.endsWith(unitName.toLowerCase()) && unitName.length() > longestMatch)
+					{
+						multiplier = u.multiplier();
+						longestMatch = unitName.length();
+					}
+				}
+			}
+			if(longestMatch > 0)
+			{
+				value = value.substring(0, value.length() - longestMatch).trim();
+			}
+		}
 		try
 		{
-			return Integer.parseInt(value);
+			return (int)(Integer.parseInt(value) * multiplier);
 		}
 		catch(NumberFormatException e)
 		{
@@ -67,7 +96,7 @@ public class RectTemplate implements ValueTemplate
 	}
 
 	@Override
-	public Class valueType()
+	public Class<?> valueType()
 	{
 		return Rect.class;
 	}

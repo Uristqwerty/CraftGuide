@@ -116,6 +116,11 @@ public class RecipeCache
 		}
 	}
 
+	public static boolean hasActiveTask()
+	{
+		return nextTask != null;
+	}
+
 	public RecipeCache()
 	{
 		reset();

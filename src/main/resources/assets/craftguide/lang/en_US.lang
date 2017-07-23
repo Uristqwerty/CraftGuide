@@ -31,3 +31,5 @@ craftguide.gui.config.export_crafting_recipes=Export all crafting table recipes
 
 craftguide.gui.config.current_theme.button=Next theme
 craftguide.gui.config.current_theme.format_string=Current theme: %s
+
+craftguide.gui.task_running=Working...

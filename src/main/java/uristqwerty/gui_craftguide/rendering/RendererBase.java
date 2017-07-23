@@ -22,6 +22,10 @@ public abstract class RendererBase
 
 	public static RendererBase instance;
 
+	/** Returns the time that the current frame started rendering, measured in
+	 * seconds since an arbitrary reference point */
+	public abstract double getClock();
+
 	public abstract void setTextureID(int textureID);
 	public abstract void drawText(String text, int x, int y);
 	public abstract void drawTextWithShadow(String text, int x, int y);
