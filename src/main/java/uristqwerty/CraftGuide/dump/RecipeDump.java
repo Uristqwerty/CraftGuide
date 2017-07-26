@@ -38,7 +38,7 @@ public abstract class RecipeDump
 	{
 		try
 		{
-			Class oreDict = Class.forName("net.minecraftforge.oredict.OreDictionary");
+			Class<?> oreDict = Class.forName("net.minecraftforge.oredict.OreDictionary");
 			Field idMap = oreDict.getDeclaredField("oreIDs");
 			Field listMap = oreDict.getDeclaredField("oreStacks");
 			idMap.setAccessible(true);
@@ -82,7 +82,7 @@ public abstract class RecipeDump
 			startWriting(output);
 
 			List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-			Set<Class> classes = new HashSet<Class>();
+			Set<Class<?>> classes = new HashSet<Class<?>>();
 
 			for(IRecipe recipe: recipes)
 			{
@@ -90,7 +90,7 @@ public abstract class RecipeDump
 			}
 
 			startArray();
-			for(Class c: classes)
+			for(Class<?> c: classes)
 			{
 				dumpRecipes(c, recipes);
 			}
@@ -155,13 +155,13 @@ public abstract class RecipeDump
 		}
 	}
 
-	private void dumpRecipes(Class recipeClass, List<IRecipe> recipes) throws IOException, IllegalArgumentException, IllegalAccessException
+	private void dumpRecipes(Class<?> recipeClass, List<IRecipe> recipes) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		List<Field> recipeFields = new ArrayList<Field>();
 
 		startObject("recipeclass");
 		startArrayValue("structure");
-		Class c = recipeClass;
+		Class<?> c = recipeClass;
 		while(c != Object.class && c != null)
 		{
 			startObject("class_structure");
@@ -286,7 +286,7 @@ public abstract class RecipeDump
 		}
 	}
 
-	private void dumpArrayValues(Object values, Class type) throws IOException
+	private void dumpArrayValues(Object values, Class<?> type) throws IOException
 	{
 		if(type.isPrimitive())
 		{
@@ -354,7 +354,7 @@ public abstract class RecipeDump
 
 	private void dumpObjectValue(Object value) throws IOException
 	{
-		Class type = value.getClass();
+		Class<?> type = value.getClass();
 		if(type.equals(ItemStack.class))
 		{
 			writeItemStack((ItemStack)value);
@@ -373,7 +373,7 @@ public abstract class RecipeDump
 			else
 			{
 				startArrayValue("List contents");
-				for(Object o: (List)value)
+				for(Object o: (List<?>)value)
 				{
 					if(o == null)
 					{

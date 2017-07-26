@@ -21,13 +21,13 @@ public @interface GuiElementMeta
 		 * written to a file.
 		 */
 		public String name();
-		
+
 		public boolean required() default false;
 	}
-	
+
 	public @interface EnumMapProperty
 	{
-		public Class<? extends Enum> keyType();
+		public Class<? extends Enum<?>> keyType();
 		public Class<?> valueType();
 	}
 }

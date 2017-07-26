@@ -55,7 +55,7 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 			}
 			else if(recipe instanceof ShapelessOreRecipe)
 			{
-				List items = (List)CommonUtilities.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
+				List<?> items = (List<?>)CommonUtilities.getPrivateValue(ShapelessOreRecipe.class, (ShapelessOreRecipe)recipe, "input");
 				return gen.getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
 			}
 		}
@@ -79,10 +79,10 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		return null;
 	}
 
-	private IdentityHashMap<List, String> mappingCache = new IdentityHashMap<List, String>();
+	private IdentityHashMap<List<?>, String> mappingCache = new IdentityHashMap<List<?>, String>();
 
 	@Override
-	public List<String> emptyOreDictEntryTextImpl(List oreDictionaryList)
+	public List<String> emptyOreDictEntryTextImpl(List<?> oreDictionaryList)
 	{
 		if(!mappingCache.containsKey(oreDictionaryList))
 		{
@@ -103,10 +103,10 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		}
 	}
 
-	private IdentityHashMap<List, String> oreDictName = new IdentityHashMap<List, String>();
+	private IdentityHashMap<List<?>, String> oreDictName = new IdentityHashMap<List<?>, String>();
 
 	@Override
-	public String getOreDictionaryNameImpl(List list)
+	public String getOreDictionaryNameImpl(List<?> list)
 	{
 		if(oreDictName.containsKey(list))
 		{
@@ -119,7 +119,7 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		return name;
 	}
 
-	private String getOreDictName(List list)
+	private String getOreDictName(List<?> list)
 	{
 		try
 		{

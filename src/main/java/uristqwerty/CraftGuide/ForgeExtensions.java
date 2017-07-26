@@ -8,7 +8,7 @@ public abstract class ForgeExtensions
 {
 	private static ForgeExtensions forgeExt = new ForgeExtensionsNullImpl();
 
-	public static String getOreDictionaryName(List list)
+	public static String getOreDictionaryName(List<?> list)
 	{
 		return forgeExt.getOreDictionaryNameImpl(list);
 	}
@@ -28,7 +28,7 @@ public abstract class ForgeExtensions
 		return forgeExt.getCraftingRecipeImpl(recipeGeneratorImplementation, recipe, allowSmallGrid);
 	}
 
-	public static List<String> emptyOreDictEntryText(List oreDictionaryList)
+	public static List<String> emptyOreDictEntryText(List<?> oreDictionaryList)
 	{
 		return forgeExt.emptyOreDictEntryTextImpl(oreDictionaryList);
 	}
@@ -42,8 +42,8 @@ public abstract class ForgeExtensions
 	protected abstract boolean matchesTypeImpl(IRecipe recipe);
 	protected abstract boolean isShapelessRecipeImpl(IRecipe recipe);
 	protected abstract Object[] getCraftingRecipeImpl(RecipeGeneratorImplementation recipeGeneratorImplementation, IRecipe recipe, boolean allowSmallGrid);
-	protected abstract List<String> emptyOreDictEntryTextImpl(List oreDictionaryList);
-	protected abstract String getOreDictionaryNameImpl(List list);
+	protected abstract List<String> emptyOreDictEntryTextImpl(List<?> oreDictionaryList);
+	protected abstract String getOreDictionaryNameImpl(List<?> list);
 
 	private static class ForgeExtensionsNullImpl extends ForgeExtensions
 	{
@@ -68,13 +68,13 @@ public abstract class ForgeExtensions
 		}
 
 		@Override
-		protected List<String> emptyOreDictEntryTextImpl(List oreDictionaryList)
+		protected List<String> emptyOreDictEntryTextImpl(List<?> oreDictionaryList)
 		{
 			return null;
 		}
 
 		@Override
-		protected String getOreDictionaryNameImpl(List list)
+		protected String getOreDictionaryNameImpl(List<?> list)
 		{
 			return null;
 		}

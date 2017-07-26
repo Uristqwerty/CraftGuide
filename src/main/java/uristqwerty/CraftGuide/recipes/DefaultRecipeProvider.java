@@ -188,7 +188,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 
 	private void addCraftingRecipes(RecipeTemplate template, RecipeTemplate templateSmall, RecipeTemplate templateShapeless, RecipeGenerator generator)
 	{
-		List recipes = CraftingManager.getInstance().getRecipeList();
+		List<?> recipes = CraftingManager.getInstance().getRecipeList();
 
 		int errCount = 0;
 

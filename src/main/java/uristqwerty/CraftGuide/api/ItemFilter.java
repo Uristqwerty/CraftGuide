@@ -4,7 +4,7 @@ import java.util.List;
 
 
 /**
- * 
+ *
  */
 public interface ItemFilter
 {
@@ -17,7 +17,7 @@ public interface ItemFilter
 	 * @return
 	 */
 	public boolean matches(Object item);
-	
+
 	/**
 	 * Draw a visual representation of this filter at (x, y), within a
 	 * 16 by 16 rectangle. May extend out of that rectangle, although it
@@ -27,7 +27,7 @@ public interface ItemFilter
 	 * @param y
 	 */
 	public void draw(Renderer renderer, int x, int y);
-	
+
 	/**
 	 * Gets a description of the filter, displayed when the user moves
 	 * their cursor over the filter display.

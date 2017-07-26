@@ -10,7 +10,7 @@ import uristqwerty.gui_craftguide.theme.Theme;
 public class GenericHandler implements ElementHandler
 {
 	private Map<String, Object> handlers = new HashMap<String, Object>();
-	
+
 	public GenericHandler(Object... elements)//May throw IndexOutOfBoundsException or ClassCastException on bad data
 	{
 		for(int i = 0; i < elements.length; i += 2)
@@ -23,12 +23,12 @@ public class GenericHandler implements ElementHandler
 	public ElementHandler getSubElement(String name, Attributes attributes)
 	{
 		Object handler = handlers.get(name.toLowerCase());
-		
+
 		if(handler instanceof ElementHandler)
 		{
 			return (ElementHandler)handler;
 		}
-		else if(handler instanceof Class && ElementHandler.class.isAssignableFrom((Class)handler))
+		else if(handler instanceof Class && ElementHandler.class.isAssignableFrom((Class<?>)handler))
 		{
 			try
 			{
@@ -43,7 +43,7 @@ public class GenericHandler implements ElementHandler
 				e.printStackTrace();
 			}
 		}
-		
+
 		return NullElement.instance;
 	}
 

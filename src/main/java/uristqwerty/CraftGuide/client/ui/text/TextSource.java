@@ -16,7 +16,7 @@ public abstract class TextSource
 
 	public void addListener(TextChangeListener listener)
 	{
-		listeners.add(new WeakReference(listener));
+		listeners.add(new WeakReference<TextChangeListener>(listener));
 	}
 
 	public void removeListener(TextChangeListener listener)

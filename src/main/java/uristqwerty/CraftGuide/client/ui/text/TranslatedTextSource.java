@@ -19,7 +19,7 @@ public class TranslatedTextSource extends TextSource
 		rawText = text;
 		translatedText = translate(rawText);
 
-		instances.add(new WeakReference(this));
+		instances.add(new WeakReference<TranslatedTextSource>(this));
 	}
 
 	@Override
