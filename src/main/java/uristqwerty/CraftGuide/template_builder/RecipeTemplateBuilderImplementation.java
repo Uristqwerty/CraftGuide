@@ -1,5 +1,7 @@
 package uristqwerty.CraftGuide.template_builder;
 
+import static uristqwerty.CraftGuide.CraftGuide.unimplemented;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,37 +118,37 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	@Override
 	public RecipeTemplateBuilder text(int width)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
 	public RecipeTemplateBuilder textBlock(int width, int rows)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
 	public RecipeTemplateBuilder icon(int width, int height)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
 	public RecipeTemplateBuilder iconWithData(int width, int height, IconMode mode, int spaceForText)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
 	public RecipeTemplateBuilder setColumnAlign(VerticalAlign align)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
 	public RecipeTemplateBuilder setItemAlign(HorizontalAlign align)
 	{
-		throw new RuntimeException("Unimplemented");
+		throw unimplemented();
 	}
 
 	@Override
@@ -444,32 +446,31 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		@Override
 		public RecipeBuilder text(String text)
 		{
-			throw new RuntimeException("Unimplemented");
+			throw unimplemented();
 		}
 
 		@Override
 		public RecipeBuilder icon(String iconName)
 		{
-			throw new RuntimeException("Unimplemented");
+			throw unimplemented();
 		}
 
 		@Override
 		public RecipeBuilder icon(String iconName, float u, float v, float u2, float v2)
 		{
-			throw new RuntimeException("Unimplemented");
+			throw unimplemented();
 		}
 
 		@Override
 		public RecipeBuilder iconWithData(String iconName, int data)
 		{
-			throw new RuntimeException("Unimplemented");
+			throw unimplemented();
 		}
 
 		@Override
 		public RecipeBuilder iconWithData(String iconName, float u, float v, float u2, float v2, int data)
 		{
-			// TODO Auto-generated method stub
-			return null;
+			throw unimplemented();
 		}
 	}
 

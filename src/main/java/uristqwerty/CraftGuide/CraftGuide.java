@@ -417,4 +417,13 @@ public class CraftGuide
 			CraftGuideLog.log(e, "", true);
 		}
 	}
+
+	/** This is a separate function so that eclipse's reference search can
+	 *  easily find all call-sites. It is Deprecated so that all uses show
+	 *  up as warnings (is there a cleaner way to say "warn at each call-site"?) */
+	@Deprecated
+	public static RuntimeException unimplemented()
+	{
+		return new RuntimeException("Unimplemented");
+	}
 }
