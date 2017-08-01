@@ -90,6 +90,19 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		overlays.add(overlay);
 	}
 
+	/** Adapt from cg.api.Renderer conventions to uq.gui.Renderer conventions */
+	@Override
+	public void renderText(int x, int y, String text, int textColor, boolean drawShadow)
+	{
+		int prevColor = currentColor();
+		setColor(textColor);
+		if(drawShadow)
+			drawTextWithShadow(text, x, y);
+		else
+			drawText(text, x, y);
+		setColor(prevColor);
+	}
+
 	@Override
 	public void drawText(String text, int x, int y)
 	{

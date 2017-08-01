@@ -50,4 +50,14 @@ public class DefaultRecipeTemplate implements RecipeTemplate
 	{
 		return craftingType;
 	}
+
+	public int width()
+	{
+		return width;
+	}
+
+	public int height()
+	{
+		return height;
+	}
 }

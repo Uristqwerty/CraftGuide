@@ -105,4 +105,6 @@ public interface Renderer
 	 * @param bottomRightColor_argb
 	 */
 	public void renderGradient(int x, int y, int width, int height, int topLeftColor_argb, int topRightColor_argb, int bottomLeftColor_argb, int bottomRightColor_argb);
+
+	public void renderText(int x, int y, String text, int textColor_argb, boolean drawShadow);
 }
