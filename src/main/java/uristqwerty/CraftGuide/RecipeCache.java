@@ -208,13 +208,17 @@ public class RecipeCache
 						}
 						else if(item instanceof ArrayList)
 						{
-							for(ItemStack stack: (ArrayList<ItemStack>)item)
+							for(Object o: (ArrayList<?>)item)
 							{
-								ItemType craftType = ItemType.getInstance(stack);
-
-								if(craftType != null)
+								if(o instanceof ItemStack)
 								{
-									allItems.add(craftType);
+									ItemStack stack = (ItemStack)o;
+									ItemType craftType = ItemType.getInstance(stack);
+
+									if(craftType != null)
+									{
+										allItems.add(craftType);
+									}
 								}
 							}
 

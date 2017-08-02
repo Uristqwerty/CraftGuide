@@ -10,7 +10,7 @@ import uristqwerty.CraftGuide.api.SlotType;
 
 public class TextSlot implements Slot
 {
-	private int color = 0xffffffff;
+	private int color = 0xff000000;
 	private int x, y;
 
 	public TextSlot(int x, int y)
@@ -32,7 +32,7 @@ public class TextSlot implements Slot
 			for(String s: (String[])data)
 			{
 				renderer.renderText(x + this.x, y + this.y, s, color, false);
-				y += 8;
+				y += 9;
 			}
 		}
 		else if(data instanceof Collection)
@@ -40,7 +40,7 @@ public class TextSlot implements Slot
 			for(String s: (Collection<String>)data)
 			{
 				renderer.renderText(x + this.x, y + this.y, s, color, false);
-				y += 8;
+				y += 9;
 			}
 		}
 	}
