@@ -23,12 +23,17 @@ public class CraftGuideAPIObject
 	 */
 	public CraftGuideAPIObject()
 	{
+		registerCallbackObject(this);
+	}
+
+	public static void registerCallbackObject(Object o)
+	{
 		try
 		{
 			Class<?> c = Class.forName("uristqwerty.CraftGuide.ReflectionAPI");
 
 			Method m = c.getMethod("registerAPIObject", Object.class);
-			m.invoke(null, this);
+			m.invoke(null, o);
 		}
 		catch(ClassNotFoundException e)
 		{

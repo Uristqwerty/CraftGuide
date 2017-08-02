@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import uristqwerty.CraftGuide.Recipe;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
 import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
@@ -25,7 +27,6 @@ import uristqwerty.CraftGuide.api.LiquidSlot;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.PseudoFluidStack;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
-import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.RecipeTemplateBuilder;
 import uristqwerty.CraftGuide.api.Renderer;
 import uristqwerty.CraftGuide.api.Slot;
@@ -151,7 +152,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	{
 		currentColumn.items.add(new Icon(width, height, mode, spaceForText, slotType, itemAlign));
 		currentColumn.totalWidth = Math.max(currentColumn.totalWidth, width + spaceForText);
-		currentColumn.totalHeight += height;
+		currentColumn.totalHeight += height + 1;
 		return this;
 	}
 
@@ -177,6 +178,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		innerBuilder.slotType = slotType;
 		contents.defineSubunit(innerBuilder);
 		ConstructedRecipeTemplate innerTemplate = innerBuilder.finishTemplate();
+		final int innerHeight = innerBuilder.maxColumnHeight + 3;
 
 		int subunitWidth = 1;
 		for(ColumnLayout column: innerBuilder.columns)
@@ -185,9 +187,9 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		}
 
 		currentColumn.align = VerticalAlign.TOP;
-		currentColumn.items.add(new Subunit(innerTemplate, itemAlign, subunitWidth, innerBuilder.maxColumnHeight));
+		currentColumn.items.add(new Subunit(innerTemplate, itemAlign, subunitWidth, innerHeight));
 		currentColumn.totalWidth = Math.max(currentColumn.totalWidth, subunitWidth);
-		currentColumn.totalHeight += innerBuilder.maxColumnHeight;
+		currentColumn.totalHeight += innerHeight;
 		return this;
 	}
 
@@ -319,7 +321,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		ConstructedRecipeTemplateImplementation template = new ConstructedRecipeTemplateImplementation();
 		template.slots = slots.toArray(new Slot[0]);
 		template.data = dataPattern.toArray(new ColumnItem[0]);
-		template.template = RecipeGeneratorImplementation.instance.createRecipeTemplate(template.slots, craftingType);
+		template.template = (DefaultRecipeTemplate)RecipeGeneratorImplementation.instance.createRecipeTemplate(template.slots, craftingType);
 		template.template.setSize(rightEdge + 3, maxColumnHeight + 6);
 
 		return template;
@@ -393,7 +395,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	{
 		ColumnItem[] data;
 		Slot[] slots;
-		RecipeTemplate template;
+		DefaultRecipeTemplate template;
 
 		@Override
 		public RecipeBuilder buildRecipe()
@@ -406,11 +408,11 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	{
 		private final ColumnItem[] data;
 		private final Slot[] slots;
-		private final RecipeTemplate template;
+		private final DefaultRecipeTemplate template;
 		private int dataIndex = 0, slotIndex = 0;
 		private Object[] recipeData;
 
-		public RecipeBuilderImplementation(ColumnItem[] data, Slot[] slots, RecipeTemplate template)
+		public RecipeBuilderImplementation(ColumnItem[] data, Slot[] slots, DefaultRecipeTemplate template)
 		{
 			this.slots = slots;
 			this.data = data;
@@ -491,25 +493,6 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				throw new RuntimeException("Data type mismatch");
 
 			return this;
-		}
-
-		private void pushRecipeData(Object item)
-		{
-			recipeData[slotIndex++] = item;
-		}
-
-		@Override
-		public void addRecipe(RecipeGenerator generator)
-		{
-			if(dataIndex == data.length && slotIndex == slots.length)
-				generator.addRecipe(template, recipeData);
-		}
-
-		private ColumnItem nextData()
-		{
-			if(dataIndex >= data.length)
-				throw new RuntimeException("Slot underflow and I haven't implemented proper error handling");
-			return data[dataIndex++];
 		}
 
 		@Override
@@ -613,22 +596,6 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 			return this;
 		}
 
-		private Object convertTextureSource(String sourceTexture, String iconName)
-		{
-			final ResourceLocation sourceLocation = new ResourceLocation(sourceTexture);
-			if(iconName == null || iconName.isEmpty())
-			{
-				return sourceLocation;
-			}
-			ITextureObject texture = Minecraft.getMinecraft().renderEngine.getTexture(sourceLocation);
-			if(texture instanceof TextureMap)
-			{
-				TextureAtlasSprite sprite = ((TextureMap)texture).getAtlasSprite(iconName);
-				return new Object[] {sourceLocation, sprite};
-			}
-			return null;
-		}
-
 		@Override
 		public RecipeBuilder iconWithText(String sourceTexture, String iconName, String text)
 		{
@@ -679,6 +646,67 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 			}
 			pushRecipeData(contents.toArray());
 			return this;
+		}
+
+		private Object convertTextureSource(String sourceTexture, String iconName)
+		{
+			final ResourceLocation sourceLocation = new ResourceLocation(sourceTexture);
+			if(iconName == null || iconName.isEmpty())
+			{
+				return sourceLocation;
+			}
+			ITextureObject texture = Minecraft.getMinecraft().renderEngine.getTexture(sourceLocation);
+			if(texture instanceof TextureMap)
+			{
+				TextureAtlasSprite sprite = ((TextureMap)texture).getAtlasSprite(iconName);
+				return new Object[] {sourceLocation, sprite};
+			}
+			return null;
+		}
+
+		private void pushRecipeData(Object item)
+		{
+			recipeData[slotIndex++] = item;
+		}
+
+		private ColumnItem nextData()
+		{
+			if(dataIndex >= data.length)
+				throw new RuntimeException("Slot underflow and I haven't implemented proper error handling");
+			return data[dataIndex++];
+		}
+
+		@Override
+		public void addRecipe(RecipeGenerator generator)
+		{
+			if(dataIndex == data.length && slotIndex == slots.length)
+			{
+				int height = template.height();
+				for(int i = 0; i < slots.length; i++)
+				{
+					if(slots[i] instanceof SubunitSlot)
+					{
+						SubunitSlot sub = (SubunitSlot)slots[i];
+						int len = ((Object[])recipeData[i]).length;
+						final int perRow = sub.perRow(len);
+						if(perRow > 0)
+						{
+							int rows = (len + perRow - 1) / perRow;
+							height = Math.max(height, sub.groupY + rows * sub.unitHeight + 3);
+						}
+					}
+				}
+
+				if(height != template.height())
+				{
+					Recipe recipe = template.generateWithSize(recipeData, template.width(), height);
+					generator.addRecipe(recipe, template.getCraftingType());
+				}
+				else
+				{
+					generator.addRecipe(template, recipeData);
+				}
+			}
 		}
 	}
 

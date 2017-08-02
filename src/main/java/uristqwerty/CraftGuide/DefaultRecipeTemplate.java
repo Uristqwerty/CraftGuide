@@ -33,6 +33,13 @@ public class DefaultRecipeTemplate implements RecipeTemplate
 		return new Recipe(slots, items, background, backgroundSelected).setSize(width, height);
 	}
 
+	public Recipe generateWithSize(Object[] items, int width, int height)
+	{
+		TexturedRect background = new TexturedRect(0, 0, width, height, backgroundTexture, 0, 0);
+		TexturedRect backgroundSelected = new TexturedRect(0, 0, width, height, backgroundSelectedTexture, 0, 0);
+		return new Recipe(slots, items, background, backgroundSelected).setSize(width, height);
+	}
+
 	@Override
 	public RecipeTemplate setSize(int width, int height)
 	{
