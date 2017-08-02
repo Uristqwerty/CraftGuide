@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
  *  searching for items, limiting the search to a specific
  *  SlotType.
  */
-public interface CraftGuideRecipeExtra1
+public interface CraftGuideRecipeExtra1 //extends CraftGuideRecipe //TODO: Uncomment at MC version break.
 {
 	public boolean containsItem(ItemStack filter, SlotType type);
 	public boolean containsItem(ItemFilter filter, SlotType type);

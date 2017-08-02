@@ -18,6 +18,7 @@ import uristqwerty.CraftGuide.client.ui.GuiButton.ButtonState;
 import uristqwerty.CraftGuide.client.ui.text.TextSource;
 import uristqwerty.CraftGuide.client.ui.text.TextSource.TextChangeListener;
 import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
+import uristqwerty.CraftGuide.dump.HTMLExport;
 import uristqwerty.CraftGuide.dump.JsonRecipeDump;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.minecraft.MultilineText;
@@ -252,6 +253,26 @@ public class ConfigList extends GuiScrollableContent
 								output.close();
 							}
 							catch(IOException e)
+							{
+								CraftGuideLog.log(e, "", true);
+							}
+						}
+					}
+				});
+
+		addButton("craftguide.gui.config.test_html_export", "craftguide.gui.config.test_html_export.button", buttonTemplate,
+				new IButtonListener()
+				{
+					@Override
+					public void onButtonEvent(GuiButton button, Event event)
+					{
+						if(event == Event.PRESS)
+						{
+							try
+							{
+								HTMLExport.test();
+							}
+							catch(Exception e)
 							{
 								CraftGuideLog.log(e, "", true);
 							}

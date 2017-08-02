@@ -29,6 +29,7 @@ import uristqwerty.CraftGuide.client.ui.IButtonListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
 import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
+import uristqwerty.CraftGuide.dump.HTMLExport;
 import uristqwerty.gui_craftguide.components.GuiElement;
 import uristqwerty.gui_craftguide.components.GuiElement.AnchorPoint;
 import uristqwerty.gui_craftguide.components.Image;
@@ -430,7 +431,7 @@ public class GuiCraftGuide extends Gui
 
 			super.drawScreen(mouseX, mouseY, f);
 
-	        CommonUtilities.clearTooltipCache();
+			CommonUtilities.clearTooltipCache();
 		}
 		catch(Exception e)
 		{
@@ -443,7 +444,9 @@ public class GuiCraftGuide extends Gui
 		}
 
 
-    	CraftGuide.side.stopTessellating();
+		CraftGuide.side.stopTessellating();
+
+		HTMLExport.maybeTest();
 	}
 
 	private class FilterClearCallback implements IButtonListener
@@ -565,7 +568,7 @@ public class GuiCraftGuide extends Gui
 	@Override
 	public void onGuiClosed()
 	{
-        Keyboard.enableRepeatEvents(false);
+		Keyboard.enableRepeatEvents(false);
 		super.onGuiClosed();
 	}
 

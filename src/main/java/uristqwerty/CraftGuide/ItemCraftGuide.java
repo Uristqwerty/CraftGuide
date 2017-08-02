@@ -3,6 +3,9 @@ package uristqwerty.CraftGuide;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,7 +28,7 @@ public class ItemCraftGuide extends Item
 	{
 		try
 		{
-			Class registry = Class.forName("cpw.mods.fml.common.registry.GameRegistry");
+			Class<?> registry = Class.forName("cpw.mods.fml.common.registry.GameRegistry");
 			Method registerItem = registry.getMethod("registerItem", Item.class, String.class, String.class);
 			registerItem.invoke(null, this, "craftguide_item", "craftguide");
 		}
@@ -38,9 +41,16 @@ public class ItemCraftGuide extends Item
 	}
 
 	@Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
-    {
+	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
+	{
 		CraftGuide.side.openGUI(player);
-        return itemstack;
-    }
+		return itemstack;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister register)
+	{
+		super.registerIcons(register);
+	}
 }

@@ -44,7 +44,8 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		CraftGuide.loaderSide = this;
 		CraftGuide.side = side;
 		craftguide = new CraftGuide();
-		craftguide.preInit("craftguide:craftguide_item", false);
+		boolean useTestIcon = false;
+		craftguide.preInit(useTestIcon?"craftguide:palette_extension_test_icon":"craftguide:craftguide_item", false);
 
 		FMLCommonHandler.instance().bus().register(new KeyCheckTick());
 	}
@@ -128,7 +129,5 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 	@Override
 	public void initClientNetworkChannels()
 	{
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -67,10 +67,7 @@ public class CraftGuide
 
 		side.initKeybind();
 
-		if(!disableItem)
-		{
-			addItem(iconName);
-		}
+		addItem(iconName);
 	}
 
 	public void init()
