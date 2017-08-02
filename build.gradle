@@ -32,7 +32,7 @@ apply plugin: 'liteloader'
 apply plugin: 'curseforge'
 
 String minecraft_versions = '1.7.10'
-version = '1.7.0.' + ver.build
+version = '1.7.1.' + ver.build
 group = 'uristqwerty' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'CraftGuide'
 
