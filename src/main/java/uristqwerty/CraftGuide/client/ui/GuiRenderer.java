@@ -9,14 +9,15 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
@@ -35,20 +36,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	private double frameStartTime;
 	private List<Overlay> overlays = new LinkedList<>();
 	private Gui gui;
-	private RenderItem itemRenderer;
-
-	{
-		try
-		{
-			itemRenderer = (RenderItem)CommonUtilities.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(),
-					"renderItem");
-		}
-		catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
-		{
-			CraftGuideLog.log(e);
-			throw new RuntimeException("Could not get Minecraft's itemRenderer. Probably have the wrong field name.");
-		}
-	}
+	private RenderItem itemRenderer = null;
 
 	private static Map<ItemStack, ItemStack> itemStackFixes = new HashMap<>();
 
@@ -59,6 +47,19 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		this.gui = gui;
 		resetValues();
 		frameStartTime = Minecraft.getSystemTime() / 1000.0;
+		if(itemRenderer == null)
+		{
+			try
+			{
+				itemRenderer = (RenderItem)CommonUtilities.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(),
+						"renderItem", "field_175621_X", "ab");
+			}
+			catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
+			{
+				CraftGuideLog.log(e);
+				throw new RuntimeException("Could not get Minecraft's itemRenderer. Probably have the wrong field name.");
+			}
+		}
 	}
 
 	public void endFrame()
@@ -70,7 +71,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		overlays.clear();
 
-		GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+		GlStateManager.color(1, 1, 1, 1);
 	}
 
 	public void setColor(int colour, int alpha)
@@ -84,7 +85,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	{
 		if(textureID != -1)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+			GlStateManager.bindTexture(textureID);
 		}
 	}
 
@@ -119,13 +120,25 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	@Override
 	public void drawText(String text, int x, int y)
 	{
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.disableBlend();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, currentColor());
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 	}
 
 	@Override
 	public void drawTextWithShadow(String text, int x, int y)
 	{
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.disableBlend();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, currentColor());
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 	}
 
 	private int currentColor()
@@ -296,12 +309,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	private int prepareGlForItemRender(int x, int y)
 	{
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		RenderHelper.enableGUIStandardItemLighting();
-		GL11.glPushMatrix();
-		GL11.glTranslatef(x, y, 0.0F);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0.0F);
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableRescaleNormal();
 		itemRenderer.zLevel = 100.0F;
 
 		int initialMatrixStackDepth = GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH);
@@ -316,19 +329,20 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		//  fix it here, so that rendering errors do not affect later parts of the UI.
 		while(finalMatrixStackDepth > initialMatrixStackDepth)
 		{
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			finalMatrixStackDepth--;
 		}
 
 		CraftGuide.side.stopTessellating();
 
 		itemRenderer.zLevel = 0.0F;
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.color(1, 1, 1, 1);
 		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
+		GlStateManager.disableDepth();
+		GlStateManager.disableLighting();
+		GlStateManager.popMatrix();
 	}
 
 	private HashSet<ItemStack> loggedStacks = new HashSet<>();
@@ -440,10 +454,11 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 	public void renderGradient(int x, int y, int width, int height, int topLeftColor_argb, int topRightColor_argb,
 			int bottomLeftColor_argb, int bottomRightColor_argb)
 	{
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glBlendFunc(770, 771);
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(770, 771);
+		GlStateManager.disableLighting();
 
 		GL11.glBegin(GL11.GL_QUADS);
 			glColor1i(topLeftColor_argb);
@@ -459,17 +474,18 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 			GL11.glVertex2i(x + width, y);
 		GL11.glEnd();
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
 	}
 
 	private void glColor1i(int color)
 	{
 		setGlColor(
-				((color >> 16) & 0xff) / 255.0,
-				((color >>  8) & 0xff) / 255.0,
-				((color >>  0) & 0xff) / 255.0,
-				((color >> 24) & 0xff) / 255.0);
+				((color >> 16) & 0xff) / 255.0f,
+				((color >>  8) & 0xff) / 255.0f,
+				((color >>  0) & 0xff) / 255.0f,
+				((color >> 24) & 0xff) / 255.0f);
 	}
 
 	private WeakHashMap<ItemStack, Void> invalidStacks = new WeakHashMap<>();

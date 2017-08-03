@@ -47,6 +47,9 @@ archivesBaseName = 'CraftGuide'
 ext.llrevision = '03'
 project(':litemod') {
     apply plugin: 'net.minecraftforge.gradle.liteloader'
+    version = '1.7.1.mc18-pre-' + ver.build
+    group = 'uristqwerty'
+    archivesBaseName = 'CraftGuide'
     minecraft {
         version = '1.8.9'
         runDir = 'run'
@@ -126,6 +129,7 @@ processResources.dependsOn themeZip
 jar {
     exclude '**/LiteMod_CraftGuide.*'
     exclude 'litemod.json'
+    classifier = 'forge'
 }
 
 task deobfJar(type: Jar) {

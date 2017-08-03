@@ -14,7 +14,7 @@ public abstract class GuiVariableRowHeightGrid extends GuiScrollableGrid
 	}
 
 	@Override
-	protected void recalculateRowHeight()
+	protected synchronized void recalculateRowHeight()
 	{
 		int rowCount = rowCount();
 		int columns = getColumns();

@@ -5,6 +5,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import uristqwerty.CraftGuide.api.ItemFilter;
@@ -67,11 +68,10 @@ public class IconSlot implements Slot
 			int x2 = x + width;
 			int y2 = y + height;
 
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(770, 771);
+			GlStateManager.disableDepth();
+			GlStateManager.enableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(770, 771);
 			setColor(color);
 
 			GL11.glBegin(GL11.GL_QUADS);
@@ -104,7 +104,7 @@ public class IconSlot implements Slot
 				r = ((color >> 16) & 0xff)/ 255.0f,
 				g = ((color >> 8) & 0xff)/ 255.0f,
 				b = ((color >> 0) & 0xff)/ 255.0f;
-		GL11.glColor4f(r, g, b, a);
+		GlStateManager.color(r, g, b, a);
 	}
 
 	@Override

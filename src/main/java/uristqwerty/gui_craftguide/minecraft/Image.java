@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.util.ResourceLocation;
@@ -154,7 +155,7 @@ public class Image implements Texture
 			}
 
 			int texID = GL11.glGenTextures();
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+			GlStateManager.bindTexture(texID);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
@@ -199,7 +200,7 @@ public class Image implements Texture
 	{
 		for(Image image: fileCache.values())
 		{
-			GL11.glDeleteTextures(image.texID);
+			GlStateManager.deleteTexture(image.texID);
 			image.texID = -1;
 		}
 	}

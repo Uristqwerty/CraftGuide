@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -79,8 +80,8 @@ public class PseudoFluidFilter implements ItemFilter
 				double v = icon.getInterpolatedV(1.0);
 				double v2 = icon.getInterpolatedV(15.0);
 
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glColor4d(1.0, 1.0, 1.0, 1.0);
+				GlStateManager.enableTexture2D();
+				GlStateManager.color(1, 1, 1, 1);
 
 				GL11.glBegin(GL11.GL_QUADS);
 					GL11.glTexCoord2d(u, v);

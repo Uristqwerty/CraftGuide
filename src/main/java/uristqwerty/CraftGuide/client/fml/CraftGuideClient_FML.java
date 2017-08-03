@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -75,19 +76,19 @@ public class CraftGuideClient_FML extends CraftGuideClient
 		for(int i = 0; i < container.inventorySlots.size(); i++)
 		{
 			Slot slot = container.inventorySlots.get(i);
-	        if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
-	        {
-	        	ItemStack item = slot.getStack();
+			if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
+			{
+				ItemStack item = slot.getStack();
 
-	        	if(item != null)
-	        	{
-	    			Minecraft mc = Minecraft.getMinecraft();
-	        		GuiCraftGuide.getInstance().setFilterItem(item);
+				if(item != null)
+				{
+					Minecraft mc = Minecraft.getMinecraft();
+					GuiCraftGuide.getInstance().setFilterItem(item);
 					CraftGuide.side.openGUI(mc.thePlayer);
-	        	}
+				}
 
-	        	break;
-	        }
+				break;
+			}
 		}
 	}
 
@@ -107,7 +108,11 @@ public class CraftGuideClient_FML extends CraftGuideClient
 
 		try
 		{
-			if((Boolean)CommonUtilities.getPrivateValue(Tessellator.class, Tessellator.getInstance(), "field_78415_z", "isDrawing", "x"))
+			if((Boolean)CommonUtilities.getPrivateValue(WorldRenderer.class, Tessellator.getInstance().getWorldRenderer(),
+					"isDrawing",
+					//"field_78415_z", "x", /* Field names in 1.7.10's Tessellator */
+					"field_179010_r", "n"  /* Field names in 1.8.9's WorldRenderer */
+					))
 			{
 				Tessellator.getInstance().draw();
 			}
