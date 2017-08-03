@@ -78,7 +78,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 
 			if(file.canWrite())
@@ -91,7 +91,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 				}
 				catch(IOException e)
 				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "", true);
 				}
 			}
 		}
@@ -106,7 +106,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 
@@ -185,7 +185,7 @@ public abstract class CraftGuideClient implements CraftGuideSide
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 

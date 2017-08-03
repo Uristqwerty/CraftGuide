@@ -48,8 +48,7 @@ public class ThemeReader implements ContentHandler
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
-			CraftGuideLog.log(e);
+			CraftGuideLog.log(e, "", true);
 			return null;
 		}
 

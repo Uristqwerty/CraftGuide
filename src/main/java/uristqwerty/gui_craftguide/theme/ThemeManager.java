@@ -288,7 +288,7 @@ public class ThemeManager
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 				debug("              Not found.");
 				return false;
 			}
@@ -354,15 +354,9 @@ public class ThemeManager
 							return theme;
 						}
 					}
-					catch(FileNotFoundException e)
+					catch(IOException e)
 					{
-						e.printStackTrace();
-						CraftGuideLog.log(e);
-					}
-					catch (IOException e)
-					{
-						e.printStackTrace();
-						CraftGuideLog.log(e);
+						CraftGuideLog.log(e, "", true);
 					}
 				}
 

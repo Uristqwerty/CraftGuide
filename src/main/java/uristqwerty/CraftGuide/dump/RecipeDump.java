@@ -56,19 +56,7 @@ public abstract class RecipeDump
 		catch(ClassNotFoundException e)
 		{
 		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
+		catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -97,15 +85,7 @@ public abstract class RecipeDump
 
 			stopWriting();
 		}
-		catch(IOException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
+		catch(IOException | IllegalArgumentException | IllegalAccessException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -144,11 +124,7 @@ public abstract class RecipeDump
 
 			stopWriting();
 		}
-		catch(IOException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
+		catch(IOException | IllegalArgumentException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}

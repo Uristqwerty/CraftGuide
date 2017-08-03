@@ -85,11 +85,7 @@ public class HTMLExport
 
 			html.finish();
 		}
-		catch (IOException e)
-		{
-			CraftGuideLog.log(e, "Could not output recipe test", true);
-		}
-		catch (LWJGLException e)
+		catch (IOException | LWJGLException e)
 		{
 			CraftGuideLog.log(e, "Could not output recipe test", true);
 		}

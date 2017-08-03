@@ -65,23 +65,7 @@ public class GrassSeedDrops extends CraftGuideAPIObject implements RecipeProvide
 				generator.addRecipe(template, recipeContents);
 			}
 		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(ClassNotFoundException e)
+		catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException | ClassNotFoundException e)
 		{
 			CraftGuideLog.log(e);
 		}

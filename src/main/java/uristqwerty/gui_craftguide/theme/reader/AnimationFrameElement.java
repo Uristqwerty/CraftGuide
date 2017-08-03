@@ -2,6 +2,7 @@ package uristqwerty.gui_craftguide.theme.reader;
 
 import org.xml.sax.Attributes;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui_craftguide.editor.TextureMeta.Unit;
 import uristqwerty.gui_craftguide.editor.TextureMeta.WithUnits;
 import uristqwerty.gui_craftguide.texture.AnimationFrame;
@@ -21,12 +22,12 @@ public class AnimationFrameElement implements ValueTemplate
 		}
 		catch(SecurityException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 			throw new RuntimeException("Can't handle this case");
 		}
 		catch(NoSuchFieldException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 			throw new RuntimeException("This really shouldn't be possible");
 		}
 	}

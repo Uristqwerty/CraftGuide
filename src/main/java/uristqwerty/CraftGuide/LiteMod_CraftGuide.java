@@ -88,10 +88,7 @@ public class LiteMod_CraftGuide implements LiteMod, InitCompleteListener, CraftG
 			{
 				CraftGuideLog.log(e, "", true);
 			}
-			catch(NoSuchMethodException e)
-			{
-			}
-			catch(ClassNotFoundException e)
+			catch(NoSuchMethodException | ClassNotFoundException e)
 			{
 			}
 		}
@@ -102,15 +99,7 @@ public class LiteMod_CraftGuide implements LiteMod, InitCompleteListener, CraftG
 			{
 				return (Boolean)isModLoaded.invoke(null, name);
 			}
-			catch(IllegalArgumentException e)
-			{
-				CraftGuideLog.log(e, "", true);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e, "", true);
-			}
-			catch(InvocationTargetException e)
+			catch(IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
 			{
 				CraftGuideLog.log(e, "", true);
 			}

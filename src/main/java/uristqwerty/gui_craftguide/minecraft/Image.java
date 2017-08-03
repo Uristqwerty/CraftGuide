@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 import uristqwerty.gui_craftguide.texture.Texture;
 
@@ -87,7 +88,7 @@ public class Image implements Texture
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 			return null;
 		}
 
@@ -164,7 +165,7 @@ public class Image implements Texture
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 			return -1;
 		}
 	}

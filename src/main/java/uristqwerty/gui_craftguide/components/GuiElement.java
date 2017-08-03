@@ -103,13 +103,9 @@ public class GuiElement
 				{
 					CraftGuideLog.log("Annotated property '" + property.name() + "', field '" + field.getName() + "', currentValue '" + field.get(this) + "'", true);
 				}
-				catch(IllegalArgumentException e)
+				catch(IllegalArgumentException | IllegalAccessException e)
 				{
-					e.printStackTrace();
-				}
-				catch(IllegalAccessException e)
-				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "", true);
 				}
 			}
 		}

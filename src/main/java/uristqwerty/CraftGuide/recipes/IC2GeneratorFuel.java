@@ -17,11 +17,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 		{
 			mult = getGeneratorMult();
 		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(ClassNotFoundException e)
+		catch(IllegalAccessException | ClassNotFoundException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -73,32 +69,12 @@ public class IC2GeneratorFuel implements StackInfoSource
 					Object config = Class.forName("ic2.core.init.MainConfig").getMethod("get").invoke(null);
 					return (Float)Class.forName("ic2.core.util.Config").getMethod("getFloat", String.class).invoke(config, "balance/energy/generator/generator");
 				}
-				catch(IllegalArgumentException e2)
-				{
-					CraftGuideLog.log(e2, "", true);
-				}
-				catch(SecurityException e2)
-				{
-					CraftGuideLog.log(e2, "", true);
-				}
-				catch(InvocationTargetException e2)
-				{
-					CraftGuideLog.log(e2, "", true);
-				}
-				catch(NoSuchMethodException e2)
+				catch(IllegalArgumentException | SecurityException | InvocationTargetException | NoSuchMethodException e2)
 				{
 					CraftGuideLog.log(e2, "", true);
 				}
 			}
-			catch(InvocationTargetException e1)
-			{
-				CraftGuideLog.log(e1, "", true);
-			}
-			catch(NoSuchMethodException e1)
-			{
-				CraftGuideLog.log(e1, "", true);
-			}
-			catch(ClassNotFoundException e1)
+			catch(InvocationTargetException | NoSuchMethodException | ClassNotFoundException e1)
 			{
 				CraftGuideLog.log(e1, "", true);
 			}

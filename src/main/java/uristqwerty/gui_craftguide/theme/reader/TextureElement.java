@@ -38,11 +38,7 @@ public class TextureElement implements ValueTemplate
 					{
 						texture = textureClass.newInstance();
 					}
-					catch(InstantiationException e)
-					{
-						CraftGuideLog.log(e);
-					}
-					catch(IllegalAccessException e)
+					catch(InstantiationException | IllegalAccessException e)
 					{
 						CraftGuideLog.log(e);
 					}
@@ -129,11 +125,7 @@ public class TextureElement implements ValueTemplate
 								}
 							}
 						}
-						catch(IllegalArgumentException e)
-						{
-							CraftGuideLog.log(e);
-						}
-						catch(IllegalAccessException e)
+						catch(IllegalArgumentException | IllegalAccessException e)
 						{
 							CraftGuideLog.log(e);
 						}

@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
@@ -25,33 +26,9 @@ public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProv
 			Object craftingManager = craftingManagerClass.getMethod("getInstance").invoke(null);
 			addRecipes(generator, (List<IRecipe>)craftingManagerClass.getMethod("getRecipeList").invoke(craftingManager));
 		}
-		catch(IllegalArgumentException e)
+		catch(IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | NoSuchFieldException e)
 		{
-			e.printStackTrace();
-		}
-		catch(SecurityException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch(InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
-		catch(NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		}
-		catch(ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch(NoSuchFieldException e)
-		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 

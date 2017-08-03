@@ -209,9 +209,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
-			CraftGuideLog.log("Exception while trying to parse an ItemStack[10] from an IRecipe:");
-			CraftGuideLog.log(e);
+			CraftGuideLog.log(e, "Exception while trying to parse an ItemStack[10] from an IRecipe:", true);
 		}
 
 		return null;

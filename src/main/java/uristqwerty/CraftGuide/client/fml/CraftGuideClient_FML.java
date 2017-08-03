@@ -55,19 +55,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 						int top = (Integer)CommonUtilities.getPrivateValue(GuiContainer.class, (GuiContainer)screen, "field_147009_r", "r", "guiTop");
 						openRecipe((GuiContainer)screen, x - left, y - top);
 					}
-					catch(IllegalArgumentException e)
-					{
-						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-					}
-					catch(SecurityException e)
-					{
-						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-					}
-					catch(NoSuchFieldException e)
-					{
-						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
-					}
-					catch(IllegalAccessException e)
+					catch(IllegalArgumentException | SecurityException | NoSuchFieldException | IllegalAccessException e)
 					{
 						CraftGuideLog.log(e, "Exception while trying to identify if there is an item at the current cursor position.", true);
 					}
@@ -124,22 +112,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 				Tessellator.getInstance().draw();
 			}
 		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-			failed = true;
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-			failed = true;
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "", true);
-			failed = true;
-		}
-		catch(IllegalAccessException e)
+		catch(SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException e)
 		{
 			CraftGuideLog.log(e, "", true);
 			failed = true;

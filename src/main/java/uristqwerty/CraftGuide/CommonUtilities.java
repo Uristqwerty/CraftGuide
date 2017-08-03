@@ -336,7 +336,7 @@ public class CommonUtilities
 		}
 		catch(NoSuchFieldException e)
 		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 	}
 
@@ -354,13 +354,9 @@ public class CommonUtilities
 				{
 					return itemDamageField.getInt(stack);
 				}
-				catch(IllegalArgumentException e)
+				catch(IllegalArgumentException | IllegalAccessException e)
 				{
-					e.printStackTrace();
-				}
-				catch(IllegalAccessException e)
-				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "", true);
 				}
 			}
 

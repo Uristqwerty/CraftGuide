@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.xml.sax.Attributes;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui_craftguide.theme.Theme;
 
 public class GenericHandler implements ElementHandler
@@ -34,13 +35,9 @@ public class GenericHandler implements ElementHandler
 			{
 				return ((Class<? extends ElementHandler>)handler).newInstance();
 			}
-			catch(InstantiationException e)
+			catch(InstantiationException | IllegalAccessException e)
 			{
-				e.printStackTrace();
-			}
-			catch(IllegalAccessException e)
-			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 

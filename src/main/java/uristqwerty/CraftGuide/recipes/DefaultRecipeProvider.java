@@ -229,7 +229,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 				}
 				else
 				{
-					e.printStackTrace();
+					CraftGuideLog.log(e, "", true);
 				}
 
 				CraftGuideLog.log(e);

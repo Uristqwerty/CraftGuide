@@ -356,11 +356,7 @@ public class RecipeCache
 				{
 					((RecipeProvider)object).generateRecipes(generator);
 				}
-				catch(Exception e)
-				{
-					CraftGuideLog.log(e);
-				}
-				catch(LinkageError e)
+				catch(Exception | LinkageError e)
 				{
 					CraftGuideLog.log(e);
 				}
@@ -386,11 +382,7 @@ public class RecipeCache
 						rawRecipes.put(type, ((RecipeFilter)object).filterRecipes(rawRecipes.get(type), type));
 					}
 				}
-				catch(Exception e)
-				{
-					CraftGuideLog.log(e);
-				}
-				catch(LinkageError e)
+				catch(Exception | LinkageError e)
 				{
 					CraftGuideLog.log(e);
 				}
@@ -415,11 +407,7 @@ public class RecipeCache
 						}
 					}
 				}
-				catch(Exception e)
-				{
-					CraftGuideLog.log(e);
-				}
-				catch(LinkageError e)
+				catch(Exception | LinkageError e)
 				{
 					CraftGuideLog.log(e);
 				}

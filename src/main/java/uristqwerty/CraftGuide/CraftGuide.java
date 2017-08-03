@@ -78,15 +78,7 @@ public class CraftGuide
 			Class.forName("uristqwerty.CraftGuide.recipes.BrewingRecipes").newInstance();
 			Class.forName("uristqwerty.CraftGuide.recipes.GrassSeedDrops").newInstance();
 		}
-		catch(InstantiationException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(ClassNotFoundException e)
+		catch(InstantiationException | IllegalAccessException | ClassNotFoundException e)
 		{
 			CraftGuideLog.log(e);
 		}
@@ -125,11 +117,7 @@ public class CraftGuide
 			{
 				CraftGuideLog.log(e);
 			}
-			catch(Exception e)
-			{
-				CraftGuideLog.log(e, "", true);
-			}
-			catch(LinkageError e)
+			catch(Exception | LinkageError e)
 			{
 				CraftGuideLog.log(e, "", true);
 			}
@@ -144,15 +132,7 @@ public class CraftGuide
 			{
 				ForgeExtensions.setImplementation((ForgeExtensions)Class.forName("uristqwerty.CraftGuide.ForgeExtensionsImplementation").newInstance());
 			}
-			catch(InstantiationException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(ClassNotFoundException e)
+			catch(InstantiationException | IllegalAccessException | ClassNotFoundException e)
 			{
 				CraftGuideLog.log(e);
 			}
@@ -244,19 +224,13 @@ public class CraftGuide
 
 		if(configFile != null && configFile.exists() && configFile.canRead())
 		{
-			try
+			try(FileInputStream inStream = new FileInputStream(configFile))
 			{
-				FileInputStream inStream = new FileInputStream(configFile);
 				config.load(inStream);
-				inStream.close();
-			}
-			catch(FileNotFoundException e)
-			{
-				e.printStackTrace();
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 
@@ -307,21 +281,19 @@ public class CraftGuide
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 
 		if(newConfigFile != null && newConfigFile.exists() && newConfigFile.canWrite())
 		{
-			try
+			try(FileOutputStream outputStream = new FileOutputStream(newConfigFile))
 			{
-				FileOutputStream outputStream = new FileOutputStream(newConfigFile);
 				saveConfig(outputStream);
-				outputStream.close();
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 	}
@@ -399,15 +371,9 @@ public class CraftGuide
 		config.setProperty("ae2Workaround", Boolean.toString(ae2Workaround));
 		config.setProperty("useWorkerThread", Boolean.toString(useWorkerThread));
 
-		try
+		try(FileOutputStream outputStream = new FileOutputStream(new File(configDirectory(), "CraftGuide.cfg")))
 		{
-			FileOutputStream outputStream = new FileOutputStream(new File(configDirectory(), "CraftGuide.cfg"));
 			saveConfig(outputStream);
-			outputStream.close();
-		}
-		catch(FileNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
 		}
 		catch(IOException e)
 		{

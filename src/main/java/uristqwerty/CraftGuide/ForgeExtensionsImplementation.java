@@ -59,19 +59,7 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 				return gen.getCraftingShapelessRecipe(items, ((ShapelessOreRecipe)recipe).getRecipeOutput());
 			}
 		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e);
-		}
-		catch(IllegalAccessException e)
+		catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
 		{
 			CraftGuideLog.log(e);
 		}
@@ -142,21 +130,9 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 				return OreDictionary.getOreName(integer);
 			}
 		}
-		catch(NoSuchFieldException e)
+		catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
 		{
-			e.printStackTrace();
-		}
-		catch(SecurityException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IllegalAccessException e)
-		{
-			e.printStackTrace();
+			CraftGuideLog.log(e, "", true);
 		}
 
 		return null;

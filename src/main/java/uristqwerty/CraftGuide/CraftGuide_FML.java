@@ -78,19 +78,7 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 		{
 			mcDir = (File)CommonUtilities.getPrivateValue(Loader.class, null, "minecraftDir");
 		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
+		catch(SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}

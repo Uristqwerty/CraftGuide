@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui_craftguide.minecraft.Image;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.SolidColorTexture;
@@ -152,7 +153,7 @@ public class Theme
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				CraftGuideLog.log(e, "", true);
 			}
 		}
 		else if(sourceType.equalsIgnoreCase("file") && imageFormat[2] != null)

@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
+import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.gui_craftguide.Rect;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.TextureClip;
@@ -92,13 +93,9 @@ public class XMLThemeWriter implements ThemeWriter
 
 			return true;
 		}
-		catch(ElementException e)
+		catch(ElementException | IOException e)
 		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
+			CraftGuideLog.log(e);
 		}
 
 		return false;

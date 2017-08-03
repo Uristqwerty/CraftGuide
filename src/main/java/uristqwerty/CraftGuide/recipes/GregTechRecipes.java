@@ -481,31 +481,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Class<? extends Enum<?>> itemList = (Class<? extends Enum<?>>) Class.forName("gregtech.api.enums.ItemList");
 			return getMachines(itemList, "Macerator").toArray(new ItemStack[0]);
 		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(InvocationTargetException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchMethodException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch (NoSuchFieldException e)
+		catch(IllegalArgumentException | SecurityException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -521,31 +497,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Class<? extends Enum<?>> itemList = (Class<? extends Enum<?>>)Class.forName("gregtech.api.enums.ItemList");
 			return getMachines(itemList, "Extractor").toArray(new ItemStack[0]);
 		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(InvocationTargetException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchMethodException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch (NoSuchFieldException e)
+		catch(IllegalArgumentException | SecurityException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -561,31 +513,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			Class<? extends Enum<?>> itemList = (Class<? extends Enum<?>>)Class.forName("gregtech.api.enums.ItemList");
 			return getMachines(itemList, "Compressor").toArray(new ItemStack[0]);
 		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(InvocationTargetException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchMethodException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch (NoSuchFieldException e)
+		catch(IllegalArgumentException | SecurityException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
