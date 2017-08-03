@@ -21,13 +21,13 @@ public class FloatingItemText implements Renderable
 	
 	public FloatingItemText(String text)
 	{
-		this.text = new ArrayList<String>(1);
+		this.text = new ArrayList<>(1);
 		this.text.add(text);
 	}
 	
 	public void setText(String text)
 	{
-		this.text = new ArrayList<String>(1);
+		this.text = new ArrayList<>(1);
 		this.text.add(text);
 	}
 

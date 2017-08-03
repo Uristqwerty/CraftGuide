@@ -97,7 +97,7 @@ public class ConfigList extends GuiScrollableContent
 		}
 	}
 
-	private List<ConfigEntry> options = new ArrayList<ConfigEntry>();
+	private List<ConfigEntry> options = new ArrayList<>();
 
 	private GuiElement innerPanel;
 

@@ -174,7 +174,7 @@ public class CraftGuide
 
 	static
 	{
-		configComments = new HashMap<String, String>();
+		configComments = new HashMap<>();
 		configComments.put("newerBackgroundStyle", "If false, CraftGuide will use the images from CraftGuideRecipe.png for vanilla shaped crafting recipes, which is better for texture packs. If true, CraftGuide will use the default background (pieced together from parts of CraftGuide.png, then slot backgrounds drawn overtop), which is worse for texture packs, and looks identical without a texture pack.");
 		configComments.put("hideMundanePotionRecipes", "Hides recipes that convert a useful potion into a mundane potion with the damage value 8192, which is basically a failed potion. In the vanilla ingredients, they only occur when you try to add an effect without first adding netherwart (or add a second effect ingredient without using netherwart in between). Note that 8192 means, to the vanilla brewing system 'can make a splash potion without losing it's effects', and a potion with a value of EXACTLY 8192 does not have any effects anyway.");
 		configComments.put("logThemeDebugInfo", "If true, CraftGuide will output a lot of debugging text every time it reloads the themes.");
@@ -329,7 +329,7 @@ public class CraftGuide
 	// config.store() does not permit per-setting comments.
 	private static void saveConfig(OutputStream outputStream) throws IOException
 	{
-		SortedSet<String> properties = new TreeSet<String>();
+		SortedSet<String> properties = new TreeSet<>();
 		properties.addAll(config.stringPropertyNames());
 
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));

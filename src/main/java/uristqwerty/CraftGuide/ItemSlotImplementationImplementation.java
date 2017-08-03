@@ -176,7 +176,7 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 
 		if(list == null)
 		{
-			list = new ArrayList<String>(1);
+			list = new ArrayList<>(1);
 			list.add("Empty item list, not in ore dictionary");
 		}
 

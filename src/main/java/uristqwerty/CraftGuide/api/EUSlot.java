@@ -51,7 +51,7 @@ public class EUSlot implements Slot
 		int value = EUVaue(data[dataIndex]);
 		int size = PacketSize(data[dataIndex]);
 
-		ArrayList<String> tooltip = new ArrayList<String>();
+		ArrayList<String> tooltip = new ArrayList<>();
 		tooltip.add("\u00a7fIC2 energy");
 
 		if(value != -1)

@@ -16,61 +16,61 @@ public class XMLThemeWriter implements ThemeWriter
 	{
 		private static final long serialVersionUID = -1106134229546685224L;
 	}
-	
+
 	private class ElementCloseMismatchException extends ElementException
 	{
 		private static final long serialVersionUID = 3826879376987706602L;
 	}
-	
+
 	private class ElementAttributeCountException extends ElementException
 	{
 		private static final long serialVersionUID = 5363934302886278365L;
 	}
-	
-	private LinkedList<String> elementStack = new LinkedList<String>();
-	
+
+	private LinkedList<String> elementStack = new LinkedList<>();
+
 	private OutputStreamWriter output;
 	private int indentation = 0;
-	
+
 	@Override
 	public boolean write(Theme theme, OutputStream outputStream)
 	{
 		try
 		{
 			output = new OutputStreamWriter(outputStream);
-			
+
 			openElement("theme");
 				openElement("metadata");
 					writeElement("id", theme.id);
 					writeElement("name", theme.name);
 					writeElement("description", theme.description);
-					
+
 					for(String dependency: theme.dependencies)
 					{
 						writeElement("dependency", dependency);
 					}
-					
+
 				closeElement("metadata");
-				
+
 				for(String image: theme.images.keySet())
 				{
 					openElement("image", "id", image);
-					
+
 					for(Object[] source: theme.images.get(image))
 					{
 						writeElement("source", (String)source[0], "type", (String)source[1]);
 					}
-					
+
 					closeElement("image");
 				}
-				
+
 				for(String texture: theme.textures.keySet())
 				{
 					if(theme.textures.get(texture) instanceof TextureClip)
 					{
 						TextureClip clip = (TextureClip)theme.textures.get(texture);
 						openElement("texture", "id", texture, "type", "clip");
-						
+
 						if(clip.source instanceof DynamicTexture)
 						{
 							writeElement("source", ((DynamicTexture)clip.source).id);
@@ -79,17 +79,17 @@ public class XMLThemeWriter implements ThemeWriter
 						{
 							//TODO
 						}
-						
+
 						writeRect(clip.rect);
-						
+
 						closeElement("texture");
 					}
 				}
-				
+
 			closeElement("theme");
-			
+
 			output.flush();
-			
+
 			return true;
 		}
 		catch(ElementException e)
@@ -100,7 +100,7 @@ public class XMLThemeWriter implements ThemeWriter
 		{
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
@@ -125,14 +125,14 @@ public class XMLThemeWriter implements ThemeWriter
 		{
 			throw new ElementAttributeCountException();
 		}
-		
+
 		String result = "";
-		
+
 		for(int i = 0; i < attributes.length; i += 2)
 		{
 			result = result + " " + attributes[i] + "=\"" + escape(attributes[i + 1]) + "\"";
 		}
-		
+
 		return result;
 	}
 
@@ -151,7 +151,7 @@ public class XMLThemeWriter implements ThemeWriter
 		{
 			throw new ElementCloseMismatchException();
 		}
-		
+
 		indentation--;
 		indent();
 		output.write("</" + elementName + ">\n");
@@ -164,7 +164,7 @@ public class XMLThemeWriter implements ThemeWriter
 			output.write("\t");
 		}
 	}
-	
+
 	private String escape(String string)
 	{
 		if(string == null)

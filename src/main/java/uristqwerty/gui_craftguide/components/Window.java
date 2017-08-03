@@ -19,7 +19,7 @@ public class Window extends GuiElement
 
 	private GuiRenderer renderer;
 	private boolean mousePressed;
-	private Map<Layer, GuiElement> layers = new EnumMap<Layer, GuiElement>(Layer.class);
+	private Map<Layer, GuiElement> layers = new EnumMap<>(Layer.class);
 
 	private int lastMouseX, lastMouseY;
 	private int centerX, centerY;

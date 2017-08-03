@@ -12,11 +12,11 @@ public abstract class TextSource
 		public void onTextChanged(TextSource source);
 	}
 
-	private List<WeakReference<TextChangeListener>> listeners = new ArrayList<WeakReference<TextChangeListener>>();
+	private List<WeakReference<TextChangeListener>> listeners = new ArrayList<>();
 
 	public void addListener(TextChangeListener listener)
 	{
-		listeners.add(new WeakReference<TextChangeListener>(listener));
+		listeners.add(new WeakReference<>(listener));
 	}
 
 	public void removeListener(TextChangeListener listener)

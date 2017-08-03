@@ -20,7 +20,7 @@ public class EmptyOreDictionaryFilter implements ItemFilter
 	{
 		list = stack;
 
-		tooltip = new ArrayList<String>(1);
+		tooltip = new ArrayList<>(1);
 		tooltip.add("\u00a77Empty OreDictionary list: '" + oreDictionaryName + "'");
 	}
 

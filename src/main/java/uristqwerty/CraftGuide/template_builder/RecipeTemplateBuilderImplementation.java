@@ -39,7 +39,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 {
 	private ItemStack craftingType;
 	private int maxColumnHeight = 0;
-	private ArrayList<ColumnLayout> columns = new ArrayList<ColumnLayout>();
+	private ArrayList<ColumnLayout> columns = new ArrayList<>();
 	private ColumnLayout currentColumn = new ColumnLayout();
 	private TemplateBuilderSlotType slotType = TemplateBuilderSlotType.INPUT;
 	private HorizontalAlign itemAlign = HorizontalAlign.CENTER;
@@ -204,8 +204,8 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	public ConstructedRecipeTemplate finishTemplate()
 	{
 		finishColumn(0);
-		ArrayList<ColumnItem> dataPattern = new ArrayList<ColumnItem>();
-		ArrayList<Slot> slots = new ArrayList<Slot>();
+		ArrayList<ColumnItem> dataPattern = new ArrayList<>();
+		ArrayList<Slot> slots = new ArrayList<>();
 
 		int xOffset = 0;
 		int rightEdge = 0;
@@ -548,7 +548,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 			case WRAP:
 				{
 					final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-					ArrayList<String> wrappedLines = new ArrayList<String>();
+					ArrayList<String> wrappedLines = new ArrayList<>();
 					for(int i = 0; i < unwrappedLines.length; i++)
 					{
 						String overflow = "";
@@ -634,7 +634,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		public <T> RecipeBuilder subUnit(Collection<T> items, SubunitBuilder<T> builder)
 		{
 			Subunit subunit = (Subunit)nextData();
-			ArrayList<Object[]> contents = new ArrayList<Object[]>();
+			ArrayList<Object[]> contents = new ArrayList<>();
 			if(items != null)
 			{
 				for(T item: items)
@@ -714,7 +714,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	{
 		public VerticalAlign align = VerticalAlign.CENTER;
 		int totalHeight = 0, totalWidth = 0, offset = 0;
-		ArrayList<ColumnItem> items = new ArrayList<ColumnItem>();
+		ArrayList<ColumnItem> items = new ArrayList<>();
 	}
 
 	private static abstract class ColumnItem

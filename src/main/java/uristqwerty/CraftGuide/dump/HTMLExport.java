@@ -98,7 +98,7 @@ public class HTMLExport
 	private File directory;
 	private BufferedWriter htmlOut;
 
-	private HashMap<Pair<TexturedRect,TexturedRect>, Integer> recipeCSSIndices = new HashMap<Pair<TexturedRect,TexturedRect>, Integer>();
+	private HashMap<Pair<TexturedRect,TexturedRect>, Integer> recipeCSSIndices = new HashMap<>();
 	private int nextRecipeCSSIndex = 0;
 
 	public HTMLExport(File dir) throws IOException
@@ -159,24 +159,26 @@ public class HTMLExport
 		GL11.glLoadIdentity();
 		GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
 
-		BufferedWriter cssOut = new BufferedWriter(new FileWriter(new File(directory, "recipe_export.css")));
-		cssOut.write(".r{position:relative;top:0px;left:0px}\n");
-
-		CraftGuideLog.checkGlError();
-		for(Entry<Pair<TexturedRect, TexturedRect>, Integer> entry: recipeCSSIndices.entrySet())
+		try(BufferedWriter cssOut = new BufferedWriter(new FileWriter(new File(directory, "recipe_export.css"))))
 		{
-			String prefix = "r" + entry.getValue();
-			TexturedRect bg = entry.getKey().first;
-			TexturedRect bgSel = entry.getKey().second;
+			cssOut.write(".r{position:relative;top:0px;left:0px}\n");
 
-			cssOut.write("." + prefix + "{width:" + (bg.width*guiScale) + "px;height:" + (bg.height*guiScale) + "px;background:url('" + prefix + "-bg.png');}\n");
-			cssOut.write("." + prefix + ":hover{width:" + (bgSel.width*guiScale) + "px;height:" + (bgSel.height*guiScale) + "px;background:url('" + prefix + "-bgh.png');}\n");
+			CraftGuideLog.checkGlError();
+			for(Entry<Pair<TexturedRect, TexturedRect>, Integer> entry: recipeCSSIndices.entrySet())
+			{
+				String prefix = "r" + entry.getValue();
+				TexturedRect bg = entry.getKey().first;
+				TexturedRect bgSel = entry.getKey().second;
 
-			renderToImage(bg, new File(directory, prefix + "-bg.png"), scaledresolution.getScaleFactor());
-			renderToImage(bgSel, new File(directory, prefix + "-bgh.png"), scaledresolution.getScaleFactor());
+				cssOut.write("." + prefix + "{width:" + (bg.width*guiScale) + "px;height:" + (bg.height*guiScale) + "px;background:url('" + prefix + "-bg.png');}\n");
+				cssOut.write("." + prefix + ":hover{width:" + (bgSel.width*guiScale) + "px;height:" + (bgSel.height*guiScale) + "px;background:url('" + prefix + "-bgh.png');}\n");
+
+				renderToImage(bg, new File(directory, prefix + "-bg.png"), scaledresolution.getScaleFactor());
+				renderToImage(bgSel, new File(directory, prefix + "-bgh.png"), scaledresolution.getScaleFactor());
+			}
+
 		}
 
-		cssOut.close();
 		GL11.glDepthMask(true);
 		GL11.glColorMask(true, true, true, true);
 		mc.getFramebuffer().bindFramebuffer(true);
@@ -228,6 +230,7 @@ public class HTMLExport
 		}
 
 		ImageWriter writer = findPngWriter();
+
 		FileImageOutputStream output = new FileImageOutputStream(file);
 		writer.setOutput(output);
 		writer.write(new IIOImage(frame, null, null));
@@ -272,7 +275,7 @@ public class HTMLExport
 
 	private String recipeCSS(Recipe recipe)
 	{
-		Pair<TexturedRect, TexturedRect> key = new Pair<TexturedRect, TexturedRect>((TexturedRect)recipe.background, (TexturedRect)recipe.backgroundSelected);
+		Pair<TexturedRect, TexturedRect> key = new Pair<>((TexturedRect)recipe.background, (TexturedRect)recipe.backgroundSelected);
 		Integer index = recipeCSSIndices.get(key);
 
 		if(index == null)

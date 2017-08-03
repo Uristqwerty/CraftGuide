@@ -10,8 +10,8 @@ import uristqwerty.gui_craftguide.theme.Theme;
 public class ImageElement implements ElementHandler
 {
 	private String id;
-	private List<String> sources = new ArrayList<String>();
-	
+	private List<String> sources = new ArrayList<>();
+
 	@Override
 	public void startElement(Theme theme, String name, Attributes attributes)
 	{
@@ -31,7 +31,7 @@ public class ImageElement implements ElementHandler
 		{
 			return new ImageSourceElement();
 		}
-		
+
 		return NullElement.instance;
 	}
 
@@ -47,7 +47,7 @@ public class ImageElement implements ElementHandler
 		{
 			return;
 		}
-		
+
 		theme.addImage(id, sources);
 	}
 

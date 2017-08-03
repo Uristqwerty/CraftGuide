@@ -20,7 +20,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 	private Texture displayBackground;
 	private Renderable hiddenOverlay = new ShadedRect(-2, -2, 20, 20, 0xc6c6c6, 0x80);
 	private RecipeCache recipeCache;
-	private Map<ItemType, Integer> settings = new HashMap<ItemType, Integer>();
+	private Map<ItemType, Integer> settings = new HashMap<>();
 	private FloatingItemText toolTip = new FloatingItemText("");
 	private Overlay toolTipOverlay = new Overlay(toolTip);
 	private String toolTipText = "";
@@ -186,7 +186,7 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 
 	private void updateFilter()
 	{
-		Set<ItemType> set = new HashSet<ItemType>();
+		Set<ItemType> set = new HashSet<>();
 
 		for(ItemType type: settings.keySet())
 		{

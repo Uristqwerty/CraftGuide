@@ -9,7 +9,7 @@ import net.minecraft.util.StatCollector;
 
 public class TranslatedTextSource extends TextSource
 {
-	private static List<WeakReference<TranslatedTextSource>> instances = new ArrayList<WeakReference<TranslatedTextSource>>();
+	private static List<WeakReference<TranslatedTextSource>> instances = new ArrayList<>();
 
 	private String rawText;
 	private String translatedText;
@@ -19,7 +19,7 @@ public class TranslatedTextSource extends TextSource
 		rawText = text;
 		translatedText = translate(rawText);
 
-		instances.add(new WeakReference<TranslatedTextSource>(this));
+		instances.add(new WeakReference<>(this));
 	}
 
 	@Override

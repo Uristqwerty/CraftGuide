@@ -33,7 +33,7 @@ import uristqwerty.gui_craftguide.texture.Texture;
 public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.api.Renderer
 {
 	private double frameStartTime;
-	private List<Overlay> overlays = new LinkedList<Overlay>();
+	private List<Overlay> overlays = new LinkedList<>();
 	private Gui gui;
 	private RenderItem itemRenderer;
 
@@ -50,7 +50,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 	}
 
-	private static Map<ItemStack, ItemStack> itemStackFixes = new HashMap<ItemStack, ItemStack>();
+	private static Map<ItemStack, ItemStack> itemStackFixes = new HashMap<>();
 
 	private Renderable itemError = new TexturedRect(-1, -1, 18, 18, DynamicTexture.instance("item_error"), 238, 200);
 
@@ -135,7 +135,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 	public void drawFloatingText(int x, int y, String text)
 	{
-		List<String> list = new ArrayList<String>(1);
+		List<String> list = new ArrayList<>(1);
 		list.add(text);
 		drawFloatingText(x, y, list);
 	}
@@ -331,7 +331,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		GL11.glPopMatrix();
 	}
 
-	private HashSet<ItemStack> loggedStacks = new HashSet<ItemStack>();
+	private HashSet<ItemStack> loggedStacks = new HashSet<>();
 
 	private boolean hasLogged(ItemStack stack)
 	{
@@ -472,7 +472,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 				((color >> 24) & 0xff) / 255.0);
 	}
 
-	private WeakHashMap<ItemStack, Void> invalidStacks = new WeakHashMap<ItemStack, Void>();
+	private WeakHashMap<ItemStack, Void> invalidStacks = new WeakHashMap<>();
 
 	public List<String> getItemNameandInformation(ItemStack stack)
 	{
@@ -500,7 +500,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		}
 
 		invalidStacks.put(stack, null);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add(EnumChatFormatting.YELLOW + "Err: Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
 		return list;
 	}

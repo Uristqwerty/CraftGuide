@@ -79,7 +79,7 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		return null;
 	}
 
-	private IdentityHashMap<List<?>, String> mappingCache = new IdentityHashMap<List<?>, String>();
+	private IdentityHashMap<List<?>, String> mappingCache = new IdentityHashMap<>();
 
 	@Override
 	public List<String> emptyOreDictEntryTextImpl(List<?> oreDictionaryList)
@@ -97,13 +97,13 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		}
 		else
 		{
-			List<String> text = new ArrayList<String>(1);
+			List<String> text = new ArrayList<>(1);
 			text.add("0 items for Ore Dictionary name '" + name + "'");
 			return text;
 		}
 	}
 
-	private IdentityHashMap<List<?>, String> oreDictName = new IdentityHashMap<List<?>, String>();
+	private IdentityHashMap<List<?>, String> oreDictName = new IdentityHashMap<>();
 
 	@Override
 	public String getOreDictionaryNameImpl(List<?> list)

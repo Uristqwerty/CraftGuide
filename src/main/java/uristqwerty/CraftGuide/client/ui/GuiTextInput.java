@@ -14,7 +14,7 @@ import uristqwerty.gui_craftguide.minecraft.Text;
 
 public class GuiTextInput extends GuiElement implements IButtonListener
 {
-	private List<ITextInputListener> listeners = new LinkedList<ITextInputListener>();
+	private List<ITextInputListener> listeners = new LinkedList<>();
 	private String before = "";
 	private String after = "";
 	public static GuiTextInput inFocus = null;

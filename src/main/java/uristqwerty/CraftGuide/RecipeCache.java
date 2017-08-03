@@ -28,17 +28,17 @@ import uristqwerty.CraftGuide.itemtype.ItemType;
 
 public class RecipeCache
 {
-	private SortedSet<ItemType> craftingTypes = new TreeSet<ItemType>();
-	private Map<ItemType, List<CraftGuideRecipe>> craftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
+	private SortedSet<ItemType> craftingTypes = new TreeSet<>();
+	private Map<ItemType, List<CraftGuideRecipe>> craftResults = new HashMap<>();
 	private List<CraftGuideRecipe> typeResults;
-	private List<CraftGuideRecipe> filteredResults = new ArrayList<CraftGuideRecipe>();
+	private List<CraftGuideRecipe> filteredResults = new ArrayList<>();
 	private RecipeGeneratorImplementation generator = RecipeGeneratorImplementation.instance;
 	private ItemFilter filterItem = null;
-	private Deque<ItemFilter> filterHistory = new LinkedList<ItemFilter>();
-	private Deque<ItemFilter> filterHistoryForwards = new LinkedList<ItemFilter>();
-	private List<IRecipeCacheListener> listeners = new LinkedList<IRecipeCacheListener>();
+	private Deque<ItemFilter> filterHistory = new LinkedList<>();
+	private Deque<ItemFilter> filterHistoryForwards = new LinkedList<>();
+	private List<IRecipeCacheListener> listeners = new LinkedList<>();
 	private Set<ItemType> currentTypes = null;
-	private SortedSet<ItemType> allItems = new TreeSet<ItemType>();
+	private SortedSet<ItemType> allItems = new TreeSet<>();
 	private boolean firstReset = true;
 
 	/* Effectively Runnable, but having a separate type should make code searches
@@ -138,7 +138,7 @@ public class RecipeCache
 				Map<ItemStack, List<CraftGuideRecipe>> rawRecipes = generateRecipes();
 
 				filterRawRecipes(rawRecipes);
-				Map<ItemType, List<CraftGuideRecipe>> newCraftResults = new HashMap<ItemType, List<CraftGuideRecipe>>();
+				Map<ItemType, List<CraftGuideRecipe>> newCraftResults = new HashMap<>();
 
 				for(ItemStack key: rawRecipes.keySet())
 				{
@@ -160,12 +160,12 @@ public class RecipeCache
 
 				SortedSet<ItemType> newAllItems = generateAllItemList(newCraftResults);
 
-				SortedSet<ItemType> newCraftingTypes = new TreeSet<ItemType>();
+				SortedSet<ItemType> newCraftingTypes = new TreeSet<>();
 				newCraftingTypes.addAll(newCraftResults.keySet());
 
 				if(firstReset)
 				{
-					currentTypes = new HashSet<ItemType>();
+					currentTypes = new HashSet<>();
 					currentTypes.addAll(newCraftingTypes);
 
 					for(ItemStack stack: generator.disabledTypes)
@@ -192,7 +192,7 @@ public class RecipeCache
 
 	private static SortedSet<ItemType> generateAllItemList(Map<ItemType, List<CraftGuideRecipe>> craftResults)
 	{
-		SortedSet<ItemType> allItems = new TreeSet<ItemType>();
+		SortedSet<ItemType> allItems = new TreeSet<>();
 
 		for(List<CraftGuideRecipe> type: craftResults.values())
 		{
@@ -240,7 +240,7 @@ public class RecipeCache
 
 	private static void removeUselessDuplicates(SortedSet<ItemType> allItems)
 	{
-		HashMap<Item, Set<ItemType>> items = new HashMap<Item, Set<ItemType>>();
+		HashMap<Item, Set<ItemType>> items = new HashMap<>();
 
 		for(ItemType type: allItems)
 		{
@@ -251,7 +251,7 @@ public class RecipeCache
 
 				if(set == null)
 				{
-					set = new HashSet<ItemType>();
+					set = new HashSet<>();
 					items.put(item, set);
 				}
 
@@ -268,7 +268,7 @@ public class RecipeCache
 
 						if(set == null)
 						{
-							set = new HashSet<ItemType>();
+							set = new HashSet<>();
 							items.put(item, set);
 						}
 
@@ -278,7 +278,7 @@ public class RecipeCache
 			}
 		}
 
-		List<ItemType> toAdd = new ArrayList<ItemType>();
+		List<ItemType> toAdd = new ArrayList<>();
 
 		for(Iterator<ItemType> i = allItems.iterator(); i.hasNext();)
 		{
@@ -429,7 +429,7 @@ public class RecipeCache
 
 	public void setTypes(Set<ItemType> types)
 	{
-		typeResults = new ArrayList<CraftGuideRecipe>();
+		typeResults = new ArrayList<>();
 		currentTypes = types;
 
 		if(types == null)
@@ -530,7 +530,7 @@ public class RecipeCache
 		}
 		else
 		{
-			filteredResults = new ArrayList<CraftGuideRecipe>();
+			filteredResults = new ArrayList<>();
 
 			for(CraftGuideRecipe recipe: typeResults)
 			{

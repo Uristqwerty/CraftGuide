@@ -31,10 +31,10 @@ public class Theme
 	public String description;
 	public File fileSource;
 	public SourceType fileSourceType;
-	public Map<String, List<Object[]>> images = new HashMap<String, List<Object[]>>();
+	public Map<String, List<Object[]>> images = new HashMap<>();
 	public String loadError = null;
-	public List<String> dependencies = new ArrayList<String>();
-	public Map<String, Texture> textures = new HashMap<String, Texture>();
+	public List<String> dependencies = new ArrayList<>();
+	public Map<String, Texture> textures = new HashMap<>();
 
 	private static Object[] errorImage = {"builtin", "error", null};
 
@@ -76,7 +76,7 @@ public class Theme
 
 	public void addImage(String id, List<String> sources)
 	{
-		List<Object[]> converted = new ArrayList<Object[]>(sources.size());
+		List<Object[]> converted = new ArrayList<>(sources.size());
 
 		for(String source: sources)
 		{

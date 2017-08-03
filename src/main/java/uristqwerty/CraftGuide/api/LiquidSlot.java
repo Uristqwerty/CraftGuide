@@ -146,14 +146,14 @@ public class LiquidSlot implements Slot
 
 		if(data[dataIndex] instanceof FluidStack)
 		{
-			tooltip = new ArrayList<String>(1);
+			tooltip = new ArrayList<>(1);
 			FluidStack stack = (FluidStack)data[dataIndex];
 			tooltip.add(stack.getLocalizedName() + " (" + stack.amount + " milliBuckets)");
 		}
 		else if(data[dataIndex] instanceof PseudoFluidStack)
 		{
 			PseudoFluidStack stack = (PseudoFluidStack)data[dataIndex];
-			tooltip = new ArrayList<String>(1);
+			tooltip = new ArrayList<>(1);
 			tooltip.add(stack.getLocalizedName() + " (" + stack.getQuantity() + " milliBuckets)");
 		}
 

@@ -50,7 +50,7 @@ public class GuiCraftGuide extends Gui
 	private Texture paneBackground = DynamicTexture.instance("pane");
 	private Texture windowBackground = DynamicTexture.instance("window");
 
-	public static Map<SlotType, Boolean> filterSlotTypes = new EnumMap<SlotType, Boolean>(SlotType.class);
+	public static Map<SlotType, Boolean> filterSlotTypes = new EnumMap<>(SlotType.class);
 
 	static
 	{

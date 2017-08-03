@@ -24,7 +24,7 @@ public class DynamicTexture implements Texture
 		}
 	}
 
-	private static Map<String, DynamicTexture> instances = new HashMap<String, DynamicTexture>();
+	private static Map<String, DynamicTexture> instances = new HashMap<>();
 
 	public static Texture instance(String id, Texture mappedTo)
 	{

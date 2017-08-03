@@ -105,7 +105,7 @@ public class SingleItemFilter implements CombinableItemFilter
 	@Override
 	public List<ItemStack> getRepresentativeItems()
 	{
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>(1);
+		ArrayList<ItemStack> list = new ArrayList<>(1);
 		list.add(comparison);
 		return list;
 	}

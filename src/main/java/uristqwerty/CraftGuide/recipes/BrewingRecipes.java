@@ -77,8 +77,8 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 		List<Item> ingredients = getIngredients();
 
 		ItemStack water = new ItemStack(Items.potionitem);
-		List<ItemStack[]> potionRecipes = new LinkedList<ItemStack[]>();
-		Set<Integer> done = new HashSet<Integer>();
+		List<ItemStack[]> potionRecipes = new LinkedList<>();
+		Set<Integer> done = new HashSet<>();
 		done.add(0);
 
 		addRecipesForPotion(potionRecipes, water, ingredients, done);
@@ -88,7 +88,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 
 	private void addRecipesForPotion(List<ItemStack[]> potionRecipes, ItemStack potion, List<Item> ingredients, Set<Integer> done)
 	{
-		List<ItemStack> next = new LinkedList<ItemStack>();
+		List<ItemStack> next = new LinkedList<>();
 
 		for(Item ingredient: ingredients)
 		{
@@ -116,7 +116,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 
 	private List<Item> getIngredients()
 	{
-		List<Item> ingredients = new LinkedList<Item>();
+		List<Item> ingredients = new LinkedList<>();
 
 		for(Object item: Item.itemRegistry)
 		{

@@ -161,7 +161,7 @@ public class DefaultRecipeProvider extends CraftGuideAPIObject implements Recipe
 			ItemStack input = entry.getKey();
 			if(input.getItemDamage() == 32767 && input.getItem().getHasSubtypes())
 			{
-				List<ItemStack> items = new ArrayList<ItemStack>();
+				List<ItemStack> items = new ArrayList<>();
 				input.getItem().getSubItems(input.getItem(), null, items);
 
 				for(ItemStack subItem: items)

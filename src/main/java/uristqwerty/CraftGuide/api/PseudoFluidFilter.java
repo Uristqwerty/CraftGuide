@@ -15,7 +15,7 @@ public class PseudoFluidFilter implements ItemFilter
 	private static NamedTexture containerTexture = null;
 	public PseudoFluidStack liquid;
 	private String liquidName;
-	private List<String> tooltip = new ArrayList<String>();
+	private List<String> tooltip = new ArrayList<>();
 
 	public PseudoFluidFilter(PseudoFluidStack liquid)
 	{

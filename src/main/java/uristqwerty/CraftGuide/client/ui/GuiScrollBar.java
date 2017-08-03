@@ -14,7 +14,7 @@ public class GuiScrollBar extends GuiElement implements IButtonListener, ISlider
 	private float min = 0, max = 1, value = 0;
 	private static float scrollMultiplier = 1;
 	private int pageSize;
-	private Map<GuiElement, Object[]> buttons = new HashMap<GuiElement, Object[]>();
+	private Map<GuiElement, Object[]> buttons = new HashMap<>();
 	private int rowSize;
 
 	public static interface ScrollBarAlignmentCallback

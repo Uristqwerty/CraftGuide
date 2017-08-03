@@ -31,7 +31,7 @@ public class ThemeReader implements ContentHandler
 	private static ElementHandler rootElement = new GenericHandler(
 			"theme", themeElement);
 
-	private LinkedList<ElementHandler> handlerStack = new LinkedList<ElementHandler>();
+	private LinkedList<ElementHandler> handlerStack = new LinkedList<>();
 
 	private Theme theme;
 

@@ -12,7 +12,7 @@ public class GuiSlider extends GuiButton
 	private int minX, minY, maxX, maxY;
 	private int dx, dy;
 
-	private List<ISliderListener> sliderListeners = new LinkedList<ISliderListener>();
+	private List<ISliderListener> sliderListeners = new LinkedList<>();
 	
 	@Override
 	public void mousePressed(int x, int y)

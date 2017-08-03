@@ -147,10 +147,8 @@ public abstract class CraftGuideClient implements CraftGuideSide
 			return;
 		}
 
-		try
+		try(InputStream stream = this.getClass().getResourceAsStream("/CraftGuideResources.zip"))
 		{
-			InputStream stream = this.getClass().getResourceAsStream("/CraftGuideResources.zip");
-
 			if(stream != null)
 			{
 				ZipInputStream resources = new ZipInputStream(stream);

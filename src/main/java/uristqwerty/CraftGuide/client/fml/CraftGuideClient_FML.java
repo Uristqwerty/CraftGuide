@@ -86,7 +86,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 
 		for(int i = 0; i < container.inventorySlots.size(); i++)
 		{
-			Slot slot = (Slot)container.inventorySlots.get(i);
+			Slot slot = container.inventorySlots.get(i);
 	        if(x > slot.xDisplayPosition - 2 && x < slot.xDisplayPosition + 17 && y > slot.yDisplayPosition - 2 && y < slot.yDisplayPosition + 17)
 	        {
 	        	ItemStack item = slot.getStack();

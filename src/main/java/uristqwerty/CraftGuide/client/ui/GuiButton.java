@@ -22,7 +22,7 @@ public class GuiButton extends GuiElement
 		DOWN_OVER,
 	}
 
-	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
+	private List<IButtonListener> buttonListeners = new LinkedList<>();
 	private ButtonTemplate template;
 
 	protected ButtonState currentState = ButtonState.UP;

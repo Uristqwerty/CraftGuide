@@ -18,7 +18,7 @@ public class LiquidFilter implements ItemFilter
 	private static NamedTexture containerTexture = null;
 	public FluidStack liquid;
 	private String liquidName;
-	private List<String> tooltip = new ArrayList<String>();
+	private List<String> tooltip = new ArrayList<>();
 
 	public LiquidFilter(FluidStack liquid)
 	{

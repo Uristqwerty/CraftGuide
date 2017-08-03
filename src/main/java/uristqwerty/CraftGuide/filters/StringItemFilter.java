@@ -103,7 +103,7 @@ public class StringItemFilter implements ItemFilter
 	@Override
 	public List<String> getTooltip()
 	{
-		List<String> text = new ArrayList<String>(1);
+		List<String> text = new ArrayList<>(1);
 		text.add("\u00a77Text search: '" + comparison + "'");
 		return text;
 	}

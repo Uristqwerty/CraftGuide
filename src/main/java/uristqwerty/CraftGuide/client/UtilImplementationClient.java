@@ -17,7 +17,7 @@ public class UtilImplementationClient extends UtilImplementationCommon
 	private NamedTextureObject itemStackBackground = new NamedTextureObject(DynamicTexture.instance("stack-background"));
 	private NamedTextureObject error = new NamedTextureObject(DynamicTexture.instance("item_error"));
 
-	private Map<String, NamedTextureObject> textureLookup = new HashMap<String, NamedTextureObject>();
+	private Map<String, NamedTextureObject> textureLookup = new HashMap<>();
 
 	@Override
 	public NamedTexture getTexture(String identifier)

@@ -19,7 +19,7 @@ import uristqwerty.CraftGuide.filters.StringItemFilter;
 
 public abstract class UtilImplementationCommon extends Util
 {
-	private static final List<ItemStack> specialEmptyItemList = new ArrayList<ItemStack>(0);
+	private static final List<ItemStack> specialEmptyItemList = new ArrayList<>(0);
 
 	public float partialTicks;
 
@@ -73,7 +73,7 @@ public abstract class UtilImplementationCommon extends Util
 				list = ((GuiRenderer)GuiRenderer.instance).getItemNameandInformation(GuiRenderer.fixedItemStack(stack));
 			}
 
-			List<String> text = new ArrayList<String>(list.size());
+			List<String> text = new ArrayList<>(list.size());
 			boolean first = true;
 
 			for(Object o: list)
@@ -124,7 +124,7 @@ public abstract class UtilImplementationCommon extends Util
 		{
 			CraftGuideLog.log(e);
 
-			List<String> text = new ArrayList<String>(1);
+			List<String> text = new ArrayList<>(1);
 			text.add(EnumChatFormatting.YELLOW + "Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
 			return text;
 		}
@@ -145,7 +145,7 @@ public abstract class UtilImplementationCommon extends Util
 	@Override
 	public List<ItemStack> addItemLists(List<ItemStack> a, List<ItemStack> b)
 	{
-		ArrayList<ItemStack> result = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> result = new ArrayList<>();
 		addUniqueItemsToList(result, a);
 		addUniqueItemsToList(result, b);
 		return result;
@@ -154,7 +154,7 @@ public abstract class UtilImplementationCommon extends Util
 	@Override
 	public List<ItemStack> subtractItemLists(List<ItemStack> a, List<ItemStack> b)
 	{
-		ArrayList<ItemStack> result = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> result = new ArrayList<>();
 		addUniqueItemsToList(result, a);
 		removeItemsFromList(result, b);
 

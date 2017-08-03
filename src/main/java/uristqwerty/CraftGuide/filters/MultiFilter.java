@@ -19,9 +19,9 @@ import uristqwerty.CraftGuide.api.Renderer;
 public class MultiFilter implements CombinableItemFilter
 {
 	private CombinableItemFilter items = new MultipleItemFilter(new ArrayList<ItemStack>());
-	private ArrayList<String> strings = new ArrayList<String>();
-	private ArrayList<FluidStack> liquids = new ArrayList<FluidStack>();
-	private ArrayList<PseudoFluidStack> pseudoLiquids = new ArrayList<PseudoFluidStack>();
+	private ArrayList<String> strings = new ArrayList<>();
+	private ArrayList<FluidStack> liquids = new ArrayList<>();
+	private ArrayList<PseudoFluidStack> pseudoLiquids = new ArrayList<>();
 
 	public MultiFilter(CombinableItemFilter items)
 	{
@@ -58,7 +58,7 @@ public class MultiFilter implements CombinableItemFilter
 	@Override
 	public List<String> getTooltip()
 	{
-		ArrayList<String> tooltip = new ArrayList<String>();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		for(String s: strings)
 			tooltip.add("Text: \"" + s + "\"");

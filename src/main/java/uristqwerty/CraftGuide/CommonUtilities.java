@@ -77,11 +77,11 @@ public class CommonUtilities
 
 	public static List<String> itemNames(ItemStack item)
 	{
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
-			ArrayList<ItemStack> subItems = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> subItems = new ArrayList<>();
 			item.getItem().getSubItems(item.getItem(), null, subItems);
 
 			for(ItemStack stack: subItems)
@@ -101,7 +101,7 @@ public class CommonUtilities
 	{
 		if(getItemDamage(item) == CraftGuide.DAMAGE_WILDCARD && item.getHasSubtypes())
 		{
-			ArrayList<ItemStack> temp = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> temp = new ArrayList<>();
 			item.getItem().getSubItems(item.getItem(), null, temp);
 
 			return temp.size();
@@ -134,7 +134,7 @@ public class CommonUtilities
 		}
 	}
 
-	private static Map<Pair<Item, Integer>, List<String>> textCache = new HashMap<Pair<Item, Integer>, List<String>>();
+	private static Map<Pair<Item, Integer>, List<String>> textCache = new HashMap<>();
 
 	static void clearTooltipCache()
 	{
@@ -145,13 +145,13 @@ public class CommonUtilities
 	{
 		try
 		{
-			Pair<Item, Integer> key = new Pair<Item, Integer>(stack.getItem(), stack.getItemDamage());
+			Pair<Item, Integer> key = new Pair<>(stack.getItem(), stack.getItemDamage());
 
 			List<String> tooltip = textCache.get(key);
 
 			if(tooltip == null)
 			{
-				tooltip = new ArrayList<String>(genExtendedItemStackText(stack));
+				tooltip = new ArrayList<>(genExtendedItemStackText(stack));
 				textCache.put(key, tooltip);
 			}
 
@@ -188,11 +188,11 @@ public class CommonUtilities
 	private static List<String> nullItemText, nullItemStackText;
 	static
 	{
-		nullItemText = new ArrayList<String>();
+		nullItemText = new ArrayList<>();
 		nullItemText.add("Error: ItemStack has null item!");
 		nullItemText.add("This is a bug in one of the mods adding recipes.");
 
-		nullItemStackText = new ArrayList<String>();
+		nullItemStackText = new ArrayList<>();
 		nullItemStackText.add("null ItemStack (might be a bug)");
 	}
 
@@ -210,7 +210,7 @@ public class CommonUtilities
 			if(stack.hasTagCompound())
 				return genExtendedItemStackText(stack);
 			else
-				return new ArrayList<String>(cachedExtendedItemStackText(stack));
+				return new ArrayList<>(cachedExtendedItemStackText(stack));
 		}
 		else
 		{

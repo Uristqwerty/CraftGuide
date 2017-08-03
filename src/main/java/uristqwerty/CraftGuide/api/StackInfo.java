@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class StackInfo
 {
-	public static List<StackInfoSource> sources = new ArrayList<StackInfoSource>();
+	public static List<StackInfoSource> sources = new ArrayList<>();
 
 	public static void addSource(StackInfoSource source)
 	{

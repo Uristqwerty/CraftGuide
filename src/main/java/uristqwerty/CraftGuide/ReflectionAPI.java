@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ReflectionAPI
 {
-	public static List<Object> APIObjects = new ArrayList<Object>();
+	public static List<Object> APIObjects = new ArrayList<>();
 
 	public static void registerAPIObject(Object object)
 	{

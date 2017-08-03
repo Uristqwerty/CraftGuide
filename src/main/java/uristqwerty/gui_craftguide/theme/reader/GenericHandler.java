@@ -9,7 +9,7 @@ import uristqwerty.gui_craftguide.theme.Theme;
 
 public class GenericHandler implements ElementHandler
 {
-	private Map<String, Object> handlers = new HashMap<String, Object>();
+	private Map<String, Object> handlers = new HashMap<>();
 
 	public GenericHandler(Object... elements)//May throw IndexOutOfBoundsException or ClassCastException on bad data
 	{

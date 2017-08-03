@@ -27,8 +27,8 @@ import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class RecipeGeneratorImplementation implements RecipeGenerator
 {
-	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<ItemStack, List<CraftGuideRecipe>>();
-	public List<ItemStack> disabledTypes = new LinkedList<ItemStack>();
+	private Map<ItemStack, List<CraftGuideRecipe>> recipes = new HashMap<>();
+	public List<ItemStack> disabledTypes = new LinkedList<>();
 	public Texture defaultBackground = new BlankTexture();
 	public Texture defaultBackgroundSelected;
 	public static ItemStack workbench = new ItemStack(Blocks.crafting_table);
@@ -141,7 +141,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 
 		if(recipeList == null)
 		{
-			recipeList = new ArrayList<CraftGuideRecipe>();
+			recipeList = new ArrayList<>();
 			recipes.put(craftingType, recipeList);
 		}
 

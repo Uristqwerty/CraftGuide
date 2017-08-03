@@ -9,7 +9,7 @@ public class GuiTabbedDisplay extends GuiElement implements IButtonListener
 {
 	private GuiElement currentTab = null;
 	private GuiElement changeTab = null;
-	private Map<Object, GuiElement> tabMap = new HashMap<Object, GuiElement>();
+	private Map<Object, GuiElement> tabMap = new HashMap<>();
 	
 	public GuiTabbedDisplay(int x, int y, int width, int height)
 	{

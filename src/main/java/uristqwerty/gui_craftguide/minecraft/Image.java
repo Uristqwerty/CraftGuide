@@ -27,8 +27,8 @@ public class Image implements Texture
 	private int texID;
 	private int height = 256;
 	private int width = 256;
-	private static Map<String, Image> jarCache = new HashMap<String, Image>();
-	private static Map<String, Image> fileCache = new HashMap<String, Image>();
+	private static Map<String, Image> jarCache = new HashMap<>();
+	private static Map<String, Image> fileCache = new HashMap<>();
 	private static Image err = new Image(-1);
 	private static boolean needsInit = true;
 
@@ -109,14 +109,12 @@ public class Image implements Texture
 
 	private static int LoadImageFile(File directory, String filename, Image writeDimsTo)
 	{
-		try
+		try(InputStream input = new FileInputStream(new File(directory, filename)))
 		{
 			int width = 4;
 			int height = 4;
 
-			InputStream input = new FileInputStream(new File(directory, filename));
 			BufferedImage image = ImageIO.read(input);
-			input.close();
 
 			while(width < image.getWidth())
 			{

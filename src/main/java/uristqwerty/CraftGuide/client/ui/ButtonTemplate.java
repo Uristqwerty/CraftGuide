@@ -8,7 +8,7 @@ import uristqwerty.gui_craftguide.texture.Texture;
 
 public class ButtonTemplate
 {
-	private Map<ButtonState, Texture> stateImages = new HashMap<ButtonState, Texture>();
+	private Map<ButtonState, Texture> stateImages = new HashMap<>();
 
 	public ButtonTemplate(Texture[] images)
 	{

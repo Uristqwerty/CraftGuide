@@ -73,10 +73,10 @@ public class ItemType implements Comparable<ItemType>
 		}
 	}
 
-	private static Map<ItemTypeKey, ItemType> simpleItemStacks = new HashMap<ItemTypeKey, ItemType>();
-	private static Map<ItemTypeKey, List<ItemType>> nbtItemStacks = new HashMap<ItemTypeKey, List<ItemType>>();
-	private static Map<String, ItemType> oreDictionaryEntries = new HashMap<String, ItemType>();
-	private static Map<ArrayList<ItemStack>, ItemType> generalArrayLists = new IdentityHashMap<ArrayList<ItemStack>, ItemType>();
+	private static Map<ItemTypeKey, ItemType> simpleItemStacks = new HashMap<>();
+	private static Map<ItemTypeKey, List<ItemType>> nbtItemStacks = new HashMap<>();
+	private static Map<String, ItemType> oreDictionaryEntries = new HashMap<>();
+	private static Map<ArrayList<ItemStack>, ItemType> generalArrayLists = new IdentityHashMap<>();
 
 	private final ItemTypeKey key;
 	private final Item item;
@@ -185,7 +185,7 @@ public class ItemType implements Comparable<ItemType>
 
 			if(items == null)
 			{
-				items = new ArrayList<ItemType>();
+				items = new ArrayList<>();
 				nbtItemStacks.put(key,  items);
 			}
 

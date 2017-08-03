@@ -21,7 +21,7 @@ public class GuiElement
 	public Texture background = null;
 
 	private GuiElement parent = null;
-	private List<GuiElement> children = new ArrayList<GuiElement>();
+	private List<GuiElement> children = new ArrayList<>();
 
 	public static enum AnchorPoint
 	{

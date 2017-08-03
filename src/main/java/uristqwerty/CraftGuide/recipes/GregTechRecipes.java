@@ -168,31 +168,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 					generator, getMachines(itemList, "Macerator", 3),
 					(Map<Integer, Object>)CommonUtilities.getPrivateValue(modHandlerClass, null, "sPulverizerRecipes"));
 		}
-		catch(ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(NoSuchMethodException e)
-		{
-			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
-		}
-		catch(InvocationTargetException e)
+		catch(ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | NoSuchFieldException | InvocationTargetException | NoSuchMethodException e)
 		{
 			CraftGuideLog.log(e, "Error while adding GregTech recipes:", true);
 		}
@@ -205,7 +181,7 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 	private ArrayList<ItemStack> getMachines(Class<? extends Enum<?>> itemList, String string, int minimumTier) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
 	{
-		ArrayList<ItemStack> machines = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> machines = new ArrayList<>();
 
 		Method get = itemList.getMethod("get", long.class, Object[].class);
 

@@ -109,7 +109,7 @@ public class MultipleItemFilter implements CombinableItemFilter
 				{
 					if(primaryItem.getHasSubtypes())
 					{
-						ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+						ArrayList<ItemStack> list = new ArrayList<>();
 						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 						text = Util.instance.getItemStackText(list.get(0));
 					}
@@ -131,7 +131,7 @@ public class MultipleItemFilter implements CombinableItemFilter
 
 					if(CommonUtilities.getItemDamage(primaryItem) == CraftGuide.DAMAGE_WILDCARD && primaryItem.getHasSubtypes())
 					{
-						ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+						ArrayList<ItemStack> list = new ArrayList<>();
 						primaryItem.getItem().getSubItems(primaryItem.getItem(), null, list);
 
 						for(int i = 1; i < list.size(); i++)
@@ -199,7 +199,7 @@ public class MultipleItemFilter implements CombinableItemFilter
 	@Override
 	public List<ItemStack> getRepresentativeItems()
 	{
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>(comparison.size());
+		ArrayList<ItemStack> list = new ArrayList<>(comparison.size());
 
 		for(ItemStack stack: comparison)
 		{

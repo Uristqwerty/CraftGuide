@@ -30,7 +30,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 	private RecipeCache recipeCache;
 	private Renderable gridBackground;
 	private Object[] items;
-	private List<Object> itemResults = new ArrayList<Object>();
+	private List<Object> itemResults = new ArrayList<>();
 	private FloatingItemText itemName = new FloatingItemText("-No Item-");
 	private Renderable itemNameOverlay = new Overlay(itemName);
 	private boolean overItem = false;
@@ -231,7 +231,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 				public void run()
 				{
 					String search = text.toLowerCase();
-					List<Object> results = new ArrayList<Object>();
+					List<Object> results = new ArrayList<>();
 
 					int prevSize = 0;
 					int iters = 0;
@@ -256,7 +256,7 @@ public class FilterSelectGrid extends GuiScrollableGrid implements IRecipeCacheL
 							}
 							prevSize = results.size();
 							updateResultsAsync(results);
-							results = new ArrayList<Object>(results);
+							results = new ArrayList<>(results);
 						}
 					}
 

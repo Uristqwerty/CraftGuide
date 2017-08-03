@@ -31,7 +31,7 @@ public class ThemeManager
 
 	public static ThemeManager instance = new ThemeManager();
 	public static Theme currentTheme;
-	public static Map<String, Class<? extends Texture>> textureTypes = new HashMap<String, Class<? extends Texture>>();
+	public static Map<String, Class<? extends Texture>> textureTypes = new HashMap<>();
 	public static String currentThemeName;
 
 	public void reload()
@@ -44,7 +44,7 @@ public class ThemeManager
 			return;
 		}
 
-		Map<String, Theme> themes = new HashMap<String, Theme>();
+		Map<String, Theme> themes = new HashMap<>();
 
 		CraftGuideLog.log("(re)loading themes...");
 
@@ -118,8 +118,8 @@ public class ThemeManager
 		}
 
 
-		Map<String, Theme> validatedThemes = new HashMap<String, Theme>();
-		List<String> processed = new ArrayList<String>();
+		Map<String, Theme> validatedThemes = new HashMap<>();
+		List<String> processed = new ArrayList<>();
 
 		debug("Validating themes:");
 		while(themes.size() > 0)
@@ -343,11 +343,9 @@ public class ThemeManager
 
 				if(!file.isDirectory() && file.getName().endsWith(".xml"))
 				{
-					try
+					try(FileInputStream source = new FileInputStream(file))
 					{
-						FileInputStream source = new FileInputStream(file);
 						Theme theme = xmlReader.read(source, dir);
-						source.close();
 
 						if(theme != null)
 						{

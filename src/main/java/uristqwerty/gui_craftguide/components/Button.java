@@ -21,7 +21,7 @@ public class Button extends GuiElement
 
 	@GuiElementProperty(name = "states")
 	@EnumMapProperty(keyType = ButtonState.class, valueType = Texture.class)
-	public EnumMap<ButtonState, Texture> stateBackgrounds = new EnumMap<ButtonState, Texture>(ButtonState.class);
+	public EnumMap<ButtonState, Texture> stateBackgrounds = new EnumMap<>(ButtonState.class);
 
 	private ButtonState currentState;
 

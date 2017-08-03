@@ -26,8 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class RecipeDump
 {
-	private IdentityHashMap<ArrayList<ItemStack>, String> oredictLookup =
-			new IdentityHashMap<ArrayList<ItemStack>, String>();
+	private IdentityHashMap<ArrayList<ItemStack>, String> oredictLookup = new IdentityHashMap<>();
 
 	public RecipeDump()
 	{
@@ -82,7 +81,7 @@ public abstract class RecipeDump
 			startWriting(output);
 
 			List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-			Set<Class<?>> classes = new HashSet<Class<?>>();
+			Set<Class<?>> classes = new HashSet<>();
 
 			for(IRecipe recipe: recipes)
 			{
@@ -157,7 +156,7 @@ public abstract class RecipeDump
 
 	private void dumpRecipes(Class<?> recipeClass, List<IRecipe> recipes) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
-		List<Field> recipeFields = new ArrayList<Field>();
+		List<Field> recipeFields = new ArrayList<>();
 
 		startObject("recipeclass");
 		startArrayValue("structure");

@@ -34,7 +34,7 @@ public class InfoSlot extends ItemSlot
 	@Override
 	public List<String> getTooltip(int x, int y, Object[] data, int dataIndex)
 	{
-		List<String> tooltip = new ArrayList<String>();
+		List<String> tooltip = new ArrayList<>();
 
 		if(data[dataIndex] instanceof Object[])
 		{
