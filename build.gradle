@@ -15,36 +15,65 @@ buildscript {
         mavenCentral()
         maven {
             name = 'forge'
-            url = 'http://files.minecraftforge.net/maven'
+            url = 'https://files.minecraftforge.net/maven'
         }
         maven {
             name = 'sonatype'
             url = 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
+        maven {
+          url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
 
-apply plugin: 'forge'
-apply plugin: 'liteloader'
-apply plugin: 'curseforge'
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.matthewprenger.cursegradle'
 
-String minecraft_versions = '1.7.10'
-version = '1.7.1.' + ver.build
-group = 'uristqwerty' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+sourceCompatibility = targetCompatibility = '1.7'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.7'
+}
+
+String minecraft_versions = '1.8.9'
+version = '1.7.1.mc18-pre-' + ver.build
+group = 'uristqwerty'
 archivesBaseName = 'CraftGuide'
 
 ext.llrevision = '03'
+project(':litemod') {
+    apply plugin: 'net.minecraftforge.gradle.liteloader'
+    minecraft {
+        version = '1.8.9'
+        runDir = 'run'
+        mappings = 'stable_22'
+    }
+
+    jar {
+        exclude '**/CraftGuide_FML.*'
+        exclude 'mcmod.info'
+    }
+}
+sourceSets {
+    main {
+        java {
+            exclude '**/LiteMod_CraftGuide.*'
+        }
+    }
+}
 
 minecraft {
-    version = '1.7.10-10.13.4.1492-1.7.10'
+    version = '1.8.9-11.15.1.2318-1.8.9'
     runDir = 'run'
+    mappings = 'stable_22'
 
+    replace '@MOD_VERSION@', project.version
     replaceIn 'CraftGuide_FML.java'
     replaceIn 'LiteMod_CraftGuide.java'
-    replace '@MOD_VERSION@', project.version
 }
 
 repositories {
@@ -52,11 +81,15 @@ repositories {
         name = 'Player\'s Repo'
         url = 'http://maven.ic2.player.to/'
     }
+    ivy {
+        name 'BuildCraft'
+        artifactPattern 'http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]'
+    }
 }
 
 dependencies {
-    compile 'com.mod-buildcraft:buildcraft:6.0.17:dev'
-    compile 'net.industrial-craft:industrialcraft-2:2.2.760-experimental:dev'
+    deobfCompile name: 'buildcraft', version: '7.2.8', classifier: 'api'
+    compile 'net.industrial-craft:industrialcraft-2:2.5.8-ex19:dev'
 }
 
 task themeZip(type: Zip) {
@@ -95,11 +128,6 @@ jar {
     exclude 'litemod.json'
 }
 
-jarLiteloader {
-    exclude '**/CraftGuide_FML.*'
-    exclude 'mcmod.info'
-}
-
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'dev'
@@ -124,31 +152,23 @@ task publish(type: Exec) {
     commandLine 'cmd', '/c', 'publish.bat', project.version, minecraft_versions
 }
 
-curse {
-    projectId = '75557'
+curseforge {
     apiKey = project.curseForgeApiKey
-    releaseType = 'alpha' //alpha|beta|release
+    project {
+        id = '75557'
+        releaseType = 'alpha' //alpha|beta|release
+        changelog = file('changes.txt')
 
-    addGameVersion minecraft_versions
-    additionalArtifact deobfJar, apiJar, sourcesJar
-
-    changelog '''\
-API changes
-  - New, even more convenient API for adding recipes. Rather than creating arrays of slots and data, uses method chaining for both. Rather than specifying coordinates explicitly, automatically positions elements within columns. Supports shaped/shapeless grids using a single method call!
-
-Additions:
-  - Option for recipe generation to run in a separate thread
-  - Grass drop probabilities
-
-Other changes:
-  - Updated integrated recipe support in some ways? Been quite a while between changing that code and writing this message, so I'm not entirely sure how.
-  - Vast improvement in recipe generation speed
-'''
-
+        addGameVersion minecraft_versions
+        mainArtifact jar
+        addArtifact deobfJar
+        addArtifact apiJar
+        addArtifact sourcesJar
+    }
 }
 
 publish.dependsOn build
-curse.dependsOn publish
+//curseforge.dependsOn publish
 
 artifacts {
     archives deobfJar
@@ -157,7 +177,8 @@ artifacts {
 }
 
 build.doLast {
-    ver.build = "" + ((ver.build as int) + 1)
-    ver.revision = "" + ((ver.revision as int) + 1)
+    ver.build = '' + ((ver.build as int) + 1)
+    ver.revision = '' + ((ver.revision as int) + 1)
     ver.store(versionFile.newWriter(), null)
 }
+

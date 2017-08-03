@@ -30,7 +30,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 	@Override
 	public String getInfo(ItemStack itemStack)
 	{
-		int fuel =  Info.itemFuel.getFuelValue(itemStack, false);
+		int fuel =  Info.itemInfo.getFuelValue(itemStack, false);
 
 		if(fuel > 0)
 		{

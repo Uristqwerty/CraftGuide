@@ -5,7 +5,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
@@ -31,7 +31,7 @@ public class IconSlot implements Slot
 		Object[] data = (Object[])dataArray[dataIndex];
 		Object source = data[0];
 		ResourceLocation texture = null;
-		IIcon icon = null;
+		TextureAtlasSprite icon = null;
 		if(source instanceof ResourceLocation)
 		{
 			texture = (ResourceLocation)source;
@@ -39,7 +39,7 @@ public class IconSlot implements Slot
 		else if(source instanceof Object[])
 		{
 			texture = (ResourceLocation)((Object[])source)[0];
-			icon = (IIcon)((Object[])source)[1];
+			icon = (TextureAtlasSprite)((Object[])source)[1];
 		}
 
 		int x = recipeX + this.x;
@@ -92,7 +92,7 @@ public class IconSlot implements Slot
 		if(data.length > 6)
 		{
 			final String text = data[6].toString();
-			int textWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
+			int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
 			int textX = Math.max(x, x + width + 1 - textWidth);
 			renderer.renderText(textX, y + height - 7, text, 0xffffffff, true);
 		}

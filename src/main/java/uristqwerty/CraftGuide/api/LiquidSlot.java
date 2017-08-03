@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
@@ -48,7 +48,7 @@ public class LiquidSlot implements Slot
 			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
 			Fluid fluid = liquid.getFluid();
-			IIcon icon = fluid.getStillIcon();
+			TextureAtlasSprite icon = Util.getFluidIcon(fluid.getStill());
 
 			if(icon != null)
 			{
@@ -82,7 +82,7 @@ public class LiquidSlot implements Slot
 			PseudoFluidStack liquid = (PseudoFluidStack)data[dataIndex];
 			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
-			IIcon icon = liquid.getIcon();
+			TextureAtlasSprite icon = Util.getFluidIcon(liquid.getIcon());
 
 			if(icon != null)
 			{

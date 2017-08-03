@@ -6,9 +6,9 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
 
 public class PseudoFluidFilter implements ItemFilter
 {
@@ -68,7 +68,7 @@ public class PseudoFluidFilter implements ItemFilter
 		{
 			TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
-			IIcon icon = liquid.getIcon();
+			TextureAtlasSprite icon = Util.getFluidIcon(liquid.getIcon());
 
 			if(icon != null)
 			{

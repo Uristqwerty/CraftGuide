@@ -530,7 +530,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				return this;
 			case TRUNCATE:
 				{
-					final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+					final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 					if(unwrappedLines.length > textDef.rows)
 					{
 						unwrappedLines = Arrays.copyOf(unwrappedLines, textDef.rows);
@@ -547,7 +547,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				}
 			case WRAP:
 				{
-					final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+					final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 					ArrayList<String> wrappedLines = new ArrayList<String>();
 					for(int i = 0; i < unwrappedLines.length; i++)
 					{

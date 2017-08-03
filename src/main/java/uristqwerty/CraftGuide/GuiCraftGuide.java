@@ -296,19 +296,6 @@ public class GuiCraftGuide extends Gui
 
 		itemListArea.addElement(searchInput);
 
-		class ClearButtonListener implements IButtonListener
-		{
-			private GuiTextInput textInput;
-			public ClearButtonListener(GuiTextInput textInput)
-			{
-				this.textInput = textInput;
-			}
-			@Override
-			public void onButtonEvent(GuiButton button, Event eventType)
-			{
-				textInput.setText("");
-			}
-		}
 
 		itemListArea.addElement(
 			new GuiButton(initialWindowWidth - 54, 180, 32, 13, buttonTemplate, "Clear")
@@ -589,5 +576,22 @@ public class GuiCraftGuide extends Gui
 	public RecipeCache getRecipeCache()
 	{
 		return recipeCache;
+	}
+
+	// Moved here to avoid a forgegradle/Srg2Source bug that was calling System.exit()
+	// WTF, forgegradle/Srg2Source, especially after forge itself goes out of its way
+	// to warn about any mod calling System.exit...
+	private static class ClearButtonListener implements IButtonListener
+	{
+		private GuiTextInput textInput;
+		public ClearButtonListener(GuiTextInput textInput)
+		{
+			this.textInput = textInput;
+		}
+		@Override
+		public void onButtonEvent(GuiButton button, Event eventType)
+		{
+			textInput.setText("");
+		}
 	}
 }

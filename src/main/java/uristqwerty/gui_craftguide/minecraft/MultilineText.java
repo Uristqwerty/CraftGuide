@@ -63,7 +63,7 @@ public class MultilineText implements Renderable
 
 	public int textWidth()
 	{
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 		int width = 0;
 
 		for(String line: text)

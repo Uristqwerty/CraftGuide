@@ -2,7 +2,10 @@ package uristqwerty.CraftGuide.api;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Contains a number of methods that implement common functionality
@@ -97,4 +100,9 @@ public abstract class Util
 	 * Returns a new List<ItemStack>, containing one of each unique item present in a but not in b
 	 */
 	public abstract List<ItemStack> addItemLists(List<ItemStack> a, List<ItemStack> b);
+
+	static TextureAtlasSprite getFluidIcon(ResourceLocation resourceLocation)
+	{
+		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resourceLocation.toString());
+	}
 }

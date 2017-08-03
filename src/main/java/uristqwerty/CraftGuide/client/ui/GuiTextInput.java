@@ -109,7 +109,7 @@ public class GuiTextInput extends GuiElement implements IButtonListener
 
 	private int xToCharIndex(String text, int x)
 	{
-		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		int i = 0;
 
 		while(i < text.length() && fr.getStringWidth(text.substring(0, i + 1)) < x)

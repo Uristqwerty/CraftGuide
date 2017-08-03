@@ -16,7 +16,7 @@ public class IC2Power implements StackInfoSource
 		}
 		else
 		{
-			double power = Info.itemEnergy.getEnergyValue(itemStack);
+			double power = Info.itemInfo.getEnergyValue(itemStack);
 
 			if(power > 0)
 			{

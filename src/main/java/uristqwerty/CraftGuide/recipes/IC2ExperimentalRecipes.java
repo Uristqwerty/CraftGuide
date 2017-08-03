@@ -2,9 +2,9 @@ package uristqwerty.CraftGuide.recipes;
 
 import ic2.api.item.IC2Items;
 import ic2.api.recipe.IMachineRecipeManager;
+import ic2.api.recipe.IMachineRecipeManager.RecipeIoContainer;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IScrapboxManager;
-import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
 
 import java.lang.reflect.Field;
@@ -45,7 +45,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		public Object[] extraCompressors();
 	}
 
-	public static List<AdditionalMachines> additionalMachines = new ArrayList<AdditionalMachines>();
+	public static List<AdditionalMachines> additionalMachines = new ArrayList<>();
 
 	public IC2ExperimentalRecipes()
 	{
@@ -66,7 +66,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
 			addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
 			addMachineRecipes(generator, IC2Items.getItem("blockcutter"), Recipes.blockcutter);
-			addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurance);
+			addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurnace);
 			addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
 			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
@@ -75,31 +75,9 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 			addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 		}
-		catch(ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalArgumentException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(SecurityException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(IllegalAccessException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchFieldException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(InvocationTargetException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
-		catch(NoSuchMethodException e)
+		catch(ClassNotFoundException | IllegalArgumentException | SecurityException |
+				IllegalAccessException | NoSuchFieldException | InvocationTargetException |
+				NoSuchMethodException e)
 		{
 			CraftGuideLog.log(e, "", true);
 		}
@@ -107,7 +85,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private Object getMacerator()
 	{
-		ArrayList<Object> macerator = new ArrayList<Object>();
+		ArrayList<Object> macerator = new ArrayList<>();
 		macerator.add(IC2Items.getItem("macerator"));
 
 		for(AdditionalMachines additional: additionalMachines)
@@ -128,7 +106,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private Object getExtractor()
 	{
-		ArrayList<Object> extractor = new ArrayList<Object>();
+		ArrayList<Object> extractor = new ArrayList<>();
 		extractor.add(IC2Items.getItem("extractor"));
 
 		for(AdditionalMachines additional: additionalMachines)
@@ -149,7 +127,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private Object getCompressor()
 	{
-		ArrayList<Object> compressor = new ArrayList<Object>();
+		ArrayList<Object> compressor = new ArrayList<>();
 		compressor.add(IC2Items.getItem("compressor"));
 
 		for(AdditionalMachines additional: additionalMachines)
@@ -185,9 +163,9 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 		int maxOutput = 1;
 
-		for(RecipeOutput output: recipeManager.getRecipes().values())
+		for(RecipeIoContainer recipe: recipeManager.getRecipes())
 		{
-			maxOutput = Math.max(maxOutput, output.items.size());
+			maxOutput = Math.max(maxOutput, recipe.output.items.size());
 		}
 
 		int columns = (maxOutput+1) / 2;
@@ -211,14 +189,14 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 		RecipeTemplate template = generator.createRecipeTemplate(recipeSlots, type);
 
-		for(Entry<IRecipeInput, RecipeOutput> recipe: recipeManager.getRecipes().entrySet())
+		for(RecipeIoContainer recipe: recipeManager.getRecipes())
 		{
-			ArrayList<ItemStack> inputs = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> inputs = new ArrayList<>();
 
-			for(ItemStack s: recipe.getKey().getInputs())
+			for(ItemStack s: recipe.input.getInputs())
 			{
 				ItemStack stack = s.copy();
-				stack.stackSize = recipe.getKey().getAmount();
+				stack.stackSize = recipe.input.getAmount();
 				inputs.add(stack);
 			}
 
@@ -226,7 +204,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			recipeContents[0] = inputs;
 			recipeContents[1] = machine;
 			recipeContents[2] = null;
-			List<ItemStack> output = recipe.getValue().items;
+			List<ItemStack> output = recipe.output.items;
 
 			for(int i = 0; i < Math.min(maxOutput, output.size()); i++)
 			{
@@ -296,7 +274,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 				.outputItem()
 				.finishTemplate();
 
-		for(IRecipe recipe: (List<IRecipe>)CraftingManager.getInstance().getRecipeList())
+		for(IRecipe recipe: CraftingManager.getInstance().getRecipeList())
 		{
 			if(shapelessRecipe.isInstance(recipe) && (Boolean)shapelessCanShow.invoke(recipe))
 			{
@@ -369,7 +347,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			{
 				String fluidName = itemString.substring(7);
 
-				ArrayList<Object> containers = new ArrayList<Object>();
+				ArrayList<Object> containers = new ArrayList<>();
 				for(FluidContainerData container: FluidContainerRegistry.getRegisteredFluidContainerData())
 				{
 					if(container.fluid.getFluid().getName().equals(fluidName))
@@ -409,7 +387,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 			if(containsItemStacks)
 				return item;
 
-			ArrayList<Object> newlist = new ArrayList<Object>(((List<?>)item).size());
+			ArrayList<Object> newlist = new ArrayList<>(((List<?>)item).size());
 
 			for(Object o: (List<?>)item)
 			{
@@ -429,7 +407,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		else if(item instanceof Iterable)
 		{
-			ArrayList<Object> newlist = new ArrayList<Object>();
+			ArrayList<Object> newlist = new ArrayList<>();
 
 			for(Object o: (Iterable<?>)item)
 			{
@@ -449,7 +427,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 		else if(item != null && item.getClass().isArray())
 		{
-			ArrayList<Object> newlist = new ArrayList<Object>();
+			ArrayList<Object> newlist = new ArrayList<>();
 
 			for(Object o: (Object[])item)
 			{

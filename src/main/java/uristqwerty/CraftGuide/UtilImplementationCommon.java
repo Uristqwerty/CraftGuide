@@ -94,7 +94,7 @@ public abstract class UtilImplementationCommon extends Util
 
 						if(rarity == null)
 						{
-							rarity = EnumRarity.common;
+							rarity = EnumRarity.COMMON;
 						}
 
 						text.add(rarity.rarityColor + (String)o);

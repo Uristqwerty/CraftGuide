@@ -25,15 +25,11 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
@@ -153,7 +149,7 @@ public class HTMLExport
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 
 
-		ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		ScaledResolution scaledresolution = new ScaledResolution(mc);
 		int guiScale = scaledresolution.getScaleFactor();
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -291,20 +287,20 @@ public class HTMLExport
 
 	public static void outputItemIcon(ItemStack stack, File dest)
 	{
-		IItemRenderer renderer = MinecraftForgeClient.getItemRenderer(stack, ItemRenderType.INVENTORY);
-		Item item = stack.getItem();
-		Block block = Block.getBlockFromItem(item);
-		boolean renderAsBlock = stack.getItemSpriteNumber() == 0 && item instanceof ItemBlock && RenderBlocks.renderItemIn3d(block.getRenderType());
-		IIcon icon = stack.getIconIndex();
-
-		if(renderer == null && !renderAsBlock && icon instanceof TextureAtlasSprite && ((TextureAtlasSprite)icon).getFrameCount() > 1)
-		{
-			// TODO: Read frame data from TextureAtlasSprite, rescale, output GIF
-		}
-		else
-		{
-			// TODO: Render to texture, copy pixels into spritesheet PNG.
-		}
+//		IItemRenderer renderer = MinecraftForgeClient.getItemRenderer(stack, ItemRenderType.INVENTORY);
+//		Item item = stack.getItem();
+//		Block block = Block.getBlockFromItem(item);
+//		boolean renderAsBlock = stack.getItemSpriteNumber() == 0 && item instanceof ItemBlock && RenderBlocks.renderItemIn3d(block.getRenderType());
+//		IIcon icon = stack.getIconIndex();
+//
+//		if(renderer == null && !renderAsBlock && icon instanceof TextureAtlasSprite && ((TextureAtlasSprite)icon).getFrameCount() > 1)
+//		{
+//			// TODO: Read frame data from TextureAtlasSprite, rescale, output GIF
+//		}
+//		else
+//		{
+//			// TODO: Render to texture, copy pixels into spritesheet PNG.
+//		}
 	}
 
 //	public static void old_test()
