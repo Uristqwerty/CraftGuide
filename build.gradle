@@ -23,7 +23,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
@@ -36,15 +36,15 @@ compileJava {
     sourceCompatibility = targetCompatibility = '1.7'
 }
 
-String minecraft_versions = '1.8.9'
-version = '1.7.1.mc18-pre-' + ver.build
+String minecraft_versions = '1.9.4'
+version = '1.7.1.MC19-pre' + ver.build
 group = 'uristqwerty'
 archivesBaseName = 'CraftGuide'
 
 minecraft {
-    version = '1.8.9-11.15.1.2318-1.8.9'
+    version = '1.9.4-12.17.0.1976'
     runDir = 'run'
-    mappings = 'stable_22'
+    mappings = 'stable_26'
 
     replace '@MOD_VERSION@', project.version
     replaceIn 'CraftGuide_FML.java'
@@ -57,7 +57,7 @@ repositories {
     }
     ivy {
         name 'BuildCraft'
-        artifactPattern 'http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]'
+        artifactPattern 'https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]'
     }
 }
 
@@ -126,7 +126,7 @@ curseforge {
     apiKey = project.curseForgeApiKey
     project {
         id = '75557'
-        releaseType = 'beta' //alpha|beta|release
+        releaseType = 'release' //alpha|beta|release
         changelog = file('changes.txt')
 
         addGameVersion minecraft_versions

@@ -76,7 +76,7 @@ public class Gui extends GuiScreen
 
 		if(mouseButton != -1)
 		{
-			if(mouseButton == 1 || (mouseButton == 0 && Minecraft.isRunningOnMac && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))))
+			if(mouseButton == 1 || (mouseButton == 0 && Minecraft.IS_RUNNING_ON_MAC && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))))
 			{
 				guiWindow.updateMouseState(x, y, Mouse.getEventButtonState(), GuiElement.MouseClick.RIGHT_CLICK);
 			}

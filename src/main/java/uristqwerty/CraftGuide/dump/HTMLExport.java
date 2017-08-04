@@ -60,7 +60,7 @@ public class HTMLExport
 	public static void doTest()
 	{
 		Map<ItemType, List<CraftGuideRecipe>> recipes = GuiCraftGuide.getInstance().getRecipeCache().getAllRecipes();
-		List<CraftGuideRecipe> tableRecipes = recipes.get(ItemType.getInstance(new ItemStack(Blocks.crafting_table)));
+		List<CraftGuideRecipe> tableRecipes = recipes.get(ItemType.getInstance(new ItemStack(Blocks.CRAFTING_TABLE)));
 
 		try
 		{

@@ -229,7 +229,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 
 	private void addCraftingRecipes(RecipeGenerator generator)
 	{
-		ItemStack workbench = new ItemStack(Blocks.crafting_table);
+		ItemStack workbench = new ItemStack(Blocks.CRAFTING_TABLE);
 		ConstructedRecipeTemplate smallShaped = generator.buildTemplate(workbench)
 				.shapedItemGrid(2, 2).nextColumn(1)
 				.outputItem()

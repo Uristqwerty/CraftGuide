@@ -4,8 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.resources.I18n;
 import uristqwerty.CraftGuide.CraftGuideLog;
-import net.minecraft.util.StatCollector;
 
 public class TranslatedTextSource extends TextSource
 {
@@ -41,7 +41,7 @@ public class TranslatedTextSource extends TextSource
 
 	private static String translate(String text)
 	{
-		return StatCollector.translateToLocal(text);
+		return I18n.format(text);
 	}
 
 	public static void reloadAll()

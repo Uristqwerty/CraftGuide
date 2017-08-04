@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
@@ -101,8 +101,8 @@ public abstract class UtilImplementationCommon extends Util
 
 						if(CraftGuide.alwaysShowID)
 						{
-							text.add(EnumChatFormatting.DARK_GRAY +
-									"ID: " + Item.itemRegistry.getNameForObject(stack.getItem()) +
+							text.add(TextFormatting.DARK_GRAY +
+									"ID: " + Item.REGISTRY.getNameForObject(stack.getItem()) +
 									"; data: " + CommonUtilities.getItemDamage(stack) +
 									(stack.hasTagCompound()?
 											"; NBT: " +Integer.toHexString(stack.getTagCompound().hashCode()) : ""
@@ -113,7 +113,7 @@ public abstract class UtilImplementationCommon extends Util
 					}
 					else
 					{
-						text.add(EnumChatFormatting.DARK_GRAY + (String)o);
+						text.add(TextFormatting.DARK_GRAY + (String)o);
 					}
 				}
 			}
@@ -125,7 +125,7 @@ public abstract class UtilImplementationCommon extends Util
 			CraftGuideLog.log(e);
 
 			List<String> text = new ArrayList<>(1);
-			text.add(EnumChatFormatting.YELLOW + "Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
+			text.add(TextFormatting.YELLOW + "Item " + Item.REGISTRY.getNameForObject(stack.getItem()) + " data " + Integer.toString(CommonUtilities.getItemDamage(stack)));
 			return text;
 		}
 	}

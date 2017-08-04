@@ -11,11 +11,11 @@ import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import org.lwjgl.opengl.GL11;
 
@@ -114,7 +114,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		GlStateManager.disableBlend();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, currentColor());
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
@@ -126,7 +126,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		GlStateManager.disableBlend();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, currentColor());
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
@@ -276,7 +276,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		{
 			CraftGuideLog.log("Failed to render ItemStack {" + (
 					itemStack == null? "null" : (
-						"itemID = " + Item.itemRegistry.getNameForObject(itemStack.getItem()) +
+						"itemID = " + Item.REGISTRY.getNameForObject(itemStack.getItem()) +
 						", itemDamage = " + CommonUtilities.getItemDamage(itemStack) +
 						", stackSize = " + itemStack.stackSize)) +
 					"} (Further stack traces from this particular ItemStack instance will not be logged)");
@@ -511,7 +511,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		invalidStacks.put(stack, null);
 		List<String> list = new ArrayList<>();
-		list.add(EnumChatFormatting.YELLOW + "Err: Item " + Item.itemRegistry.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
+		list.add(TextFormatting.YELLOW + "Err: Item " + Item.REGISTRY.getNameForObject(stack.getItem()) + ", damage " + CommonUtilities.getItemDamage(stack));
 		return list;
 	}
 

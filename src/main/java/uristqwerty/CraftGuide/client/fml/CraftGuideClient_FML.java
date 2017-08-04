@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -108,7 +108,7 @@ public class CraftGuideClient_FML extends CraftGuideClient
 
 		try
 		{
-			if((Boolean)CommonUtilities.getPrivateValue(WorldRenderer.class, Tessellator.getInstance().getWorldRenderer(),
+			if((Boolean)CommonUtilities.getPrivateValue(VertexBuffer.class, Tessellator.getInstance().getBuffer(),
 					"isDrawing",
 					//"field_78415_z", "x", /* Field names in 1.7.10's Tessellator */
 					"field_179010_r", "n"  /* Field names in 1.8.9's WorldRenderer */

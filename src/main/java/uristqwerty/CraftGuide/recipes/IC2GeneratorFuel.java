@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import ic2.api.info.Info;
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
@@ -36,10 +37,9 @@ public class IC2GeneratorFuel implements StackInfoSource
 		return null;
 	}
 
-	// This method will become *so* much simpler in 1.8+, once I can drop support for older IC² versions.
-	// Also, Java 7's Exception1|Exception2 syntax. Plan is to also drop support for Java 6 in the upgrade to MC 1.8
 	private float getGeneratorMult() throws IllegalAccessException, ClassNotFoundException
 	{
+		CraftGuide.unimplemented(); // TODO: fix reflection, drop backcompat
 		try
 		{
 			return (Integer)Class.forName("ic2.core.IC2").getField("energyGeneratorBase").get(null);

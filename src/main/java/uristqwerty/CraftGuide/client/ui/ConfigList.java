@@ -10,7 +10,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.GuiCraftGuide;
@@ -283,7 +283,7 @@ public class ConfigList extends GuiScrollableContent
 
 	private void addButton(String text, String buttonText, ButtonTemplate buttonTemplate, IButtonListener listener)
 	{
-		String translatedButtonText = StatCollector.translateToLocal(buttonText);
+		String translatedButtonText = I18n.format(buttonText);
 		int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(translatedButtonText);
 
 		addRow(text,
@@ -332,7 +332,7 @@ public class ConfigList extends GuiScrollableContent
 
 	private void addThemeButton(ButtonTemplate buttonTemplate)
 	{
-		String translatedButtonText = StatCollector.translateToLocal("craftguide.gui.config.current_theme.button");
+		String translatedButtonText = I18n.format("craftguide.gui.config.current_theme.button");
 		int textWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(translatedButtonText);
 
 		addThemeRow(

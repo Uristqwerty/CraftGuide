@@ -35,7 +35,7 @@ public class GrassSeedDrops extends CraftGuideAPIObject implements RecipeProvide
 			Field seedField = Class.forName("net.minecraftforge.common.ForgeHooks$SeedEntry").getDeclaredField("seed");
 			seedField.setAccessible(true);
 
-			ItemStack grass = new ItemStack(Blocks.tallgrass, 1, 1);
+			ItemStack grass = new ItemStack(Blocks.TALLGRASS, 1, 1);
 
 			double total = 0;
 			for(WeightedRandom.Item entry: entries)

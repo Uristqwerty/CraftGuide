@@ -1,131 +1,95 @@
 package uristqwerty.CraftGuide.recipes;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionHelper;
-import uristqwerty.CraftGuide.CommonUtilities;
-import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.CraftGuide.DefaultRecipeTemplate;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.brewing.IBrewingRecipe;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
-import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
-import uristqwerty.CraftGuide.api.RecipeTemplate;
-import uristqwerty.CraftGuide.api.slotTypes.Slot;
-import uristqwerty.CraftGuide.api.SlotType;
-import uristqwerty.gui_craftguide.texture.DynamicTexture;
-import uristqwerty.gui_craftguide.texture.TextureClip;
+import uristqwerty.CraftGuide.itemtype.ItemType;
 
 public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
-	private final Slot[] slots = new ItemSlot[]{
-		new ItemSlot(12, 12, 16, 16).setSlotType(SlotType.INPUT_SLOT),
-		new ItemSlot(12, 30, 16, 16).setSlotType(SlotType.INPUT_SLOT),
-		new ItemSlot(49, 21, 16, 16).setSlotType(SlotType.OUTPUT_SLOT),
-	};
-
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
-		ItemStack stack = new ItemStack(Items.brewing_stand);
-		List<ItemStack[]> recipes = getRecipes();
-		/*RecipeTemplate template = generator.createRecipeTemplate(slots, stack,
-			"/gui/BrewGuide.png", 1, 1, 82, 1);*/
+		TreeSet<ItemType> ingredients = new TreeSet<>();
+		TreeSet<ItemType> inputs = new TreeSet<>();
 
-		RecipeTemplate template = new DefaultRecipeTemplate(
-				slots,
-				stack,
-				new TextureClip(
-						DynamicTexture.instance("brew_recipe_background"),
-						1, 1, 79, 58),
-				new TextureClip(
-						DynamicTexture.instance("brew_recipe_background"),
-						82, 1, 79, 58));
-
-		if(CraftGuide.hideMundanePotionRecipes)
+		for(Item item: Item.REGISTRY)
 		{
-			Iterator<ItemStack[]> iterator = recipes.iterator();
-
-			while(iterator.hasNext())
+			ArrayList<ItemStack> itemSet = new ArrayList<>();
+			CreativeTabs tabs[] = item.getCreativeTabs();
+			for(CreativeTabs tab: tabs)
 			{
-				ItemStack[] recipe = iterator.next();
+				item.getSubItems(item, tab, itemSet);
+			}
 
-				if(recipe[2] != null && CommonUtilities.getItemDamage(recipe[2]) == 8192)
+			for(ItemStack stack: itemSet)
+			{
+				if(BrewingRecipeRegistry.isValidIngredient(stack))
+					ingredients.add(ItemType.getInstance(stack));
+				if(BrewingRecipeRegistry.isValidInput(stack))
+					inputs.add(ItemType.getInstance(stack));
+			}
+		}
+
+		ItemStack brewingStand = new ItemStack(Items.BREWING_STAND);
+		ConstructedRecipeTemplate template = generator.buildTemplate(brewingStand)
+				.item().item().nextColumn(1)
+				.machineItem().nextColumn(1)
+				.outputItem().finishTemplate();
+
+		TreeSet<ItemType> discoveredInputs;
+		TreeSet<ItemType> inputsToTry = inputs;
+		do
+		{
+			discoveredInputs = new TreeSet<>();
+
+			for(IBrewingRecipe recipe: BrewingRecipeRegistry.getRecipes())
+			{
+				for(ItemType ingredient: ingredients)
 				{
-					iterator.remove();
+					final ItemStack ingredientStack = ingredient.getDisplayStack();
+					if(recipe.isIngredient(ingredientStack))
+					{
+						for(ItemType input: inputsToTry)
+						{
+							final ItemStack inputStack = input.getDisplayStack();
+							if(recipe.isInput(inputStack))
+							{
+								ItemStack result = recipe.getOutput(inputStack, ingredientStack);
+								if(result != null)
+								{
+									ItemType resultType = ItemType.getInstance(result);
+									if(!ingredients.contains(resultType))
+									{
+										discoveredInputs.add(resultType);
+									}
+
+									template.buildRecipe()
+										.item(ingredientStack).item(inputStack)
+										.item(brewingStand)
+										.item(result)
+										.addRecipe(generator);
+								}
+							}
+						}
+					}
 				}
 			}
-		}
 
-		for(ItemStack[] recipe: recipes)
-		{
-			generator.addRecipe(template, recipe);
-		}
+			inputs.addAll(discoveredInputs);
+			inputsToTry = discoveredInputs;
+		} while(!inputsToTry.isEmpty());
 
-		generator.setDefaultTypeVisibility(stack, false);
-	}
-
-	private List<ItemStack[]> getRecipes()
-	{
-		List<Item> ingredients = getIngredients();
-
-		ItemStack water = new ItemStack(Items.potionitem);
-		List<ItemStack[]> potionRecipes = new LinkedList<>();
-		Set<Integer> done = new HashSet<>();
-		done.add(0);
-
-		addRecipesForPotion(potionRecipes, water, ingredients, done);
-
-		return potionRecipes;
-	}
-
-	private void addRecipesForPotion(List<ItemStack[]> potionRecipes, ItemStack potion, List<Item> ingredients, Set<Integer> done)
-	{
-		List<ItemStack> next = new LinkedList<>();
-
-		for(Item ingredient: ingredients)
-		{
-			int result = PotionHelper.applyIngredient(CommonUtilities.getItemDamage(potion), ingredient.getPotionEffect(new ItemStack(ingredient)));
-
-			if(result != 0 && result != CommonUtilities.getItemDamage(potion))
-			{
-				ItemStack output = new ItemStack(Items.potionitem);
-				output.setItemDamage(result);
-				potionRecipes.add(new ItemStack[] {potion, new ItemStack(ingredient), output});
-
-				if(!done.contains(result))
-				{
-					next.add(output);
-					done.add(result);
-				}
-			}
-		}
-
-		for(ItemStack nextPotion: next)
-		{
-			addRecipesForPotion(potionRecipes, nextPotion, ingredients, done);
-		}
-	}
-
-	private List<Item> getIngredients()
-	{
-		List<Item> ingredients = new LinkedList<>();
-
-		for(Object item: Item.itemRegistry)
-		{
-			if(item != null && ((Item)item).isPotionIngredient(new ItemStack((Item)item)))
-			{
-				ingredients.add(((Item)item));
-			}
-		}
-
-		return ingredients;
+		generator.setDefaultTypeVisibility(brewingStand, false);
 	}
 }

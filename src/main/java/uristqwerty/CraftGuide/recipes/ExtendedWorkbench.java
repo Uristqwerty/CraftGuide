@@ -15,7 +15,7 @@ import uristqwerty.CraftGuide.api.RecipeProvider;
 
 public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProvider
 {
-	private static ItemStack workbenchStack = new ItemStack(Blocks.crafting_table, 1, 1);
+	private static ItemStack workbenchStack = new ItemStack(Blocks.CRAFTING_TABLE, 1, 1);
 
 	@Override
 	public void generateRecipes(RecipeGenerator generator)

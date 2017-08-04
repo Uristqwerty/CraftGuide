@@ -65,11 +65,11 @@ public class CommonUtilities
 		{
 			if(item.getHasSubtypes())
 			{
-				idText = String.format(" (%s #%04d/%d)", Item.itemRegistry.getNameForObject(item.getItem()), Item.getIdFromItem(item.getItem()), getItemDamage(item));
+				idText = String.format(" (%s #%04d/%d)", Item.REGISTRY.getNameForObject(item.getItem()), Item.getIdFromItem(item.getItem()), getItemDamage(item));
 			}
 			else
 			{
-				idText = String.format(" (%s #%04d)", Item.itemRegistry.getNameForObject(item.getItem()), Item.getIdFromItem(item.getItem()));
+				idText = String.format(" (%s #%04d)", Item.REGISTRY.getNameForObject(item.getItem()), Item.getIdFromItem(item.getItem()));
 			}
 		}
 		return item.getDisplayName() + idText;

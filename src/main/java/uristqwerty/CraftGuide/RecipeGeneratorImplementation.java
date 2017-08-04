@@ -31,7 +31,7 @@ public class RecipeGeneratorImplementation implements RecipeGenerator
 	public List<ItemStack> disabledTypes = new LinkedList<>();
 	public Texture defaultBackground = new BlankTexture();
 	public Texture defaultBackgroundSelected;
-	public static ItemStack workbench = new ItemStack(Blocks.crafting_table);
+	public static ItemStack workbench = new ItemStack(Blocks.CRAFTING_TABLE);
 	public static final RecipeGeneratorImplementation instance = new RecipeGeneratorImplementation();
 
 	private RecipeGeneratorImplementation()

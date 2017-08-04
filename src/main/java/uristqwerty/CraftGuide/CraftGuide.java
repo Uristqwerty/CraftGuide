@@ -146,9 +146,9 @@ public class CraftGuide
 		if(enableItemRecipe)
 		{
 			loaderSide.addRecipe(new ItemStack(itemCraftGuide), new Object[] {"pbp",
-					"bcb", "pbp", Character.valueOf('c'), Blocks.crafting_table,
-					Character.valueOf('p'), Items.paper, Character.valueOf('b'),
-					Items.book});
+					"bcb", "pbp", Character.valueOf('c'), Blocks.CRAFTING_TABLE,
+					Character.valueOf('p'), Items.PAPER, Character.valueOf('b'),
+					Items.BOOK});
 		}
 	}
 
