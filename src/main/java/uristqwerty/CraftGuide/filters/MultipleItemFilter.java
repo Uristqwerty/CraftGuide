@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.api.CombinableItemFilter;
@@ -38,6 +39,17 @@ public class MultipleItemFilter implements CombinableItemFilter
 		if(stack instanceof ItemStack)
 		{
 			return matches((ItemStack)stack);
+		}
+		else if(stack instanceof FluidStack)
+		{
+			for(ItemStack compare: comparison)
+			{
+				if(((FluidStack)stack).isFluidEqual(compare))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		else if(stack instanceof List)
 		{

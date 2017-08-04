@@ -54,20 +54,19 @@ public class CraftGuide
 
 	public static final int DAMAGE_WILDCARD = 32767;
 
-	public void preInit(String iconName, boolean disableItem)
+	public void preInit(boolean disableItem)
 	{
 		CraftGuideLog.init(new File(logDirectory(), "CraftGuide.log"));
 
 		initForgeExtensions();
 		loadProperties();
+		addItem();
 
 		side.preInit();
 
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
 		uristqwerty.CraftGuide.api.slotTypes.ItemSlot.implementation = new ItemSlotImplementationImplementation();
 		side.initKeybind();
-
-		addItem(iconName);
 	}
 
 	public void init()
@@ -139,9 +138,9 @@ public class CraftGuide
 		}
 	}
 
-	private void addItem(String iconName)
+	private void addItem()
 	{
-		itemCraftGuide = new ItemCraftGuide(iconName);
+		itemCraftGuide = new ItemCraftGuide();
 
 		if(enableItemRecipe)
 		{

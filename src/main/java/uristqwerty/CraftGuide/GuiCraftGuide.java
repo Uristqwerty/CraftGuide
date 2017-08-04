@@ -59,7 +59,7 @@ public class GuiCraftGuide extends Gui
 		filterSlotTypes.put(SlotType.MACHINE_SLOT, false);
 	}
 
-	public static GuiCraftGuide getInstance()
+	public static synchronized GuiCraftGuide getInstance()
 	{
 		if(instance == null)
 		{

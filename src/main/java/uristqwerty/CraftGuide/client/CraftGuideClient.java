@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.CraftGuideSide;
@@ -57,6 +59,9 @@ public abstract class CraftGuideClient implements CraftGuideSide
 			ThemeManager.currentTheme = ThemeManager.instance.buildTheme("theme_base");
 			ThemeManager.currentThemeName = "theme_base";
 		}
+
+		ModelLoader.setCustomModelResourceLocation(CraftGuide.itemCraftGuide, 0,
+				new ModelResourceLocation("craftguide:craftguide_item", "inventory"));
 	}
 
 	private String readThemeChoice()
@@ -147,36 +152,35 @@ public abstract class CraftGuideClient implements CraftGuideSide
 		{
 			if(stream != null)
 			{
-				ZipInputStream resources = new ZipInputStream(stream);
-				byte[] buffer = new byte[1024 * 16];
-				ZipEntry entry;
-				while((entry = resources.getNextEntry()) != null)
+				try(ZipInputStream resources = new ZipInputStream(stream))
 				{
-					File destination = new File(outputBase, entry.getName());
-
-					if(entry.isDirectory())
+					byte[] buffer = new byte[1024 * 16];
+					ZipEntry entry;
+					while((entry = resources.getNextEntry()) != null)
 					{
-						destination.mkdirs();
-					}
-					else
-					{
-						CraftGuideLog.log("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'", false);
-						destination.getParentFile().mkdirs();
-						destination.createNewFile();
-						FileOutputStream output = new FileOutputStream(destination);
-						int len;
+						File destination = new File(outputBase, entry.getName());
 
-						while((len = resources.read(buffer, 0, buffer.length)) != -1)
+						if(entry.isDirectory())
 						{
-							output.write(buffer, 0, len);
+							destination.mkdirs();
 						}
+						else
+						{
+							CraftGuideLog.log("CraftGuide: Extracting '" + entry.getName() + "' to '" + destination.getCanonicalPath() + "'", false);
+							destination.getParentFile().mkdirs();
+							destination.createNewFile();
+							try(FileOutputStream output = new FileOutputStream(destination))
+							{
+								int len;
 
-						output.flush();
-						output.close();
+								while((len = resources.read(buffer, 0, buffer.length)) != -1)
+								{
+									output.write(buffer, 0, len);
+								}
+							}
+						}
 					}
 				}
-
-				resources.close();
 			}
 		}
 		catch(IOException e)

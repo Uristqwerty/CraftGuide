@@ -3,14 +3,12 @@ package uristqwerty.CraftGuide.recipes;
 import ic2.api.item.IC2Items;
 import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.IMachineRecipeManager.RecipeIoContainer;
-import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IScrapboxManager;
 import ic2.api.recipe.Recipes;
 import ic2.core.recipe.AdvRecipe;
 import ic2.core.recipe.AdvShapelessRecipe;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -18,9 +16,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
-import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -253,7 +248,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 				if(recipe.canShow())
 				{
 					shapeless.buildRecipe()
-						.shapelessItemGrid(resolveAll(recipe.input))
+						.shapelessItemGrid(AdvRecipe.expandArray(recipe.input))
 						.item(recipe.getRecipeOutput())
 						.addRecipe(generator);
 				}
@@ -269,7 +264,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 					ConstructedRecipeTemplate template = width < 3 && height < 3? smallShaped : shaped;
 
 					template.buildRecipe()
-						.shapedItemGrid(width, height, resolveAll(input))
+						.shapedItemGrid(width, height, AdvRecipe.expandArray(input))
 						.item(recipe.getRecipeOutput())
 						.addRecipe(generator);
 				}
@@ -293,129 +288,5 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 
 		return expanded;
-	}
-
-	private Object[] resolveAll(Object[] input)
-	{
-		Object ret[] = new Object[input.length];
-		for(int i = 0; i< input.length; i++)
-		{
-			ret[i] = resolve(input[i]);
-		}
-		return ret;
-	}
-
-	private Object resolve(Object item)
-	{
-		if(item instanceof String)
-		{
-			String itemString = (String)item;
-
-			if(itemString.startsWith("liquid$"))
-			{
-				String fluidName = itemString.substring(7);
-
-				ArrayList<Object> containers = new ArrayList<>();
-				for(FluidContainerData container: FluidContainerRegistry.getRegisteredFluidContainerData())
-				{
-					if(container.fluid.getFluid().getName().equals(fluidName))
-					{
-						containers.add(container.filledContainer);
-					}
-				}
-
-				return containers;
-			}
-			else
-			{
-				return OreDictionary.getOres(itemString);
-			}
-		}
-		else if(item instanceof ItemStack)
-		{
-			return item;
-		}
-		else if(item instanceof IRecipeInput)
-		{
-			return ((IRecipeInput)item).getInputs();
-		}
-		else if(item instanceof List)
-		{
-			boolean containsItemStacks = true;
-
-			for(Object o: (List<?>)item)
-			{
-				if(!(o instanceof ItemStack))
-				{
-					containsItemStacks = false;
-					break;
-				}
-			}
-
-			if(containsItemStacks)
-				return item;
-
-			ArrayList<Object> newlist = new ArrayList<>(((List<?>)item).size());
-
-			for(Object o: (List<?>)item)
-			{
-				Object r = resolve(o);
-
-				if(r instanceof Collection)
-				{
-					newlist.addAll((Collection<?>)r);
-				}
-				else
-				{
-					newlist.add(r);
-				}
-			}
-
-			return newlist;
-		}
-		else if(item instanceof Iterable)
-		{
-			ArrayList<Object> newlist = new ArrayList<>();
-
-			for(Object o: (Iterable<?>)item)
-			{
-				Object r = resolve(o);
-
-				if(r instanceof Collection)
-				{
-					newlist.addAll((Collection<?>)r);
-				}
-				else
-				{
-					newlist.add(r);
-				}
-			}
-
-			return newlist;
-		}
-		else if(item != null && item.getClass().isArray())
-		{
-			ArrayList<Object> newlist = new ArrayList<>();
-
-			for(Object o: (Object[])item)
-			{
-				Object r = resolve(o);
-
-				if(r instanceof Collection)
-				{
-					newlist.addAll((Collection<?>)r);
-				}
-				else
-				{
-					newlist.add(r);
-				}
-			}
-
-			return newlist;
-		}
-		else
-		{
-			return null;
-		}
 	}
 }

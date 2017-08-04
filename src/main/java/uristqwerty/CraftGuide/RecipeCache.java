@@ -126,7 +126,7 @@ public class RecipeCache
 		reset();
 	}
 
-	public void reset()
+	public synchronized void reset()
 	{
 		CraftGuide.needsRecipeRefresh = false;
 

@@ -23,6 +23,7 @@ import uristqwerty.CraftGuide.api.Util;
 
 import org.lwjgl.opengl.GL11;
 
+@SuppressWarnings("deprecation")
 public class LiquidSlot implements Slot
 {
 	private int x;

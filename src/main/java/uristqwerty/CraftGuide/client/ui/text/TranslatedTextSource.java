@@ -36,7 +36,7 @@ public class TranslatedTextSource extends TextSource
 
 	public String format(Object... args)
 	{
-		return String.format(translatedText, args);
+		return I18n.format(rawText, args);
 	}
 
 	private static String translate(String text)

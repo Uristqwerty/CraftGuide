@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemCraftGuide extends Item
 {
-	public ItemCraftGuide(String iconName)
+	public ItemCraftGuide()
 	{
 		setUnlocalizedName("craftguide_item");
 		setRegistryName("craftguide_item");
@@ -26,5 +26,4 @@ public class ItemCraftGuide extends Item
 		CraftGuide.side.openGUI(playerIn);
 		return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 	}
-	
 }

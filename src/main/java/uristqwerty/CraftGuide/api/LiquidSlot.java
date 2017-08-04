@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
  * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
  * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public class LiquidSlot implements Slot
 {

@@ -37,7 +37,7 @@ compileJava {
 }
 
 String minecraft_versions = '1.9.4'
-version = '1.7.1.MC19-pre' + ver.build
+version = '1.7.1.' + ver.build
 group = 'uristqwerty'
 archivesBaseName = 'CraftGuide'
 

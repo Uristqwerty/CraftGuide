@@ -78,10 +78,9 @@ public class ThemeManager
 			}
 		}
 
-		try
+		IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+		try(IResource packThemes = resourceManager.getResource(new ResourceLocation("craftguide", "themes.txt")))
 		{
-			IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
-			IResource packThemes = resourceManager.getResource(new ResourceLocation("craftguide", "themes.txt"));
 			CraftGuideLog.log("Loading themes from texture pack...");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(packThemes.getInputStream()));
 			String line;

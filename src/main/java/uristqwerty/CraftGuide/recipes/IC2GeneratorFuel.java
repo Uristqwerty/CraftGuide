@@ -1,11 +1,9 @@
 package uristqwerty.CraftGuide.recipes;
 
-import java.lang.reflect.InvocationTargetException;
-
 import ic2.api.info.Info;
+import ic2.core.init.MainConfig;
+import ic2.core.util.ConfigUtil;
 import net.minecraft.item.ItemStack;
-import uristqwerty.CraftGuide.CraftGuide;
-import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.StackInfoSource;
 
 public class IC2GeneratorFuel implements StackInfoSource
@@ -14,14 +12,7 @@ public class IC2GeneratorFuel implements StackInfoSource
 
 	public IC2GeneratorFuel()
 	{
-		try
-		{
-			mult = getGeneratorMult();
-		}
-		catch(IllegalAccessException | ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
+		mult = getGeneratorMult();
 	}
 
 	@Override
@@ -37,49 +28,8 @@ public class IC2GeneratorFuel implements StackInfoSource
 		return null;
 	}
 
-	private float getGeneratorMult() throws IllegalAccessException, ClassNotFoundException
+	private float getGeneratorMult()
 	{
-		CraftGuide.unimplemented(); // TODO: fix reflection, drop backcompat
-		try
-		{
-			return (Integer)Class.forName("ic2.core.IC2").getField("energyGeneratorBase").get(null);
-		}
-		catch(NoSuchFieldException e)
-		{
-			try
-			{
-				Class<?> configClass = Class.forName("ic2.core.util.Config");
-
-				try
-				{
-					Class<?> configUtilClass = Class.forName("ic2.core.util.ConfigUtil");
-					Object config = Class.forName("ic2.core.init.MainConfig").getMethod("get").invoke(null);
-					return (Float)configUtilClass.getMethod("getFloat", configClass, String.class).invoke(null, config, "balance/energy/generator/generator");
-				}
-				catch(ClassNotFoundException _)
-				{
-					Object config = Class.forName("ic2.core.IC2").getField("config").get(null);
-					return 10*(Float)configClass.getMethod("getFloat", String.class).invoke(config, "balance/energy/generator/generator");
-				}
-			}
-			catch(NoSuchFieldException e1)
-			{
-				try
-				{
-					Object config = Class.forName("ic2.core.init.MainConfig").getMethod("get").invoke(null);
-					return (Float)Class.forName("ic2.core.util.Config").getMethod("getFloat", String.class).invoke(config, "balance/energy/generator/generator");
-				}
-				catch(IllegalArgumentException | SecurityException | InvocationTargetException | NoSuchMethodException e2)
-				{
-					CraftGuideLog.log(e2, "", true);
-				}
-			}
-			catch(InvocationTargetException | NoSuchMethodException | ClassNotFoundException e1)
-			{
-				CraftGuideLog.log(e1, "", true);
-			}
-		}
-
-		return 0;
+		return ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/generator");
 	}
 }
