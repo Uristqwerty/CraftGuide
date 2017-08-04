@@ -83,11 +83,9 @@ public abstract class CraftGuideClient implements CraftGuideSide
 
 			if(file.canWrite())
 			{
-				try
+				try(FileWriter writer = new FileWriter(file))
 				{
-					FileWriter writer = new FileWriter(file);
 					writer.write("base_texpack");
-					writer.close();
 				}
 				catch(IOException e)
 				{
@@ -97,11 +95,9 @@ public abstract class CraftGuideClient implements CraftGuideSide
 		}
 		else if(file.canRead())
 		{
-			try
+			try(BufferedReader reader = new BufferedReader(new FileReader(file)))
 			{
-				BufferedReader reader = new BufferedReader(new FileReader(file));
 				String line = reader.readLine();
-				reader.close();
 				return line;
 			}
 			catch(IOException e)

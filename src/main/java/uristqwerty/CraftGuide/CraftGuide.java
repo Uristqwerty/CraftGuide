@@ -3,7 +3,6 @@ package uristqwerty.CraftGuide;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -304,37 +303,36 @@ public class CraftGuide
 		SortedSet<String> properties = new TreeSet<>();
 		properties.addAll(config.stringPropertyNames());
 
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-
-		for(String property: properties)
+		try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream)))
 		{
-			if(configComments.containsKey(property))
+			for(String property: properties)
 			{
-				writer.newLine();
-				writer.write("# ");
-				writer.write(configComments.get(property));
-				writer.newLine();
-				writer.write(property);
-				writer.write('=');
-				writer.write(config.getProperty(property));
-				writer.newLine();
+				if(configComments.containsKey(property))
+				{
+					writer.newLine();
+					writer.write("# ");
+					writer.write(configComments.get(property));
+					writer.newLine();
+					writer.write(property);
+					writer.write('=');
+					writer.write(config.getProperty(property));
+					writer.newLine();
+				}
+			}
+	
+			writer.newLine();
+	
+			for(String property: properties)
+			{
+				if(!configComments.containsKey(property))
+				{
+					writer.write(property);
+					writer.write('=');
+					writer.write(config.getProperty(property));
+					writer.newLine();
+				}
 			}
 		}
-
-		writer.newLine();
-
-		for(String property: properties)
-		{
-			if(!configComments.containsKey(property))
-			{
-				writer.write(property);
-				writer.write('=');
-				writer.write(config.getProperty(property));
-				writer.newLine();
-			}
-		}
-
-		writer.close();
 	}
 
 	public static File configDirectory()

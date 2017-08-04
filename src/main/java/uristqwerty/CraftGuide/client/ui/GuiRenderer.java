@@ -252,9 +252,12 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 
 		try
 		{
-			itemStack = renderItem(itemStack, renderOverlay);
+			if(itemStack.getItem() != null)
+			{
+				itemStack = renderItem(itemStack, renderOverlay);
 
-			error = false;
+				error = false;
+			}
 		}
 		catch(Exception e)
 		{

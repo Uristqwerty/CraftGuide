@@ -6,10 +6,9 @@ import ic2.api.recipe.IMachineRecipeManager.RecipeIoContainer;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IScrapboxManager;
 import ic2.api.recipe.Recipes;
+import ic2.core.recipe.AdvRecipe;
+import ic2.core.recipe.AdvShapelessRecipe;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +21,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
-import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
@@ -57,30 +55,21 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
-		try
-		{
-			addCraftingRecipes(generator);
+		addCraftingRecipes(generator);
 
-			addMachineRecipes(generator, IC2Items.getItem("macerator"), getMacerator(), Recipes.macerator);
-			addMachineRecipes(generator, IC2Items.getItem("extractor"), getExtractor(), Recipes.extractor);
-			addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
-			addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
-			addMachineRecipes(generator, IC2Items.getItem("blockcutter"), Recipes.blockcutter);
-			addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurnace);
-			addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
-			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
-			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
-			addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
-			addMachineRecipes(generator, IC2Items.getItem("orewashingplant"), Recipes.oreWashing);
+		addMachineRecipes(generator, IC2Items.getItem("macerator"), getMacerator(), Recipes.macerator);
+		addMachineRecipes(generator, IC2Items.getItem("extractor"), getExtractor(), Recipes.extractor);
+		addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
+		addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
+		addMachineRecipes(generator, IC2Items.getItem("blockcutter"), Recipes.blockcutter);
+		addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurnace);
+		addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
+		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
+		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
+		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
+		addMachineRecipes(generator, IC2Items.getItem("orewashingplant"), Recipes.oreWashing);
 
-			addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
-		}
-		catch(ClassNotFoundException | IllegalArgumentException | SecurityException |
-				IllegalAccessException | NoSuchFieldException | InvocationTargetException |
-				NoSuchMethodException e)
-		{
-			CraftGuideLog.log(e, "", true);
-		}
+		addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
 	}
 
 	private Object getMacerator()
@@ -238,26 +227,8 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 	}
 
-	private void addCraftingRecipes(RecipeGenerator generator) throws ClassNotFoundException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException
+	private void addCraftingRecipes(RecipeGenerator generator)
 	{
-		Class<?> advancedRecipe = Class.forName("ic2.core.AdvRecipe");
-		Field outputField = advancedRecipe.getField("output");
-		Field inputField = advancedRecipe.getField("input");
-		Field widthField = advancedRecipe.getField("inputWidth");
-		Method canShow = advancedRecipe.getMethod("canShow");
-		Field maskField = null;
-
-		try
-		{
-			maskField = advancedRecipe.getField("masks");
-		}
-		catch(NoSuchFieldException e){}
-
-		Class<?> shapelessRecipe = Class.forName("ic2.core.AdvShapelessRecipe");
-		Field shapelessInput = shapelessRecipe.getField("input");
-		Field shapelessOutput = shapelessRecipe.getField("output");
-		Method shapelessCanShow = shapelessRecipe.getMethod("canShow");
-
 		ItemStack workbench = new ItemStack(Blocks.crafting_table);
 		ConstructedRecipeTemplate smallShaped = generator.buildTemplate(workbench)
 				.shapedItemGrid(2, 2).nextColumn(1)
@@ -274,35 +245,34 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 				.outputItem()
 				.finishTemplate();
 
-		for(IRecipe recipe: CraftingManager.getInstance().getRecipeList())
+		for(IRecipe r: CraftingManager.getInstance().getRecipeList())
 		{
-			if(shapelessRecipe.isInstance(recipe) && (Boolean)shapelessCanShow.invoke(recipe))
+			if(r instanceof AdvShapelessRecipe)
 			{
-				ItemStack output = (ItemStack)shapelessOutput.get(recipe);
-				Object[] input = (Object[])shapelessInput.get(recipe);
-				shapeless.buildRecipe()
-					.shapelessItemGrid(resolveAll(input))
-					.item(output)
-					.addRecipe(generator);
-			}
-			else if(advancedRecipe.isInstance(recipe) && (Boolean)canShow.invoke(recipe))
-			{
-				ItemStack output = (ItemStack)outputField.get(recipe);
-				Object[] input = (Object[])inputField.get(recipe);
-				int width = (Integer)widthField.get(recipe);
-
-				if(maskField != null)
+				AdvShapelessRecipe recipe = (AdvShapelessRecipe)r;
+				if(recipe.canShow())
 				{
-					input = expandInput(input, width, ((int[])maskField.get(recipe))[0]);
+					shapeless.buildRecipe()
+						.shapelessItemGrid(resolveAll(recipe.input))
+						.item(recipe.getRecipeOutput())
+						.addRecipe(generator);
 				}
+			}
+			else if(r instanceof AdvRecipe)
+			{
+				AdvRecipe recipe = (AdvRecipe)r;
+				if(recipe.canShow())
+				{
+					int width = recipe.inputWidth;
+					int height = recipe.inputHeight;
+					Object[] input = expandInput(recipe.input, width, recipe.masks[0]);
+					ConstructedRecipeTemplate template = width < 3 && height < 3? smallShaped : shaped;
 
-				int height = input.length / width;
-
-				ConstructedRecipeTemplate template = width < 3 && height < 3? smallShaped : shaped;
-				template.buildRecipe()
-					.shapedItemGrid(width, height, resolveAll(input))
-					.item(output)
-					.addRecipe(generator);
+					template.buildRecipe()
+						.shapedItemGrid(width, height, resolveAll(input))
+						.item(recipe.getRecipeOutput())
+						.addRecipe(generator);
+				}
 			}
 		}
 	}

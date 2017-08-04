@@ -4,9 +4,6 @@ File versionFile = new File('version.txt')
 // build is to distinguish bugfix releases, as the fourth number in the mod version. Resets when any of the others increase.
 ver.build = 0
 
-// revision is used by liteloader, and is required to increase (by an arbitrary amount) with each public release
-ver.revision = 0
-
 // with the default values set above, now try reading the actual values
 ver.load(versionFile.newDataInputStream())
 
@@ -44,31 +41,6 @@ version = '1.7.1.mc18-pre-' + ver.build
 group = 'uristqwerty'
 archivesBaseName = 'CraftGuide'
 
-ext.llrevision = '03'
-project(':litemod') {
-    apply plugin: 'net.minecraftforge.gradle.liteloader'
-    version = '1.7.1.mc18-pre-' + ver.build
-    group = 'uristqwerty'
-    archivesBaseName = 'CraftGuide'
-    minecraft {
-        version = '1.8.9'
-        runDir = 'run'
-        mappings = 'stable_22'
-    }
-
-    jar {
-        exclude '**/CraftGuide_FML.*'
-        exclude 'mcmod.info'
-    }
-}
-sourceSets {
-    main {
-        java {
-            exclude '**/LiteMod_CraftGuide.*'
-        }
-    }
-}
-
 minecraft {
     version = '1.8.9-11.15.1.2318-1.8.9'
     runDir = 'run'
@@ -76,7 +48,6 @@ minecraft {
 
     replace '@MOD_VERSION@', project.version
     replaceIn 'CraftGuide_FML.java'
-    replaceIn 'LiteMod_CraftGuide.java'
 }
 
 repositories {
@@ -106,29 +77,24 @@ processResources
     // this will ensure that this task is redone when the versions change.
     inputs.property 'version', project.version
     inputs.property 'mcversion', project.minecraft.version
-    inputs.property 'revision', ver.revision
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        include 'litemod.json'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'llrevision':project.llrevision, 'revision':ver.revision
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-        exclude 'litemod.json'
     }
 }
 
 processResources.dependsOn themeZip
 
 jar {
-    exclude '**/LiteMod_CraftGuide.*'
-    exclude 'litemod.json'
     classifier = 'forge'
 }
 
@@ -160,7 +126,7 @@ curseforge {
     apiKey = project.curseForgeApiKey
     project {
         id = '75557'
-        releaseType = 'alpha' //alpha|beta|release
+        releaseType = 'beta' //alpha|beta|release
         changelog = file('changes.txt')
 
         addGameVersion minecraft_versions
@@ -182,7 +148,6 @@ artifacts {
 
 build.doLast {
     ver.build = '' + ((ver.build as int) + 1)
-    ver.revision = '' + ((ver.revision as int) + 1)
     ver.store(versionFile.newWriter(), null)
 }
 
