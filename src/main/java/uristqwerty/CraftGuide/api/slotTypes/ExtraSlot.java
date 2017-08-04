@@ -1,6 +1,9 @@
-package uristqwerty.CraftGuide.api;
+package uristqwerty.CraftGuide.api.slotTypes;
 
 import java.util.List;
+
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
 
 
 /**
@@ -12,12 +15,7 @@ import java.util.List;
  * Unlike in the old API, there is no "can filter" option,
  * as that can be accomplished through {@link #setSlotType}
  * which is already present in ItemSlot.
- *
- * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
- * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
  */
-@SuppressWarnings("deprecation")
-@Deprecated
 public class ExtraSlot extends ItemSlot
 {
 	public Object displayed;

@@ -1,6 +1,10 @@
-package uristqwerty.CraftGuide.api;
+package uristqwerty.CraftGuide.api.slotTypes;
 
 import java.util.List;
+
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.SlotType;
 
 /**
  * An ItemSlot that appends probability information to the name of
@@ -14,12 +18,7 @@ import java.util.List;
  *  and use that copy, it will function just fine with older versions of
  *  CraftGuide, as well as newer ones. It also shows how the API is set up
  *  to make that sort of extension possible.
- *
- * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
- * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
  */
-@SuppressWarnings("deprecation")
-@Deprecated
 public class ChanceSlot extends ItemSlot
 {
 	private int ratio = 100;

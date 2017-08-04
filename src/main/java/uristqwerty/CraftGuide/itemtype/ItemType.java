@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import uristqwerty.CraftGuide.CommonUtilities;
+import uristqwerty.CraftGuide.ForgeExtensions;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemType implements Comparable<ItemType>
 {
+	private static final ItemTypeKey emptyOreDictKey = new ItemTypeKey(Integer.MAX_VALUE - 1, Integer.MIN_VALUE);
 	private static final ItemTypeKey errKey = new ItemTypeKey(Integer.MAX_VALUE, Integer.MIN_VALUE);
 	private static final ItemType errType_nullItem = new ItemType(errKey, "Error\nOne or more recipe contains an ItemStack with a null item.");
 	private static final ItemType errType_unknownType = new ItemType(errKey, "Error\nItemType requested for unknown type of item.");
@@ -102,11 +104,20 @@ public class ItemType implements Comparable<ItemType>
 
 	private ItemType(ArrayList<ItemStack> items)
 	{
-		ItemStack itemStack = items.get(0);
+		ItemStack itemStack = firstNonNull(items);
 		this.item = itemStack.getItem();
 		this.key = new ItemTypeKey(Item.getIdFromItem(item), CommonUtilities.getItemDamage(itemStack));
 		this.stack = items;
 		this.originalHashcode = items.hashCode();
+	}
+
+	private static ItemStack firstNonNull(ArrayList<ItemStack> items)
+	{
+		for(ItemStack i: items)
+			if(i != null && i.getItem() != null)
+				return i;
+
+		return null;
 	}
 
 	private ItemType(ItemTypeKey key, NBTTagCompound nbt, int nbtHash)
@@ -134,13 +145,26 @@ public class ItemType implements Comparable<ItemType>
 		}
 		else if(stack instanceof ArrayList<?> && ((ArrayList<?>)stack).size() > 0)
 		{
+			boolean hasNonNullStack = false;
+
 			for(Object o: (ArrayList<?>)stack)
 			{
-				if(o != null && !(o instanceof ItemStack))
-					return errType_unknownType;
+				if(o != null)
+				{
+					if(!(o instanceof ItemStack))
+						return errType_unknownType;
+					hasNonNullStack = true;
+				}
 			}
 
-			return getInstance((ArrayList<ItemStack>)stack);
+			if(hasNonNullStack)
+			{
+				return getInstance((ArrayList<ItemStack>)stack);
+			}
+			else
+			{
+				return getInstance(ForgeExtensions.getOreDictionaryName((List<?>)stack));
+			}
 		}
 		else
 		{
@@ -200,6 +224,21 @@ public class ItemType implements Comparable<ItemType>
 				type = new ItemType(key, nbt, nbtHash);
 				items.add(type);
 			}
+		}
+
+		return type;
+	}
+
+	private static ItemType getInstance(String oreDictName)
+	{
+		if(oreDictName == null)
+			return errType_unknownType;
+
+		ItemType type = oreDictionaryEntries.get(oreDictName);
+		if(type == null)
+		{
+			type = new ItemType(emptyOreDictKey, "Empty Ore Dictionary type: " + oreDictName);
+			oreDictionaryEntries.put(oreDictName, type);
 		}
 
 		return type;

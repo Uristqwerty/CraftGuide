@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
-import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
 public class IconSlot implements Slot

@@ -5,7 +5,6 @@ import java.util.List;
 
 import uristqwerty.CraftGuide.api.ItemFilter;
 import uristqwerty.CraftGuide.api.Renderer;
-import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
 public class TextSlot implements Slot

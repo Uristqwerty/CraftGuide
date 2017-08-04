@@ -33,3 +33,4 @@ craftguide.gui.config.current_theme.button=Next theme
 craftguide.gui.config.current_theme.format_string=Current theme: %s
 
 craftguide.gui.task_running=Working...
+craftguide.gui.empty_oredict_type=Empty Ore Dictionary list: '%1$s'

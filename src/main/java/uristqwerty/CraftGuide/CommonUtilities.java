@@ -207,10 +207,21 @@ public class CommonUtilities
 			if(stack.getItem() == null)
 				return nullItemText;
 
+			List<String> tooltip;
 			if(stack.hasTagCompound())
-				return genExtendedItemStackText(stack);
+				tooltip = genExtendedItemStackText(stack);
 			else
-				return new ArrayList<>(cachedExtendedItemStackText(stack));
+				tooltip = new ArrayList<>(cachedExtendedItemStackText(stack));
+
+			if(item instanceof List)
+			{
+				String name = ForgeExtensions.getOreDictionaryName((List<?>)item);
+				if(name != null)
+				{
+					tooltip.add("Ore dictionary name: '" + name + "'");
+				}
+			}
+			return tooltip;
 		}
 		else
 		{

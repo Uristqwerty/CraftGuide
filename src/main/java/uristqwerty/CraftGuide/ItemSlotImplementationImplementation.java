@@ -15,7 +15,8 @@ import uristqwerty.CraftGuide.api.Util;
 /**
  * It's a rather silly name, but since it's only directly used in one other class...
  */
-public class ItemSlotImplementationImplementation implements ItemSlotImplementation
+@SuppressWarnings("deprecation")
+public class ItemSlotImplementationImplementation implements ItemSlotImplementation, uristqwerty.CraftGuide.api.slotTypes.ItemSlotImplementation
 {
 	private NamedTexture overlayAny;
 	private NamedTexture overlayForge;
@@ -144,6 +145,8 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 						return true;
 					}
 				}
+
+				return search.matches(data);
 			}
 		}
 		catch (Throwable e)
@@ -181,5 +184,123 @@ public class ItemSlotImplementationImplementation implements ItemSlotImplementat
 		}
 
 		return list;
+	}
+
+	@Override
+	public List<String> getTooltip(uristqwerty.CraftGuide.api.slotTypes.ItemSlot itemSlot, Object data)
+	{
+		ItemStack stack = item(data);
+
+		if(stack == null)
+		{
+			if(data instanceof List && ((List<?>)data).size() < 1)
+			{
+				return emptyOreDictEntryText((List<?>)data);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return CommonUtilities.getExtendedItemStackText(data);
+		}
+	}
+
+	@Override
+	public void draw(uristqwerty.CraftGuide.api.slotTypes.ItemSlot itemSlot, Renderer renderer, int recipeX, int recipeY, Object data, boolean isMouseOver)
+	{
+		int x = recipeX + itemSlot.x;
+		int y = recipeY + itemSlot.y;
+		ItemStack stack = item(data);
+
+		if(itemSlot.drawBackground)
+		{
+			renderer.renderRect(x - 1, y - 1, 18, 18, background);
+		}
+
+		if(stack != null)
+		{
+			renderer.renderItemStack(x, y, stack);
+
+			if(isMouseOver)
+			{
+				renderer.renderRect(x, y, 16, 16, 0xff, 0xff, 0xff, 0x80);
+			}
+
+			if(CommonUtilities.getItemDamage(stack) == CraftGuide.DAMAGE_WILDCARD)
+			{
+				renderer.renderRect(x - 1, y - 1, 18, 18, overlayAny);
+			}
+
+			if(data instanceof List)
+			{
+				if(((List<?>)data).size() > 1)
+				{
+					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+				}
+				else
+				{
+					renderer.renderRect(x - 1, y - 1, 18, 18, overlayForgeSingle);
+				}
+			}
+		}
+		else if(data instanceof List && ((List<?>)data).size() < 1)
+		{
+			renderer.renderRect(x - 1, y - 1, 18, 18, overlayForge);
+		}
+	}
+
+	@Override
+	public boolean matches(uristqwerty.CraftGuide.api.slotTypes.ItemSlot itemSlot, ItemFilter search, Object data, SlotType type)
+	{
+		if(type != itemSlot.slotType && (
+				type != SlotType.ANY_SLOT ||
+				itemSlot.slotType == SlotType.DISPLAY_SLOT ||
+				itemSlot.slotType == SlotType.HIDDEN_SLOT))
+		{
+			return false;
+		}
+
+		try
+		{
+			if(search == null)
+			{
+				return false;
+			}
+			else if(data == null || data instanceof ItemStack)
+			{
+				return search.matches(data);
+			}
+			else if(data instanceof List)
+			{
+				for(Object content: (List<?>)data)
+				{
+					if(search.matches(content))
+					{
+						return true;
+					}
+				}
+
+				return search.matches(data);
+			}
+		}
+		catch (Throwable e)
+		{
+			CraftGuideLog.log("exception trace: uristqwerty.CraftGuide.ItemSlotImplementationImplementation.matches data " + (data != null? data.getClass() : "null"));
+			throw new RuntimeException(e);
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isPointInBounds(uristqwerty.CraftGuide.api.slotTypes.ItemSlot itemSlot, int x, int y)
+	{
+		return x >= itemSlot.x
+				&& x < itemSlot.x + itemSlot.width
+				&& y >= itemSlot.y
+				&& y < itemSlot.y + itemSlot.height;
 	}
 }

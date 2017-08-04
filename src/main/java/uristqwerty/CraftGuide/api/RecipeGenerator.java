@@ -42,8 +42,8 @@ public interface RecipeGenerator
 	 * @param backgroundSelectedY
 	 * @return
 	 */
-
 	public RecipeTemplate createRecipeTemplate(Slot[] slots, ItemStack craftingType, String backgroundTexture, int backgroundX, int backgroundY, int backgroundSelectedX, int backgroundSelectedY);
+
 	/**
 	 * Creates a {@link RecipeTemplate} for the provided ISlot[],
 	 * associated with the provided crafting type. The background is

@@ -1,4 +1,4 @@
-package uristqwerty.CraftGuide.api;
+package uristqwerty.CraftGuide.api.slotTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +12,17 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidStack;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.LiquidFilter;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.PseudoFluidFilter;
+import uristqwerty.CraftGuide.api.PseudoFluidStack;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.api.Util;
 
 import org.lwjgl.opengl.GL11;
 
-
-/**
- * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
- * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
- */
-@Deprecated
 public class LiquidSlot implements Slot
 {
 	private int x;

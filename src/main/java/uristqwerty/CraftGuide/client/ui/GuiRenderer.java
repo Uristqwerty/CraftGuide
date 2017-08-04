@@ -49,16 +49,7 @@ public class GuiRenderer extends RendererBase implements uristqwerty.CraftGuide.
 		frameStartTime = Minecraft.getSystemTime() / 1000.0;
 		if(itemRenderer == null)
 		{
-			try
-			{
-				itemRenderer = (RenderItem)CommonUtilities.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(),
-						"renderItem", "field_175621_X", "ab");
-			}
-			catch(SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e)
-			{
-				CraftGuideLog.log(e);
-				throw new RuntimeException("Could not get Minecraft's itemRenderer. Probably have the wrong field name.");
-			}
+			itemRenderer = Minecraft.getMinecraft().getRenderItem();
 		}
 	}
 

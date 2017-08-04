@@ -17,13 +17,13 @@ import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.Recipe;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
-import uristqwerty.CraftGuide.api.ChanceSlot;
+import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate.RecipeBuilder;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate.SubunitBuilder;
 import uristqwerty.CraftGuide.api.ItemFilter;
-import uristqwerty.CraftGuide.api.ItemSlot;
-import uristqwerty.CraftGuide.api.LiquidSlot;
+import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
+import uristqwerty.CraftGuide.api.slotTypes.LiquidSlot;
 import uristqwerty.CraftGuide.api.NamedTexture;
 import uristqwerty.CraftGuide.api.PseudoFluidStack;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
@@ -347,7 +347,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		currentColumn = newColumn;
 	}
 	
-	private static class DecorationSlot implements Slot
+	private static class DecorationSlot implements uristqwerty.CraftGuide.api.slotTypes.Slot
 	{
 		private final int x, y, w, h;
 		private final NamedTexture texture;
@@ -820,7 +820,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		}
 	}
 
-	private static class SubunitSlot implements Slot
+	private static class SubunitSlot implements uristqwerty.CraftGuide.api.slotTypes.Slot
 	{
 		private int groupX, groupY, groupWidth, unitWidth, unitHeight;
 		private HorizontalAlign alignment;

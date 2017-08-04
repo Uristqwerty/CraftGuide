@@ -54,6 +54,7 @@ public class StringItemFilter implements ItemFilter
 			try
 			{
 				List<?> list = (List<?>)item;
+				boolean empty = true;
 
 				for(Object o: list)
 				{
@@ -61,9 +62,12 @@ public class StringItemFilter implements ItemFilter
 					{
 						return true;
 					}
+
+					if(o != null)
+						empty = false;
 				}
 
-				if(list.size() < 1)
+				if(empty)
 				{
 					List<String> lines = ForgeExtensions.emptyOreDictEntryText(list);
 

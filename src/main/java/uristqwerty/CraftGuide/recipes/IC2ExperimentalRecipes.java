@@ -21,16 +21,16 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.oredict.OreDictionary;
-import uristqwerty.CraftGuide.api.ChanceSlot;
+import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
-import uristqwerty.CraftGuide.api.EUSlot;
-import uristqwerty.CraftGuide.api.ExtraSlot;
-import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.api.slotTypes.EUSlot;
+import uristqwerty.CraftGuide.api.slotTypes.ExtraSlot;
+import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
-import uristqwerty.CraftGuide.api.Slot;
+import uristqwerty.CraftGuide.api.slotTypes.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.StackInfo;
 
@@ -57,25 +57,25 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	{
 		addCraftingRecipes(generator);
 
-		addMachineRecipes(generator, IC2Items.getItem("macerator"), getMacerator(), Recipes.macerator);
-		addMachineRecipes(generator, IC2Items.getItem("extractor"), getExtractor(), Recipes.extractor);
-		addMachineRecipes(generator, IC2Items.getItem("compressor"), getCompressor(), Recipes.compressor);
-		addMachineRecipes(generator, IC2Items.getItem("centrifuge"), Recipes.centrifuge);
-		addMachineRecipes(generator, IC2Items.getItem("blockcutter"), Recipes.blockcutter);
-		addMachineRecipes(generator, IC2Items.getItem("blastfurance"), Recipes.blastfurnace);
-		addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
-		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerExtruding);
-		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerCutting);
-		addMachineRecipes(generator, IC2Items.getItem("metalformer"), Recipes.metalformerRolling);
-		addMachineRecipes(generator, IC2Items.getItem("orewashingplant"), Recipes.oreWashing);
+		addMachineRecipes(generator, IC2Items.getItem("te", "macerator"), getMacerator(), Recipes.macerator);
+		addMachineRecipes(generator, IC2Items.getItem("te", "extractor"), getExtractor(), Recipes.extractor);
+		addMachineRecipes(generator, IC2Items.getItem("te", "compressor"), getCompressor(), Recipes.compressor);
+		addMachineRecipes(generator, IC2Items.getItem("te", "centrifuge"), Recipes.centrifuge);
+		addMachineRecipes(generator, IC2Items.getItem("te", "block_cutter"), Recipes.blockcutter);
+		addMachineRecipes(generator, IC2Items.getItem("te", "blast_furnace"), Recipes.blastfurnace);
+		// addMachineRecipes(generator, IC2Items.getItem("recycler"), Recipes.recycler);
+		addMachineRecipes(generator, IC2Items.getItem("te", "metal_former"), Recipes.metalformerExtruding);
+		addMachineRecipes(generator, IC2Items.getItem("te", "metal_former"), Recipes.metalformerCutting);
+		addMachineRecipes(generator, IC2Items.getItem("te", "metal_former"), Recipes.metalformerRolling);
+		addMachineRecipes(generator, IC2Items.getItem("te", "ore_washing_plant"), Recipes.oreWashing);
 
-		addScrapboxOutput(generator, IC2Items.getItem("scrapBox"), Recipes.scrapboxDrops);
+		addScrapboxOutput(generator, IC2Items.getItem("crafting", "scrap_box"), Recipes.scrapboxDrops);
 	}
 
 	private Object getMacerator()
 	{
 		ArrayList<Object> macerator = new ArrayList<>();
-		macerator.add(IC2Items.getItem("macerator"));
+		macerator.add(IC2Items.getItem("te", "macerator"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -96,7 +96,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	private Object getExtractor()
 	{
 		ArrayList<Object> extractor = new ArrayList<>();
-		extractor.add(IC2Items.getItem("extractor"));
+		extractor.add(IC2Items.getItem("te", "extractor"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -117,7 +117,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 	private Object getCompressor()
 	{
 		ArrayList<Object> compressor = new ArrayList<>();
-		compressor.add(IC2Items.getItem("compressor"));
+		compressor.add(IC2Items.getItem("te", "compressor"));
 
 		for(AdditionalMachines additional: additionalMachines)
 		{
@@ -265,7 +265,7 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 				{
 					int width = recipe.inputWidth;
 					int height = recipe.inputHeight;
-					Object[] input = expandInput(recipe.input, width, recipe.masks[0]);
+					Object[] input = expandInput(recipe.input, width, height, recipe.masks[0]);
 					ConstructedRecipeTemplate template = width < 3 && height < 3? smallShaped : shaped;
 
 					template.buildRecipe()
@@ -277,10 +277,8 @@ public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements Recip
 		}
 	}
 
-	private Object[] expandInput(Object[] input, int width, int mask)
+	private Object[] expandInput(Object[] input, int width, int height, int mask)
 	{
-		int height = ((mask & 0x007) != 0? 1 : 0) + ((mask & 0x038) != 0? 1 : 0) + ((mask & 0x1c0) != 0? 1 : 0);
-
 		Object[] expanded = new Object[width * height];
 		int i = 0;
 		for(int y = 0; y < height; y++)

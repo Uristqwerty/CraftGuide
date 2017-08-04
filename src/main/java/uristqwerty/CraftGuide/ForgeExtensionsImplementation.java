@@ -1,17 +1,15 @@
 package uristqwerty.CraftGuide;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
 
 /**
  * Implements all functionality that relies on Forge. As this class
@@ -21,6 +19,8 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
  */
 public class ForgeExtensionsImplementation extends ForgeExtensions
 {
+	private static final TranslatedTextSource emptyOreText =
+			new TranslatedTextSource("craftguide.gui.empty_oredict_type");
 	@Override
 	public boolean matchesTypeImpl(IRecipe recipe)
 	{
@@ -86,7 +86,7 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 		else
 		{
 			List<String> text = new ArrayList<>(1);
-			text.add("0 items for Ore Dictionary name '" + name + "'");
+			text.add(emptyOreText.format(name));
 			return text;
 		}
 	}
@@ -111,23 +111,13 @@ public class ForgeExtensionsImplementation extends ForgeExtensions
 	{
 		try
 		{
-			Field oreStacks = OreDictionary.class.getDeclaredField("oreStacks");
-			oreStacks.setAccessible(true);
-			HashMap<Integer, ArrayList<ItemStack>> map = (HashMap<Integer, ArrayList<ItemStack>>)oreStacks.get(null);
-			Integer integer = null;
-
-			for(Entry<Integer, ArrayList<ItemStack>> entry: map.entrySet())
+			List<List<ItemStack>> listList = (List<List<ItemStack>>)CommonUtilities.getPrivateValue(OreDictionary.class, null, "idToStackUn");
+			for(int i = 0; i < listList.size(); i++)
 			{
-				if(entry.getValue() == list)
+				if(listList.get(i) == list)
 				{
-					integer = entry.getKey();
-					break;
+					return OreDictionary.getOreName(i);
 				}
-			}
-
-			if(integer != null)
-			{
-				return OreDictionary.getOreName(integer);
 			}
 		}
 		catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)

@@ -101,7 +101,7 @@ public abstract class Util
 	 */
 	public abstract List<ItemStack> addItemLists(List<ItemStack> a, List<ItemStack> b);
 
-	static TextureAtlasSprite getFluidIcon(ResourceLocation resourceLocation)
+	public static TextureAtlasSprite getFluidIcon(ResourceLocation resourceLocation)
 	{
 		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resourceLocation.toString());
 	}

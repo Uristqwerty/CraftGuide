@@ -1,16 +1,13 @@
-package uristqwerty.CraftGuide.api;
+package uristqwerty.CraftGuide.api.slotTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.SlotType;
 
-/**
- * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
- * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
- */
-@SuppressWarnings("deprecation")
-@Deprecated
 public class InfoSlot extends ItemSlot
 {
 	private final ItemStack displayed;

@@ -20,7 +20,11 @@ import java.util.List;
  * recipe that mainly uses the alternate methods in certain situations.
  * For most mods, however, the existing recipe mechanics should be
  * sufficient (most shouldn't even need more than the provided ItemSlot).
+ *
+ * \@deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
+ * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
  */
+//@Deprecated
 public interface Slot
 {
 	/**

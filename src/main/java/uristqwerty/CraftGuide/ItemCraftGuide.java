@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemCraftGuide extends Item
 {
@@ -13,25 +14,8 @@ public class ItemCraftGuide extends Item
 		setUnlocalizedName("craftguide_item");
 		setRegistryName("craftguide_item");
 		setCreativeTab(CreativeTabs.tabMisc);
-
-//		registerItemName();
+		GameRegistry.registerItem(this);
 	}
-
-//	private  void registerItemName()
-//	{
-//		try
-//		{
-//			Class<?> registry = Class.forName("cpw.mods.fml.common.registry.GameRegistry");
-//			Method registerItem = registry.getMethod("registerItem", Item.class, String.class, String.class);
-//			registerItem.invoke(null, this, "craftguide_item", "craftguide");
-//		}
-//		catch(ClassNotFoundException e){}
-//		catch(SecurityException e){}
-//		catch(NoSuchMethodException e){}
-//		catch(IllegalArgumentException e){}
-//		catch(IllegalAccessException e){}
-//		catch(InvocationTargetException e){}
-//	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)

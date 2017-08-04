@@ -1,14 +1,15 @@
-package uristqwerty.CraftGuide.api;
+package uristqwerty.CraftGuide.api.slotTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import uristqwerty.CraftGuide.api.ItemFilter;
+import uristqwerty.CraftGuide.api.NamedTexture;
+import uristqwerty.CraftGuide.api.Renderer;
+import uristqwerty.CraftGuide.api.SlotType;
+import uristqwerty.CraftGuide.api.Util;
 
-/**
- * @deprecated API re-organization. Use the copy in uristqwerty.craftguide.api.slotTypes
- * instead, if possible. This copy will remain until at least Minecraft 1.14, probably longer.
- */
-@Deprecated
+
 public class EUSlot implements Slot
 {
 	public static final int VALUE_UNSPECIFIED = Integer.MIN_VALUE;

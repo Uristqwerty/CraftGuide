@@ -22,6 +22,7 @@ import org.lwjgl.input.Keyboard;
 import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.gui_craftguide.theme.ThemeManager;
 
+@SuppressWarnings("deprecation")
 public class CraftGuide
 {
 	public static CraftGuideSide side;
@@ -63,7 +64,7 @@ public class CraftGuide
 		side.preInit();
 
 		ItemSlot.implementation = new ItemSlotImplementationImplementation();
-
+		uristqwerty.CraftGuide.api.slotTypes.ItemSlot.implementation = new ItemSlotImplementationImplementation();
 		side.initKeybind();
 
 		addItem(iconName);

@@ -38,6 +38,7 @@ import uristqwerty.CraftGuide.itemtype.ItemType;
 import uristqwerty.gui_craftguide.rendering.RendererBase;
 import uristqwerty.gui_craftguide.rendering.TexturedRect;
 
+@SuppressWarnings("deprecation")
 public class HTMLExport
 {
 	private static boolean testRequested = false;
@@ -221,12 +222,18 @@ public class HTMLExport
 		}
 
 		ImageWriter writer = findPngWriter();
-
-		FileImageOutputStream output = new FileImageOutputStream(file);
-		writer.setOutput(output);
-		writer.write(new IIOImage(frame, null, null));
-		output.close();
-		writer.dispose();
+		try
+		{
+			try(FileImageOutputStream output = new FileImageOutputStream(file))
+			{
+				writer.setOutput(output);
+				writer.write(new IIOImage(frame, null, null));
+			}
+		}
+		finally
+		{
+			writer.dispose();
+		}
 		CraftGuideLog.checkGlError();
 	}
 

@@ -15,6 +15,7 @@ import uristqwerty.CraftGuide.api.Util;
 import uristqwerty.CraftGuide.client.ui.GuiRenderer;
 import uristqwerty.gui_craftguide.rendering.Renderable;
 
+@SuppressWarnings("deprecation")
 public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 {
 	protected Slot[] slots;
@@ -40,6 +41,12 @@ public class Recipe implements CraftGuideRecipe, CraftGuideRecipeExtra1
 		{
 			ItemStack display = displayStack(recipe[i]);
 			if(recipe[i] instanceof ItemStack && slots[i] instanceof ItemSlot && !((ItemSlot)slots[i]).drawQuantity && display != null && display.stackSize > 1)
+			{
+				ItemStack old = display;
+
+				this.recipe[i] = new ItemStack(old.getItem(), 1, CommonUtilities.getItemDamage(old));
+			}
+			else if(recipe[i] instanceof ItemStack && slots[i] instanceof uristqwerty.CraftGuide.api.slotTypes.ItemSlot && !((uristqwerty.CraftGuide.api.slotTypes.ItemSlot)slots[i]).drawQuantity && display != null && display.stackSize > 1)
 			{
 				ItemStack old = display;
 

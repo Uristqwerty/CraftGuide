@@ -5,6 +5,8 @@ import java.io.File;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
@@ -54,9 +56,8 @@ public class CraftGuide_FML implements CraftGuideLoaderSide
 	public void init(FMLInitializationEvent event)
 	{
 		craftguide.init();
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(CraftGuide.itemCraftGuide, 0, new ModelResourceLocation(CraftGuide.itemCraftGuide.getRegistryName(), "inventory"));
 	}
-
-
 
 	@Override
 	public boolean isModLoaded(String name)
