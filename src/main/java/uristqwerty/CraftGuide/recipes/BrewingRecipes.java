@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
@@ -17,6 +18,9 @@ import uristqwerty.CraftGuide.itemtype.ItemType;
 
 public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvider
 {
+	private static final int MAX_FULL_ITERATIONS = 10;
+	private static final int MAX_VANILLA_ONLY_ITERATIONS = 100;
+
 	@Override
 	public void generateRecipes(RecipeGenerator generator)
 	{
@@ -47,8 +51,10 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 				.machineItem().nextColumn(1)
 				.outputItem().finishTemplate();
 
-		TreeSet<ItemType> discoveredInputs;
+		TreeSet<ItemType> discoveredInputs = new TreeSet<>();
 		TreeSet<ItemType> inputsToTry = inputs;
+		int iterations = 0;
+
 		do
 		{
 			discoveredInputs = new TreeSet<>();
@@ -69,7 +75,7 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 								if(result != null)
 								{
 									ItemType resultType = ItemType.getInstance(result);
-									if(!ingredients.contains(resultType))
+									if(!inputs.contains(resultType))
 									{
 										discoveredInputs.add(resultType);
 									}
@@ -85,10 +91,47 @@ public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvide
 					}
 				}
 			}
-
 			inputs.addAll(discoveredInputs);
 			inputsToTry = discoveredInputs;
-		} while(!inputsToTry.isEmpty());
+		} while(!inputsToTry.isEmpty() && iterations++ < MAX_FULL_ITERATIONS);
+
+		IBrewingRecipe recipe = new VanillaBrewingRecipe();
+		do
+		{
+			discoveredInputs = new TreeSet<>();
+
+			for(ItemType ingredient: ingredients)
+			{
+				final ItemStack ingredientStack = ingredient.getDisplayStack();
+				if(recipe.isIngredient(ingredientStack))
+				{
+					for(ItemType input: inputsToTry)
+					{
+						final ItemStack inputStack = input.getDisplayStack();
+						if(recipe.isInput(inputStack))
+						{
+							ItemStack result = recipe.getOutput(inputStack, ingredientStack);
+							if(result != null)
+							{
+								ItemType resultType = ItemType.getInstance(result);
+								if(!inputs.contains(resultType))
+								{
+									discoveredInputs.add(resultType);
+								}
+
+								template.buildRecipe()
+									.item(ingredientStack).item(inputStack)
+									.item(brewingStand)
+									.item(result)
+									.addRecipe(generator);
+							}
+						}
+					}
+				}
+			}
+			inputs.addAll(discoveredInputs);
+			inputsToTry = discoveredInputs;
+		} while(!inputsToTry.isEmpty() && iterations++ < MAX_VANILLA_ONLY_ITERATIONS);
 
 		generator.setDefaultTypeVisibility(brewingStand, false);
 	}
