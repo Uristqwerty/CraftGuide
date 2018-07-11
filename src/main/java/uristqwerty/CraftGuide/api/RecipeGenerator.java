@@ -119,4 +119,14 @@ public interface RecipeGenerator
 	public Object[] getCraftingRecipe(IRecipe recipe, boolean allowSmallGrid);
 
 	public RecipeTemplateBuilder buildTemplate(ItemStack type);
+
+	/**
+	 * To allow more classic game engine optimization, you may want to
+	 * directly adapt in-memory recipe data, without (partially) duplicating
+	 * it for CraftGuide or allocating an extra object per recipe as an
+	 * adapter + index.
+	 * <br><br>
+	 * In this mode, all operations take an integer recipe index
+	 */
+	//public void addImmediateModeRecipes(ImmediateModeRecipeAdapter source, ItemStack craftingType);
 }

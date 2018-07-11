@@ -174,6 +174,13 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 	@Override
 	public RecipeTemplateBuilder repeatedSubunit(SubunitLayout layoutMode, SubunitDescriptor contents)
 	{
+		return repeatedSubunit(layoutMode, 1, contents);
+	}
+
+	@Override
+	public RecipeTemplateBuilder repeatedSubunit(SubunitLayout layoutMode, int minColumns, SubunitDescriptor contents)
+	{
+		minColumns = Math.max(1, minColumns);
 		RecipeTemplateBuilderImplementation innerBuilder = new RecipeTemplateBuilderImplementation(null);
 		innerBuilder.slotType = slotType;
 		contents.defineSubunit(innerBuilder);
@@ -188,7 +195,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 
 		currentColumn.align = VerticalAlign.TOP;
 		currentColumn.items.add(new Subunit(innerTemplate, itemAlign, subunitWidth, innerHeight));
-		currentColumn.totalWidth = Math.max(currentColumn.totalWidth, subunitWidth);
+		currentColumn.totalWidth = Math.max(currentColumn.totalWidth, subunitWidth * minColumns);
 		currentColumn.totalHeight += innerHeight;
 		return this;
 	}
@@ -861,6 +868,8 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 			Object subunits[] = (Object[])data[dataIndex];
 			final int units = subunits.length;
 			int left = left(units);
+			if(units < 1)
+				return null;
 			int perRow = perRow(units);
 			int rows = (units + perRow - 1) / perRow;
 			int index = getIndex(x, y, left, units, perRow, rows);
@@ -884,6 +893,8 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		{
 			Object subunits[] = (Object[])data[dataIndex];
 			final int units = subunits.length;
+			if(units < 1)
+				return false;
 			int left = left(units);
 			int perRow = perRow(units);
 			int rows = (units + perRow - 1) / perRow;
@@ -906,6 +917,8 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 		{
 			Object subunits[] = (Object[])data[dataIndex];
 			final int units = subunits.length;
+			if(units < 1)
+				return null;
 			int left = left(units);
 			int perRow = perRow(units);
 			int rows = (units + perRow - 1) / perRow;
@@ -962,7 +975,7 @@ public class RecipeTemplateBuilderImplementation implements RecipeTemplateBuilde
 				return -1;
 
 			int i = (x - left) / unitWidth +
-					perRow * (y - groupY) / unitHeight;
+					perRow * ((y - groupY) / unitHeight);
 			return i < units? i : -1;
 		}
 

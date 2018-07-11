@@ -38,6 +38,7 @@ public interface RecipeTemplateBuilder
 	public RecipeTemplateBuilder setItemAlign(HorizontalAlign align);
 	public RecipeTemplateBuilder nextSlotType(TemplateBuilderSlotType type);
 	public RecipeTemplateBuilder repeatedSubunit(SubunitLayout layoutMode, SubunitDescriptor contents);
+	public RecipeTemplateBuilder repeatedSubunit(SubunitLayout layoutMode, int minColumns, SubunitDescriptor contents);
 
 	public ConstructedRecipeTemplate finishTemplate();
 

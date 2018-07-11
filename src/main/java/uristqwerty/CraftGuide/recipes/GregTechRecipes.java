@@ -11,9 +11,14 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuideLog;
+import uristqwerty.CraftGuide.Pair;
 import uristqwerty.CraftGuide.api.ChanceSlot;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate.RecipeBuilder;
+import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate.SubunitBuilder;
 import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.EUSlot;
 import uristqwerty.CraftGuide.api.ExtraSlot;
@@ -21,12 +26,19 @@ import uristqwerty.CraftGuide.api.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplate;
+import uristqwerty.CraftGuide.api.RecipeTemplateBuilder;
+import uristqwerty.CraftGuide.api.RecipeTemplateBuilder.SubunitDescriptor;
+import uristqwerty.CraftGuide.api.RecipeTemplateBuilder.SubunitLayout;
+import uristqwerty.CraftGuide.api.RecipeTemplateBuilder.TemplateBuilderSlotType;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.recipes.IC2ExperimentalRecipes.AdditionalMachines;
 
 public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvider, AdditionalMachines
 {
+	private RecipeGenerator generator;
+	private Class<?> recipeClass;
+
 	public GregTechRecipes()
 	{
 		super();
@@ -50,70 +62,135 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 				recipeClass = Class.forName("gregtech.api.util.GT_Recipe");
 			}
 
-			generateRecipes(
-					generator, getMachines(itemList, "Centrifuge"),
-					(ArrayList<?>)recipeClass.getField("sCentrifugeRecipes").get(null),
-					5, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Electrolyzer"),
-					(ArrayList<?>)recipeClass.getField("sElectrolyzerRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "ChemicalReactor"),
-					(ArrayList<?>)recipeClass.getField("sChemicalRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Wiremill"),
-					(ArrayList<?>)recipeClass.getField("sWiremillRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "AlloySmelter"),
-					(ArrayList<?>)recipeClass.getField("sAlloySmelterRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Bender"),
-					(ArrayList<?>)recipeClass.getField("sBenderRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Assembler"),
-					(ArrayList<?>)recipeClass.getField("sAssemblerRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Canner"),
-					(ArrayList<?>)recipeClass.getField("sCannerRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Lathe"),
-					(ArrayList<?>)recipeClass.getField("sLatheRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Cutter"),
-					(ArrayList<?>)recipeClass.getField("sCutterRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Extruder"),
-					(ArrayList<?>)recipeClass.getField("sExtruderRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Bronze_Hammer"),
-					(ArrayList<?>)recipeClass.getField("sHammerRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Boxinator"),
-					(ArrayList<?>)recipeClass.getField("sBoxinatorRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Unboxinator"),
-					(ArrayList<?>)recipeClass.getField("sUnboxinatorRecipes").get(null),
-					-1, 0, false, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Generator_Diesel"),
-					(ArrayList<?>)recipeClass.getField("sDieselFuels").get(null),
-					12, 1000, true, null);
-			generateRecipes(
-					generator, getMachines(itemList, "Generator_Gas_Turbine"),
-					(ArrayList<?>)recipeClass.getField("sTurbineFuels").get(null),
-					16, 1000, true, null);
+			this.generator = generator;
+			this.recipeClass = recipeClass;
+
+			generateMachine("sOreWasherRecipes", "orewasher");
+			generateMachine("sThermalCentrifugeRecipes", "thermalcentrifuge");
+			generateMachine("sCompressorRecipes", "compressor");
+			generateMachine("sExtractorRecipes", "extractor");
+			generateMachine("sRecyclerRecipes", "recycler");
+			generateMachine("sFurnaceRecipes", "furnace");
+			generateMachine("sMicrowaveRecipes", "microwave");
+			generateMachine("sScannerFakeRecipes", "scanner");
+			generateMachine("sRockBreakerFakeRecipes", "rockbreaker");
+			generateMachine("sByProductList", "byproductlist");
+			generateMachine("sReplicatorFakeRecipes", "replicator");
+			generateMachine("sAssemblylineVisualRecipes", "fakeAssemblylineProcess");
+			generateMachine("sPlasmaArcFurnaceRecipes", "plasmaarcfurnace");
+			generateMachine("sArcFurnaceRecipes", "arcfurnace");
+			generateMachine("sPrinterRecipes", "printer");
+			generateMachine("sSifterRecipes", "sifter");
+			generateMachine("sPressRecipes", "press");
+			generateMachine("sLaserEngraverRecipes", "laserengraver");
+			generateMachine("sMixerRecipes", "mixer");
+			generateMachine("sAutoclaveRecipes", "autoclave");
+			generateMachine("sElectroMagneticSeparatorRecipes", "electromagneticseparator");
+			generateMachine("sPolarizerRecipes", "polarizer");
+			generateMachine("sMaceratorRecipes", "macerator");
+			generateMachine("sChemicalBathRecipes", "chemicalbath");
+			generateMachine("sFluidCannerRecipes", "fluidcanner");
+			generateMachine("sBrewingRecipes", "brewer");
+			generateMachine("sFluidHeaterRecipes", "fluidheater");
+			generateMachine("sDistilleryRecipes", "distillery");
+			generateMachine("sFermentingRecipes", "fermenter");
+			generateMachine("sFluidSolidficationRecipes", "fluidsolidifier");
+			generateMachine("sFluidExtractionRecipes", "fluidextractor");
+			generateMachine("sBoxinatorRecipes", "packager");
+			generateMachine("sUnboxinatorRecipes", "unpackager");
+			generateMachine("sFusionRecipes", "fusioncomputer");
+			generateMachine("sCentrifugeRecipes", "centrifuge");
+			generateMachine("sElectrolyzerRecipes", "electrolyzer");
+			generateMachine("sBlastRecipes", "blastfurnace");
+			generateMachine("sPrimitiveBlastRecipes", "brickedblastfurnace");
+			generateMachine("sImplosionRecipes", "implosioncompressor");
+			generateMachine("sVacuumRecipes", "vacuumfreezer");
+			generateMachine("sChemicalRecipes", "chemicalreactor");
+			generateMachine("sMultiblockChemicalRecipes", "largechemicalreactor");
+			generateMachine("sDistillationRecipes", "distillationtower");
+			generateMachine("sCrakingRecipes", "craker");
+			generateMachine("sPyrolyseRecipes", "pyro");
+			generateMachine("sWiremillRecipes", "wiremill");
+			generateMachine("sBenderRecipes", "bender");
+			generateMachine("sAlloySmelterRecipes", "alloysmelter");
+			generateMachine("sAssemblerRecipes", "assembler");
+			generateMachine("sCircuitAssemblerRecipes", "circuitassembler");
+			generateMachine("sCannerRecipes", "canner");
+			generateMachine("sCNCRecipes", "cncmachine");
+			generateMachine("sLatheRecipes", "lathe");
+			generateMachine("sCutterRecipes", "cuttingsaw");
+			generateMachine("sSlicerRecipes", "slicer");
+			generateMachine("sExtruderRecipes", "extruder");
+			generateMachine("sHammerRecipes", "hammer");
+			generateMachine("sAmplifiers", "uuamplifier");
+			generateMachine("sMassFabFakeRecipes", "massfab");
+
+			this.generator = null;
+			this.recipeClass = null;
+
+//			generateRecipes(generator, itemList, "Centrifuge",
+//					recipeClass, "sCentrifugeRecipes",
+//					5, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Electrolyzer",
+//					recipeClass, "sElectrolyzerRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "ChemicalReactor",
+//					recipeClass, "sChemicalRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Wiremill",
+//					recipeClass, "sWiremillRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "AlloySmelter",
+//					recipeClass, "sAlloySmelterRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Bender",
+//					recipeClass, "sBenderRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Assembler",
+//					recipeClass, "sAssemblerRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Canner",
+//					recipeClass, "sCannerRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Lathe",
+//					recipeClass, "sLatheRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Cutter",
+//					recipeClass, "sCutterRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Extruder",
+//					recipeClass, "sExtruderRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Bronze_Hammer",
+//					recipeClass, "sHammerRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Boxinator",
+//					recipeClass, "sBoxinatorRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Unboxinator",
+//					recipeClass, "sUnboxinatorRecipes",
+//					-1, 0, false, null);
+//			generateRecipes(
+//					generator, itemList, "Generator_Diesel",
+//					recipeClass, "sDieselFuels",
+//					12, 1000, true, null);
+//			generateRecipes(
+//					generator, itemList, "Generator_Gas_Turbine",
+//					recipeClass, "sTurbineFuels",
+//					16, 1000, true, null);
 
 			// Things GregTech 1.7 has not implemented yet (at the time of writing this):
 			/*
@@ -198,12 +275,12 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 	}
 
-	private ArrayList<ItemStack> getMachines(Class<? extends Enum<?>> itemList, String string) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
+	private static ArrayList<ItemStack> getMachines(Class<? extends Enum<?>> itemList, String string) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
 	{
 		return getMachines(itemList, string, -1);
 	}
 
-	private ArrayList<ItemStack> getMachines(Class<? extends Enum<?>> itemList, String string, int minimumTier) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
+	private static ArrayList<ItemStack> getMachines(Class<? extends Enum<?>> itemList, String string, int minimumTier) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, NoSuchFieldException
 	{
 		ArrayList<ItemStack> machines = new ArrayList<ItemStack>();
 
@@ -248,6 +325,217 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		return machines;
 	}
 
+
+
+	public void generateMachine(String recipeField, String idSearch)
+				throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException
+	{
+		try
+		{
+			ArrayList<ItemStack> machines = new ArrayList<ItemStack>();
+			Class<?> gregTechAPI = Class.forName("gregtech.api.GregTech_API");
+			Class<?> iMetaTileEntity = Class.forName("gregtech.api.interfaces.metatileentity.IMetaTileEntity");
+			Block machineBlock = (Block)gregTechAPI.getField("sBlockMachines").get(null);
+			Method getMetaName = iMetaTileEntity.getMethod("getMetaName");
+			Object[] metatileentities = (Object[])gregTechAPI.getField("METATILEENTITIES").get(null);
+			for(int i = 0; i < metatileentities.length; i++)
+			{
+				if(metatileentities[i] != null)
+				{
+					String metaName = (String)getMetaName.invoke(metatileentities[i]);
+					for(String part: metaName.split("\\."))
+						if(part.equals(idSearch))
+							machines.add(new ItemStack(machineBlock, 1, i));
+				}
+			}
+
+			if(machines.size() < 1)
+			{
+				CraftGuideLog.log("Found 0 gregtech machine blocks for " + idSearch);
+				return;
+			}
+
+			Object recipes = recipeClass.getField(recipeField).get(null);
+			Collection<?> recipeList;
+			if(recipes instanceof Collection)
+				recipeList = (Collection<?>)recipes;
+			else
+				recipeList = (Collection<?>)recipes.getClass().getField("mRecipeList").get(recipes);
+
+			generateMachine(machines, recipeList);
+		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e);
+		}
+	}
+
+	public void generateMachine(ArrayList<ItemStack> machines, Collection<?> recipes)
+				throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
+	{
+		if(machines.size() < 1)
+			return;
+
+		int numInputs = 0;
+		int numOutputs = 0;
+		int numFluidInputs = 0;
+		int numFluidOutputs = 0;
+
+		ItemStack typeMachine = machines.get(0);
+
+		Class<?> recipeClass = Class.forName("gregtech.api.util.GT_Recipe");
+		Field inputs = null;
+		Field outputs = null;
+		Field inputFluids = null;
+		Field outputFluids = null;
+		Field outputChances = null;
+
+		inputs = recipeClass.getField("mInputs");
+		outputs = recipeClass.getField("mOutputs");
+		inputFluids = recipeClass.getField("mFluidInputs");
+		outputFluids = recipeClass.getField("mFluidOutputs");
+		outputChances = recipeClass.getField("mChances");
+
+		for(Object recipe: recipes)
+		{
+			numInputs = Math.max(numInputs, recipeLength((ItemStack[])inputs.get(recipe)));
+			numOutputs = Math.max(numOutputs, recipeLength((ItemStack[])outputs.get(recipe)));
+			numFluidInputs = Math.max(numFluidInputs, recipeLength((FluidStack[])inputFluids.get(recipe)));
+			numFluidOutputs = Math.max(numFluidOutputs, recipeLength((FluidStack[])outputFluids.get(recipe)));
+		}
+
+		ConstructedRecipeTemplate template = generator.buildTemplate(typeMachine)
+			.repeatedSubunit(SubunitLayout.HORIZONTAL_WRAPPING, Math.min(numFluidInputs == 0? 2 : 1, numInputs), new SubunitDescriptor()
+				{
+					@Override
+					public void defineSubunit(RecipeTemplateBuilder b)
+					{
+						b.item();
+					}
+				}) // TODO: Replace inner class with b -> b.item()
+			.nextColumn()
+			.repeatedSubunit(SubunitLayout.HORIZONTAL_WRAPPING, Math.min(1, numFluidInputs), new SubunitDescriptor()
+				{
+					@Override
+					public void defineSubunit(RecipeTemplateBuilder b)
+					{
+						b.liquid();
+					}
+				}) // TODO: Replace inner class with b -> b.liquid()
+			.nextColumn(1)
+			.machineItem()
+			.nextSlotType(TemplateBuilderSlotType.OUTPUT)
+			.repeatedSubunit(SubunitLayout.HORIZONTAL_WRAPPING, 1, new SubunitDescriptor()
+			{
+				@Override
+				public void defineSubunit(RecipeTemplateBuilder b)
+				{
+					b.liquid();
+				}
+			}) // TODO: Replace inner class
+			.nextColumn(1)
+			.repeatedSubunit(SubunitLayout.HORIZONTAL_WRAPPING, Math.min(3, numOutputs), new SubunitDescriptor()
+				{
+					@Override
+					public void defineSubunit(RecipeTemplateBuilder b)
+					{
+						b.chanceItem();
+					}
+				}) // TODO: Replace inner class
+			.finishTemplate();
+
+		for(Object recipe: recipes)
+		{
+			ItemStack[] outputItems = (ItemStack[])outputs.get(recipe);
+			int[] chance = (int[])outputChances.get(recipe);
+			ArrayList<Pair<ItemStack, Integer>> outputData = new ArrayList<Pair<ItemStack, Integer>>();
+			for(int i = 0; i < outputItems.length; i++)
+			{
+				outputData.add(new Pair<ItemStack, Integer>(outputItems[i], chance[i]));
+			}
+			template.buildRecipe()
+// TODO: Enjoy Lambdas
+//				.subUnit((ItemStack[])inputs.get(recipe), (i, b) -> b.item(i))
+//				.subUnit((FluidStack[])inputFluids.get(recipe), (f, b) -> b.liquid(f))
+//				.item(machines)
+//				.subUnit(outputData, (i, b) -> b.chanceItem(i.first, i.second / 10000.0))
+//				.subUnit((FluidStack[])outputFluids.get(recipe), (f, b) -> b.liquid(f))
+//				.addRecipe(generator);
+				.subUnit((ItemStack[])inputs.get(recipe), new SubunitBuilder<ItemStack>()
+					{
+						@Override
+						public void build(ItemStack i, RecipeBuilder b)
+						{
+							b.item(i);
+						}
+					})
+				.subUnit((FluidStack[])inputFluids.get(recipe), new SubunitBuilder<FluidStack>()
+					{
+						@Override
+						public void build(FluidStack f, RecipeBuilder b)
+						{
+							b.liquid(f);
+						}
+					})
+				.item(machines)
+				.subUnit((FluidStack[])outputFluids.get(recipe), new SubunitBuilder<FluidStack>()
+				{
+					@Override
+					public void build(FluidStack f, RecipeBuilder b)
+					{
+						b.liquid(f);
+					}
+				})
+				.subUnit(outputData, new SubunitBuilder<Pair<ItemStack, Integer>>()
+					{
+						@Override
+						public void build(Pair<ItemStack, Integer> i, RecipeBuilder b)
+						{
+							b.chanceItem(i.first, i.second / 10000.0);
+						}
+					})
+				.addRecipe(generator);
+		}
+	}
+
+	public static void generateRecipes(RecipeGenerator generator, Class<? extends Enum<?>> itemList, String machineName,
+			Class<?> recipeClass, String recipeField, int constantEUt, int startEUOutputMult, boolean generated, final String extraFormat)
+				throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException
+	{
+		try
+		{
+			ArrayList<ItemStack> machines = getMachines(itemList, machineName);
+			Object recipes = recipeClass.getField("sCentrifugeRecipes").get(null);
+			Collection<?> recipeList;
+			if(recipes instanceof Collection)
+				recipeList = (Collection<?>)recipes;
+			else
+				recipeList = (Collection<?>)recipes.getClass().getField("mRecipeList").get(recipes);
+
+			generateRecipes(generator, machines, recipeList, constantEUt, startEUOutputMult, generated, extraFormat);
+		}
+		catch(NoSuchFieldException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(InvocationTargetException e)
+		{
+			CraftGuideLog.log(e);
+		}
+		catch(NoSuchMethodException e)
+		{
+			CraftGuideLog.log(e);
+		}
+	}
+
 	public static void generateRecipes(RecipeGenerator generator, ArrayList<ItemStack> machines, Collection<?> recipes,
 			int constantEUt, int startEUOutputMult, boolean generated, final String extraFormat)
 				throws ClassNotFoundException, IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException
@@ -257,6 +545,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 		int numInputs = 0;
 		int numOutputs = 0;
+		int numFluidInputs = 0;
+		int numFluidOutputs = 0;
 
 		ItemStack typeMachine = machines.get(0);
 
@@ -282,6 +572,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		{
 			numInputs = Math.max(numInputs, recipeLength((ItemStack[])inputs.get(recipe)));
 			numOutputs = Math.max(numOutputs, recipeLength((ItemStack[])outputs.get(recipe)));
+			numFluidInputs = Math.max(numFluidInputs, recipeLength((FluidStack[])inputs.get(recipe)));
+			numFluidOutputs = Math.max(numFluidOutputs, recipeLength((FluidStack[])outputs.get(recipe)));
 		}
 
 		Slot[] recipeSlots = layoutMachineSlots(machines, numInputs, numOutputs, extraFormat);
@@ -332,6 +624,17 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		}
 	}
 
+	private static int recipeLength(FluidStack[] fluidStacks)
+	{
+		for(int i = fluidStacks.length; i > 0; i--)
+		{
+			if(fluidStacks[i - 1] != null)
+				return i;
+		}
+
+		return 0;
+	}
+
 	private static int recipeLength(ItemStack[] itemStacks)
 	{
 		for(int i = itemStacks.length; i > 0; i--)
@@ -345,11 +648,6 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 
 	public static Slot[] layoutMachineSlots(ArrayList<ItemStack> machine, int numInputs, int numOutputs, final String extraFormat)
 	{
-		if(numInputs > 9 || numOutputs > 9)
-		{
-			throw new IllegalArgumentException("CraftGuide currently cannot handle GregTech machine recipes with more than 9 inputs or 9 outputs. In the unlikely case that more are needed, please report this to the current developer of CraftGuide.");
-		}
-
 		Slot[] recipeSlots = new Slot[numInputs + numOutputs + 2];
 
 		int recipeHOffset = Math.max(3, 30 - 9 * (slotColumns(numInputs) + slotColumns(numOutputs)));
@@ -409,13 +707,10 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 			return i < 2? (i == 0? 6 : 24) : i < 4? (18 * (i - 2)) : (i == 5? 6 : 24);
 
 		case 8:
-			return i < 6? (18 * ((i % 3) - 2)) : (i == 6? 6 : 24);
-
-		case 9:
-			return 18 * ((i % 3) - 2);
+			return i < 6? (18 * (i % 3)) : (i == 6? 6 : 24);
 
 		default:
-			throw new IllegalArgumentException();
+			return 18 * (i % 3);
 		}
 	}
 
@@ -438,11 +733,8 @@ public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvid
 		case 7:
 			return i < 2? 0 : i < 5? 18 : 36;
 
-		case 8: case 9:
-			return (i / 3) * 18;
-
 		default:
-			throw new IllegalArgumentException();
+			return (i / 3) * 18;
 		}
 	}
 

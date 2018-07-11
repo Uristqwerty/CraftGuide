@@ -4,11 +4,7 @@ import java.util.Arrays;
 
 import uristqwerty.gui_craftguide.components.Window.Layer;
 import uristqwerty.gui_craftguide.minecraft.Text;
-import uristqwerty.gui_craftguide.texture.BorderedTexture;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
-import uristqwerty.gui_craftguide.texture.SubTexture;
-import uristqwerty.gui_craftguide.texture.Texture;
-import uristqwerty.gui_craftguide.texture.TextureClip;
 
 public class DropdownSelector extends GuiElement
 {
@@ -24,20 +20,7 @@ public class DropdownSelector extends GuiElement
 	{
 		super(x, y, width, height);
 		selectionPane = new ScrollPane(x, y + height, width, 100);
-
-		Texture texture = DynamicTexture.instance("base_image");
-		selectionPane.background = new BorderedTexture(
-				new Texture[]{
-						new TextureClip(texture, 1, 1, 4, 4),
-						new SubTexture(texture, 6, 1, 64, 4),
-						new TextureClip(texture, 71, 1, 4, 4),
-						new SubTexture(texture, 1, 6, 4, 64),
-						new SubTexture(texture, 6, 6, 64, 64),
-						new SubTexture(texture, 71, 6, 4, 64),
-						new TextureClip(texture, 1, 71, 4, 4),
-						new SubTexture(texture, 6, 71, 64, 4),
-						new TextureClip(texture, 71, 71, 4, 4),
-				}, 4);
+		selectionPane.background = DynamicTexture.instance("window");
 	}
 
 	@Override

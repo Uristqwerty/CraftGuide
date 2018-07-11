@@ -133,16 +133,9 @@ curse {
     additionalArtifact deobfJar, apiJar, sourcesJar
 
     changelog '''\
-API changes
-  - New, even more convenient API for adding recipes. Rather than creating arrays of slots and data, uses method chaining for both. Rather than specifying coordinates explicitly, automatically positions elements within columns. Supports shaped/shapeless grids using a single method call!
-
-Additions:
-  - Option for recipe generation to run in a separate thread
-  - Grass drop probabilities
-
-Other changes:
-  - Updated integrated recipe support in some ways? Been quite a while between changing that code and writing this message, so I'm not entirely sure how.
-  - Vast improvement in recipe generation speed
+API:
+ - Final API refinements. Hopefully, this can support all future needs for
+   MC 1.7.10.
 '''
 
 }
