@@ -229,6 +229,22 @@ public class RecipeCache
 								allItems.add(craftType);
 							}
 						}
+						else if(item instanceof Object[])
+						{
+							for(Object o: (Object[])item)
+							{
+								if(o instanceof ItemStack)
+								{
+									ItemStack stack = (ItemStack)o;
+									ItemType craftType = ItemType.getInstance(stack);
+
+									if(craftType != null)
+									{
+										allItems.add(craftType);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
