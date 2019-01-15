@@ -5,7 +5,8 @@ public interface IButtonListener
 	enum Event
 	{
 		PRESS,
-		RELEASE
+		RELEASE,
+		RELEASE_DISABLED,
 	}
 
 	void onButtonEvent(GuiButton button, Event eventType);

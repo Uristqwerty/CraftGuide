@@ -35,6 +35,11 @@ public class Text implements Renderable
 		this.text = text;
 	}
 
+	public void setColor(int color_argb)
+	{
+		this.color = color_argb;
+	}
+
 	public int textHeight()
 	{
 		return 8;

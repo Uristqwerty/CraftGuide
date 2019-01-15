@@ -20,7 +20,12 @@ public class GuiButton extends GuiElement
 		UP_OVER,
 		DOWN,
 		DOWN_OVER,
+		DISABLED,
 	}
+
+	private static final int
+		DISABLED_TEXT_COLOR = 0xff404040,
+		NORMAL_TEXT_COLOR = 0xff000000;
 
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
 	private ButtonTemplate template;
@@ -30,6 +35,8 @@ public class GuiButton extends GuiElement
 	private static FloatingItemText toolTip = new FloatingItemText("");
 	private static Overlay toolTipRender = new Overlay(toolTip);
 	private TextSource toolTipText = new PlainTextSource("");
+	private GuiCentredText text = null;
+	private boolean mouseOver = false;
 
 	public GuiButton(int x, int y, int width, int height, Texture texture, int u, int v)
 	{
@@ -68,9 +75,10 @@ public class GuiButton extends GuiElement
 	{
 		this(x, y, width, height, template);
 
-		addElement(
-			new GuiCentredText(0, 0, width, height, text)
-				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT));
+		this.text = (GuiCentredText)new GuiCentredText(0, 0, width, height, text)
+				.anchor(AnchorPoint.TOP_LEFT, AnchorPoint.BOTTOM_RIGHT);
+
+		addElement(this.text);
 	}
 
 	@Override
@@ -80,6 +88,10 @@ public class GuiButton extends GuiElement
 		{
 			toolTip.setText(toolTipText.getText());
 			render(toolTipRender);
+		}
+
+		if(text != null) {
+			text.setColor(currentState == ButtonState.DISABLED? DISABLED_TEXT_COLOR : NORMAL_TEXT_COLOR);
 		}
 
 		setBackground(template.getStateImage(currentState));
@@ -119,17 +131,20 @@ public class GuiButton extends GuiElement
 
 	protected void updateState(boolean over, boolean held)
 	{
-		currentState =
-			held?
-				over?
-					ButtonState.DOWN_OVER
+		mouseOver = over;
+		if(currentState != ButtonState.DISABLED) {
+			currentState =
+				held?
+					over?
+						ButtonState.DOWN_OVER
+					:
+						ButtonState.DOWN
 				:
-					ButtonState.DOWN
-			:
-				over?
-					ButtonState.UP_OVER
-				:
-					ButtonState.UP;
+					over?
+						ButtonState.UP_OVER
+					:
+						ButtonState.UP;
+		}
 	}
 
 	protected boolean isHeld()
@@ -140,6 +155,11 @@ public class GuiButton extends GuiElement
 	protected boolean isOver()
 	{
 		return currentState == ButtonState.UP_OVER || currentState == ButtonState.DOWN_OVER;
+	}
+
+	protected boolean isDisabled()
+	{
+		return currentState == ButtonState.DISABLED;
 	}
 
 	public GuiButton addButtonListener(IButtonListener listener)
@@ -166,5 +186,26 @@ public class GuiButton extends GuiElement
 	{
 		this.toolTipText = textSource;
 		return this;
+	}
+
+	public void setDisabled(boolean disabled)
+	{
+		if(disabled == (currentState == ButtonState.DISABLED))
+			return;
+
+		if(disabled && isHeld())
+		{
+			sendButtonEvent(IButtonListener.Event.RELEASE_DISABLED);
+		}
+
+		if(disabled)
+		{
+			currentState = ButtonState.DISABLED;
+		}
+		else
+		{
+			currentState = ButtonState.UP;
+			updateState(mouseOver, false);
+		}
 	}
 }

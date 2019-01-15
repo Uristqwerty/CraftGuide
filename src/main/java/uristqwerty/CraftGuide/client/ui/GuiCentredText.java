@@ -29,4 +29,9 @@ public class GuiCentredText extends GuiElement
 		
 		super.draw();
 	}
+
+	public void setColor(int color_argb)
+	{
+		text.setColor(color_argb);
+	}
 }

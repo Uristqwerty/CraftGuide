@@ -293,6 +293,7 @@
 		<borderwidth>2</borderwidth>
 		<borderheight>2</borderheight>
 	</texture>
+	<texture id="button_disabled" sourceid="button_over"></texture>
 	<texture type="clip" id="toggle_off">
 		<source sourceid="base_image"></source>
 		<rect x="48" y="191" width="13" height="13"></rect>
@@ -308,6 +309,10 @@
 	<texture type="clip" id="toggle_on">
 		<source sourceid="base_image"></source>
 		<rect x="87" y="191" width="13" height="13"></rect>
+	</texture>
+	<texture type="clip" id="toggle_disabled">
+		<source sourceid="base_image"></source>
+		<rect x="100" y="191" width="13" height="13"></rect>
 	</texture>
 	<texture type="coloredtexture" id="stack-oredict-single">
 		<source sourceid="stack-oredict"></source>

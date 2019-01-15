@@ -26,6 +26,7 @@ import uristqwerty.CraftGuide.client.ui.GuiTabbedDisplay;
 import uristqwerty.CraftGuide.client.ui.GuiText;
 import uristqwerty.CraftGuide.client.ui.GuiTextInput;
 import uristqwerty.CraftGuide.client.ui.IButtonListener;
+import uristqwerty.CraftGuide.client.ui.IRecipeCacheListener;
 import uristqwerty.CraftGuide.client.ui.RowCount;
 import uristqwerty.CraftGuide.client.ui.ToggleButton;
 import uristqwerty.CraftGuide.client.ui.text.TranslatedTextSource;
@@ -96,6 +97,7 @@ public class GuiCraftGuide extends Gui
 						DynamicTexture.instance("button_over"),
 						DynamicTexture.instance("button_up"),
 						DynamicTexture.instance("button_down"),
+						DynamicTexture.instance("button_disabled"),
 				});
 
 		ButtonTemplate toggleTemplate = new ButtonTemplate(
@@ -104,6 +106,7 @@ public class GuiCraftGuide extends Gui
 						DynamicTexture.instance("toggle_off_over"),
 						DynamicTexture.instance("toggle_on"),
 						DynamicTexture.instance("toggle_on_over"),
+						DynamicTexture.instance("toggle_disabled"),
 				});
 
 		guiWindow.background = windowBackground;
@@ -200,10 +203,53 @@ public class GuiCraftGuide extends Gui
 							new GuiText(15, 3, new TranslatedTextSource("craftguide.gui.filter_type.machine"), 0xff000000)));
 
 		GuiButton clearButton =
-			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 50, 13, buttonTemplate, "Clear")
+			(GuiButton) new GuiButton(8, initialWindowHeight - 18, 16, 13, buttonTemplate, "X")
 				.anchor(AnchorPoint.BOTTOM_LEFT);
 
+		final GuiButton prevFilterButton =
+				(GuiButton) new GuiButton(8 + 50 - 32, initialWindowHeight - 18, 16, 13, buttonTemplate, "<")
+					.anchor(AnchorPoint.BOTTOM_LEFT);
+
+		final GuiButton nextFilterButton =
+				(GuiButton) new GuiButton(8 + 50 - 16, initialWindowHeight - 18, 16, 13, buttonTemplate, ">")
+					.anchor(AnchorPoint.BOTTOM_LEFT);
+
 		recipeTab.addElement(clearButton);
+		recipeTab.addElement(prevFilterButton);
+		recipeTab.addElement(nextFilterButton);
+
+		prevFilterButton.addButtonListener(new IButtonListener()
+		{
+			@Override
+			public void onButtonEvent(GuiButton button, Event eventType)
+			{
+				recipeCache.previousFilter();
+			}
+		});
+
+		nextFilterButton.addButtonListener(new IButtonListener()
+		{
+			@Override
+			public void onButtonEvent(GuiButton button, Event eventType)
+			{
+				recipeCache.nextFilter();
+			}
+		});
+
+		recipeCache.addListener(new IRecipeCacheListener()
+		{
+			@Override
+			public void onReset(RecipeCache cache)
+			{
+			}
+
+			@Override
+			public void onChange(RecipeCache cache)
+			{
+				prevFilterButton.setDisabled(cache.hasPreviousFilter());
+				nextFilterButton.setDisabled(cache.hasNextFilter());
+			}
+		});
 
 		recipeTab.addElement(
 			new GuiText(9, 151, new TranslatedTextSource("craftguide.gui.filter"), 0xff000000)

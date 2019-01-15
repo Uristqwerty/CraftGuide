@@ -3,6 +3,8 @@ package uristqwerty.CraftGuide.client.ui;
 
 public class ToggleButton extends GuiButton
 {
+	private boolean disabledChecked = false;
+
 	public ToggleButton(int x, int y, int width, int height, ButtonTemplate template)
 	{
 		super(x, y, width, height, template);
@@ -17,7 +19,7 @@ public class ToggleButton extends GuiButton
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		if(containsPoint(x, y))
+		if(containsPoint(x, y) && !isDisabled())
 		{
 			if(!isHeld())
 			{
@@ -41,5 +43,23 @@ public class ToggleButton extends GuiButton
 	{
 		currentState = state;
 		return this;
+	}
+
+	@Override
+	public void setDisabled(boolean disabled)
+	{
+		if(disabled != isDisabled())
+		{
+			if(disabled)
+			{
+				disabledChecked = isHeld();
+				super.setDisabled(disabled);
+			}
+			else
+			{
+				super.setDisabled(disabled);
+				updateState(isOver(), disabledChecked);
+			}
+		}
 	}
 }
