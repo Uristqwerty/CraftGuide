@@ -80,11 +80,24 @@ public class MultiFilter implements CombinableItemFilter
 		{
 			ItemFilter filter = items.addItemFilter(other);
 			if(filter instanceof CombinableItemFilter)
-				items = (CombinableItemFilter)filter;
+			{
+				MultiFilter new_filter = new MultiFilter(this);
+				new_filter.items = (CombinableItemFilter)filter;
+				return new_filter;
+			}
 		}
 		else if(other instanceof StringItemFilter)
 		{
-			addString(((StringItemFilter)other).comparison);
+			String comparison = ((StringItemFilter)other).comparison;
+			comparison = comparison.toLowerCase();
+			for(String s: strings)
+				if(comparison.equals(s))
+					return this;
+
+			MultiFilter new_filter = new MultiFilter(this);
+			new_filter.strings = new ArrayList<String>(new_filter.strings);
+			new_filter.strings.add(comparison);
+			return new_filter;
 		}
 		else if(other instanceof LiquidFilter)
 		{
@@ -92,7 +105,11 @@ public class MultiFilter implements CombinableItemFilter
 			for(FluidStack s: liquids)
 				if(s.isFluidEqual(stack))
 					return this;
-			liquids.add(stack);
+
+			MultiFilter new_filter = new MultiFilter(this);
+			new_filter.liquids = new ArrayList<FluidStack>(new_filter.liquids);
+			new_filter.liquids.add(stack);
+			return new_filter;
 		}
 		else if(other instanceof PseudoFluidFilter)
 		{
@@ -100,20 +117,14 @@ public class MultiFilter implements CombinableItemFilter
 			for(PseudoFluidStack s: pseudoLiquids)
 				if(s.isFluidEqual(stack))
 					return this;
-			pseudoLiquids.add(stack);
+
+			MultiFilter new_filter = new MultiFilter(this);
+			new_filter.pseudoLiquids = new ArrayList<PseudoFluidStack>(new_filter.pseudoLiquids);
+			new_filter.pseudoLiquids.add(stack);
+			return new_filter;
 		}
 		return this;
 	}
-
-	private void addString(String comparison)
-	{
-		comparison = comparison.toLowerCase();
-		for(String s: strings)
-			if(comparison.equals(s))
-				return;
-		strings.add(comparison);
-	}
-
 	@Override
 	public ItemFilter subtractItemFilter(ItemFilter other)
 	{

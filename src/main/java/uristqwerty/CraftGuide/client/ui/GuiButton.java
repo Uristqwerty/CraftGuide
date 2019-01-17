@@ -24,7 +24,7 @@ public class GuiButton extends GuiElement
 	}
 
 	private static final int
-		DISABLED_TEXT_COLOR = 0xff404040,
+		DISABLED_TEXT_COLOR = 0xff808080,
 		NORMAL_TEXT_COLOR = 0xff000000;
 
 	private List<IButtonListener> buttonListeners = new LinkedList<IButtonListener>();
@@ -107,7 +107,7 @@ public class GuiButton extends GuiElement
 	@Override
 	public void mousePressed(int x, int y)
 	{
-		if(containsPoint(x, y))
+		if(!isDisabled() && containsPoint(x, y))
 		{
 			if(!isHeld())
 			{
@@ -121,7 +121,7 @@ public class GuiButton extends GuiElement
 	@Override
 	public void mouseReleased(int x, int y)
 	{
-		if(isHeld())
+		if(!isDisabled() && isHeld())
 		{
 			sendButtonEvent(IButtonListener.Event.RELEASE);
 		}

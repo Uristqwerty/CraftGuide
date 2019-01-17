@@ -486,12 +486,19 @@ public class RecipeCache
 			filter = null;
 		}
 
-		if(filterItem != null)
+		if(filterItem != filter)
 		{
-			filterHistory.push(filterItem);
-		}
+			if(filterItem != null)
+			{
+				filterHistory.push(filterItem);
+				while(filterHistory.size() > CraftGuide.maxUndoHistory)
+				{
+					filterHistory.removeFirst();
+				}
+			}
 
-		filterHistoryForwards.clear();
+			filterHistoryForwards.clear();
+		}
 
 		setFilter(filter);
 	}

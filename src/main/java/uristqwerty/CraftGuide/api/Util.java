@@ -89,12 +89,12 @@ public abstract class Util
 	public abstract float getPartialTicks();
 
 	/**
-	 * Returns a new List<ItemStack>, containing one of each unique item present in either a or b
+	 * Returns a new List<ItemStack>, containing one of each unique item present in a but not in b
 	 */
 	public abstract List<ItemStack> subtractItemLists(List<ItemStack> a, List<ItemStack> b);
 
 	/**
-	 * Returns a new List<ItemStack>, containing one of each unique item present in a but not in b
+	 * Returns a new List<ItemStack>, containing one of each unique item present in either a or b
 	 */
 	public abstract List<ItemStack> addItemLists(List<ItemStack> a, List<ItemStack> b);
 }

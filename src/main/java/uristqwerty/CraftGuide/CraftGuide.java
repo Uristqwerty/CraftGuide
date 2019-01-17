@@ -33,9 +33,10 @@ public class CraftGuide
 
 	private static Map<String, String> configComments;
 
-	public static int resizeRate;
-	public static int mouseWheelScrollRate;
-	public static int defaultKeybind;
+	public static int resizeRate = 0;
+	public static int mouseWheelScrollRate = 3;
+	public static int defaultKeybind = Keyboard.KEY_G;
+	public static int maxUndoHistory = 100;
 	public static boolean pauseWhileOpen = true;
 	public static boolean gridPacking = true;
 	public static boolean alwaysShowID = false;
@@ -190,6 +191,7 @@ public class CraftGuide
 		configComments.put("rightClickClearText", "Right-clicking a text input clears it, instead of setting the cursor position.");
 		configComments.put("ae2Workaround", "Workaround for slow startup time and exception spam with some AE2 versions.");
 		configComments.put("useWorkerThread", "Run potentially slow tasks (such as constructing the recipe list, or performing searches) in a separate thread. Will keep the game responsive, but may cause stability issues.");
+		configComments.put("maxUndoHistory", "Maximum number of previous searches to store, or a negative value for unlimited history. Might act as a tiny memory optimization for long game sessions to leave it at a reasonable finite value.");
 	}
 
 	private void setConfigDefaults()
@@ -210,6 +212,7 @@ public class CraftGuide
 		config.setProperty("defaultKeybind", Integer.toString(Keyboard.KEY_G));
 		config.setProperty("ae2Workaround", Boolean.toString(true));
 		config.setProperty("useWorkerThread", Boolean.toString(true));
+		config.setProperty("maxUndoHistory", "100");
 	}
 
 	/**
@@ -280,6 +283,14 @@ public class CraftGuide
 		try
 		{
 			defaultKeybind = Integer.valueOf(config.getProperty("defaultKeybind"));
+		}
+		catch(NumberFormatException e)
+		{
+		}
+
+		try
+		{
+			maxUndoHistory = Integer.valueOf(config.getProperty("maxUndoHistory"));
 		}
 		catch(NumberFormatException e)
 		{

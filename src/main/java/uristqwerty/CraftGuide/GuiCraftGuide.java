@@ -246,8 +246,8 @@ public class GuiCraftGuide extends Gui
 			@Override
 			public void onChange(RecipeCache cache)
 			{
-				prevFilterButton.setDisabled(cache.hasPreviousFilter());
-				nextFilterButton.setDisabled(cache.hasNextFilter());
+				prevFilterButton.setDisabled(!cache.hasPreviousFilter());
+				nextFilterButton.setDisabled(!cache.hasNextFilter());
 			}
 		});
 
