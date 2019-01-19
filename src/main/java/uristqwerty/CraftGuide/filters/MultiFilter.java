@@ -28,6 +28,14 @@ public class MultiFilter implements CombinableItemFilter
 		this.addItemFilter(items);
 	}
 
+	private MultiFilter(MultiFilter other)
+	{
+		items = other.items;
+		strings = other.strings;
+		liquids = other.liquids;
+		pseudoLiquids = other.pseudoLiquids;
+	}
+
 	@Override
 	public boolean matches(Object item)
 	{

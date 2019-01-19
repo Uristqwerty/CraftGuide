@@ -223,7 +223,8 @@ public class GuiCraftGuide extends Gui
 			@Override
 			public void onButtonEvent(GuiButton button, Event eventType)
 			{
-				recipeCache.previousFilter();
+				if(eventType == Event.PRESS)
+					recipeCache.previousFilter();
 			}
 		});
 
@@ -232,7 +233,8 @@ public class GuiCraftGuide extends Gui
 			@Override
 			public void onButtonEvent(GuiButton button, Event eventType)
 			{
-				recipeCache.nextFilter();
+				if(eventType == Event.PRESS)
+					recipeCache.nextFilter();
 			}
 		});
 
