@@ -25,15 +25,21 @@ public class MultiFilter implements CombinableItemFilter
 
 	public MultiFilter(CombinableItemFilter items)
 	{
-		this.addItemFilter(items);
+		this.items = (CombinableItemFilter)this.items.addItemFilter(items);
 	}
 
-	private MultiFilter(MultiFilter other)
+	private MultiFilter()
 	{
-		items = other.items;
-		strings = other.strings;
-		liquids = other.liquids;
-		pseudoLiquids = other.pseudoLiquids;
+	}
+
+	private MultiFilter copy()
+	{
+		MultiFilter copy = new MultiFilter();
+		copy.items = items;
+		copy.strings = strings;
+		copy.liquids = liquids;
+		copy.pseudoLiquids = pseudoLiquids;
+		return copy;
 	}
 
 	@Override
@@ -89,7 +95,7 @@ public class MultiFilter implements CombinableItemFilter
 			ItemFilter filter = items.addItemFilter(other);
 			if(filter instanceof CombinableItemFilter)
 			{
-				MultiFilter new_filter = new MultiFilter(this);
+				MultiFilter new_filter = this.copy();
 				new_filter.items = (CombinableItemFilter)filter;
 				return new_filter;
 			}
@@ -102,7 +108,7 @@ public class MultiFilter implements CombinableItemFilter
 				if(comparison.equals(s))
 					return this;
 
-			MultiFilter new_filter = new MultiFilter(this);
+			MultiFilter new_filter = this.copy();
 			new_filter.strings = new ArrayList<String>(new_filter.strings);
 			new_filter.strings.add(comparison);
 			return new_filter;
@@ -114,7 +120,7 @@ public class MultiFilter implements CombinableItemFilter
 				if(s.isFluidEqual(stack))
 					return this;
 
-			MultiFilter new_filter = new MultiFilter(this);
+			MultiFilter new_filter = this.copy();
 			new_filter.liquids = new ArrayList<FluidStack>(new_filter.liquids);
 			new_filter.liquids.add(stack);
 			return new_filter;
@@ -126,7 +132,7 @@ public class MultiFilter implements CombinableItemFilter
 				if(s.isFluidEqual(stack))
 					return this;
 
-			MultiFilter new_filter = new MultiFilter(this);
+			MultiFilter new_filter = this.copy();
 			new_filter.pseudoLiquids = new ArrayList<PseudoFluidStack>(new_filter.pseudoLiquids);
 			new_filter.pseudoLiquids.add(stack);
 			return new_filter;
@@ -139,43 +145,87 @@ public class MultiFilter implements CombinableItemFilter
 		if(other instanceof SingleItemFilter || other instanceof MultipleItemFilter)
 		{
 			ItemFilter filter = items.subtractItemFilter(other);
-			if(filter instanceof CombinableItemFilter)
-				items = (CombinableItemFilter)filter;
-			else if(filter != null)
-				items = new MultipleItemFilter(new ArrayList<ItemStack>());
+			if(filter != null)
+			{
+				MultiFilter new_filter = this.copy();
+				if(filter instanceof CombinableItemFilter)
+					new_filter.items = (CombinableItemFilter)filter;
+				else
+					new_filter.items = new MultipleItemFilter(new ArrayList<ItemStack>());
+				return new_filter;
+			}
 		}
 		else if(other instanceof StringItemFilter)
 		{
 			String str = ((StringItemFilter)other).comparison;
-			Iterator<String> iter = strings.iterator();
+			ArrayList<String> new_strings = (ArrayList<String>)strings.clone();
+			Iterator<String> iter = new_strings.iterator();
+			boolean removed = false;
 			while(iter.hasNext())
+			{
 				if(iter.next().equals(str))
+				{
 					iter.remove();
+					removed = true;
+				}
+			}
 
-			if(liquids.isEmpty() && pseudoLiquids.isEmpty() && strings.isEmpty())
+			if(liquids.isEmpty() && pseudoLiquids.isEmpty() && new_strings.isEmpty())
 				return items;
+			else if(removed)
+			{
+				MultiFilter new_filter = this.copy();
+				new_filter.strings = new_strings;
+				return new_filter;
+			}
 		}
 		else if(other instanceof LiquidFilter)
 		{
 			FluidStack stack = ((LiquidFilter)other).liquid;
-			Iterator<FluidStack> iter = liquids.iterator();
+			ArrayList<FluidStack> new_liquids = (ArrayList<FluidStack>)liquids.clone();
+			Iterator<FluidStack> iter = new_liquids.iterator();
+			boolean removed = false;
 			while(iter.hasNext())
+			{
 				if(iter.next().isFluidEqual(stack))
+				{
 					iter.remove();
+					removed = true;
+				}
+			}
 
-			if(liquids.isEmpty() && pseudoLiquids.isEmpty() && strings.isEmpty())
+			if(new_liquids.isEmpty() && pseudoLiquids.isEmpty() && strings.isEmpty())
 				return items;
+			else if(removed)
+			{
+				MultiFilter new_filter = this.copy();
+				new_filter.liquids = new_liquids;
+				return new_filter;
+			}
 		}
 		else if(other instanceof PseudoFluidFilter)
 		{
 			PseudoFluidStack stack = ((PseudoFluidFilter)other).liquid;
-			Iterator<PseudoFluidStack> iter = pseudoLiquids.iterator();
+			ArrayList<PseudoFluidStack> new_pseudoLiquids = (ArrayList<PseudoFluidStack>)pseudoLiquids.clone();
+			Iterator<PseudoFluidStack> iter = new_pseudoLiquids.iterator();
+			boolean removed = false;
 			while(iter.hasNext())
+			{
 				if(iter.next().isFluidEqual(stack))
+				{
 					iter.remove();
+					removed = true;
+				}
+			}
 
-			if(liquids.isEmpty() && pseudoLiquids.isEmpty() && strings.isEmpty())
+			if(liquids.isEmpty() && new_pseudoLiquids.isEmpty() && strings.isEmpty())
 				return items;
+			else if(removed)
+			{
+				MultiFilter new_filter = this.copy();
+				new_filter.pseudoLiquids = new_pseudoLiquids;
+				return new_filter;
+			}
 		}
 		return this;
 	}
