@@ -490,7 +490,7 @@ public class RecipeCache
 		{
 			if(filterItem != null)
 			{
-				filterHistory.push(filterItem);
+				filterHistory.add(filterItem);
 				while(filterHistory.size() > CraftGuide.maxUndoHistory)
 				{
 					filterHistory.removeFirst();
@@ -514,10 +514,10 @@ public class RecipeCache
 		{
 			if(filterItem != null)
 			{
-				filterHistoryForwards.push(filterItem);
+				filterHistoryForwards.add(filterItem);
 			}
 
-			setFilter(filterHistory.pop());
+			setFilter(filterHistory.removeLast());
 		}
 	}
 
@@ -532,10 +532,10 @@ public class RecipeCache
 		{
 			if(filterItem != null)
 			{
-				filterHistory.push(filterItem);
+				filterHistory.add(filterItem);
 			}
 
-			setFilter(filterHistoryForwards.pop());
+			setFilter(filterHistoryForwards.removeLast());
 		}
 	}
 
