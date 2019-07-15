@@ -8,4 +8,9 @@ public interface PseudoFluidStack
 	public String getLocalizedName();
 	public int getQuantity();
 	public boolean isFluidEqual(PseudoFluidStack other);
+
+	public default int getColor()
+	{
+		return 0xffffffff;
+	}
 }

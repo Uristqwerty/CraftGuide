@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import uristqwerty.CraftGuide.CommonUtilities;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.slotTypes.EUSlot;
 import uristqwerty.CraftGuide.api.slotTypes.ExtraSlot;
 import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
@@ -25,7 +24,7 @@ import uristqwerty.CraftGuide.api.slotTypes.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.recipes.IC2ExperimentalRecipes.AdditionalMachines;
 
-public class GregTechRecipes extends CraftGuideAPIObject implements RecipeProvider, AdditionalMachines
+public class GregTechRecipes implements RecipeProvider, AdditionalMachines
 {
 	public GregTechRecipes()
 	{

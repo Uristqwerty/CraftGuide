@@ -17,7 +17,6 @@ import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.DefaultRecipeTemplate;
 import uristqwerty.CraftGuide.ForgeExtensions;
 import uristqwerty.CraftGuide.RecipeGeneratorImplementation;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
@@ -29,7 +28,7 @@ import uristqwerty.CraftGuide.api.StackInfoSource;
 import uristqwerty.gui_craftguide.texture.DynamicTexture;
 import uristqwerty.gui_craftguide.texture.TextureClip;
 
-public class DefaultRecipeProvider extends CraftGuideAPIObject implements RecipeProvider, StackInfoSource
+public class DefaultRecipeProvider implements RecipeProvider, StackInfoSource
 {
 	public DefaultRecipeProvider()
 	{

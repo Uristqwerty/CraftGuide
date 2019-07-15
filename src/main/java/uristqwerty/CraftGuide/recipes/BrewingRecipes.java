@@ -11,12 +11,11 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.itemtype.ItemType;
 
-public class BrewingRecipes extends CraftGuideAPIObject implements RecipeProvider
+public class BrewingRecipes implements RecipeProvider
 {
 	private static final int MAX_FULL_ITERATIONS = 10;
 	private static final int MAX_VANILLA_ONLY_ITERATIONS = 100;

@@ -10,7 +10,6 @@ import net.minecraft.util.WeightedRandom.Item;
 import net.minecraftforge.common.ForgeHooks;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.slotTypes.ExtraSlot;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
@@ -18,7 +17,7 @@ import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.slotTypes.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
-public class GrassSeedDrops extends CraftGuideAPIObject implements RecipeProvider
+public class GrassSeedDrops implements RecipeProvider
 {
 	@Override
 	public void generateRecipes(RecipeGenerator generator)

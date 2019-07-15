@@ -31,9 +31,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.matthewprenger.cursegradle'
 
-sourceCompatibility = targetCompatibility = '1.7'
+sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
-    sourceCompatibility = targetCompatibility = '1.7'
+    sourceCompatibility = targetCompatibility = '1.8'
 }
 
 String minecraft_versions = '1.9.4'
@@ -59,11 +59,24 @@ repositories {
         name 'BuildCraft'
         artifactPattern 'https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]'
     }
+    maven {
+        name 'DVS1 Maven FS'
+        url 'https://dvs1.progwml6.com/files/maven'
+    }
+    maven {
+        name 'k-4u'
+        url 'https://modmaven.k-4u.nl'
+    }
 }
 
 dependencies {
-    deobfCompile name: 'buildcraft', version: '7.2.8', classifier: 'api'
+    compile 'de.ellpeck.actuallyadditions:ActuallyAdditions:1.10.2-r75:api'
     compile 'net.industrial-craft:industrialcraft-2:2.5.8-ex19:dev'
+    compile files('manual-deps/Calculator-1.10.2-3.2.1.jar')
+    compile files('manual-deps/SonarCore-1.10.2-3.2.6.jar')
+    deobfCompile name: 'buildcraft', version: '7.2.8', classifier: 'api'
+    deobfCompile 'slimeknights:TConstruct:1.9.4-2.3.3.jenkins263'
+    deobfCompile 'slimeknights.mantle:Mantle:1.9.4-0.10.2.jenkins149'
 }
 
 task themeZip(type: Zip) {

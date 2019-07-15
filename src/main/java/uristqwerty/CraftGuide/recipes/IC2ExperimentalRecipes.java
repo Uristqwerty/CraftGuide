@@ -18,7 +18,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import uristqwerty.CraftGuide.api.slotTypes.ChanceSlot;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.slotTypes.EUSlot;
 import uristqwerty.CraftGuide.api.slotTypes.ExtraSlot;
 import uristqwerty.CraftGuide.api.slotTypes.ItemSlot;
@@ -29,7 +28,7 @@ import uristqwerty.CraftGuide.api.slotTypes.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 import uristqwerty.CraftGuide.api.StackInfo;
 
-public class IC2ExperimentalRecipes extends CraftGuideAPIObject implements RecipeProvider
+public class IC2ExperimentalRecipes implements RecipeProvider
 {
 	public static interface AdditionalMachines
 	{

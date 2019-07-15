@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 
 import uristqwerty.CraftGuide.api.ItemSlot;
+import uristqwerty.CraftGuide.recipes._AddRecipes;
 import uristqwerty.gui_craftguide.theme.ThemeManager;
 
 @SuppressWarnings("deprecation")
@@ -71,56 +72,9 @@ public class CraftGuide
 
 	public void init()
 	{
-		try
-		{
-			Class.forName("uristqwerty.CraftGuide.recipes.DefaultRecipeProvider").newInstance();
-			Class.forName("uristqwerty.CraftGuide.recipes.BrewingRecipes").newInstance();
-			Class.forName("uristqwerty.CraftGuide.recipes.GrassSeedDrops").newInstance();
-		}
-		catch(InstantiationException | IllegalAccessException | ClassNotFoundException e)
-		{
-			CraftGuideLog.log(e);
-		}
-
-		loadModRecipes("BTW", "uristqwerty.CraftGuide.recipes.BTWRecipes");
-		addIC2Recipes();
-		loadModRecipes("gregtech", "uristqwerty.CraftGuide.recipes.GregTechRecipes");
-		loadModRecipes("extendedWorkbench", "uristqwerty.CraftGuide.recipes.ExtendedWorkbench");
-		loadModRecipes("BuildCraft|Factory", "uristqwerty.CraftGuide.recipes.BuildCraftRecipes");
+		_AddRecipes.add();
 
 		side.initNetworkChannels();
-	}
-
-	private void addIC2Recipes()
-	{
-		try
-		{
-			Class.forName("ic2.core.block.machine.tileentity.TileEntityMetalFormer");
-			loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2ExperimentalRecipes");
-		}
-		catch(ClassNotFoundException e)
-		{
-			loadModRecipes("IC2", "uristqwerty.CraftGuide.recipes.IC2Recipes");
-		}
-	}
-
-	private void loadModRecipes(String modID, String recipeClass)
-	{
-		if(loaderSide.isModLoaded(modID))
-		{
-			try
-			{
-				Class.forName(recipeClass).newInstance();
-			}
-			catch(ClassNotFoundException e)
-			{
-				CraftGuideLog.log(e);
-			}
-			catch(Exception | LinkageError e)
-			{
-				CraftGuideLog.log(e, "", true);
-			}
-		}
 	}
 
 	private void initForgeExtensions()

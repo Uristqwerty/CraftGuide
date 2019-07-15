@@ -12,7 +12,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import uristqwerty.CraftGuide.CraftGuide;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 import uristqwerty.CraftGuide.api.RecipeTemplateBuilder.TemplateBuilderSlotType;
@@ -23,7 +22,7 @@ import buildcraft.api.recipes.IFlexibleRecipe;
 import buildcraft.api.recipes.IFlexibleRecipeViewable;
 import buildcraft.api.recipes.IIntegrationRecipe;
 
-public class BuildCraftRecipes extends CraftGuideAPIObject implements RecipeProvider
+public class BuildCraftRecipes implements RecipeProvider
 {
 	@Override
 	public void generateRecipes(RecipeGenerator generator)

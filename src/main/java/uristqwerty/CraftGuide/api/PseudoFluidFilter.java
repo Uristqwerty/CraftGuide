@@ -81,7 +81,8 @@ public class PseudoFluidFilter implements ItemFilter
 				double v2 = icon.getInterpolatedV(15.0);
 
 				GlStateManager.enableTexture2D();
-				GlStateManager.color(1, 1, 1, 1);
+				setColor(liquid.getColor());
+				GlStateManager.disableLighting();
 
 				GL11.glBegin(GL11.GL_QUADS);
 					GL11.glTexCoord2d(u, v);
@@ -100,6 +101,15 @@ public class PseudoFluidFilter implements ItemFilter
 		}
 
 		renderer.renderRect(x - 1, y - 1, 18, 18, containerTexture);
+	}
+
+	private void setColor(int color)
+	{
+		float a = ((color >> 24) & 0xff)/ 255.0f,
+				r = ((color >> 16) & 0xff)/ 255.0f,
+				g = ((color >> 8) & 0xff)/ 255.0f,
+				b = ((color >> 0) & 0xff)/ 255.0f;
+		GlStateManager.color(r, g, b, a);
 	}
 
 	@Override

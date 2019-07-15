@@ -9,11 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import uristqwerty.CraftGuide.CraftGuideLog;
 import uristqwerty.CraftGuide.api.ConstructedRecipeTemplate;
-import uristqwerty.CraftGuide.api.CraftGuideAPIObject;
 import uristqwerty.CraftGuide.api.RecipeGenerator;
 import uristqwerty.CraftGuide.api.RecipeProvider;
 
-public class ExtendedWorkbench extends CraftGuideAPIObject implements RecipeProvider
+public class ExtendedWorkbench implements RecipeProvider
 {
 	private static ItemStack workbenchStack = new ItemStack(Blocks.CRAFTING_TABLE, 1, 1);
 
