@@ -77,6 +77,8 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 			ItemType type = (ItemType)types.toArray()[row];
 			displayBackground.renderRect(renderer, xOffset, yOffset, width(), rowHeight, 0, 0);
 			renderer.drawItemStack(type.getDisplayStack(), xOffset + 8, yOffset + 8, false);
+			renderer.renderText(xOffset + 8 + 16 + 4, yOffset + 8 + 6,
+					"x" + recipeCache.getAllRecipes().get(type).size(), 0xff000000, false);
 
 			if(hidden(type))
 			{
@@ -254,6 +256,11 @@ public class CraftTypeDisplay extends GuiScrollableGrid implements IRecipeCacheL
 							toolTipText = "Show only recipes of this type";
 					}
 				}
+			}
+			else if(x >= 8 && x <= 24 && y >= 8 && y <= 24)
+			{
+				ItemType type = (ItemType)recipeCache.getCraftTypes().toArray()[row];
+				toolTipText = type.getDisplayStack().getDisplayName();
 			}
 		}
 	}

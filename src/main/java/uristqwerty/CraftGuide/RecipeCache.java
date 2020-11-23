@@ -539,53 +539,59 @@ public class RecipeCache
 		}
 	}
 
-	private void setFilter(ItemFilter filter)
+	private void setFilter(final ItemFilter filter)
 	{
 		filterItem = filter;
 
-		boolean input = GuiCraftGuide.filterSlotTypes.get(SlotType.INPUT_SLOT);
-		boolean output = GuiCraftGuide.filterSlotTypes.get(SlotType.OUTPUT_SLOT);
-		boolean machine = GuiCraftGuide.filterSlotTypes.get(SlotType.MACHINE_SLOT);
-
-		if(filter == null)
-		{
-			filteredResults = typeResults;
-		}
-		else
-		{
-			filteredResults = new ArrayList<CraftGuideRecipe>();
-
-			for(CraftGuideRecipe recipe: typeResults)
+		runTask(new Task(){
+			@Override
+			public void run()
 			{
-				try
-				{
-					if(recipe instanceof CraftGuideRecipeExtra1)
-					{
-						CraftGuideRecipeExtra1 e = (CraftGuideRecipeExtra1)recipe;
+				boolean input = GuiCraftGuide.filterSlotTypes.get(SlotType.INPUT_SLOT);
+				boolean output = GuiCraftGuide.filterSlotTypes.get(SlotType.OUTPUT_SLOT);
+				boolean machine = GuiCraftGuide.filterSlotTypes.get(SlotType.MACHINE_SLOT);
 
-						if((input && e.containsItem(filter, SlotType.INPUT_SLOT))
-						|| (output && e.containsItem(filter, SlotType.OUTPUT_SLOT))
-						|| (machine && e.containsItem(filter, SlotType.MACHINE_SLOT)))
+				if(filter == null)
+				{
+					filteredResults = typeResults;
+				}
+				else
+				{
+					filteredResults = new ArrayList<CraftGuideRecipe>();
+
+					for(CraftGuideRecipe recipe: typeResults)
+					{
+						try
 						{
-							filteredResults.add(recipe);
+							if(recipe instanceof CraftGuideRecipeExtra1)
+							{
+								CraftGuideRecipeExtra1 e = (CraftGuideRecipeExtra1)recipe;
+
+								if((input && e.containsItem(filter, SlotType.INPUT_SLOT))
+								|| (output && e.containsItem(filter, SlotType.OUTPUT_SLOT))
+								|| (machine && e.containsItem(filter, SlotType.MACHINE_SLOT)))
+								{
+									filteredResults.add(recipe);
+								}
+							}
+							else if(recipe.containsItem(filter))
+							{
+								filteredResults.add(recipe);
+							}
+						}
+						catch(Exception e)
+						{
+							CraftGuideLog.log(e, "Exception thrown while matching against recipe " + recipe, false);
 						}
 					}
-					else if(recipe.containsItem(filter))
-					{
-						filteredResults.add(recipe);
-					}
 				}
-				catch(Exception e)
+
+				for(IRecipeCacheListener listener: listeners)
 				{
-					CraftGuideLog.log(e, "Exception thrown while matching against recipe " + recipe, false);
+					listener.onChange(RecipeCache.this);
 				}
 			}
-		}
-
-		for(IRecipeCacheListener listener: listeners)
-		{
-			listener.onChange(this);
-		}
+		});
 	}
 
 	public ItemFilter getFilter()
